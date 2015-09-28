@@ -1,20 +1,59 @@
+@import url(//fonts.googleapis.com/css?family=Roboto);
+
 // Colors
 // --------------------------------------------------
 
-$btnText:                           #fff;
+$cfa-background: #265E6D;
+
+$btnText:                           #FFF;
 $btnTextAlt:                        #000;
 
-$btnGooglePlusBackground:           #dd4b39;
-$btnGooglePlusBackgroundHighlight:  #c53727;
-$btnGithubBackground:               #fafafa;
-$btnGithubBackgroundHighlight:      #ccc;
+$btnGooglePlusBackground:           #DC4E41;
+$btnGooglePlusBackgroundHighlight:  #C53727;
 
 // Social buttons
 // --------------------------------------------------
 
-.btn-google-plus {
-  @include button-variant($btnText, $btnGooglePlusBackground, $btnGooglePlusBackgroundHighlight);
+.glogin {
+  text-align: center;
+  display: inline-block;
+  white-space: nowrap;
+  color: $btnText;
+  width: 200px;
+  font-family: 'Roboto', sans-serif;
+  background-color: $btnGooglePlusBackground;
+  border-radius: 5px;
+  &:hover:not(:active) {
+    cursor: pointer;
+    background-color: $btnGooglePlusBackgroundHighlight;
+  }
+  span.glogin-icon {
+    display: inline-block;
+    vertical-align: middle;
+    width: 42px;
+    height: 42px;
+    line-height: 42px;
+    font-size: 18px;
+    border-right: white 1px solid;
+  }
+  span.glogin-text {
+    display: inline-block;
+    vertical-align: middle;
+    padding: 0 18px;
+    font-size: 14px;
+    font-weight: bold;
+    font-family: 'Roboto', sans-serif;
+  }
 }
-.btn-github {
-  @include button-variant($btnTextAlt, $btnGithubBackground, $btnGithubBackgroundHighlight);
+
+.login-page {
+  background-color: $cfa-background;
+}
+
+.banner {
+  text-align: center;
+  color: white;
+  img {
+    max-height: 300px;
+  }
 }
