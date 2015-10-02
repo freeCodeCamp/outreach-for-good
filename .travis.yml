@@ -1,6 +1,8 @@
 language: node_js
 node_js:
   - '0.12.7'
+env:
+  - APP_SECRET='app-secret'
 before_script:
   - npm install -g bower grunt-cli
   - gem install sass

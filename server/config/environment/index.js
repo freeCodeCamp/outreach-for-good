@@ -10,6 +10,8 @@ function requiredProcessEnv(name) {
   return process.env[name];
 }
 
+requiredProcessEnv('APP_SECRET');
+
 // All configurations will extend these options
 // ============================================
 var all = {
@@ -27,9 +29,8 @@ var all = {
   // Should we populate the DB with sample data?
   seedDB: false,
 
-  // Secret for session, you will want to change this and make it an environment variable
   secrets: {
-    session: 'app-secret'
+    session: process.env.APP_SECRET
   },
 
   // List of user roles
