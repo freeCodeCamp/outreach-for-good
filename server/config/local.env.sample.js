@@ -8,6 +8,7 @@
 module.exports = {
   DOMAIN:           'http://localhost:9000',
   APP_SECRET:       'app-secret',
+  SUPER_USER_EMAIL: 'test@example.com',
 
   GOOGLE_ID:        'app-id',
   GOOGLE_SECRET:    'secret',
