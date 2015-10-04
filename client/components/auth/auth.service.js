@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('appApp')
-  .factory('Auth', function Auth(User, $cookieStore) {
+  .factory('Auth', function Auth(User, Role, $cookieStore) {
     var currentUser = {};
     if($cookieStore.get('token')) {
       currentUser = User.get();
@@ -60,7 +60,7 @@ angular.module('appApp')
        * @return {Boolean}
        */
       isAdmin: function() {
-        return currentUser.role === 'admin';
+        return Role.hasRole(currentUser.role, 'admin');
       },
 
       /**

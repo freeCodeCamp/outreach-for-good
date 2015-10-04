@@ -6,6 +6,12 @@ angular.module('appApp')
       id: '@_id'
     },
     {
+      updateRole: {
+        method: 'PUT',
+        params: {
+          controller: 'role'
+        }
+      },
       get: {
         method: 'GET',
         params: {

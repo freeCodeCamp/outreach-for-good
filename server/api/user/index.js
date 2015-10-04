@@ -9,6 +9,8 @@ var router = express.Router();
 
 router.get('/', auth.hasRole('admin'), controller.index);
 router.delete('/:id', auth.hasRole('admin'), controller.destroy);
+router.put('/:id/role', auth.hasRole('admin'), controller.updateRole);
+
 router.get('/me', auth.isAuthenticated(), controller.me);
 router.get('/:id', auth.isAuthenticated(), controller.show);
 

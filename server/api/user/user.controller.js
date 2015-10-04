@@ -3,6 +3,7 @@
 var User = require('./user.model');
 var passport = require('passport');
 var config = require('../../config/environment');
+var auth = require('../../auth/auth.service');
 
 /**
  * Get list of users
@@ -25,6 +26,28 @@ exports.show = function (req, res, next) {
     if (err) return next(err);
     if (!user) return res.status(401).send('Unauthorized');
     res.json(user.profile);
+  });
+};
+
+/**
+ * Change a users' role.
+ * restriction: 'admin'
+ *
+ * A user can only assign roles for users with equal or lower roles.
+ * A user can only assign equal or lower roles to other users.
+ */
+exports.updateRole = function(req, res) {
+  auth.hasRole(req.body.role)(req, res, function() {
+    User.findById(req.params.id, function(err, user) {
+      if(err) return res.status(500).send(err);
+      auth.hasRole(user.role)(req, res, function() {
+        user.role = req.body.role;
+        user.save(function(err) {
+          if (err) return res.status(500).send(err);
+          res.json(user);
+        });
+      });
+    });
   });
 };
 

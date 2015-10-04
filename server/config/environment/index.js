@@ -11,6 +11,7 @@ function requiredProcessEnv(name) {
 }
 
 requiredProcessEnv('APP_SECRET');
+requiredProcessEnv('SUPER_USER_EMAIL');
 
 // All configurations will extend these options
 // ============================================
@@ -34,7 +35,7 @@ var all = {
   },
 
   // List of user roles
-  userRoles: ['guest', 'user', 'admin'],
+  userRoles: ['guest', 'teacher', 'manager', 'admin', 'super'],
 
   // MongoDB connection options
   mongo: {

@@ -8,7 +8,7 @@ var UserSchema = new Schema({
   email: { type: String, lowercase: true },
   role: {
     type: String,
-    default: 'user'
+    default: 'guest'
   },
   provider: String,
   google: {}

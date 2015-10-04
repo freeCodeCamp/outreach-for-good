@@ -2,7 +2,7 @@ language: node_js
 node_js:
   - '0.12.7'
 env:
-  - APP_SECRET='app-secret'
+  - APP_SECRET='app-secret' SUPER_USER_EMAIL='test@example.com'
 before_script:
   - npm install -g bower grunt-cli
   - gem install sass

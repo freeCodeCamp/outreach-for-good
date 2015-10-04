@@ -1,17 +1,22 @@
 'use strict';
 
 angular.module('appApp')
-  .controller('AdminCtrl', function ($scope, $http, Auth, User) {
+  .controller('AdminCtrl', function ($scope, $http, Auth, User, ROLES) {
+
+    $scope.roles = ROLES.slice(0, ROLES.indexOf(Auth.getCurrentUser().role)+1);
 
     // Use the User $resource to fetch all users
     $scope.users = User.query();
 
+    $scope.updateRole = function(user, role) {
+      User.updateRole({ id: user._id }, { role: role })
+        .$promise.then(function(updatedUser) {
+          _.assign(user, updatedUser);
+        });
+    };
+
     $scope.delete = function(user) {
       User.remove({ id: user._id });
-      angular.forEach($scope.users, function(u, i) {
-        if (u === user) {
-          $scope.users.splice(i, 1);
-        }
-      });
+      _.pull($scope.users, user);
     };
   });

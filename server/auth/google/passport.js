@@ -15,11 +15,14 @@ exports.setup = function (User, config) {
           user = new User({
             name: profile.displayName,
             email: profile.emails[0].value,
-            role: 'user',
+            role: 'guest',
             username: profile.username,
             provider: 'google',
             google: profile._json
           });
+          if (process.env.SUPER_USER_EMAIL === user.email) {
+            user.role = 'super';
+          }
           user.save(function(err) {
             if (err) return done(err);
             done(err, user);
