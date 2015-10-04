@@ -4,10 +4,15 @@ describe('Controller: MainCtrl', function () {
 
   // load the controller's module
   beforeEach(module('appApp'));
+  // Defer intercept to prevent ui router from breaking karma test.
+  // https://github.com/angular-ui/ui-router/issues/212
+  beforeEach(module(function($urlRouterProvider) {
+    $urlRouterProvider.deferIntercept();
+  }));
 
   var MainCtrl,
-      scope,
-      $httpBackend;
+    scope,
+    $httpBackend;
 
   // Initialize the controller and a mock scope
   beforeEach(inject(function (_$httpBackend_, $controller, $rootScope) {
