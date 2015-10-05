@@ -16,7 +16,9 @@ angular.module('appApp')
     };
 
     $scope.delete = function(user) {
-      User.remove({ id: user._id });
-      _.pull($scope.users, user);
+      User.remove({ id: user._id })
+        .$promise.then(function() {
+          _.pull($scope.users, user);
+        });
     };
   });

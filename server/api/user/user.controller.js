@@ -54,11 +54,18 @@ exports.updateRole = function(req, res) {
 /**
  * Deletes a user
  * restriction: 'admin'
+ *
+ * A user can only delete users with equal or lower roles.
  */
 exports.destroy = function(req, res) {
-  User.findByIdAndRemove(req.params.id, function(err, user) {
+  User.findById(req.params.id, function(err, user) {
     if(err) return res.status(500).send(err);
-    return res.status(204).send('No Content');
+    auth.hasRole(user.role)(req, res, function() {
+      User.remove(user, function(err, user) {
+        if (err) return res.status(500).send(err);
+        return res.status(204).send('No Content');
+      });
+    });
   });
 };
 
