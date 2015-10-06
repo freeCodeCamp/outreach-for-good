@@ -15,8 +15,13 @@ var StudentSchema = new Schema({
   	_id: Number, // Student ID
   	lastName: String,
   	firstName: String,
-  	statistics: [schoolYearSchema]
+  	statistics: [SchoolYearSchema]
 });
 
-module.exports = mongoose.model('SchoolYear', schoolYearSchema);
-module.exports = mongoose.model('Student', StudentSchema);
+var SchoolYear = mongoose.model('SchoolYear', SchoolYearSchema);
+var Student = mongoose.model('Student', StudentSchema);
+
+module.exports = {
+		SchoolYear: SchoolYear,
+		Student: Student
+};
