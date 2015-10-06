@@ -1,5 +1,9 @@
 'use strict';
 
+
+/***
+TODO: LOCK DOWN ROUTES WITH AUTH ROLE CHECKS
+****/
 var express = require('express');
 var controller = require('./student.controller');
 
