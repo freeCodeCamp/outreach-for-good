@@ -3,7 +3,7 @@
 describe('Controller: MainCtrl', function () {
 
   // load the controller's module
-  beforeEach(module('appApp'));
+  beforeEach(module('app'));
   // Defer intercept to prevent ui router from breaking karma test.
   // https://github.com/angular-ui/ui-router/issues/212
   beforeEach(module(function($urlRouterProvider) {

@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('appApp')
+angular.module('app')
   .controller('AdminCtrl', function ($scope, $http, Auth, User, ROLES) {
 
     $scope.roles = ROLES.slice(0, ROLES.indexOf(Auth.getCurrentUser().role)+1);
