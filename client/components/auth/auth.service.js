@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('appApp')
+angular.module('app')
   .factory('Auth', function Auth(User, Role, $cookieStore) {
     var currentUser = {};
     if($cookieStore.get('token')) {

@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('appApp')
+angular.module('app')
   // Keep in sync with /server/config/environment/index.js
   .constant('ROLES', ['guest', 'teacher', 'manager', 'admin', 'super'])
   .factory('Role', function(ROLES) {

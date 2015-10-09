@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('appApp')
+angular.module('app')
   .config(function ($stateProvider) {
     $stateProvider
       .state('main', {
