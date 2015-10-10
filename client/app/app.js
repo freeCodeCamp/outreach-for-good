@@ -9,7 +9,9 @@ angular.module('app', [
 ])
   .config(function($stateProvider, $urlRouterProvider, $locationProvider,
     $httpProvider) {
-    $urlRouterProvider.otherwise('/');
+    $urlRouterProvider.otherwise(function($injector) {
+      $injector.get('$state').go('main');
+    });
 
     $locationProvider.html5Mode(true);
     $httpProvider.interceptors.push('authInterceptor');
@@ -41,33 +43,33 @@ angular.module('app', [
       }
     };
   })
-
+  
   .run(function($rootScope, $state, Auth, Role) {
-    $rootScope.$on('$stateChangeStart', function(event, next) {
+    // States that always bypass the authentication/authorization check.
+    var bypass = ['login', 'access.forbidden', 'access.guest'];
+    $rootScope.$on('$stateChangeStart', function(event, next, params) {
+      // Bypass the preventDefault when authentication and authorization pass
+      // http://stackoverflow.com/a/28827077/635411
+      if ($rootScope.stateChangeBypass || _.contains(bypass, next.name)) {
+        $rootScope.stateChangeBypass = false;
+        return;
+      }
+      event.preventDefault();
       Auth.isLoggedInAsync(function(loggedIn) {
-        if (!loggedIn) {
-          if (next.name !== 'login') {
-            // Redirect to login if route requires auth and user not logged in
-            event.preventDefault();
-            $state.go('login');
-          }
-        } else {
+        if (loggedIn) {
           var role = Auth.getCurrentUser().role;
           if (!Role.hasRole(role, 'teacher')) {
-            if (next.name !== 'access.guest') {
-              // Redirect to guest state if user not at least a teacher
-              event.preventDefault();
-              $state.go('access.guest');
-            }
-          } else if (next.auth) {
-            var requiredRole = next.auth.required;
-            if (!Role.hasRole(role, requiredRole) &&
-                next.name !== 'access.forbidden') {
-              // Redirect to forbidden state if user not at a high enough role
-              event.preventDefault();
-              $state.go('access.forbidden', {required: requiredRole});
-            }
+            // Redirect to guest state if user not at least a teacher
+            $state.go('access.guest');
+          } else if (next.auth && !Role.hasRole(role, next.auth.required)) {
+            // Redirect to forbidden state if user not at a high enough role
+            $state.go('access.forbidden', {required: next.auth.required});
+          } else {
+            $rootScope.stateChangeBypass = true;
+            $state.go(next, params);
           }
+        } else {
+          $state.go('login');
         }
       });
     });
