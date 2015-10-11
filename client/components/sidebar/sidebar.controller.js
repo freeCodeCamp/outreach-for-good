@@ -1,3 +1,5 @@
+'use strict';
+
 angular.module('app')
   .controller('SidebarCtrl', function ($scope, $state, Auth) {
 
@@ -7,7 +9,7 @@ angular.module('app')
     $scope.getCurrentUser = Auth.getCurrentUser;
     $scope.bool = false;
 
-    $scope.$on('toggle-sidebar', function(event, args) {
-      $scope.bool === true ? $scope.bool = false : $scope.bool = true;      
+    $scope.$on('toggle-sidebar', function() {
+      $scope.bool = !$scope.bool;
     });
   });
