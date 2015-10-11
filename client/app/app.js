@@ -43,10 +43,10 @@ angular.module('app', [
       }
     };
   })
-  
+
   .run(function($rootScope, $state, Auth, Role) {
     // States that always bypass the authentication/authorization check.
-    var bypass = ['login', 'access.forbidden', 'access.guest'];
+    var bypass = ['login', 'forbidden', 'guest'];
     $rootScope.$on('$stateChangeStart', function(event, next, params) {
       // Bypass the preventDefault when authentication and authorization pass
       // http://stackoverflow.com/a/28827077/635411
@@ -60,10 +60,10 @@ angular.module('app', [
           var role = Auth.getCurrentUser().role;
           if (!Role.hasRole(role, 'teacher')) {
             // Redirect to guest state if user not at least a teacher
-            $state.go('access.guest');
+            $state.go('guest');
           } else if (next.auth && !Role.hasRole(role, next.auth.required)) {
             // Redirect to forbidden state if user not at a high enough role
-            $state.go('access.forbidden', {required: next.auth.required});
+            $state.go('forbidden', {required: next.auth.required});
           } else {
             $rootScope.stateChangeBypass = true;
             $state.go(next, params);

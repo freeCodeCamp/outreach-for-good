@@ -1,0 +1,12 @@
+@import 'common';
+
+.access-page {
+  background-color: $cfa-background;
+  .banner {
+    text-align: center;
+    color: white;
+    img {
+      max-height: 250px;
+    }
+  }
+}
