@@ -1,24 +1,95 @@
-.fixed-brand{
-    width: auto;
+@import '../../app/common';
+
+$bgDefault: $cfa-background;
+$bgHighlight: lighten($cfa-background, 15%);
+$colDefault: #fff;
+$colHighlight: #c8f7c5;
+
+.navbar-default {
+  background-color: $bgDefault;
+  border: none;
+  .navbar-brand {
+    line-height: 54px;
+    padding: 0 15px;
+    color: $colDefault;
+    &:hover, &:focus {
+      color: $colHighlight;
+    }
+  }
+  .navbar-text {
+    color: $colDefault;
+    line-height: 54px;
+    margin: 0 15px;
+  }
+  .navbar-nav {
+    > li {
+      > a {
+        line-height: 54px;
+        padding: 0 15px;
+        color: $colDefault;
+        &:hover, &:focus {
+          color: $colHighlight;
+        }
+      }
+    }
+    > .active {
+      > a, > a:hover, > a:focus {
+        color: $colHighlight;
+        background-color: $bgHighlight;
+      }
+    }
+    > .open {
+      > a, > a:hover, > a:focus {
+        color: $colHighlight;
+        background-color: $bgHighlight;
+      }
+    }
+  }
+  .navbar-toggle {
+    line-height: 18px;
+    color: $colDefault;
+    border-color: $bgHighlight;
+    &:hover, &:focus {
+      color: $colHighlight;
+      background-color: $bgHighlight;
+    }
+    .icon-bar {
+      background-color: $colDefault;
+    }
+  }
+  .navbar-collapse,
+  .navbar-form {
+    border-color: $colDefault;
+  }
+  .navbar-link {
+    color: $colDefault;
+    &:hover {
+      color: $colHighlight;
+    }
+  }
 }
 
-.navbar-default, .navbar-collapse {
-	background: #265e6d;
-	color: white;
-}
-
-.navbar-default .navbar-brand,
-.navbar-default .navbar-brand:hover {
-    color: white;
+@media (max-width: 767px) {
+  .navbar-default .navbar-nav .open .dropdown-menu {
+    > li > a {
+      color: $colDefault;
+      &:hover, &:focus {
+        color: $colHighlight;
+      }
+    }
+    > .active {
+      > a, > a:hover, > a:focus, {
+        color: $colHighlight;
+        background-color: $bgHighlight;
+      }
+    }
+  }
 }
 
 .navbar {
-	border: none;
+  margin-bottom: 0;
 }
 
-.navbar-default .navbar-nav > li > a {
-    color: white !important;
-}
-p.navbar-text {
-    color: #C8F7C5 !important;
+#sidebar-toggle {
+  display: block;
 }
