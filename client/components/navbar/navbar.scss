@@ -1,0 +1,24 @@
+.fixed-brand{
+    width: auto;
+}
+
+.navbar-default, .navbar-collapse {
+	background: #265e6d;
+	color: white;
+}
+
+.navbar-default .navbar-brand,
+.navbar-default .navbar-brand:hover {
+    color: white;
+}
+
+.navbar {
+	border: none;
+}
+
+.navbar-default .navbar-nav > li > a {
+    color: white !important;
+}
+p.navbar-text {
+    color: #C8F7C5 !important;
+}
