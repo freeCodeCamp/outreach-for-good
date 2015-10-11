@@ -1,2 +1,5 @@
 <div ng-include="'components/navbar/navbar.html'"></div>
-<div ng-include="'components/sidebar/sidebar.html'"></div>
+<section class="main-view">
+  <div ng-include="'components/sidebar/sidebar.html'"></div>
+  <ui-view></ui-view>
+</section>

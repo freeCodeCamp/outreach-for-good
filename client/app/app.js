@@ -10,7 +10,7 @@ angular.module('app', [
   .config(function($stateProvider, $urlRouterProvider, $locationProvider,
     $httpProvider) {
     $urlRouterProvider.otherwise(function($injector) {
-      $injector.get('$state').go('main');
+      $injector.get('$state').go('dashboard');
     });
 
     $locationProvider.html5Mode(true);
