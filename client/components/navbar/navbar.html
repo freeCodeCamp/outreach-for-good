@@ -1,18 +1,22 @@
-<div ng-controller="NavbarCtrl">
-  <nav class="navbar navbar-default no-margin">
-    <!-- Brand and toggle get grouped for better mobile display -->
-      <div class="navbar-header fixed-brand">
-        <a class="navbar-brand" href="/main">Child First Authority</a>
-        <button class="navbar-toggle collapse in" ng-click="toggleSidebar()"> <i class="fa fa-bars fa-lg"></i></button>
-      </div><!-- navbar-header-->
-
-      <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-        <ul class="nav navbar-nav navbar-right">
-          <li ng-show="isLoggedIn()"><p class="navbar-text">Hello {{ getCurrentUser().name }}</p> </li>
-          <li ng-show="isAdmin()" ng-class="{active: isActive('admin')}"><a ui-sref="admin">Admin</a></li>
-          <li ng-hide="isLoggedIn()" ng-class="{active: isActive('login')}"><a ui-sref="login">Login</a></li>
-          <li ng-show="isLoggedIn()"><a href="" ng-click="logout()">Logout</a></li>
-        </ul>
-      </div><!-- bs-example-navbar-collapse-1 -->
-  </nav>
+<div class="navbar navbar-default navbar-static-top" ng-controller="NavbarCtrl">
+  <div class="container-fluid">
+    <div class="navbar-header fixed-brand">
+      <a ui-sref="main" class="navbar-brand">Child First Authority</a>
+      <button class="navbar-toggle" type="button" ng-click="isCollapsed = !isCollapsed">
+        <span class="sr-only">Toggle user menu</span>
+        <i class="fa fa-user fa-lg"></i>
+      </button>
+      <button class="navbar-toggle" type="button" id="sidebar-toggle" ng-click="toggleSidebar()">
+        <span class="sr-only">Toggle sidebar menu</span>
+        <i class="fa fa-bars fa-lg"></i>
+      </button>
+    </div>
+    <div collapse="isCollapsed" class="navbar-collapse collapse" id="navbar-main">
+      <ul class="nav navbar-nav navbar-right">
+        <li><p class="navbar-text">Hello {{ getCurrentUser().name }}</p></li>
+        <li ng-show="isAdmin()" ng-class="{active: isActive('admin')}"><a ui-sref="admin">Admin</a></li>
+        <li><a href="" ng-click="logout()">Logout</a></li>
+      </ul>
+    </div>
+  </div>
 </div>
