@@ -5,7 +5,8 @@ angular.module('app')
     $stateProvider
       .state('admin', {
         url: '/admin',
-        templateUrl: 'app/admin/admin.html',
+        parent: 'main',
+        templateUrl: 'app/main/admin/admin.html',
         controller: 'AdminCtrl',
         auth: { required: 'admin' }
       });

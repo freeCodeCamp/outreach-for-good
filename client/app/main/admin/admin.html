@@ -1,0 +1,25 @@
+<div class="admin">
+  <div class="row">
+    <div class="col-xs-12">
+      <h3>User Roles</h3>
+      <ul class="list-group">
+        <li class="list-group-item" ng-repeat="user in users">
+          <div class="btn-group pull-right" dropdown is-open="status.isopen">
+            <button type="button" class="btn btn-primary" dropdown-toggle ng-disabled="disabled">
+              {{ user.role }} <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" role="menu" aria-labelledby="{{ user.name }}-role">
+              <li role="menuitem" ng-repeat="role in roles"><a href="" ng-click="updateRole(user, role)">{{ role }}</a>
+              </li>
+            </ul>
+            <button ng-click="delete(user)" type="button" class="btn btn-danger">
+              <span class="glyphicon glyphicon-trash"></span>
+            </button>
+          </div>
+          <strong>{{user.name}}</strong><br>
+          <span class="text-muted">{{user.email}}</span>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
