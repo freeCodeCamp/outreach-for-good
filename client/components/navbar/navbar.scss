@@ -56,6 +56,15 @@ $colHighlight: #c8f7c5;
     .icon-bar {
       background-color: $colDefault;
     }
+    &.pull-left {
+      margin-left:-7px;
+    }
+    @media (max-width: 767px) {
+      &.pull-left {
+        margin-right: 0;
+        margin-left: 8px;
+      }
+    }
   }
   .navbar-collapse,
   .navbar-form {
