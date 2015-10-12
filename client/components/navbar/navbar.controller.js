@@ -23,5 +23,5 @@ angular.module('app')
 
     $scope.toggleSidebar = function() {
       $rootScope.$broadcast('toggle-sidebar');
-    }
+    };
   });
