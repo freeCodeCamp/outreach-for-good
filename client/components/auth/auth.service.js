@@ -1,10 +1,15 @@
 'use strict';
 
 angular.module('app')
-  .factory('Auth', function Auth(User, Role, $cookieStore) {
+  .constant('ROLES', ['guest', 'teacher', 'manager', 'admin', 'super'])
+  .factory('Auth', function Auth(User, ROLES, $cookieStore) {
     var currentUser = {};
-    if($cookieStore.get('token')) {
+    if ($cookieStore.get('token')) {
       currentUser = User.get();
+    }
+
+    function hasRole(userRole, roleRequired) {
+      return ROLES.indexOf(userRole) >= ROLES.indexOf(roleRequired);
     }
 
     return {
@@ -41,13 +46,13 @@ angular.module('app')
        * Waits for currentUser to resolve before checking if user is logged in
        */
       isLoggedInAsync: function(cb) {
-        if(currentUser.hasOwnProperty('$promise')) {
+        if (currentUser.hasOwnProperty('$promise')) {
           currentUser.$promise.then(function() {
             cb(true);
           }).catch(function() {
             cb(false);
           });
-        } else if(currentUser.hasOwnProperty('role')) {
+        } else if (currentUser.hasOwnProperty('role')) {
           cb(true);
         } else {
           cb(false);
@@ -55,13 +60,23 @@ angular.module('app')
       },
 
       /**
-       * Check if a user is an admin
+       * Check if a user is an at least requiredRole.
+       *
+       * Convenience function for checking if current user hasRole.
        *
        * @return {Boolean}
        */
-      isAdmin: function() {
-        return Role.hasRole(currentUser.role, 'admin');
+      userIs: function(requiredRole) {
+        return hasRole(currentUser.role, requiredRole);
       },
+
+      /**
+       * Returns if userRole sufficient for roleRequired.
+       *
+       * @param userRole
+       * @param roleRequired
+       */
+      hasRole: hasRole,
 
       /**
        * Get auth token

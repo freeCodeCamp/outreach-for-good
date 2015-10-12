@@ -5,12 +5,13 @@ angular.module('app', [
   'ngResource',
   'ngSanitize',
   'ui.router',
-  'ui.bootstrap'
+  'ui.bootstrap',
+  'matchmedia-ng'
 ])
   .config(function($stateProvider, $urlRouterProvider, $locationProvider,
     $httpProvider) {
     $urlRouterProvider.otherwise(function($injector) {
-      $injector.get('$state').go('main');
+      $injector.get('$state').go('dashboard');
     });
 
     $locationProvider.html5Mode(true);
@@ -43,10 +44,10 @@ angular.module('app', [
       }
     };
   })
-  
-  .run(function($rootScope, $state, Auth, Role) {
+
+  .run(function($rootScope, $state, Auth) {
     // States that always bypass the authentication/authorization check.
-    var bypass = ['login', 'access.forbidden', 'access.guest'];
+    var bypass = ['login', 'forbidden', 'guest'];
     $rootScope.$on('$stateChangeStart', function(event, next, params) {
       // Bypass the preventDefault when authentication and authorization pass
       // http://stackoverflow.com/a/28827077/635411
@@ -58,12 +59,12 @@ angular.module('app', [
       Auth.isLoggedInAsync(function(loggedIn) {
         if (loggedIn) {
           var role = Auth.getCurrentUser().role;
-          if (!Role.hasRole(role, 'teacher')) {
+          if (!Auth.hasRole(role, 'teacher')) {
             // Redirect to guest state if user not at least a teacher
-            $state.go('access.guest');
-          } else if (next.auth && !Role.hasRole(role, next.auth.required)) {
+            $state.go('guest');
+          } else if (next.auth && !Auth.hasRole(role, next.auth.required)) {
             // Redirect to forbidden state if user not at a high enough role
-            $state.go('access.forbidden', {required: next.auth.required});
+            $state.go('forbidden', {required: next.auth.required});
           } else {
             $rootScope.stateChangeBypass = true;
             $state.go(next, params);

@@ -28,7 +28,7 @@
     "filterDirectory": "client/app/",
     "serviceDirectory": "client/app/",
     "basePath": "client",
-    "moduleName": "",
+    "moduleName": "app",
     "filters": [
       "uirouter"
     ],

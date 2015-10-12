@@ -13,7 +13,8 @@
     "angular-bootstrap": "~0.11.0",
     "font-awesome": ">=4.1.0",
     "lodash": "~2.4.1",
-    "angular-ui-router": "~0.2.15"
+    "angular-ui-router": "~0.2.15",
+    "matchmedia-ng": "~1.0.5"
   },
   "devDependencies": {
     "angular-mocks": ">=1.2.*",
