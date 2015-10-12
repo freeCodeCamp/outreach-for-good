@@ -1,76 +1,61 @@
 /* Toggle Styles */
- 
-.sidebar-wrapper {
-    z-index: 1000;
-    position: absolute; 
-    left: 250px;
-    width: 50px;
-    height: 100%;
-    margin-left: -250px;
-    overflow-y: auto;
-    background: #1BA39C;
-    -webkit-transition: all 0.5s ease;
-    -moz-transition: all 0.5s ease;
-    -o-transition: all 0.5s ease;
-    transition: all 0.5s ease;
-}
 
-.sidebar-wrapper.toggle {
-    width: 250px;
+.sidebar-wrapper {
+  z-index: 1000;
+  position: absolute;
+  left: 0;
+  width: 250px;
+  top: 54px;
+  bottom: 0;
+  overflow-y: auto;
+  background: #1BA39C;
+  transition: all 0.5s ease;
+  &.isCollapsed {
+    width: 0;
+  }
+  @media(min-width: 768px) {
+    &.isCollapsed {
+      width: 50px;
+    }
+  }
 }
 
 /* Sidebar Styles */
- 
+
 .sidebar-nav {
-    position: absolute;
-    top: 0;
-    width: 250px;
-    margin: 0;
-    padding: 0;
-    list-style: none;
-
-    li {
-        text-indent: 15px;
-        line-height: 40px;
-        
-        a {
-            display: block;
-            text-decoration: none;
-            color: white;
-        }
-        a:hover {
-            text-decoration: none;
-            color: #fff;
-            background: rgba(255,255,255,0.2);
-            border-left: #D35400 2px solid;
-        }
-        a:active,
-        a:focus {
-            text-decoration: none;
-        }
+  position: absolute;
+  top: 0;
+  width: 250px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  li {
+    text-indent: 15px;
+    line-height: 40px;
+    a {
+      display: block;
+      text-decoration: none;
+      color: white;
     }
-}
- 
-.sidebar-nav > .sidebar-brand {
-    height: 65px;
-    font-size: 18px;
-    line-height: 60px;
-}
- 
-.sidebar-nav > .sidebar-brand a {
-    color: #999999;
-}
- 
-.sidebar-nav > .sidebar-brand a:hover {
-    color: #fff;
-    background: none;
-}
-.no-margin{
-    margin:0;
+    a:hover {
+      text-decoration: none;
+      color: #fff;
+      background: rgba(255, 255, 255, 0.2);
+      border-left: #D35400 2px solid;
+    }
+    a:active,
+    a:focus {
+      text-decoration: none;
+    }
+  }
 }
 
-.nav-pills > li.active > a, 
+.no-margin {
+  margin: 0;
+}
+
+.nav-pills > li.active > a,
 .nav-pills > li.active > a:hover {
-	background: #F4B350;
-	color: white;
+  background: #F4B350;
+  color: white;
 }

@@ -5,6 +5,7 @@ angular.module('app')
     $stateProvider
       .state('main', {
         abstract: true,
-        templateUrl: 'app/main/main.html'
+        templateUrl: 'app/main/main.html',
+        controller: 'MainCtrl'
       });
   });

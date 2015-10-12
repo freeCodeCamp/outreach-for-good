@@ -1,5 +1,7 @@
 <div ng-include="'components/navbar/navbar.html'"></div>
-<section class="main-view">
-  <div ng-include="'components/sidebar/sidebar.html'"></div>
-  <ui-view></ui-view>
+<div ng-include="'components/sidebar/sidebar.html'"></div>
+<section id="main-view" ng-class="{isCollapsed: sidebar.isCollapsed}">
+  <div class="container-fluid">
+    <ui-view></ui-view>
+  </div>
 </section>
