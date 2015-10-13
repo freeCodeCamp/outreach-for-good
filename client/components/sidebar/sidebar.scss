@@ -1,5 +1,8 @@
 /* Toggle Styles */
 
+$sidebar-background: #1BA39C;
+$colHighlight: #c8f7c5;
+
 .sidebar-wrapper {
   z-index: 1000;
   position: absolute;
@@ -8,7 +11,8 @@
   top: 54px;
   bottom: 0;
   overflow-y: auto;
-  background: #1BA39C;
+  overflow-x: hidden;
+  background: $sidebar-background;
   transition: all 0.5s ease;
   &.isCollapsed {
     width: 0;
@@ -30,32 +34,43 @@
   padding: 0;
   list-style: none;
   li {
-    text-indent: 15px;
-    line-height: 40px;
+    line-height: 50px;
+    span {
+      width: 50px;
+      height: 50px;
+      i.fa-stack-1x {
+        height: 50px;
+        line-height: 50px;
+      }
+    }
     a {
       display: block;
       text-decoration: none;
-      color: white;
+      color: #fff;
     }
     a:hover {
-      text-decoration: none;
       color: #fff;
       background: rgba(255, 255, 255, 0.2);
       border-left: #D35400 2px solid;
     }
-    a:active,
-    a:focus {
-      text-decoration: none;
-    }
   }
 }
 
-.no-margin {
+.nav-stacked > li + li {
   margin: 0;
 }
 
-.nav-pills > li.active > a,
-.nav-pills > li.active > a:hover {
-  background: #F4B350;
-  color: white;
+.nav-pills {
+  li, li.active {
+    a, a:hover {
+      color: #fff;
+      border-radius: 0;
+    }
+  }
+  li.active {
+    a, a:hover, a:focus {
+      background-color: darken($sidebar-background, 20%);
+      color: $colHighlight;
+    }
+  }
 }
