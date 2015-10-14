@@ -1,5 +1,5 @@
 'use strict';
 
 angular.module('app')
-  .controller('PDFUploadCtrl', function ($scope) {
+  .controller('PDFUploadCtrl', function() {
   });
