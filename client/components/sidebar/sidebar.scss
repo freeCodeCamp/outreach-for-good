@@ -19,7 +19,7 @@ $colHighlight: #c8f7c5;
   }
   @media(min-width: 768px) {
     &.isCollapsed {
-      width: 50px;
+      width: 54px;
     }
   }
 }
@@ -34,13 +34,13 @@ $colHighlight: #c8f7c5;
   padding: 0;
   list-style: none;
   li {
-    line-height: 50px;
+    line-height: 54px;
     span {
-      width: 50px;
-      height: 50px;
+      width: 54px;
+      height: 54px;
       i.fa-stack-1x {
-        height: 50px;
-        line-height: 50px;
+        height: 54px;
+        line-height: 54px;
       }
     }
     a {
