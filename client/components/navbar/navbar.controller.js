@@ -15,9 +15,13 @@ angular.module('app').controller('NavbarCtrl',
       return $state.includes('main');
     };
 
-    matchmedia.onPhone(function(mediaQueryList) {
+    var unregister = matchmedia.onPhone(function(mediaQueryList) {
       if (!mediaQueryList.matches) {
         $scope.isCollapsed = true;
       }
+    });
+
+    $scope.$on('$destroy', function() {
+      unregister();
     });
   });

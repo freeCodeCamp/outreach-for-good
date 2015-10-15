@@ -1,22 +1,13 @@
 'use strict';
 
-angular.module('app').factory('Sidebar', function(matchmedia) {
-  var collapsed = true;
-
-  function isCollapsed() {
-    return collapsed;
+angular.module('app').factory('Sidebar', function() {
+  function Sidebar() {
+    this.isCollapsed = true;
   }
 
-  function toggle() {
-    collapsed = !collapsed;
-  }
-
-  matchmedia.onPhone(function(mediaQueryList) {
-    collapsed = mediaQueryList.matches;
-  });
-
-  return {
-    isCollapsed: isCollapsed,
-    toggle: toggle
+  Sidebar.prototype.toggle = function() {
+    this.isCollapsed = !this.isCollapsed;
   };
+
+  return new Sidebar();
 });
