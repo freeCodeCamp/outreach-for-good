@@ -23,4 +23,12 @@ angular.module('app').controller('SidebarCtrl',
       }
       $state.go(state);
     };
+
+    var unregister = matchmedia.onPhone(function(mediaQueryList) {
+      $scope.sidebar.isCollapsed = mediaQueryList.matches;
+    });
+
+    $scope.$on('$destroy', function() {
+      unregister();
+    });
   });

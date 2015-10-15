@@ -17,13 +17,12 @@ describe('Service: SidebarService', function() {
   }));
 
   it('should be created with isCollapsed true', function() {
-    console.log(sidebar);
-    expect(sidebar.isCollapsed()).toBe(true);
+    expect(sidebar.isCollapsed).toBe(true);
   });
 
   it('should toggle isCollapsed when toggle() is called', function() {
-    expect(sidebar.isCollapsed()).toBe(true);
+    expect(sidebar.isCollapsed).toBe(true);
     sidebar.toggle();
-    expect(sidebar.isCollapsed()).toBe(false);
+    expect(sidebar.isCollapsed).toBe(false);
   });
 });

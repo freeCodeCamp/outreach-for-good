@@ -1,5 +1,5 @@
 <div ng-controller="SidebarCtrl">
-  <div class="sidebar-wrapper" ng-class="{isCollapsed: sidebar.isCollapsed()}">
+  <div class="sidebar-wrapper" ng-class="{isCollapsed: sidebar.isCollapsed}">
     <ul class="sidebar-nav nav-pills nav-stacked" id="menu">
       <li ng-repeat="state in states"
         ng-class="{active: active(state.name)}"
