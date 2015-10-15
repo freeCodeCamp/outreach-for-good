@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('app')
-  .config(function ($stateProvider) {
+  .config(function($stateProvider) {
     $stateProvider
       .state('PDFUpload', {
         url: '/PDFUpload',
