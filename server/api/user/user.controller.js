@@ -2,7 +2,6 @@
 
 var User = require('./user.model');
 var passport = require('passport');
-var config = require('../../config/environment');
 var auth = require('../../auth/auth.service');
 
 /**
