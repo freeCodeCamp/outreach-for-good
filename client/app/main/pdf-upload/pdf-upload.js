@@ -3,10 +3,10 @@
 angular.module('app')
   .config(function($stateProvider) {
     $stateProvider
-      .state('PDFUpload', {
-        url: '/PDFUpload',
+      .state('pdf-upload', {
+        url: '/pdf-upload',
         parent: 'main',
-        templateUrl: 'app/main/PDFUpload/PDFUpload.html',
+        templateUrl: 'app/main/pdf-upload/pdf-upload.html',
         controller: 'PDFUploadCtrl'
       });
   });
