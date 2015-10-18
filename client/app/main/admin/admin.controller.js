@@ -1,24 +1,32 @@
 'use strict';
 
-angular.module('app')
-  .controller('AdminCtrl', function ($scope, $http, Auth, User, ROLES) {
+var app = angular.module('app');
 
-    $scope.roles = ROLES.slice(0, ROLES.indexOf(Auth.getCurrentUser().role)+1);
+app.controller('AdminCtrl', function($scope, $http, Auth, User, Modal, ROLES) {
 
-    // Use the User $resource to fetch all users
-    $scope.users = User.query();
+  $scope.roles = ROLES.slice(0, ROLES.indexOf(Auth.getCurrentUser().role) + 1);
 
-    $scope.updateRole = function(user, role) {
-      User.updateRole({ id: user._id }, { role: role })
+  $scope.users = User.query();
+
+  $scope.updateRole = function(user, role) {
+    if (user.role === role) {
+      return;
+    }
+    var updateFn = function() {
+      User.updateRole({id: user._id}, {role: role})
         .$promise.then(function(updatedUser) {
           _.assign(user, updatedUser);
         });
     };
+    Modal.confirm.update(updateFn)(user.name, 'Role', user.role, role);
+  };
 
-    $scope.delete = function(user) {
-      User.remove({ id: user._id })
-        .$promise.then(function() {
-          _.pull($scope.users, user);
-        });
+  $scope.delete = function(user) {
+    var deleteFn = function() {
+      User.remove({id: user._id}).$promise.then(function() {
+        _.pull($scope.users, user);
+      });
     };
-  });
+    Modal.confirm.delete(deleteFn)(user.name);
+  };
+});
