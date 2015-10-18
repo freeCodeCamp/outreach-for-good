@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Directive: navbar', function() {
+describe('Directive: sidebar', function() {
 
   // load the directive's module and view
   beforeEach(module('app'));
@@ -9,19 +9,19 @@ describe('Directive: navbar', function() {
   beforeEach(module(function($urlRouterProvider) {
     $urlRouterProvider.deferIntercept();
   }));
-  beforeEach(module('components/navbar/navbar.html'));
+  beforeEach(module('components/sidebar/sidebar.html'));
 
   var element, scope;
 
   beforeEach(inject(function($rootScope, $compile) {
     scope = $rootScope.$new();
-    element = angular.element('<navbar></navbar>');
+    element = angular.element('<sidebar></sidebar>');
     element = $compile(element)(scope);
     scope.$apply();
   }));
 
-  it('should create a navbar with an isolated scope', function() {
+  it('should create a sidbar with an isolated scope', function() {
     var isolated = element.isolateScope();
-    expect(isolated.isCollapsed).toBe(true);
+    expect(isolated.sidebar.isCollapsed).toBe(true);
   });
 });
