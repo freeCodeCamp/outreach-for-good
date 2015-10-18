@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('app').controller('NavbarCtrl',
-  function($scope, $state, $rootScope, Auth, Sidebar, matchmedia) {
+  function($scope, $state, $rootScope, Auth, Sidebar) {
     $scope.isCollapsed = true;
     $scope.getCurrentUser = Auth.getCurrentUser;
     $scope.sidebar = Sidebar;
@@ -14,14 +14,4 @@ angular.module('app').controller('NavbarCtrl',
     $scope.showSidebarToggle = function() {
       return $state.includes('main');
     };
-
-    var unregister = matchmedia.onPhone(function(mediaQueryList) {
-      if (!mediaQueryList.matches) {
-        $scope.isCollapsed = true;
-      }
-    });
-
-    $scope.$on('$destroy', function() {
-      unregister();
-    });
   });
