@@ -1,19 +1,14 @@
 'use strict';
 
 var mongoose = require('mongoose'),
-    Schema = mongoose.Schema;
+  Schema = mongoose.Schema;
 
 var StudentSchema = new Schema({
-  	_id: Number, // Student ID
-  	LastName: String,
-  	FirstName: String,
-  	Statistics: [{
-  		SchoolYear: Number,
-  		AllAbsences: Number,
-  		Tardy: Number,
-  		Present: Number,
-  		Enrolled: Number
-  	}]
+  studentId: {type: Number, required: true, index: true},
+  lastName: {type: String, required: true, trim: true},
+  firstName: {type: String, required: true, trim: true},
+  currentSchool: {type: Schema.Types.ObjectId, ref: 'School'},
+  active: {type: Boolean, default: true}
 });
 
 module.exports = mongoose.model('Student', StudentSchema);
