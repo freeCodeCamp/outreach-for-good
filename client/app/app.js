@@ -1,24 +1,25 @@
 'use strict';
 
-angular.module('app', [
+var app = angular.module('app', [
   'ngCookies',
   'ngResource',
   'ngSanitize',
   'ui.router',
   'ui.bootstrap',
   'matchmedia-ng'
-])
-  .config(function($stateProvider, $urlRouterProvider, $locationProvider,
-    $httpProvider) {
-    $urlRouterProvider.otherwise(function($injector) {
-      $injector.get('$state').go('dashboard');
-    });
+]);
 
-    $locationProvider.html5Mode(true);
-    $httpProvider.interceptors.push('authInterceptor');
-  })
+app.config(function($stateProvider, $urlRouterProvider, $locationProvider,
+  $httpProvider) {
+  $urlRouterProvider.otherwise(function($injector) {
+    $injector.get('$state').go('dashboard');
+  });
 
-  .factory('authInterceptor',
+  $locationProvider.html5Mode(true);
+  $httpProvider.interceptors.push('authInterceptor');
+});
+
+app.factory('authInterceptor',
   function($rootScope, $q, $cookieStore, $injector) {
     return {
       // Add authorization token to headers
@@ -32,46 +33,57 @@ angular.module('app', [
 
       // Intercept 401s and redirect you to login
       responseError: function(response) {
-        if (response.status === 401) {
-          // remove any stale tokens
-          $cookieStore.remove('token');
-          // Use injector to get around circular dependency.
-          $injector.get('$state').go('login');
-          return $q.reject(response);
-        } else {
-          return $q.reject(response);
+        var $state = $injector.get('$state');
+        switch (response.status) {
+          case 401:
+            // remove any stale tokens
+            $cookieStore.remove('token');
+            // Use injector to get around circular dependency.
+            $state.go('login');
+            break;
+          case 403:
+            console.log(response);
+            $state.go('forbidden', {reason: response.reason});
+            break;
         }
+        return $q.reject(response);
       }
     };
-  })
+  });
 
-  .run(function($rootScope, $state, Auth) {
-    // States that always bypass the authentication/authorization check.
-    var bypass = ['login', 'forbidden', 'guest'];
-    $rootScope.$on('$stateChangeStart', function(event, next, params) {
-      // Bypass the preventDefault when authentication and authorization pass
-      // http://stackoverflow.com/a/28827077/635411
-      if ($rootScope.stateChangeBypass || _.contains(bypass, next.name)) {
-        $rootScope.stateChangeBypass = false;
-        return;
-      }
-      event.preventDefault();
-      Auth.isLoggedInAsync(function(loggedIn) {
-        if (loggedIn) {
-          var role = Auth.getCurrentUser().role;
-          if (!Auth.hasRole(role, 'teacher')) {
-            // Redirect to guest state if user not at least a teacher
-            $state.go('guest');
-          } else if (next.auth && !Auth.hasRole(role, next.auth.required)) {
-            // Redirect to forbidden state if user not at a high enough role
-            $state.go('forbidden', {required: next.auth.required});
-          } else {
-            $rootScope.stateChangeBypass = true;
-            $state.go(next, params);
-          }
+function roleMsg(userRole, roleRequired) {
+  return 'Your current role of ' + userRole +
+         ' does not meet the minimum required role of ' +
+         roleRequired + ' for the requested page.';
+}
+
+app.run(function($rootScope, $state, Auth) {
+  // States that always bypass the authentication/authorization check.
+  var bypass = ['login', 'forbidden', 'guest'];
+  $rootScope.$on('$stateChangeStart', function(event, next, params) {
+    // Bypass the preventDefault when authentication and authorization pass
+    // http://stackoverflow.com/a/28827077/635411
+    if ($rootScope.stateChangeBypass || _.contains(bypass, next.name)) {
+      $rootScope.stateChangeBypass = false;
+      return;
+    }
+    event.preventDefault();
+    Auth.isLoggedInAsync(function(loggedIn) {
+      if (loggedIn) {
+        var role = Auth.getCurrentUser().role;
+        if (!Auth.hasRole(role, 'teacher')) {
+          // Redirect to guest state if user not at least a teacher
+          $state.go('guest');
+        } else if (next.auth && !Auth.hasRole(role, next.auth.required)) {
+          // Redirect to forbidden state if user not at a high enough role
+          $state.go('forbidden', {reason: roleMsg(role, next.auth.required)});
         } else {
-          $state.go('login');
+          $rootScope.stateChangeBypass = true;
+          $state.go(next, params);
         }
-      });
+      } else {
+        $state.go('login');
+      }
     });
   });
+});
