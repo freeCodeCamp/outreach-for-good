@@ -1,4 +1,4 @@
-<div class="navbar navbar-default navbar-fixed-top" ng-controller="NavbarCtrl">
+<div class="navbar navbar-default navbar-fixed-top">
   <div class="navbar-header fixed-brand">
     <button class="navbar-toggle pull-left"
       type="button"
@@ -9,7 +9,10 @@
       <i class="fa fa-bars fa-lg"></i>
     </button>
     <a ui-sref="dashboard" class="navbar-brand">Child First Authority</a>
-    <button class="navbar-toggle" type="button" ng-click="isCollapsed = !isCollapsed">
+    <button class="navbar-toggle"
+      type="button"
+      ng-click="isCollapsed = !isCollapsed"
+      ng-blur="isCollapsed = true">
       <span class="sr-only">Toggle user menu</span>
       <i class="fa fa-user fa-lg"></i>
     </button>
