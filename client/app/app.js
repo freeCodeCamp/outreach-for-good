@@ -4,6 +4,7 @@ var app = angular.module('app', [
   'ngCookies',
   'ngResource',
   'ngSanitize',
+  'ui.grid',
   'ui.router',
   'ui.bootstrap',
   'matchmedia-ng'
