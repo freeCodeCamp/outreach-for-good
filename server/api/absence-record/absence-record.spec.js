@@ -2,7 +2,7 @@
 
 var should = require('should');
 var app = require('../../app');
-var AbsenceRecord = require('./absence_record.model');
+var AbsenceRecord = require('./absence-record.model');
 
 describe('AbsenceRecord Model', function() {
   var record = new AbsenceRecord({
