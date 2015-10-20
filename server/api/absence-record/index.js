@@ -1,7 +1,7 @@
 'use strict';
 
 var express = require('express');
-var controller = require('./absence_record.controller');
+var controller = require('./absence-record.controller');
 var auth = require('../../auth/auth.service');
 
 var router = express.Router();
