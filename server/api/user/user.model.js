@@ -5,13 +5,14 @@ var Schema = mongoose.Schema;
 
 var UserSchema = new Schema({
   name: String,
-  email: { type: String, lowercase: true },
+  email: {type: String, lowercase: true},
   role: {
     type: String,
     default: 'guest'
   },
   provider: String,
-  google: {}
+  google: {},
+  assignment: {type: Schema.Types.ObjectId, ref: 'School'}
 });
 
 // Public profile information

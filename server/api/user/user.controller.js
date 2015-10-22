@@ -9,7 +9,7 @@ var auth = require('../../auth/auth.service');
  * restriction: 'admin'
  */
 exports.index = function(req, res) {
-  User.find({}, function (err, users) {
+  User.find().populate('assignment').exec(function (err, users) {
     if(err) return res.status(500).send(err);
     res.status(200).json(users);
   });
@@ -29,7 +29,7 @@ exports.show = function (req, res, next) {
 };
 
 /**
- * Change a users' role.
+ * Change a user's role.
  * restriction: 'admin'
  *
  * A user can only assign roles for users with equal or lower roles.
@@ -45,6 +45,23 @@ exports.updateRole = function(req, res) {
           if (err) return res.status(500).send(err);
           res.json(user);
         });
+      });
+    });
+  });
+};
+
+/**
+ * Change a user's assigned school.
+ * restriction: 'admin'
+ */
+exports.updateAssignment = function(req, res) {
+  User.findById(req.params.id, function(err, user) {
+    if(err) return res.status(500).send(err);
+    user.assignment = req.body.assignment;
+    user.save(function(err) {
+      if (err) return res.status(500).send(err);
+      user.populate('assignment', function() {
+        res.json(user);
       });
     });
   });

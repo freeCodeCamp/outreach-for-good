@@ -1,6 +1,10 @@
-<ui-select ng-model="dummy" append-to-body="true" on-select="grid.appScope.updateRole($item, row.entity)">
-  <ui-select-match placeholder="{{MODEL_COL_FIELD}}">{{ COL_FIELD }}</ui-select-match>
-  <ui-select-choices repeat="item in grid.appScope.roles | filter: $select.search">
-    <span>{{ item }}</span>
-  </ui-select-choices>
-</ui-select>
+<div class="btn-group role-dropdown" uib-dropdown dropdown-append-to-body>
+  <button id="btn-append-to-body" type="button" class="btn btn-primary btn-block" uib-dropdown-toggle>
+    {{ COL_FIELD }}
+  </button>
+  <ul class="uib-dropdown-menu role-menu" role="menu" aria-labelledby="btn-append-to-body">
+    <li role="menuitem" ng-repeat="role in grid.appScope.roles" ng-click="grid.appScope.updateRole(role, row.entity)">
+      <a href>{{role}}</a>
+    </li>
+  </ul>
+</div>
