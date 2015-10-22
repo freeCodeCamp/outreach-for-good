@@ -1,0 +1,6 @@
+<ui-select ng-model="dummy" append-to-body="true" on-select="grid.appScope.updateRole($item, row.entity)">
+  <ui-select-match placeholder="{{MODEL_COL_FIELD}}">{{ COL_FIELD }}</ui-select-match>
+  <ui-select-choices repeat="item in grid.appScope.roles | filter: $select.search">
+    <span>{{ item }}</span>
+  </ui-select-choices>
+</ui-select>
