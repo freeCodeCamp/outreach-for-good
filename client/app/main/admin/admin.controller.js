@@ -76,12 +76,12 @@ function AdminCtrl($scope, Auth, User, School, Modal, ROLES) {
   };
 
   $scope.deleteUser = function(user) {
-    var deleteFn = function() {
+    var deleteUserFn = function() {
       User.remove({id: user._id}).$promise.then(function() {
         _.pull($scope.userGridOptions.data, user);
       });
     };
-    Modal.confirm.delete(deleteFn)(user.name);
+    Modal.confirm.delete(deleteUserFn)(user.name);
   };
 
   // Schools
@@ -103,13 +103,23 @@ function AdminCtrl($scope, Auth, User, School, Modal, ROLES) {
     $scope.schoolGridOptions.data = School.query();
   };
 
+  $scope.addSchool = function() {
+    var addSchoolFn = function(model) {
+      return School.save({}, model, function(school) {
+        $scope.schoolGridOptions.data.push(school);
+      });
+    };
+    Modal.form('Add New School', 'app/main/admin/add-school-modal.html',
+      addSchoolFn);
+  };
+
   $scope.deleteSchool = function(school) {
-    var deleteFn = function() {
+    var deleteSchoolFn = function() {
       School.remove({id: school._id}).$promise.then(function() {
         _.pull($scope.schoolGridOptions.data, school);
       });
     };
-    Modal.confirm.delete(deleteFn)(school.name);
+    Modal.confirm.delete(deleteSchoolFn)(school.name);
   };
 }
 

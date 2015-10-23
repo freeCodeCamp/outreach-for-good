@@ -13,7 +13,9 @@
   </div>
   <div class="row school">
     <div class="col-xs-12">
-      <h3>Schools<span><button class="btn btn-success pull-right"><i class="fa fa-lg fa-plus"></i></button></span></h3>
+      <h3>Schools
+        <a href><i ng-click="addSchool()" class="fa fa-plus-circle"></i></a>
+      </h3>
       <div ui-grid="schoolGridOptions"
         ui-grid-auto-resize
         ui-grid-selection

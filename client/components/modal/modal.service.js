@@ -10,7 +10,7 @@ app.factory('Modal', function($rootScope, $uibModal) {
    *     modal
    * @return {Object}            - the instance $uibModal.open() returns
    */
-  function openModal(scope, modalClass) {
+  function openModal(scope, modalClass, templateUrl) {
     var modalScope = $rootScope.$new();
     scope = scope || {};
     modalClass = modalClass || 'modal-default';
@@ -18,7 +18,7 @@ app.factory('Modal', function($rootScope, $uibModal) {
     angular.extend(modalScope, scope);
 
     return $uibModal.open({
-      templateUrl: 'components/modal/modal.html',
+      templateUrl: templateUrl || 'components/modal/modal.html',
       windowClass: modalClass,
       scope: modalScope
     });
@@ -135,6 +135,37 @@ app.factory('Modal', function($rootScope, $uibModal) {
           });
         };
       }
+    },
+    form: function(title, templateUrl, cb) {
+      var formModal = openModal({
+        modal: {
+          dismissable: true,
+          title: title,
+          templateUrl: templateUrl,
+          submitFn: function(form, model) {
+            if (form.$valid) {
+              cb(model).$promise.then(function() {
+                formModal.close();
+              }, function() {
+                // TODO: Handle error from submitting form.
+              });
+            }
+          },
+          buttons: [{
+            classes: 'btn-success',
+            text: 'Submit',
+            type: 'submit',
+            click: angular.noop
+          }, {
+            classes: 'btn-default',
+            text: 'Cancel',
+            click: function(e) {
+              formModal.dismiss(e);
+            }
+          }]
+        },
+        model: {}
+      }, 'modal-success', 'components/modal/form-modal.html');
     }
   };
 });
