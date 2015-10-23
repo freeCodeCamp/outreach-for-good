@@ -4,9 +4,14 @@ var app = angular.module('app', [
   'ngCookies',
   'ngResource',
   'ngSanitize',
-  'ui.grid',
-  'ui.router',
   'ui.bootstrap',
+  'ui.grid',
+  'ui.grid.autoResize',
+  'ui.grid.exporter',
+  'ui.grid.pinning',
+  'ui.grid.selection',
+  'ui.router',
+  'ui.select',
   'matchmedia-ng'
 ]);
 

@@ -3,6 +3,51 @@
     margin-top: 10px;
   }
   .trash {
-    color:rgb(209, 91, 71);
+    color: rgb(209, 91, 71);
+  }
+  .user-grid {
+    min-height: 200px;
+    vertical-align: middle;
+    .action-col {
+      padding: 0;
+      text-align: center;
+    }
+    .ui-grid-cell,
+    .ui-grid-header-cell-label {
+      line-height: 54px;
+    }
+    .role-col {
+      padding: 0;
+      .ui-select-match {
+        padding: 0 5px;
+      }
+    }
+    .ui-grid-cell-contents {
+      padding: 0 5px;
+    }
+    .ui-grid-selection-row-header-buttons {
+      padding: 5px 0;
+      &:not(.ui-grid-header-cell-primary-focus) {
+        line-height: 44px;
+      }
+    }
+    .ui-grid-header-cell {
+      height: 54px;
+    }
+    .ui-grid-menu-button {
+      height: 30px;
+      padding: 2px 0;
+      .ui-grid-icon-menu {
+        margin-left: 3px;
+      }
+    }
+    .ui-grid-icon-cancel,
+    .ui-grid-menu-close-button,
+    .ui-grid-column-menu-button {
+      &:focus {
+        outline: none;
+        display: none;
+      }
+    }
   }
 }
