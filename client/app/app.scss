@@ -22,6 +22,9 @@ body,
   width: 100%;
 }
 
+// https://angular-ui.github.io/bootstrap/#/getting_started
+.nav, .pagination, .carousel, .panel-title a { cursor: pointer; }
+
 // Component styles are injected through grunt
 // injector
 @import 'access/access.scss';
