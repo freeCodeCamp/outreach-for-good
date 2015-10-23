@@ -1,0 +1,15 @@
+<div ng-if="row.entity.role === 'teacher'" class="btn-group assignment-dropdown" uib-dropdown dropdown-append-to-body>
+  <button id="btn-append-to-body" type="button" class="btn btn-info btn-block" uib-dropdown-toggle>
+    {{COL_FIELD.name || 'None'}}
+  </button>
+  <ul class="uib-dropdown-menu assignment-menu" role="menu" aria-labelledby="btn-append-to-body">
+    <li role="menuitem" ng-click="grid.appScope.updateAssignment(undefined, row.entity)">
+      <a href>Remove Assignment</a>
+    </li>
+    <li role="menuitem"
+      ng-repeat="school in grid.appScope.schoolGridOptions.data"
+      ng-click="grid.appScope.updateAssignment(school, row.entity)">
+      <a href>{{school.name || 'None'}}</a>
+    </li>
+  </ul>
+</div>

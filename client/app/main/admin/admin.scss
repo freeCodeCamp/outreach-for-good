@@ -7,6 +7,7 @@
   }
   .grid {
     min-height: 200px;
+    max-height: 500px;
     vertical-align: middle;
     .action-col {
       padding: 0;
@@ -15,12 +16,6 @@
     .ui-grid-cell,
     .ui-grid-header-cell-label {
       line-height: 54px;
-    }
-    .role-col {
-      padding: 0;
-      .ui-select-match {
-        padding: 0 5px;
-      }
     }
     .ui-grid-cell-contents {
       padding: 0 5px;
@@ -51,11 +46,29 @@
     }
   }
   #user-grid {
-    .role-col {
-      padding: 0;
-      .ui-select-match {
-        padding: 0 5px;
+    .role-dropdown {
+      width: 100%;
+      padding: 0 5px;
+    }
+    .assignment-dropdown {
+      width: 100%;
+      padding: 0 5px;
+      button {
+        padding-left: 8px;
+        text-align: left;
       }
     }
+  }
+}
+.dropdown-menu {
+  &.role-menu {
+    min-width: 125px;
+  }
+  &.assignment-menu {
+    min-width: 200px;
+  }
+  li a {
+    line-height: 30px;
+    vertical-align: middle;
   }
 }
