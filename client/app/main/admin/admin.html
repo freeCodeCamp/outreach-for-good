@@ -1,13 +1,24 @@
 <div class="admin">
-  <div class="row">
+  <div class="row user">
     <div class="col-xs-12">
-      <h3>User Roles</h3>
+      <h3>Users</h3>
       <div ui-grid="userGridOptions"
         ui-grid-auto-resize
         ui-grid-pinning
         ui-grid-exporter
         ui-grid-selection
-        class="user-grid"></div>
+        id="user-grid"
+        class="grid"></div>
+    </div>
+  </div>
+  <div class="row school">
+    <div class="col-xs-12">
+      <h3>Schools<span><button class="btn btn-success pull-right"><i class="fa fa-lg fa-plus"></i></button></span></h3>
+      <div ui-grid="schoolGridOptions"
+        ui-grid-auto-resize
+        ui-grid-selection
+        id="school-grid"
+        class="grid"></div>
     </div>
   </div>
 </div>

@@ -2,10 +2,10 @@
   h3 {
     margin-top: 10px;
   }
-  .trash {
-    color: rgb(209, 91, 71);
+  .school {
+    margin-top: 10px;
   }
-  .user-grid {
+  .grid {
     min-height: 200px;
     vertical-align: middle;
     .action-col {
@@ -47,6 +47,14 @@
       &:focus {
         outline: none;
         display: none;
+      }
+    }
+  }
+  #user-grid {
+    .role-col {
+      padding: 0;
+      .ui-select-match {
+        padding: 0 5px;
       }
     }
   }
