@@ -8,7 +8,7 @@ var Student = require('../student/student.model');
 
 // Parse PDF report to readable JSON data
 function parseStudents(block) {
-  return chunk(block[0], 2).map(function(student, i) {
+  return _.chunk(block[0], 2).map(function(student, i) {
     var names = student[0].split(', ');
     return {
       last: names[0],
@@ -23,13 +23,6 @@ function parseStudents(block) {
     student['School Year'] = block[5][i * 2 + 1];
     return student;
   });
-}
-
-function chunk(arr, size) {
-  return arr.slice(0, Math.floor((arr.length + size - 1) / size))
-    .map(function(_, i) {
-      return arr.slice(i * size, i * size + size);
-    });
 }
 
 // Creates a new student record
@@ -58,18 +51,19 @@ function createStudentRecord(stu) {
 // If absence record exists, appends it
 function createAbsenceRecord() {
 }
+
 // Takes PDF Data and transfers it into the DB
 exports.create = function(req, res) {
 
   console.log(req.file);
-  console.log(req.file.originalname)
+  console.log(req.file.originalname);
   console.log(req.file.filename);
 
   fs.readFile(req.file.path, function(err, buffer) {
     if (err) return console.log(err);
-    pdf2table.parse(buffer, function(err, rows, rowsdebug) {
+    pdf2table.parse(buffer, function(err, rows) {
       if (err) return console.log(err);
-      var results = chunk(rows.reverse(), 6).reduce(function(p, block) {
+      var results = _.chunk(rows.reverse(), 6).reduce(function(p, block) {
         return p.concat(parseStudents(block));
       }, []);
       results.forEach(function(student) {
