@@ -1,6 +1,6 @@
-<form class="col-md-6">
+<form class="col-md-6" method="POST" action="/api/pdfs/" enctype="multipart/form-data">
   <legend>Upload Student Data</legend>
-  <input class="form-control" type="file">
+  <input class="form-control" type="file" name="pdf">
   <hr>
-  <button class="btn btn-default">Submit</button>
+  <button class="btn btn-default" type="submit">Submit</button>
 </form>
