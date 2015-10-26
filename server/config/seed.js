@@ -8,6 +8,7 @@
 var School = require('../api/school/school.model');
 var Student = require('../api/student/student.model');
 var User = require('../api/user/user.model');
+var AbsenceRecord = require('../api/absence-record/absence-record.model');
 
 User.remove().exec().then(function() {
   return School.remove().exec();
@@ -58,6 +59,50 @@ User.remove().exec().then(function() {
     firstName: 'Sue',
     currentSchool: schoolB._id
   }, logCreateResults('students'));
+}).then(function(studentA, studentB, studentC, studentD, studentE){
+  return AbsenceRecord.create({
+    schoolYear: '2015-2016',
+    school: studentA.currentSchool,
+    entries:[
+    {
+      student: studentA._id,
+      absences: 1.0,
+      tardies: 0.0,
+      present: 15.0,
+      enrolled: 16.0
+    }, {
+      student: studentB._id,
+      absences: 1.0,
+      tardies: 0.0,
+      present: 14.0,
+      enrolled: 15.0
+    }, {
+      student: studentC._id,
+      absences: 1.0,
+      tardies: 0,
+      present: 21.0,
+      enrolled: 22.0
+    }
+    ]
+  }, {
+    schoolYear: '2015-2016',
+    school: studentD.currentSchool,
+    entries:[
+    {
+      student: studentD._id,
+      absences: 0.0,
+      tardies: 0.0,
+      present: 1.0,
+      enrolled: 1.0
+    }, {
+      student: studentE._id,
+      absences: 0.0,
+      tardies: 0.0,
+      present: 22.0,
+      enrolled: 22.0
+    }
+    ]
+  }, logCreateResults('AbsenceRecords'));
 }).then(function() {
   return Student.find().populate('currentSchool').exec(function(err, students) {
     console.log('\nSchools to Students');
