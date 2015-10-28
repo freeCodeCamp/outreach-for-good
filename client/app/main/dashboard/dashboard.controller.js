@@ -1,7 +1,24 @@
 'use strict';
 
 angular.module('app')
-  .controller('DashboardCtrl', function($scope) {
+  .controller('DashboardCtrl', function($scope, $http) {
+    $http.get('/api/students/by-school/', {
+        // Temporary param until we can get school from user model 
+        params: {
+            school: 'School A'
+        }
+    }).success(function(data) {
+        console.log(data);
+    });
+
+    $http.get('/api/absence-records/by-school', {
+        params: {
+            school: 'School A'
+        }
+    }).success(function(data) {
+        console.log(data);
+    });
+
     $scope.letters = 45;
     $scope.calls = 3;
     $scope.home = 0;

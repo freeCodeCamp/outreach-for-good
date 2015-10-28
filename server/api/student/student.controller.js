@@ -2,12 +2,27 @@
 
 var _ = require('lodash');
 var Student = require('./student.model');
+var School = require('../school/school.model');
 
 // Get list of students
 exports.index = function(req, res) {
   Student.find(function (err, students) {
     if(err) { return handleError(res, err); }
     return res.json(200, students);
+  });
+};
+
+// Get list of students by school
+// (switch to querry parm down the road)
+exports.bySchool = function(req, res) {
+  School.find({name: req.query.school}, function (err, school) {
+      if(err) { return handleError(res, err); }
+      console.log(school[0]._id);
+      Student.find({currentSchool: school[0]._id}, function (err, students) {
+        if(err) { return handleError(res, err); }
+        console.log(students);
+        return res.status(200).json(students);
+      });
   });
 };
 

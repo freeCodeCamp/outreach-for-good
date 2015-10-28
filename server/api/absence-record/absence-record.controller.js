@@ -2,6 +2,7 @@
 
 var _ = require('lodash');
 var AbsenceRecord = require('./absence-record.model');
+var School = require('../school/school.model');
 
 /**
  * Get list of absence records
@@ -11,6 +12,23 @@ exports.index = function(req, res) {
   AbsenceRecord.find(function(err, records) {
     if (err) { return handleError(res, err); }
     return res.status(200).json(records);
+  });
+};
+
+/**
+ * Get list of absence records by school
+ * restriction: 'teacher'
+ */
+exports.bySchool = function(req, res) {
+  School.find({name: req.query.school}, function (err, schools) {
+      if(err) { return handleError(res, err); }
+      var schoolID = schools[0]._id;
+      console.log(schoolID);
+      AbsenceRecord.find({school: schoolID}, function (err, records) {
+        var result = records[0];
+        console.log(result);
+        return res.status(200).json(result);
+      });
   });
 };
 
