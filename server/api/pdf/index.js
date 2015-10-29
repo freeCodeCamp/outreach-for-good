@@ -12,6 +12,6 @@ var upload = multer({ storage: storage });
 
 var router = express.Router();
 
-router.post('/', upload.single('pdf'), controller.create);
+router.post('/', upload.single('file'), controller.create);
 
 module.exports = router;

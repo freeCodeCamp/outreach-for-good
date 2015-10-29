@@ -1,6 +1,9 @@
-<form class="col-md-6" method="POST" action="/api/pdfs/" enctype="multipart/form-data">
-  <legend>Upload Student Data</legend>
-  <input class="form-control" type="file" name="pdf">
+<form class="col-md-6" name="form">
+  <legend>Upload a PDF</legend>
+  <input class="form-control" ngf-select type="file" ng-model="file" name="file">
+  <br>
+  <div style="color:red;">{{errorMessage}}</div>
+  <div style="color:green;">{{message}}</div>
   <hr>
-  <button class="btn btn-default" type="submit">Submit</button>
+  <button class="btn btn-default"type="submit" ng-click="submit(file)">submit</button>
 </form>

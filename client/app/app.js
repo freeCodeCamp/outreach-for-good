@@ -4,6 +4,7 @@ var app = angular.module('app', [
   'ngCookies',
   'ngResource',
   'ngSanitize',
+  'ngFileUpload',
   'ui.bootstrap',
   'ui.grid',
   'ui.grid.autoResize',
