@@ -1,7 +1,7 @@
 /* Toggle Styles */
 
 $sidebar-background: #1BA39C;
-$colHighlight: #c8f7c5;
+$sidebar-highlight: #EB9531;
 
 .sidebar-wrapper {
   z-index: 1000;
@@ -62,15 +62,20 @@ $colHighlight: #c8f7c5;
 
 .nav-pills {
   li, li.active {
+    box-sizing: border-box;
     a, a:hover {
       color: #fff;
       border-radius: 0;
     }
   }
   li.active {
-    a, a:hover, a:focus {
-      background-color: darken($sidebar-background, 20%);
-      color: $colHighlight;
+    > a, > a:focus {
+      background-color: $sidebar-highlight !important;
+      color: white;
+    } 
+    a:hover {
+      background-color: default;
+      color: white;
     }
   }
 }
