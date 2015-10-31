@@ -6,7 +6,8 @@
       ng-if="showSidebarToggle()"
       ng-click="sidebar.toggle()">
       <span class="sr-only">Toggle sidebar menu</span>
-      <i class="fa fa-bars fa-lg"></i>
+      <i class="fa fa-bars fa-lg" 
+        ng-class="{'fa-rotate-90': sidebar.isCollapsed}"></i>
     </button>
     <a ui-sref="dashboard" class="navbar-brand">Child First Authority</a>
     <button class="navbar-toggle"
