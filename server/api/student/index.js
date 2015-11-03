@@ -10,6 +10,7 @@ var controller = require('./student.controller');
 var router = express.Router();
 
 router.get('/', controller.index);
+router.get('/by-school/', controller.bySchool);
 router.get('/:id', controller.show);
 router.post('/', controller.create);
 router.put('/:id', controller.update);
