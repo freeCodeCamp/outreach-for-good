@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('app')
-  .controller('DashboardCtrl', function($scope, listStudents) {
-    $scope.students = listStudents.getStudents();
+  .controller('DashboardCtrl', function($scope, Students) {
+    $scope.students = Students.list();
 
     $scope.letters = 45;
     $scope.calls = 3;
