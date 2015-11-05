@@ -28,37 +28,33 @@ function parseStudents(block) {
 // Creates a new student record
 // If student record exists, do nothing...
 function createStudentRecords(records) {
-  var stuRecords = [];
-  records.forEach(function(record) {
-    var newStudent = {
+  return records.map(function(record) {
+    return {
       studentId: record.id,
       lastName: record.last,
       firstName: record.first,
       active: true
-      // get school attr here
+        // get school attr here
     };
-    stuRecords.push(newStudent);
-  })
-  return stuRecords;
+  });
 }
 
 // Creates new Absence Record...
 // If absence record exists, appends it
 function createAbsenceRecord(records) {
-  var absRecord = {entries:[]};
-
-  absRecord.schoolYear = records[0]['School Year'];
-  // insert school attr here
-  records.forEach(function(record){
-    var entry = {
+  var absRecord = {
+    schoolYear: records[0]['School Year'],
+    // insert school attr here
+  };
+  absRecord.entries = records.map(function(record) {
+    return {
       //get student ID here
       absences: record['All Absences'],
       tardies: record.Tdy,
       present: record.Present,
       enrolled: record.Enrolled
-    }
-    absRecord.entries.push(entry)
-  })
+    };
+  });
   return absRecord;
 }
 
