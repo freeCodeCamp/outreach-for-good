@@ -27,37 +27,39 @@ function parseStudents(block) {
 
 // Creates a new student record
 // If student record exists, do nothing...
-function createStudentRecord(stu) {
-  var newStudent = {
-    studentId: '',
-    lastName: '',
-    firstName: ''
-  };
-
-  newStudent.studentId = stu.id;
-  newStudent.lastName = stu.last;
-  newStudent.firstName = stu.first;
-  // get school attr here
-
-  console.log(newStudent);
-  // Uncomment code after complete school doc can be created
-  // Student.create(newStudent, function(err, student) {
-  //   if(err) { return handleError(res, err); }
-  //   return res.json(201, student);
-  // });
+function createStudentRecords(records) {
+  return records.map(function(record) {
+    return {
+      studentId: record.id,
+      lastName: record.last,
+      firstName: record.first,
+      active: true
+        // get school attr here
+    };
+  });
 }
 
 // Creates new Absence Record...
 // If absence record exists, appends it
-function createAbsenceRecord() {
+function createAbsenceRecord(records) {
+  var absRecord = {
+    schoolYear: records[0]['School Year'],
+    // insert school attr here
+  };
+  absRecord.entries = records.map(function(record) {
+    return {
+      //get student ID here
+      absences: record['All Absences'],
+      tardies: record.Tdy,
+      present: record.Present,
+      enrolled: record.Enrolled
+    };
+  });
+  return absRecord;
 }
 
 // Takes PDF Data and transfers it into the DB
 exports.create = function(req, res) {
-
-  console.log(req.file);
-  console.log(req.file.originalname);
-  console.log(req.file.filename);
 
   fs.readFile(req.file.path, function(err, buffer) {
     if (err) return console.log(err);
@@ -66,9 +68,12 @@ exports.create = function(req, res) {
       var results = _.chunk(rows.reverse(), 6).reduce(function(p, block) {
         return p.concat(parseStudents(block));
       }, []);
-      results.forEach(function(student) {
-        createStudentRecord(student);
-      });
+      var stuBatch = createStudentRecords(results);
+      var absBatch = createAbsenceRecord(results);
+      console.log(stuBatch);
+      //Student.collection.insert(stuBatch, {ordered: false});
+      console.log(absBatch);
+      //AbsenceRecord.create(absBatch);
     });
   });
   res.status(204).end()
