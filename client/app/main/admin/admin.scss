@@ -1,14 +1,22 @@
 .admin {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
   h3 {
-    margin-top: 10px;
+    text-align: center;
   }
-  .school {
-    margin-top: 10px;
+  .user, .school {
+    display: flex;
+    flex-direction: column;
+    flex: 1 0 0;
+    min-height: 250px;
   }
   .grid {
-    min-height: 200px;
-    max-height: 500px;
+    display: flex;
+    flex: 1 0 0;
     vertical-align: middle;
+    border-right: 0 solid #fff;
+    border-left: 0 solid #fff;
     .action-col {
       padding: 0;
       text-align: center;
@@ -32,6 +40,7 @@
     .ui-grid-menu-button {
       height: 30px;
       padding: 2px 0;
+      border-top: 0 solid #fff;
       .ui-grid-icon-menu {
         margin-left: 3px;
       }
@@ -60,6 +69,7 @@
     }
   }
 }
+
 .dropdown-menu {
   &.role-menu {
     min-width: 125px;
