@@ -2,8 +2,16 @@
 
 var app = angular.module('app');
 
-app.service('School', function($resource) {
-  return $resource('/api/schools/:id', {
+app.factory('School', function($resource) {
+  return $resource('/api/schools/:id/:controller', {
     id: '@_id'
+  }, {
+    students: {
+      method: 'GET',
+      isArray:true,
+      params: {
+        controller: 'students'
+      }
+    }
   });
 });

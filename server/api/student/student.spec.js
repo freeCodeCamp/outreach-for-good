@@ -5,16 +5,9 @@ var app = require('../../app');
 var request = require('supertest');
 
 describe('GET /api/students', function() {
-
-  it('should respond with JSON array', function(done) {
+  it('should return unauthorized response', function(done) {
     request(app)
-      .get('/api/students')
-      .expect(200)
-      .expect('Content-Type', /json/)
-      .end(function(err, res) {
-        if (err) return done(err);
-        res.body.should.be.instanceof(Array);
-        done();
-      });
+      .get('/api/schools')
+      .expect(401, done);
   });
 });
