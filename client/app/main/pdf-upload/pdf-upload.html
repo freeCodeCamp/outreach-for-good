@@ -1,9 +1,9 @@
-<form class="col-md-6" name="form">
+<form class="col-md-6" name="forms.uploadForm" ng-submit="submit()">
   <legend>Upload a PDF</legend>
-  <input class="form-control" ngf-select type="file" ng-model="file" name="file">
+  <input class="form-control" ngf-select type="file" ng-model="file" name="file" required>
   <br>
   <div style="color:red;">{{errorMessage}}</div>
   <div style="color:green;">{{message}}</div>
   <hr>
-  <button class="btn btn-default"type="submit" ng-click="submit(file)">submit</button>
+  <button ng-disabled="processingUpload" class="btn btn-default" type="submit">submit</button>
 </form>
