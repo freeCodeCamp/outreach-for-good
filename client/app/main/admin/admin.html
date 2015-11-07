@@ -5,19 +5,14 @@
       ui-grid-auto-resize
       ui-grid-pinning
       ui-grid-exporter
-      ui-grid-selection
       id="user-grid"
       class="grid">
     </div>
   </div>
   <div class="school">
     <h3>Schools
-        <a href><i ng-click="addSchool()" class="fa fa-plus-circle"></i></a>
+      <a href><i ng-click="addSchool()" class="fa fa-plus-circle"></i></a>
     </h3>
-    <div ui-grid="schoolGridOptions"
-      ui-grid-auto-resize
-      ui-grid-selection
-      id="school-grid"
-      class="grid"></div>
+    <div ui-grid="schoolGridOptions" ui-grid-auto-resize id="school-grid" class="grid"></div>
   </div>
 </div>
