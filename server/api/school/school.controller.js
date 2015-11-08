@@ -2,6 +2,7 @@
 
 var _ = require('lodash');
 var School = require('./school.model');
+var Student = require('../student/student.model');
 
 /**
  * Get list of schools
@@ -23,6 +24,24 @@ exports.show = function(req, res) {
     if (err) { return handleError(res, err); }
     if (!school) { return res.status(404).send('Not Found'); }
     return res.json(school);
+  });
+};
+
+/**
+ * Get students for a school.
+ * restriction: 'teacher'
+ */
+exports.students = function(req, res) {
+  School.findById(req.params.id, function(err, school) {
+    if (err) { return handleError(res, err); }
+    if (!school) { return res.status(404).send('Not Found'); }
+    Student
+      .find({currentSchool: school})
+      .populate('currentSchool', 'name')
+      .exec(function(err, students) {
+        if (err) { return handleError(res, err); }
+        return res.status(200).json(students);
+      });
   });
 };
 
