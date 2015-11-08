@@ -377,6 +377,14 @@ module.exports = function (grunt) {
             'package.json',
             'server/**/*'
           ]
+        }, {
+          expand: true,
+          flatten: true,
+          cwd: '<%= yeoman.client %>',
+          dest: '<%= yeoman.dist %>/public/app',
+          src: [
+            'bower_components/angular-ui-grid/*.{ttf,woff,eot,svg}'
+          ]
         }]
       },
       styles: {
