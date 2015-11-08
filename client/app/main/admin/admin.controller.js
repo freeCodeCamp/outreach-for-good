@@ -2,7 +2,7 @@
 
 var app = angular.module('app');
 
-function AdminCtrl($scope, Auth, User, School, Modal, ROLES) {
+function AdminCtrl($scope, Auth, User, School, Modal, ROLES, $templateCache) {
   $scope.roles = ROLES.slice(0, ROLES.indexOf(Auth.getCurrentUser().role) + 1);
 
   // Users
@@ -14,10 +14,20 @@ function AdminCtrl($scope, Auth, User, School, Modal, ROLES) {
   };
 
   $scope.userGridOptions.columnDefs = [{
+    name: 'google.image.url',
+    displayName: '',
+    width: 54,
+    cellTemplate: 'app/main/admin/partial/cell.profile-image.html',
+    cellTooltip: function(row) {
+      return row.entity.name;
+    },
+    enableSorting: false,
+    enableMenu: false,
+    pinnedLeft: true
+  }, {
     name: 'name',
     displayName: 'Name',
-    minWidth: 150,
-    pinnedLeft: true
+    minWidth: 150
   }, {
     name: 'email',
     displayName: 'Email Address',
@@ -27,19 +37,19 @@ function AdminCtrl($scope, Auth, User, School, Modal, ROLES) {
     displayName: 'Assigned School',
     minWidth: 200,
     cellClass: 'assignment-col',
-    cellTemplate: 'app/main/admin/assignment-cell.html'
+    cellTemplate: 'app/main/admin/partial/cell.assignment.html'
   }, {
     name: 'role',
     displayName: 'Role',
     width: 125,
     cellClass: 'role-col',
-    cellTemplate: 'app/main/admin/role-cell.html'
+    cellTemplate: 'app/main/admin/partial/cell.role.html'
   }, {
     name: 'Actions',
     width: 108,
     enableSorting: false,
     cellClass: 'action-col',
-    cellTemplate: 'app/main/admin/action-cell.html'
+    cellTemplate: 'app/main/admin/partial/cell.action.html'
   }];
 
   $scope.userGridOptions.onRegisterApi = function(gridApi) {
@@ -109,7 +119,7 @@ function AdminCtrl($scope, Auth, User, School, Modal, ROLES) {
         $scope.schoolGridOptions.data.push(school);
       });
     };
-    Modal.form('Add New School', 'app/main/admin/add-school-modal.html',
+    Modal.form('Add New School', 'app/main/admin/partial/modal.add-school.html',
       addSchoolFn);
   };
 
