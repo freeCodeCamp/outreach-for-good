@@ -7,6 +7,10 @@ angular.module('app').controller('SidebarCtrl',
       displayName: 'Dashboard',
       icon: 'fa-dashboard'
     }, {
+      name: 'pdf-upload',
+      displayName: 'Upload Absence Report',
+      icon: 'fa-upload'
+    }, {
       name: 'admin',
       displayName: 'Admin',
       icon: 'fa-wrench',
