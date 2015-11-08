@@ -17,6 +17,9 @@ function MainCtrl($scope, Auth, Data, School, Sidebar, Student) {
     case 'manager':
     case 'admin':
     case 'super':
+      School.list().$promise.then(function(schools) {
+        Data.setSchools(schools);
+      });
       Student.list().$promise.then(function(students) {
         Data.setStudents(students);
       });
