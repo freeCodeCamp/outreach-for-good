@@ -4,6 +4,7 @@ var app = angular.module('app');
 
 app.controller('PDFUploadCtrl', function($scope, Upload) {
   $scope.forms = {};
+  $scope.data = {};
 
   $scope.upload = function(file) {
     return Upload.upload({
@@ -13,16 +14,22 @@ app.controller('PDFUploadCtrl', function($scope, Upload) {
   };
 
   $scope.submit = function() {
-    if ($scope.forms.uploadForm.file.$valid && $scope.file) {
-      $scope.processingUpload = true;
-      $scope.upload($scope.file).then(function(response) {
-        if (response.status === 204) {
-          $scope.message = 'File Uploaded!';
-          delete $scope.file;
+    delete $scope.data.upload.message;
+    if ($scope.forms.upload.$valid) {
+      $scope.data.upload.processingUpload = true;
+      $scope.forms.upload.file.$setValidity('server', true);
+      delete $scope.data.upload.fileError;
+
+      $scope.upload($scope.data.upload.file).then(function(res) {
+        if (res.status === 204) {
+          $scope.data.upload = {};
+          $scope.data.upload.message = 'File Uploaded!';
+          $scope.forms.upload.$setPristine();
         } else {
-          $scope.errorMessage = response.status + ': ' + response.statusText;
+          $scope.forms.upload.file.$setValidity('server', false);
+          $scope.data.upload.fileError = res.status + ': ' + res.statusText;
         }
-        $scope.processingUpload = false;
+        $scope.data.upload.processingUpload = false;
       });
     }
   };
