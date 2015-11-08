@@ -34,7 +34,7 @@ function createStudentRecords(records) {
       lastName: record.last,
       firstName: record.first,
       active: true
-        // get school attr here
+      // get school attr here
     };
   });
 }

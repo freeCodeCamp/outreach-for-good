@@ -1,26 +1,29 @@
 'use strict';
 
-angular.module('app')
-  .controller('PDFUploadCtrl', function($scope, Upload, $timeout) {
-    $scope.submit = function(file) {
-      file.upload = Upload.upload({
-        url: '/api/pdfs/',
-        data: {
-          file: file
-        }
-      });
+var app = angular.module('app');
 
-      file.upload.then(function(response) {
-        $timeout(function() {
-          file.result = response.data;
-          if (response.status === 204) {
-            $scope.message = 'File Uploaded!';
-          } else {
-            $scope.errorMessage = response.status + ': ' + response.statusText;
-          }
-          // TODO: This causes build jshint errors. Find out how to do this.
-          // form.reset();
-        });
+app.controller('PDFUploadCtrl', function($scope, Upload) {
+  $scope.forms = {};
+
+  $scope.upload = function(file) {
+    return Upload.upload({
+      url: '/api/pdfs/',
+      data: {file: file}
+    });
+  };
+
+  $scope.submit = function() {
+    if ($scope.forms.uploadForm.file.$valid && $scope.file) {
+      $scope.processingUpload = true;
+      $scope.upload($scope.file).then(function(response) {
+        if (response.status === 204) {
+          $scope.message = 'File Uploaded!';
+          delete $scope.file;
+        } else {
+          $scope.errorMessage = response.status + ': ' + response.statusText;
+        }
+        $scope.processingUpload = false;
       });
-    };
-  });
+    }
+  };
+});
