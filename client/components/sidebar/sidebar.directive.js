@@ -10,7 +10,9 @@ app.directive('sidebar', function(matchmedia) {
     restrict: 'E',
     link: function(scope) {
       var cleanup = matchmedia.onPhone(function(mediaQueryList) {
-        scope.sidebar.isCollapsed = mediaQueryList.matches;
+        if (mediaQueryList.matches) {
+          scope.sidebar.isCollapsed = true;
+        }
       });
       scope.$on('$destroy', function() {
         cleanup();
