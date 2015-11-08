@@ -1,6 +1,8 @@
 <div class="admin row">
   <div class="user">
-    <h3>Users</h3>
+    <div class="grid-title">
+      <h3>Users</h3>
+    </div>
     <div ui-grid="userGridOptions"
       ui-grid-auto-resize
       ui-grid-pinning
@@ -10,9 +12,11 @@
     </div>
   </div>
   <div class="school">
-    <h3>Schools
-      <a href><i ng-click="addSchool()" class="fa fa-plus-circle"></i></a>
-    </h3>
+    <div class="grid-title">
+      <h3>Schools
+        <a href><i ng-click="addSchool()" class="fa fa-plus-circle"></i></a>
+      </h3>
+    </div>
     <div ui-grid="schoolGridOptions" ui-grid-auto-resize id="school-grid" class="grid"></div>
   </div>
 </div>
