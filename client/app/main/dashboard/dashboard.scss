@@ -1,9 +1,10 @@
 .dashboard {
+  margin-top: 15px;
   .widget {
     @extend .col-sm-6;
     @extend .col-lg-3;
     text-align: center;
-    > .well {
+    .well {
       height: 130px;
       margin: 0 auto 20px auto;
     }
