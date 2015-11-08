@@ -4,6 +4,16 @@
 <div class="upload-form row">
   <form class="form-inline" name="forms.upload" ng-submit="submit()" novalidate>
     <div class="form-group"
+      ng-class="data.upload.school ? 'has-success' : 'has-error'">
+      <label>School</label>
+      <ui-select theme="bootstrap" ng-model="data.upload.school" ng-disabled="isTeacher" required>
+        <ui-select-match placeholder="Select a school">{{$select.selected.name}}</ui-select-match>
+        <ui-select-choices repeat="school in schools | filter: $select.search">
+          <div ng-bind-html="school.name | highlight: $select.search"></div>
+        </ui-select-choices>
+      </ui-select>
+    </div>
+    <div class="form-group"
       ng-class="{
         'has-error': forms.upload.file.$invalid && forms.upload.file.$dirty,
         'has-success': forms.upload.file.$valid

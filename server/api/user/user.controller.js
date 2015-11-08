@@ -9,8 +9,8 @@ var auth = require('../../auth/auth.service');
  * restriction: 'admin'
  */
 exports.index = function(req, res) {
-  User.find().populate('assignment').exec(function (err, users) {
-    if(err) return res.status(500).send(err);
+  User.find().populate('assignment').exec(function(err, users) {
+    if (err) return res.status(500).send(err);
     res.status(200).json(users);
   });
 };
@@ -18,10 +18,10 @@ exports.index = function(req, res) {
 /**
  * Get a single user
  */
-exports.show = function (req, res, next) {
+exports.show = function(req, res, next) {
   var userId = req.params.id;
 
-  User.findById(userId, function (err, user) {
+  User.findById(userId, function(err, user) {
     if (err) return next(err);
     if (!user) return res.status(401).send('Unauthorized');
     res.json(user.profile);
@@ -38,7 +38,7 @@ exports.show = function (req, res, next) {
 exports.updateRole = function(req, res) {
   auth.hasRole(req.body.role)(req, res, function() {
     User.findById(req.params.id, function(err, user) {
-      if(err) return res.status(500).send(err);
+      if (err) return res.status(500).send(err);
       auth.hasRole(user.role)(req, res, function() {
         user.role = req.body.role;
         user.save(function(err) {
@@ -56,7 +56,7 @@ exports.updateRole = function(req, res) {
  */
 exports.updateAssignment = function(req, res) {
   User.findById(req.params.id, function(err, user) {
-    if(err) return res.status(500).send(err);
+    if (err) return res.status(500).send(err);
     user.assignment = req.body.assignment;
     user.save(function(err) {
       if (err) return res.status(500).send(err);
@@ -75,7 +75,7 @@ exports.updateAssignment = function(req, res) {
  */
 exports.destroy = function(req, res) {
   User.findById(req.params.id, function(err, user) {
-    if(err) return res.status(500).send(err);
+    if (err) return res.status(500).send(err);
     auth.hasRole(user.role)(req, res, function() {
       User.remove(user, function(err, user) {
         if (err) return res.status(500).send(err);
@@ -90,13 +90,14 @@ exports.destroy = function(req, res) {
  */
 exports.me = function(req, res, next) {
   var userId = req.user._id;
-  User.findOne({
-    _id: userId
-  }, function(err, user) {
-    if (err) return next(err);
-    if (!user) return res.status(401).send('Unauthorized');
-    res.json(user);
-  });
+  User
+    .findOne({_id: userId})
+    .populate('assignment')
+    .exec(function(err, user) {
+      if (err) return next(err);
+      if (!user) return res.status(401).send('Unauthorized');
+      res.json(user);
+    });
 };
 
 /**
