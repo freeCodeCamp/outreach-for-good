@@ -38,3 +38,15 @@ body,
 @import 'navbar/navbar.scss';
 @import 'sidebar/sidebar.scss';
 // endinjector
+
+// Fix for inline forms for ui-select
+@media (min-width: 768px) {
+  .ui-select-container {
+    min-width: 291px;
+    display: inline-block;
+  }
+  .form-inline .ui-select-container .ui-select-toggle,
+  .form-inline .ui-select-container .ui-select-search {
+    width: 100%;
+  }
+}
