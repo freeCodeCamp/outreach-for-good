@@ -2,7 +2,7 @@
 
 var app = angular.module('app');
 
-function AdminCtrl($scope, Auth, User, School, Modal, ROLES) {
+function AdminCtrl($scope, Auth, Data, User, School, Modal, ROLES) {
   $scope.roles = ROLES.slice(0, ROLES.indexOf(Auth.getCurrentUser().role) + 1);
 
   // Users
@@ -110,13 +110,13 @@ function AdminCtrl($scope, Auth, User, School, Modal, ROLES) {
 
   $scope.schoolGridOptions.onRegisterApi = function(gridApi) {
     $scope.schoolGridOptions = gridApi;
-    $scope.schoolGridOptions.data = School.query();
+    $scope.schoolGridOptions.data = Data.schools();
   };
 
   $scope.addSchool = function() {
     var addSchoolFn = function(model) {
       return School.save({}, model, function(school) {
-        $scope.schoolGridOptions.data.push(school);
+        Data.schools().push(school);
       });
     };
     Modal.form('Add New School', 'app/main/admin/partial/modal.add-school.html',
@@ -126,7 +126,7 @@ function AdminCtrl($scope, Auth, User, School, Modal, ROLES) {
   $scope.deleteSchool = function(school) {
     var deleteSchoolFn = function() {
       School.remove({id: school._id}).$promise.then(function() {
-        _.pull($scope.schoolGridOptions.data, school);
+        _.pull(Data.schools(), school);
       });
     };
     Modal.confirm.delete(deleteSchoolFn)(school.name);
