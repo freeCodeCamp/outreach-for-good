@@ -6,6 +6,7 @@ var fs = require('fs');
 var AbsenceRecord = require('../absence-record/absence-record.model');
 var Student = require('../student/student.model');
 
+
 // Parse PDF report to readable JSON data
 function parseStudents(block) {
   return _.chunk(block[0], 2).map(function(student, i) {
@@ -21,46 +22,85 @@ function parseStudents(block) {
     student.Present = block[3][i * 2 + 1];
     student.Enrolled = block[4][i * 2 + 1];
     student['School Year'] = block[5][i * 2 + 1];
+    student['School Year'] = student['School Year'].replace(/\s/g, '');
     return student;
   });
 }
 
-// Creates a new student record
-// If student record exists, do nothing...
-function createStudentRecords(records) {
-  return records.map(function(record) {
-    return {
-      studentId: record.id,
-      lastName: record.last,
-      firstName: record.first,
-      active: true
-      // get school attr here
-    };
-  });
-}
+// Filters new students
+function filterNewStudents(records, schoolId) {
+  Student.find(function(err, students) {
 
-// Creates new Absence Record...
-// If absence record exists, appends it
-function createAbsenceRecord(records) {
-  var absRecord = {
-    schoolYear: records[0]['School Year'],
-    // insert school attr here
-  };
-  absRecord.entries = records.map(function(record) {
-    return {
-      //get student ID here
-      absences: record['All Absences'],
-      tardies: record.Tdy,
-      present: record.Present,
-      enrolled: record.Enrolled
-    };
+    var curStudents = _.pluck(students, 'studentId');
+    var incStudents = _.pluck(records, 'id');
+    var finalList = _.difference(incStudents, curStudents);
+    var result = [];
+
+    _.forEach(finalList, function(id, key) {
+      _.forEach(records, function(record, key) {
+        if(record.id === id) {
+          result.push({
+            studentId: record.id,
+            lastName: record.last,
+            firstName: record.first,
+            active: true,
+            currentSchool: schoolId
+          });
+        };
+      });
+    });
+    console.log(result);
+    Student.collection.insert(result, {ordered: true});
   });
-  return absRecord;
+
+  AbsenceRecord.find({
+    school: schoolId, 
+    schoolYear: records[0]['School Year'] 
+  },function(err, record) {
+    if(record.length === 0) { 
+      console.log('create new absencerecord');
+      AbsenceRecord.create({
+        schoolYear: records[0]['School Year'],
+        school: schoolId
+      }, function(err, newRecord) {
+        console.log(newRecord)
+        record[0] = newRecord;
+      })
+    }
+  
+    var newEntries = [];
+    Student.find(function(err,students) {
+      var studentList = _.map(students, function(student) {
+        {return  _.pick(student, '_id', 'studentId'); } 
+      });
+      _.forEach(records, function(record, idx) {
+        _.forEach(studentList, function(student, i) {
+          if(studentList[i].studentId === records[idx].id) {
+            newEntries.push({
+              student: studentList[i]._id,
+              absences: record['All Absences'],
+              tardies: record.Tdy,
+              present: record.Present,
+              enrolled: record.Enrolled
+            });
+          };
+        });
+      });
+      AbsenceRecord.findById(record[0]._id, function(err, record) {
+        record.entries = _.merge(record.entries, newEntries);
+        console.log(record);
+        record.save(function(err) {
+          return record;
+        })
+      });
+    });
+
+  });
 }
 
 // Takes PDF Data and transfers it into the DB
 exports.create = function(req, res) {
-
+  var schoolId = req.body.schoolId;
   fs.readFile(req.file.path, function(err, buffer) {
     if (err) return console.log(err);
     pdf2table.parse(buffer, function(err, rows) {
@@ -68,12 +108,7 @@ exports.create = function(req, res) {
       var results = _.chunk(rows.reverse(), 6).reduce(function(p, block) {
         return p.concat(parseStudents(block));
       }, []);
-      var stuBatch = createStudentRecords(results);
-      var absBatch = createAbsenceRecord(results);
-      console.log(stuBatch);
-      //Student.collection.insert(stuBatch, {ordered: false});
-      console.log(absBatch);
-      //AbsenceRecord.create(absBatch);
+      filterNewStudents(results, schoolId);
     });
   });
   res.status(204).end()
