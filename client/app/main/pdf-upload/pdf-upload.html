@@ -1,9 +1,34 @@
-<form class="col-md-6" name="forms.uploadForm" ng-submit="submit()">
-  <legend>Upload a PDF</legend>
-  <input class="form-control" ngf-select type="file" ng-model="file" name="file" required>
-  <br>
-  <div style="color:red;">{{errorMessage}}</div>
-  <div style="color:green;">{{message}}</div>
-  <hr>
-  <button ng-disabled="processingUpload" class="btn btn-default" type="submit">submit</button>
-</form>
+<div class="heading row">
+  <h3>Upload Absence Report</h3>
+</div>
+<div class="upload-form row">
+  <form class="form-inline" name="forms.upload" ng-submit="submit()" novalidate>
+    <div class="form-group"
+      ng-class="{
+        'has-error': forms.upload.file.$invalid && forms.upload.file.$dirty,
+        'has-success': forms.upload.file.$valid
+      }">
+      <label class="control-label" for="pdfInput">PDF</label>
+      <input id="pdfInput"
+        class="form-control"
+        type="file"
+        name="file"
+        ng-model="data.upload.file"
+        ngf-pattern="'application/pdf'"
+        ngf-select
+        required>
+    </div>
+    <button class="btn btn-primary" type="submit" ng-disabled="forms.upload.$invalid || data.upload.processingUpload">
+      Submit
+    </button>
+  </form>
+  <div ng-if="forms.upload.file.$invalid && forms.upload.file.$dirty" class="form-group has-error">
+    <div ng-messages="forms.upload.file.$error" class="help-block">
+      <div ng-message-exp="['required', 'pattern']">Choose an absence report PDF to upload</div>
+      <div ng-message="server">{{data.upload.fileError}}</div>
+    </div>
+  </div>
+  <div ng-if="!forms.upload.$dirty" class="form-group has-success">
+    <div class="help-block">{{data.upload.message}}</div>
+  </div>
+</div>

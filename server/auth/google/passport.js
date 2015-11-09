@@ -28,7 +28,7 @@ exports.setup = function (User, config) {
             done(err, user);
           });
         } else {
-          if (user.google.image.url != profile._json.image.url) {
+          if (user.google.image.url !== profile._json.image.url) {
             user.google.image.url = profile._json.image.url;
             user.save(function(err) {
               if (err) return done(err);

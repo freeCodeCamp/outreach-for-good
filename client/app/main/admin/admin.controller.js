@@ -2,7 +2,7 @@
 
 var app = angular.module('app');
 
-function AdminCtrl($scope, Auth, User, School, Modal, ROLES, $templateCache) {
+function AdminCtrl($scope, Auth, User, School, Modal, ROLES) {
   $scope.roles = ROLES.slice(0, ROLES.indexOf(Auth.getCurrentUser().role) + 1);
 
   // Users

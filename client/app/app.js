@@ -2,6 +2,7 @@
 
 var app = angular.module('app', [
   'ngCookies',
+  'ngMessages',
   'ngResource',
   'ngSanitize',
   'ngFileUpload',
