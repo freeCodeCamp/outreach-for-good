@@ -3,6 +3,7 @@
 var _ = require('lodash');
 var AbsenceRecord = require('./absence-record.model');
 var School = require('../school/school.model');
+var Student = require('../student/student.model');
 
 /**
  * Get list of absence records
@@ -49,9 +50,38 @@ exports.show = function(req, res) {
  * restriction: 'teacher'
  */
 exports.create = function(req, res) {
-  AbsenceRecord.create(req.body, function(err, record) {
+
+  var school = req.params.schoolId;
+  var newData = req.body.creates;
+
+  var newStudents = _.pluck(newData, 'student');
+  var newEntries = _.pluck(newData, 'entry');
+  var newIds = [];
+
+  _.each(newStudents, function(student) { 
+    newIds.push(student.studentId);
+  });
+  _.map(newStudents, function(student) {
+    student.currentSchool = school;
+  })
+  
+  // Create new students from newStudents Array
+  Student.collection.insert(newStudents, {ordered: true});
+  // Collect newly created student _ids for entries
+  Student.find({'studentId' : {$in : newIds}}, function(err, stus) {
     if (err) { return handleError(res, err); }
-    return res.status(201).json(record);
+    _.forEach(newEntries, function(entry, idx) {
+      entry.student = stus[idx]._id;
+    })
+    // Create object that will be the new Abs Record
+    var newAbsRec = {
+      schoolYear: newData[0].schoolYear,
+      school: school,
+      entries: newEntries
+    }
+    console.log(newAbsRec);
+    // Create new absence record collection
+    AbsenceRecord.collection.insert(newAbsRec);
   });
 };
 

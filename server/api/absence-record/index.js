@@ -11,7 +11,7 @@ var router = express.Router();
 router.get('/', auth.hasRole('manager'), controller.index);
 router.get('/by-school', controller.bySchool);
 router.get('/:id', auth.hasRole('teacher'), controller.show);
-router.post('/', auth.hasRole('teacher'), controller.create);
+router.post('/:schoolId', auth.hasRole('teacher'), controller.create);
 router.put('/:id', auth.hasRole('teacher'), controller.update);
 router.patch('/:id', auth.hasRole('teacher'), controller.update);
 router.delete('/:id', auth.hasRole('teacher'), controller.destroy);
