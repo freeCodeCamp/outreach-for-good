@@ -72,13 +72,12 @@ exports.upload = function(req, res) {
         var result = groupByType(students, idToPrev);
         // This adds the student to the entry, could just add the student._id
         (result.updates || []).forEach(function(student) {
-          student.entry.student = idToPrev[student.student.id];
+          student.entry.student = idToPrev[student.student.id]._id;
         });
 
         result.missing =
           _.difference(_.keys(idToPrev), _.map(students, 'student.id'));
 
-        console.log(JSON.stringify(result, null, 2));
         res.status(200).json(result);
       });
     });

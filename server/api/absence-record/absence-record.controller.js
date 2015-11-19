@@ -50,38 +50,32 @@ exports.show = function(req, res) {
  * restriction: 'teacher'
  */
 exports.create = function(req, res) {
-
   var school = req.params.schoolId;
-  var newData = req.body.creates;
+  var newData = req.body;
+  var newStudents = _.pluck(newData.creates, 'student') || [];
+  var newEntries = _.pluck(newData.creates, 'entry') || [];
+  var existingEntries = _.pluck(newData.updates, 'entry') || [];
 
-  var newStudents = _.pluck(newData, 'student');
-  var newEntries = _.pluck(newData, 'entry');
-  var newIds = [];
-
-  _.each(newStudents, function(student) { 
-    newIds.push(student.studentId);
-  });
   _.map(newStudents, function(student) {
     student.currentSchool = school;
-  })
+  });
   
   // Create new students from newStudents Array
-  Student.collection.insert(newStudents, {ordered: true});
-  // Collect newly created student _ids for entries
-  Student.find({'studentId' : {$in : newIds}}, function(err, stus) {
+  Student.collection.insert(newStudents, {ordered: true}, function(err, createdStudents) {
     if (err) { return handleError(res, err); }
-    _.forEach(newEntries, function(entry, idx) {
-      entry.student = stus[idx]._id;
-    })
-    // Create object that will be the new Abs Record
+    _.forEach(createdStudents.ops, function(student, index) {
+      newEntries[index].student = student._id;
+    });
     var newAbsRec = {
-      schoolYear: newData[0].schoolYear,
+      schoolYear: (newData.creates[0] || newData.updates[0]).schoolYear,
       school: school,
-      entries: newEntries
-    }
-    console.log(newAbsRec);
+      entries: [].concat.apply(newEntries, existingEntries)
+    };
     // Create new absence record collection
-    AbsenceRecord.collection.insert(newAbsRec);
+    AbsenceRecord.collection.insert(newAbsRec, function(err, record) {
+      if (err) { return handleError(res, err); }
+      return res.status(200).json(record);
+    });
   });
 };
 

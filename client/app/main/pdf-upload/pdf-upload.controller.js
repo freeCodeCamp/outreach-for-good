@@ -27,17 +27,17 @@ app.controller('PDFUploadCtrl', function($scope, $http, Auth, Data, Upload) {
   $scope.cancelUpload = function() {
     $scope.isUploaded = false;
     $scope.result.data = {};
-    $scope.data.upload.message = "Upload Canceled";
-  }
+    $scope.data.upload.message = 'Upload Canceled';
+  };
 
   $scope.confirmUpload = function() {
     $http.post('/api/absence-records/' + $scope.result.config.data.schoolId, 
-      $scope.result.data).success(function(data) {
-        $scope.data.upload.message = "Upload Confirmed!";
+      $scope.result.data).success(function() {
+        $scope.data.upload.message = 'Upload Confirmed!';
         $scope.result.data = {};
         $scope.isUploaded = false;
       });
-  }
+  };
 
   $scope.submit = function() {
     delete $scope.data.upload.message;
@@ -49,7 +49,7 @@ app.controller('PDFUploadCtrl', function($scope, $http, Auth, Data, Upload) {
       $scope.upload($scope.data.upload.file).then(function(res) {
         if (res.status === 200) {
           $scope.data.upload = {school: defaultSchool};
-          $scope.data.upload.message = "Confirm you want to upload the following..." ;
+          $scope.data.upload.message = 'Confirm you want to upload the following...';
           $scope.result = res;
           $scope.forms.upload.$setPristine();   
           $scope.isUploaded = true;
