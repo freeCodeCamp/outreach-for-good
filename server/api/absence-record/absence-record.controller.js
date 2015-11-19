@@ -17,23 +17,6 @@ exports.index = function(req, res) {
 };
 
 /**
- * Get list of absence records by school
- * restriction: 'teacher'
- */
-exports.bySchool = function(req, res) {
-  School.find({name: req.query.school}, function(err, schools) {
-    if (err) { return handleError(res, err); }
-    var schoolID = schools[0]._id;
-    console.log(schoolID);
-    AbsenceRecord.find({school: schoolID}, function(err, records) {
-      var result = records[0];
-      console.log(result);
-      return res.status(200).json(result);
-    });
-  });
-};
-
-/**
  * Get a single absence record
  * restriction: 'teacher'
  */
@@ -45,10 +28,12 @@ exports.show = function(req, res) {
   });
 };
 
-function newAbsenceRecord(record, res) {
+function newAbsenceRecord(record, res, createdStudents) {
   return AbsenceRecord.create(record, function(err, createdRecord) {
     if (err) return handleError(res, err);
-    return res.status(200).json(createdRecord);
+    return res
+      .status(200)
+      .json({record: createdRecord, students: createdStudents});
   });
 }
 
@@ -57,32 +42,34 @@ function newAbsenceRecord(record, res) {
  * restriction: 'teacher'
  */
 exports.create = function(req, res) {
-  var school = req.params.schoolId;
+  // TODO: Validate user has authorization to add absence record for school.
+
+  var school = req.body.schoolId;
   var existingEntries = _.pluck(req.body.updates || [], 'entry');
   if (!req.body.creates) {
     return newAbsenceRecord({
       schoolYear: req.body.updates[0].schoolYear,
       school: school,
       entries: existingEntries
-    }, res);
+    }, res, []);
   }
   var newStudents = _.pluck(req.body.creates, 'student');
   var newEntries = _.pluck(req.body.creates, 'entry');
   _.forEach(newStudents, function(student) {
     student.currentSchool = school;
   });
-  Student.collection.insert(newStudents, {ordered: true},
-    function(err, createdStudents) {
-      if (err) return handleError(res, err);
-      _.forEach(createdStudents.ops, function(student, index) {
-        newEntries[index].student = student._id;
-      });
-      return newAbsenceRecord({
-        schoolYear: req.body.creates[0].schoolYear,
-        school: school,
-        entries: [].concat.apply(newEntries, existingEntries)
-      }, res);
+  Student.collection.insert(newStudents, {ordered: true}, function(err, ins) {
+    var createdStudents = ins.ops;
+    if (err) return handleError(res, err);
+    _.forEach(createdStudents, function(student, index) {
+      newEntries[index].student = student._id;
     });
+    return newAbsenceRecord({
+      schoolYear: req.body.creates[0].schoolYear,
+      school: school,
+      entries: [].concat.apply(newEntries, existingEntries)
+    }, res, createdStudents);
+  });
 };
 
 /**
