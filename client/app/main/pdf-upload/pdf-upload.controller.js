@@ -31,11 +31,14 @@ app.controller('PDFUploadCtrl', function($scope, $http, Auth, Data, Upload) {
   };
 
   $scope.confirmUpload = function() {
-    $http.post('/api/absence-records/' + $scope.result.config.data.schoolId, 
-      $scope.result.data).success(function() {
+    $http.post('/api/absence-records/' + $scope.result.config.data.schoolId,
+      $scope.result.data).then(function() {
         $scope.data.upload.message = 'Upload Confirmed!';
         $scope.result.data = {};
         $scope.isUploaded = false;
+      }, function(err) {
+        console.log(err);
+        $scope.data.upload.message = 'Confirmation Error: ' + err;
       });
   };
 
@@ -49,9 +52,10 @@ app.controller('PDFUploadCtrl', function($scope, $http, Auth, Data, Upload) {
       $scope.upload($scope.data.upload.file).then(function(res) {
         if (res.status === 200) {
           $scope.data.upload = {school: defaultSchool};
-          $scope.data.upload.message = 'Confirm you want to upload the following...';
+          $scope.data.upload.message =
+            'Confirm you want to upload the following...';
           $scope.result = res;
-          $scope.forms.upload.$setPristine();   
+          $scope.forms.upload.$setPristine();
           $scope.isUploaded = true;
         } else {
           $scope.forms.upload.file.$setValidity('server', false);

@@ -40,10 +40,12 @@
   </div>
   <div ng-if="!forms.upload.$dirty" class="form-group has-success">
     <div class="help-block">{{data.upload.message}}</div>
-    <div class="content-block" ng-show="isUploaded">
-      {{result.data | json }}
+  </div>
+  <div ng-if="isUploaded" class="row">
+    <pre class="content-block text-left">{{result.data | json }}</pre>
+    <div class="row">
+      <button class="btn btn-success" ng-click="confirmUpload()">Confirm Upload</button>
+      <button class="btn btn-danger" ng-click="cancelUpload()">Cancel Upload</button>
     </div>
   </div>
-  <button class="btn btn-success" ng-show="isUploaded" ng-click="confirmUpload()">Confirm Upload</button>
-  <button class="btn btn-danger" ng-show="isUploaded" ng-click="cancelUpload()">Canel Upload</button>
 </div>

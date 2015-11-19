@@ -28,10 +28,10 @@ function parseStudent(arr) {
     studentId: arr[0][1]
   };
   result.entry = {
-    'All Absences': arr[1][1],
-    Tdy: arr[2][1],
-    Present: arr[3][1],
-    Enrolled: arr[4][1]
+    absences: +arr[1][1],
+    tardies: +arr[2][1],
+    present: +arr[3][1],
+    enrolled: +arr[4][1]
   };
   result.schoolYear = arr[5][1].replace(/\s/g, '');
   return result;
@@ -39,9 +39,8 @@ function parseStudent(arr) {
 
 function previousRecord(schoolId, schoolYear) {
   return AbsenceRecord
-    .find({schoolId: schoolId, schoolYear: schoolYear})
-    .sort({created_at: -1})
-    .limit(1)
+    .findOne({school: schoolId, schoolYear: schoolYear})
+    .sort({_id: -1})
     .populate('entries.student')
     .exec();
 }
@@ -49,15 +48,15 @@ function previousRecord(schoolId, schoolYear) {
 // Categorize students into update and create.
 function groupByType(students, idToPrev) {
   return _.groupBy(students, function(student) {
-    return student.student.id in idToPrev ? 'updates' : 'creates';
+    return student.student.studentId in idToPrev ? 'updates' : 'creates';
   });
 }
 
 exports.upload = function(req, res) {
   fs.readFile(req.file.path, function(err, buffer) {
-    if (err) return console.log(err);
+    if (err) return handleError(res, err);
     pdf2table.parse(buffer, function(err, rows) {
-      if (err) return console.log(err);
+      if (err) return handleError(res, err);
 
       // TODO: Try catch for failure to parse.
       var students = studentDataArrays(rows).map(parseStudent);
@@ -68,16 +67,15 @@ exports.upload = function(req, res) {
 
       previousRecord(schoolId, schoolYear).then(function(prev) {
         var idToPrev = _.indexBy((prev || {}).entries, 'student.studentId');
-
         var result = groupByType(students, idToPrev);
-        // This adds the student to the entry, could just add the student._id
-        (result.updates || []).forEach(function(student) {
-          student.entry.student = idToPrev[student.student.id]._id;
-        });
-
+        if (result.updates) {
+          _.forEach(result.updates, function(student) {
+            var prevStudent = idToPrev[student.student.studentId].student;
+            student.entry.student = prevStudent._id;
+          });
+        }
         result.missing =
-          _.difference(_.keys(idToPrev), _.map(students, 'student.id'));
-
+          _.difference(_.keys(idToPrev), _.map(students, 'student.studentId'));
         res.status(200).json(result);
       });
     });
