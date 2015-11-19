@@ -2,7 +2,8 @@
 
 var app = angular.module('app');
 
-app.controller('PDFUploadCtrl', function($scope, Auth, Data, Upload) {
+app.controller('PDFUploadCtrl', function($scope, $http, Auth, Data, Upload) {
+  $scope.isUploaded = false;
   var defaultSchool;
 
   $scope.isTeacher = Auth.getCurrentUser().role === 'teacher';
@@ -23,6 +24,21 @@ app.controller('PDFUploadCtrl', function($scope, Auth, Data, Upload) {
     });
   };
 
+  $scope.cancelUpload = function() {
+    $scope.isUploaded = false;
+    $scope.result.data = {};
+    $scope.data.upload.message = 'Upload Canceled';
+  };
+
+  $scope.confirmUpload = function() {
+    $http.post('/api/absence-records/' + $scope.result.config.data.schoolId, 
+      $scope.result.data).success(function() {
+        $scope.data.upload.message = 'Upload Confirmed!';
+        $scope.result.data = {};
+        $scope.isUploaded = false;
+      });
+  };
+
   $scope.submit = function() {
     delete $scope.data.upload.message;
     if ($scope.forms.upload.$valid) {
@@ -31,10 +47,12 @@ app.controller('PDFUploadCtrl', function($scope, Auth, Data, Upload) {
       delete $scope.data.upload.fileError;
 
       $scope.upload($scope.data.upload.file).then(function(res) {
-        if (res.status === 204) {
+        if (res.status === 200) {
           $scope.data.upload = {school: defaultSchool};
-          $scope.data.upload.message = 'File Uploaded!';
-          $scope.forms.upload.$setPristine();
+          $scope.data.upload.message = 'Confirm you want to upload the following...';
+          $scope.result = res;
+          $scope.forms.upload.$setPristine();   
+          $scope.isUploaded = true;
         } else {
           $scope.forms.upload.file.$setValidity('server', false);
           $scope.data.upload.fileError = res.status + ': ' + res.statusText;

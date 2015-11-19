@@ -3,6 +3,7 @@
 var _ = require('lodash');
 var AbsenceRecord = require('./absence-record.model');
 var School = require('../school/school.model');
+var Student = require('../student/student.model');
 
 /**
  * Get list of absence records
@@ -49,9 +50,32 @@ exports.show = function(req, res) {
  * restriction: 'teacher'
  */
 exports.create = function(req, res) {
-  AbsenceRecord.create(req.body, function(err, record) {
+  var school = req.params.schoolId;
+  var newData = req.body;
+  var newStudents = _.pluck(newData.creates, 'student') || [];
+  var newEntries = _.pluck(newData.creates, 'entry') || [];
+  var existingEntries = _.pluck(newData.updates, 'entry') || [];
+
+  _.map(newStudents, function(student) {
+    student.currentSchool = school;
+  });
+  
+  // Create new students from newStudents Array
+  Student.collection.insert(newStudents, {ordered: true}, function(err, createdStudents) {
     if (err) { return handleError(res, err); }
-    return res.status(201).json(record);
+    _.forEach(createdStudents.ops, function(student, index) {
+      newEntries[index].student = student._id;
+    });
+    var newAbsRec = {
+      schoolYear: (newData.creates[0] || newData.updates[0]).schoolYear,
+      school: school,
+      entries: [].concat.apply(newEntries, existingEntries)
+    };
+    // Create new absence record collection
+    AbsenceRecord.collection.insert(newAbsRec, function(err, record) {
+      if (err) { return handleError(res, err); }
+      return res.status(200).json(record);
+    });
   });
 };
 

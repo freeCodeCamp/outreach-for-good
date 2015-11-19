@@ -2,7 +2,7 @@
   <h3>Upload Absence Report</h3>
 </div>
 <div class="upload-form row">
-  <form class="form-inline" name="forms.upload" ng-submit="submit()" novalidate>
+  <form class="form-inline" name="forms.upload" ng-submit="submit()" ng-show="!isUploaded" novalidate>
     <div class="form-group"
       ng-class="data.upload.school ? 'has-success' : 'has-error'">
       <label>School</label>
@@ -40,5 +40,10 @@
   </div>
   <div ng-if="!forms.upload.$dirty" class="form-group has-success">
     <div class="help-block">{{data.upload.message}}</div>
+    <div class="content-block" ng-show="isUploaded">
+      {{result.data | json }}
+    </div>
   </div>
+  <button class="btn btn-success" ng-show="isUploaded" ng-click="confirmUpload()">Confirm Upload</button>
+  <button class="btn btn-danger" ng-show="isUploaded" ng-click="cancelUpload()">Canel Upload</button>
 </div>

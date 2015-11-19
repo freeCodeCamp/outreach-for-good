@@ -4,79 +4,84 @@ var _ = require('lodash');
 var pdf2table = require('pdf2table');
 var fs = require('fs');
 var AbsenceRecord = require('../absence-record/absence-record.model');
-var Student = require('../student/student.model');
 
-// Parse PDF report to readable JSON data
-function parseStudents(block) {
-  return _.chunk(block[0], 2).map(function(student, i) {
-    var names = student[0].split(', ');
-    return {
-      last: names[0],
-      first: names[1],
-      id: student[1]
-    };
-  }).map(function(student, i) {
-    student['All Absences'] = block[1][i * 2 + 1];
-    student.Tdy = block[2][i * 2 + 1];
-    student.Present = block[3][i * 2 + 1];
-    student.Enrolled = block[4][i * 2 + 1];
-    student['School Year'] = block[5][i * 2 + 1];
-    return student;
-  });
+// Returns an array of arrays, each nested array represents data for a student.
+function studentDataArrays(rows) {
+  var rowChunks = _.chunk(rows.reverse(), 6);
+  return [].concat.apply([], _.map(rowChunks, splitRowChunks));
 }
 
-// Creates a new student record
-// If student record exists, do nothing...
-function createStudentRecords(records) {
-  return records.map(function(record) {
-    return {
-      studentId: record.id,
-      lastName: record.last,
-      firstName: record.first,
-      active: true
-      // get school attr here
-    };
+// Splits each row of three students into an array for each student.
+function splitRowChunks(rows) {
+  var propertyArrays = _.map(rows, function(row) {
+    return _.chunk(row, 2);
   });
+  return _.zip.apply(null, propertyArrays);
 }
 
-// Creates new Absence Record...
-// If absence record exists, appends it
-function createAbsenceRecord(records) {
-  var absRecord = {
-    schoolYear: records[0]['School Year'],
-    // insert school attr here
+function parseStudent(arr) {
+  var result = {};
+  var names = arr[0][0].split(', ');
+  result.student = {
+    lastName: names[0],
+    firstName: names[1],
+    studentId: arr[0][1]
   };
-  absRecord.entries = records.map(function(record) {
-    return {
-      //get student ID here
-      absences: record['All Absences'],
-      tardies: record.Tdy,
-      present: record.Present,
-      enrolled: record.Enrolled
-    };
-  });
-  return absRecord;
+  result.entry = {
+    'All Absences': arr[1][1],
+    Tdy: arr[2][1],
+    Present: arr[3][1],
+    Enrolled: arr[4][1]
+  };
+  result.schoolYear = arr[5][1].replace(/\s/g, '');
+  return result;
 }
 
-// Takes PDF Data and transfers it into the DB
-exports.create = function(req, res) {
+function previousRecord(schoolId, schoolYear) {
+  return AbsenceRecord
+    .find({schoolId: schoolId, schoolYear: schoolYear})
+    .sort({created_at: -1})
+    .limit(1)
+    .populate('entries.student')
+    .exec();
+}
 
+// Categorize students into update and create.
+function groupByType(students, idToPrev) {
+  return _.groupBy(students, function(student) {
+    return student.student.id in idToPrev ? 'updates' : 'creates';
+  });
+}
+
+exports.upload = function(req, res) {
   fs.readFile(req.file.path, function(err, buffer) {
     if (err) return console.log(err);
     pdf2table.parse(buffer, function(err, rows) {
       if (err) return console.log(err);
-      var results = _.chunk(rows.reverse(), 6).reduce(function(p, block) {
-        return p.concat(parseStudents(block));
-      }, []);
-      var stuBatch = createStudentRecords(results);
-      var absBatch = createAbsenceRecord(results);
-      console.log(stuBatch);
-      //Student.collection.insert(stuBatch, {ordered: false});
-      console.log(absBatch);
-      //AbsenceRecord.create(absBatch);
+
+      // TODO: Try catch for failure to parse.
+      var students = studentDataArrays(rows).map(parseStudent);
+      // Needs authorization check if teacher, check if equal to assignment.
+      var schoolId = req.body.schoolId;
+      // This will throw if no students, add guard statement (invalid upload?).
+      var schoolYear = students[0].schoolYear;
+
+      previousRecord(schoolId, schoolYear).then(function(prev) {
+        var idToPrev = _.indexBy((prev || {}).entries, 'student.studentId');
+
+        var result = groupByType(students, idToPrev);
+        // This adds the student to the entry, could just add the student._id
+        (result.updates || []).forEach(function(student) {
+          student.entry.student = idToPrev[student.student.id]._id;
+        });
+
+        result.missing =
+          _.difference(_.keys(idToPrev), _.map(students, 'student.id'));
+
+        res.status(200).json(result);
+      });
     });
   });
-  res.status(204).end()
 };
 
 function handleError(res, err) {

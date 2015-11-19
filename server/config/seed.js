@@ -15,6 +15,8 @@ User.remove().exec().then(function() {
 }).then(function() {
   return Student.remove().exec();
 }).then(function() {
+  return AbsenceRecord.remove().exec();
+}).then(function() {
   return User.create({
     provider: 'local',
     name: 'Test User',
