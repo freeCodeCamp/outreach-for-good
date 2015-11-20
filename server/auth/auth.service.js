@@ -63,25 +63,30 @@ function hasRole(roleRequired) {
     });
 }
 
-function schoolMsg(schoolName) {
-  return 'Your current role of teacher and assignment to ' +
-         schoolName + ' does not allow access to requested resource.';
+function schoolMsg(schoolId) {
+  return 'Your current role of teacher and assignment to schoolId: ' +
+         schoolId + ' does not allow access to requested resource.';
+}
+
+function authorizeSchool(req, type) {
+  var schoolId = type === 'body' ? req.body.schoolId : req.params.schoolId;
+  var assignment = req.user.assignment;
+  return schoolId && assignment && assignment.toString() === schoolId;
 }
 
 /**
  * Checks if the user is at least manager role or has school assignment
  */
-function schoolAuth() {
+function schoolAuth(type) {
   return compose()
     .use(function(req, res, next) {
-      if (!req.params.schoolId) {
-        throw new Error('schoolAuth is for routes with schoolId param');
-      }
       if (meetsRoleRequirements(req.user.role, 'manager') ||
-          req.user.currentSchool.id === req.params.schoolId) {
-        next()
+          authorizeSchool(req, type)) {
+        next();
       } else {
-        res.status(403).json({reason: schoolMsg(req.user.currentSchool.name)});
+        res.status(403).json({
+          reason: schoolMsg(req.user.assignment)
+        });
       }
     });
 }

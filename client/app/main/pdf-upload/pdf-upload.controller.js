@@ -28,7 +28,7 @@ app.controller('PDFUploadCtrl',
     $scope.cancelUpload = function() {
       $scope.isUploaded = false;
       $scope.result.data = {};
-      $scope.data.upload.message = 'Upload Canceled';
+      $scope.data.upload.message = 'Upload Cancelled';
     };
 
     $scope.confirmUpload = function() {
