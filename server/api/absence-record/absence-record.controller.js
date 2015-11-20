@@ -42,8 +42,6 @@ function newAbsenceRecord(record, res, createdStudents) {
  * restriction: 'teacher'
  */
 exports.create = function(req, res) {
-  // TODO: Validate user has authorization to add absence record for school.
-
   var school = req.body.schoolId;
   var existingEntries = _.pluck(req.body.updates || [], 'entry');
   if (!req.body.creates) {
