@@ -57,11 +57,9 @@ exports.upload = function(req, res) {
     if (err) return handleError(res, err);
     pdf2table.parse(buffer, function(err, rows) {
       if (err) return handleError(res, err);
-
+      var schoolId = req.body.schoolId;
       // TODO: Try catch for failure to parse.
       var students = studentDataArrays(rows).map(parseStudent);
-      // Needs authorization check if teacher, check if equal to assignment.
-      var schoolId = req.body.schoolId;
       // This will throw if no students, add guard statement (invalid upload?).
       var schoolYear = students[0].schoolYear;
 
@@ -84,5 +82,5 @@ exports.upload = function(req, res) {
 };
 
 function handleError(res, err) {
-  return res.send(500, err);
+  return res.status(500).send(err);
 }
