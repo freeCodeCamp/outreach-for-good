@@ -76,6 +76,7 @@ exports.upload = function(req, res) {
         }
         result.missing =
           _.difference(_.keys(idToPrev), _.map(students, 'student.studentId'));
+        result.schoolId = schoolId;
         res.status(200).json(result);
       });
     });
