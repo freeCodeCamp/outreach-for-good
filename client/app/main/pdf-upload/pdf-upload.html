@@ -34,12 +34,12 @@
   </form>
   <div ng-if="forms.upload.file.$invalid && forms.upload.file.$dirty" class="form-group has-error">
     <div ng-messages="forms.upload.file.$error" class="help-block">
-      <div ng-message-exp="['required', 'pattern']">Choose an absence report PDF to upload</div>
-      <div ng-message="server">{{data.upload.fileError}}</div>
+      <div ng-message-exp="['required', 'pattern']"><span class="label label-warning">Choose an absence report PDF to upload</span></div>
+      <div ng-message="server"><span class="label label-danger">{{data.upload.fileError}}</span></div>
     </div>
   </div>
   <div ng-if="!forms.upload.$dirty" class="form-group has-success">
-    <div class="help-block">{{data.upload.message}}</div>
+    <div class="help-block"><span class="label label-primary">{{data.upload.message}}</span></div>
   </div>
   <div ng-if="isUploaded" class="row">
     <div class="table-responsive">
@@ -65,8 +65,8 @@
         </tr>
         <tr class="success">
           <th>Existing Students</th>
-        </tr class="success">
-        <tr ng-repeat="listing in result.data.updates">
+        </tr>
+        <tr class="success" ng-repeat="listing in result.data.updates">
           <td>{{listing.student.lastName}}, {{listing.student.firstName}}</td>
           <td>{{listing.student.studentId}}</td>
           <td>{{listing.entry.absences}}</td>
