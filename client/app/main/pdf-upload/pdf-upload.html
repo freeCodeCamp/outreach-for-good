@@ -42,7 +42,40 @@
     <div class="help-block">{{data.upload.message}}</div>
   </div>
   <div ng-if="isUploaded" class="row">
-    <pre class="content-block text-left">{{result.data | json }}</pre>
+    <div class="table-responsive">
+      <table class="table table-condensed">
+        <tr>
+          <th>NAME</th>
+          <th>SID</th>
+          <th>ABSENCES</th>
+          <th>ENROLLED</th>
+          <th>PRESENT</th>
+          <th>TARDIES</th>
+        </tr>
+        <tr class="info">
+          <th>New Students</th>
+        </tr>
+        <tr class="info" ng-repeat="listing in result.data.creates">
+          <td>{{listing.student.lastName}}, {{listing.student.firstName}}</td>
+          <td>{{listing.student.studentId}}</td>
+          <td>{{listing.entry.absences}}</td>
+          <td>{{listing.entry.enrolled}}</td>
+          <td>{{listing.entry.present}}</td>
+          <td>{{listing.entry.tardies}}</td>
+        </tr>
+        <tr class="success">
+          <th>Existing Students</th>
+        </tr class="success">
+        <tr ng-repeat="listing in result.data.updates">
+          <td>{{listing.student.lastName}}, {{listing.student.firstName}}</td>
+          <td>{{listing.student.studentId}}</td>
+          <td>{{listing.entry.absences}}</td>
+          <td>{{listing.entry.enrolled}}</td>
+          <td>{{listing.entry.present}}</td>
+          <td>{{listing.entry.tardies}}</td>
+        </tr>
+      </table>
+    </div>  
     <div class="row">
       <button class="btn btn-success" ng-click="confirmUpload()">Confirm Upload</button>
       <button class="btn btn-danger" ng-click="cancelUpload()">Cancel Upload</button>
