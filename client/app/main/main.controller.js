@@ -2,15 +2,19 @@
 
 var app = angular.module('app');
 
-function MainCtrl($scope, Auth, Data, School, Sidebar, Student) {
+function MainCtrl($scope, AbsenceRecord, Auth, Data, School, Sidebar, Student) {
   $scope.sidebar = Sidebar;
   var user = Auth.getCurrentUser();
   switch (user.role) {
     case 'teacher':
       if (user.assignment) {
-        School.students({id: user.assignment})
-          .$promise.then(function(students) {
+        School.students({id: user.assignment._id}).$promise
+          .then(function(students) {
             Data.setStudents(students);
+          });
+        AbsenceRecord.school({selector: user.assignment._id}).$promise
+          .then(function(entries) {
+            Data.setEntries(entries);
           });
       }
       break;
@@ -22,6 +26,9 @@ function MainCtrl($scope, Auth, Data, School, Sidebar, Student) {
       });
       Student.list().$promise.then(function(students) {
         Data.setStudents(students);
+      });
+      AbsenceRecord.list().$promise.then(function(entries) {
+        Data.setEntries(entries);
       });
       break;
   }

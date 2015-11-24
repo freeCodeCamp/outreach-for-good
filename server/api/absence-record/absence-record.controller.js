@@ -2,7 +2,7 @@
 
 var _ = require('lodash');
 var AbsenceRecord = require('./absence-record.model');
-var School = require('../school/school.model');
+var ObjectId = require('mongoose').Types.ObjectId;
 var Student = require('../student/student.model');
 
 /**
@@ -11,8 +11,62 @@ var Student = require('../student/student.model');
  */
 exports.index = function(req, res) {
   AbsenceRecord.find(function(err, records) {
-    if (err) { return handleError(res, err); }
+    if (err) return handleError(res, err);
     return res.status(200).json(records);
+  });
+};
+
+/**
+ * Get current absence records for all schools
+ * restriction: 'manager'
+ */
+exports.allSchools = function(req, res) {
+  var options = [{
+    $sort: {_id: -1}
+  }, {
+    $group: {
+      _id: '$school',
+      school: {$first: '$school'},
+      entries: {$first: '$entries'}
+    }
+  }, {
+    $unwind: '$entries'
+  }];
+  AbsenceRecord.aggregate(options, function(err, results) {
+    if (err) return handleError(res, err);
+    AbsenceRecord.populate(results, 'school entries.student',
+      function(err, entries) {
+        if (err) return handleError(res, err);
+        return res.status(200).json(entries);
+      });
+  });
+};
+
+/**
+ * Get current absence record for school
+ * restriction: 'teacher'
+ */
+exports.school = function(req, res) {
+  var options = [{
+    $match: {school: new ObjectId(req.params.schoolId)}
+  }, {
+    $sort: {_id: -1}
+  }, {
+    $group: {
+      _id: '$school',
+      school: {$first: '$school'},
+      entries: {$first: '$entries'}
+    }
+  }, {
+    $unwind: '$entries'
+  }];
+  AbsenceRecord.aggregate(options, function(err, results) {
+    if (err) return handleError(res, err);
+    AbsenceRecord.populate(results, 'school entries.student',
+      function(err, entries) {
+        if (err) return handleError(res, err);
+        return res.status(200).json(entries);
+      });
   });
 };
 
@@ -22,8 +76,8 @@ exports.index = function(req, res) {
  */
 exports.show = function(req, res) {
   AbsenceRecord.findById(req.params.id, function(err, record) {
-    if (err) { return handleError(res, err); }
-    if (!record) { return res.status(404).send('Not Found'); }
+    if (err) return handleError(res, err);
+    if (!record) return res.status(404).send('Not Found');
     return res.json(record);
   });
 };
@@ -75,13 +129,13 @@ exports.create = function(req, res) {
  * restriction: 'teacher'
  */
 exports.update = function(req, res) {
-  if (req.body._id) { delete req.body._id; }
+  if (req.body._id) delete req.body._id;
   AbsenceRecord.findById(req.params.id, function(err, record) {
-    if (err) { return handleError(res, err); }
-    if (!record) { return res.status(404).send('Not Found'); }
+    if (err) return handleError(res, err);
+    if (!record) return res.status(404).send('Not Found');
     var updated = _.merge(record, req.body);
     updated.save(function(err) {
-      if (err) { return handleError(res, err); }
+      if (err) return handleError(res, err);
       return res.status(200).json(record);
     });
   });
@@ -93,10 +147,10 @@ exports.update = function(req, res) {
  */
 exports.destroy = function(req, res) {
   AbsenceRecord.findById(req.params.id, function(err, record) {
-    if (err) { return handleError(res, err); }
-    if (!record) { return res.status(404).send('Not Found'); }
+    if (err) return handleError(res, err);
+    if (!record) return res.status(404).send('Not Found');
     record.remove(function(err) {
-      if (err) { return handleError(res, err); }
+      if (err) return handleError(res, err);
       return res.status(204).send('No Content');
     });
   });
