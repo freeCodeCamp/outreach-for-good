@@ -3,7 +3,7 @@
     <li ng-repeat="state in states"
       ng-class="{active: active(state.name)}"
       ng-if="!state.requiredRole || userIs(state.requiredRole)">
-      <a href="" ng-click="navigateTo(state.name)">
+      <a href="" ng-click="navigateTo(state.url)">
         <span class="fa-stack fa-lg pull-left"><i class="fa fa-stack-1x" ng-class="state.icon"></i></span>
         {{state.displayName}}
       </a>

@@ -50,8 +50,7 @@ app.factory('authInterceptor',
             $state.go('login');
             break;
           case 403:
-            console.log(response);
-            $state.go('forbidden', {reason: response.reason});
+            $state.go('forbidden', {reason: response.data.reason});
             break;
         }
         return $q.reject(response);

@@ -13,7 +13,12 @@ app.controller('DashboardCtrl', function($scope, Data) {
   $scope.studentGridOptions.columnDefs = [{
     name: 'entries.student.studentId',
     displayName: 'Student Id',
-    minWidth: 150
+    minWidth: 150,
+    cellTemplate: '<div class="ui-grid-cell-contents">' +
+                  '<a ui-sref="student({id: ' +
+                  '\'{{row.entity.entries.student._id}}\'})">' +
+                  '{{row.entity.entries.student.studentId}}</a>' +
+                  '</div>'
   }, {
     name: 'entries.student.firstName',
     displayName: 'First Name',

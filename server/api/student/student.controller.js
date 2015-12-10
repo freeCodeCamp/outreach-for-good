@@ -2,7 +2,6 @@
 
 var _ = require('lodash');
 var Student = require('./student.model');
-var School = require('../school/school.model');
 
 /**
  * Get list of all students
@@ -13,24 +12,42 @@ exports.index = function(req, res) {
     .find()
     .populate('currentSchool', 'name')
     .exec(function(err, students) {
-      if (err) { return handleError(res, err); }
+      if (err) return handleError(res, err);
       return res.status(200).json(students);
     });
 };
 
-// Get a single student
+/** TODO: Refactor school auth into its own service to keep DRY. **/
+function schoolMsg(schoolId) {
+  return 'Your current role of teacher and assignment to schoolId: ' +
+         schoolId + ' does not allow access to requested resource.';
+}
+
+/**
+ * Get single student by id
+ * restriction: 'teacher'
+ */
 exports.show = function(req, res) {
-  Student.findById(req.params.id, function(err, student) {
-    if (err) { return handleError(res, err); }
-    if (!student) { return res.send(404); }
-    return res.json(student);
-  });
+  Student
+    .findById(req.params.id)
+    .populate('currentSchool', 'name')
+    .exec(function(err, student) {
+      if (err) return handleError(res, err);
+      if (!student) return res.send(404);
+      if (req.user.role === 'teacher' &&
+          student.currentSchool.id !== req.user.assignment.toString()) {
+        return res.status(403).json({
+          reason: schoolMsg(req.user.assignment.toString())
+        });
+      }
+      return res.json(student);
+    });
 };
 
 // Creates a new student in the DB.
 exports.create = function(req, res) {
   Student.create(req.body, function(err, student) {
-    if (err) { return handleError(res, err); }
+    if (err) return handleError(res, err);
     return res.json(201, student);
   });
 };
@@ -39,11 +56,11 @@ exports.create = function(req, res) {
 exports.update = function(req, res) {
   if (req.body._id) { delete req.body._id; }
   Student.findById(req.params.id, function(err, student) {
-    if (err) { return handleError(res, err); }
-    if (!student) { return res.send(404); }
+    if (err) return handleError(res, err);
+    if (!student) return res.send(404);
     var updated = _.merge(student, req.body);
     updated.save(function(err) {
-      if (err) { return handleError(res, err); }
+      if (err) return handleError(res, err);
       return res.json(200, student);
     });
   });
@@ -52,10 +69,10 @@ exports.update = function(req, res) {
 // Deletes a student from the DB.
 exports.destroy = function(req, res) {
   Student.findById(req.params.id, function(err, student) {
-    if (err) { return handleError(res, err); }
-    if (!student) { return res.send(404); }
+    if (err) return handleError(res, err);
+    if (!student) return res.send(404);
     student.remove(function(err) {
-      if (err) { return handleError(res, err); }
+      if (err) return handleError(res, err);
       return res.send(204);
     });
   });

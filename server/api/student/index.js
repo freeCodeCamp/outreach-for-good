@@ -9,10 +9,12 @@ var router = express.Router();
 
 router.get('/', auth.hasRole('manager'), controller.index);
 
+// School Authentication in controller
+router.get('/:id', auth.hasRole('teacher'), controller.show);
+
 /**
  * TODO: LOCK DOWN ROUTES WITH AUTH ROLE CHECKS
  */
-router.get('/:id', controller.show);
 router.post('/', controller.create);
 router.put('/:id', controller.update);
 router.patch('/:id', controller.update);
