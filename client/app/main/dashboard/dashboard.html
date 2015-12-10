@@ -1,64 +1,55 @@
-<section class="dashboard">
+<div class="dashboard row">
   <div class="widgets">
-    <div class="row">
-      <div class="widget">
-        <div class="well">
-          <h5>Letters outstanding</h5>
-          <div><i class="fa fa-envelope fa-2x"></i></div>
-          <div class="badge">{{letters}}</div>
-        </div>
-      </div>
-      <div class="widget">
-        <div class="well">
-          <h5>Phone calls outstanding</h5>
-          <div><i class="fa fa-phone fa-2x"></i></div>
-          <div class="badge">{{calls}}</div>
-        </div>
-      </div>
-      <div class="widget">
-        <div class="well">
-          <h5>Home visits outstanding</h5>
-          <div><i class="fa fa-home fa-2x"></i></div>
-          <div class="badge">{{home}}</div>
-        </div>
-      </div>
-      <div class="widget">
-        <div class="well">
-          <h5>Court referrals outstanding</h5>
-          <div><i class="fa fa-gavel fa-2x"></i></div>
-          <div class="badge">{{court}}</div>
-        </div>
-      </div>
-      <div class="widget">
-        <div class="well">
-          <h5>SST referrals outstanding</h5>
-          <div><i class="fa fa-support fa-2x"></i></div>
-          <div class="badge">{{sst}}</div>
-        </div>
-      </div>
-      <div class="widget">
-        <div class="well">
-          <h5>Students</h5>
-          <div><i class="fa fa-child fa-2x"></i></div>
-        </div>
-      </div>
-      <div class="widget">
-        <div class="well">
-          <h5>Reports</h5>
-          <div><i class="fa fa-area-chart fa-2x"></i></div>
-        </div>
-      </div>
-      <div class="widget">
-        <div class="well">
-          <h5>Upload PDF</h5>
-          <div><a ui-sref="pdf-upload"><i class="fa fa-upload fa-2x"></i></a></div>
-        </div>
-      </div>
+    <div class="widget">
+      <a href="#" tooltip-placement="top" uib-tooltip="Letters">
+        <i class="fa fa-envelope fa-2x"></i>
+      </a>
+      <div class="badge">{{letters}}</div>
+    </div>
+    <div class="widget">
+      <a href="#" tooltip-placement="top" uib-tooltip="Phone calls">
+        <i class="fa fa-phone fa-2x"></i>
+      </a>
+      <div class="badge">{{calls}}</div>
+    </div>
+    <div class="widget">
+      <a href="#" tooltip-placement="top" uib-tooltip="Home visits">
+        <i class="fa fa-home fa-2x"></i>
+      </a>
+      <div class="badge">{{home}}</div>
+    </div>
+    <div class="widget">
+      <a href="#" tooltip-placement="top" uib-tooltip="Court referrals">
+        <i class="fa fa-gavel fa-2x"></i>
+      </a>
+      <div class="badge">{{court}}</div>
+    </div>
+    <div class="widget">
+      <a href="#" tooltip-placement="top" uib-tooltip="SST referrals">
+        <i class="fa fa-support fa-2x"></i>
+      </a>
+      <div class="badge">{{sst}}</div>
+    </div>
+    <div class="widget">
+      <a href="#" tooltip-placement="top" uib-tooltip="Students">
+        <i class="fa fa-child fa-2x"></i>
+      </a>
+    </div>
+    <div class="widget">
+      <a href="#" tooltip-placement="top" uib-tooltip="Reports">
+        <i class="fa fa-area-chart fa-2x"></i>
+      </a>
+    </div>
+    <div class="widget">
+      <a ui-sref="pdf-upload" tooltip-placement="top" uib-tooltip="Upload">
+        <i class="fa fa-upload fa-2x"></i>
+      </a>
     </div>
   </div>
-  <div class="student-list row">
-    <h3 class="text-center">List of student participants</h3>
-    <div ui-grid="studentGridOptions" ui-grid-auto-resize ui-grid-selection id="student-grid" class="grid"></div>
+  <div class="heading">
+    <h3>List of student participants</h3>
   </div>
-</section>
-
+  <div class="student-list">
+    <div ui-grid="studentGridOptions" ui-grid-auto-resize ui-grid-selection class="grid"></div>
+  </div>
+</div>
