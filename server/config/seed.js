@@ -69,19 +69,25 @@ User.remove().exec().then(function() {
     {
       student: studentA._id,
       absences: 1.0,
+      absencesDelta: 1.0,
       tardies: 0.0,
+      tardiesDelta: 0.0,
       present: 15.0,
       enrolled: 16.0
     }, {
       student: studentB._id,
       absences: 1.0,
+      absencesDelta: 1.0,
       tardies: 0.0,
+      tardiesDelta: 0.0,
       present: 14.0,
       enrolled: 15.0
     }, {
       student: studentC._id,
       absences: 1.0,
+      absencesDelta: 1.0,
       tardies: 0,
+      tardiesDelta: 0.0,
       present: 21.0,
       enrolled: 22.0
     }
@@ -93,13 +99,17 @@ User.remove().exec().then(function() {
     {
       student: studentD._id,
       absences: 0.0,
+      absencesDelta: 0.0,
       tardies: 0.0,
+      tardiesDelta: 0.0,
       present: 1.0,
       enrolled: 1.0
     }, {
       student: studentE._id,
       absences: 0.0,
+      absencesDelta: 0.0,
       tardies: 0.0,
+      tardiesDelta: 0.0,
       present: 22.0,
       enrolled: 22.0
     }

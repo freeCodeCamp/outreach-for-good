@@ -68,8 +68,22 @@ exports.upload = function(req, res) {
         var result = groupByType(students, idToPrev);
         if (result.updates) {
           _.forEach(result.updates, function(student) {
+            var prevAbsRec = idToPrev[student.student.studentId];
             var prevStudent = idToPrev[student.student.studentId].student;
             student.entry.student = prevStudent._id;
+            // Calculate Deltas
+            student.entry.tardiesDelta = student.entry.tardies -  prevAbsRec.tardies;
+            student.entry.absencesDelta = student.entry.absences -  prevAbsRec.absences;
+            console.log(student);
+          });
+        }
+        // Deltas are equivilent to their entry counterpart if creating new student
+        if (result.creates) {
+          _.forEach(result.creates, function(student) {
+            // Calculate Deltas
+            student.entry.tardiesDelta = student.entry.tardies;
+            student.entry.absencesDelta = student.entry.absences;
+            console.log(student);
           });
         }
         result.missing =
