@@ -4,19 +4,15 @@ var app = angular.module('app');
 
 app.controller('PDFUploadCtrl',
   function($scope, AbsenceRecord, Auth, Data, Upload) {
+    $scope.forms = {};
     $scope.isUploaded = false;
-    var defaultSchool;
+    $scope.schools = Data.schools();
 
-    $scope.isTeacher = Auth.getCurrentUser().role === 'teacher';
-    if ($scope.isTeacher) {
-      defaultSchool = Auth.getCurrentUser().assignment;
-      $scope.schools = [defaultSchool];
-    } else {
-      $scope.schools = Data.schools();
+    if (Auth.getCurrentUser().role === 'teacher') {
+      $scope.defaultSchool = Auth.getCurrentUser().assignment;
     }
 
-    $scope.forms = {};
-    $scope.data = {upload: {school: defaultSchool}};
+    $scope.data = {upload: {school: $scope.defaultSchool}};
 
     $scope.upload = function(file) {
       return Upload.upload({
@@ -32,8 +28,7 @@ app.controller('PDFUploadCtrl',
     };
 
     $scope.confirmUpload = function() {
-      AbsenceRecord.save({}, $scope.result.data, function(res) {
-        [].push.apply(Data.students(), res.students);
+      AbsenceRecord.save({}, $scope.result.data, function() {
         $scope.data.upload.message = 'Upload Confirmed!';
         $scope.result.data = {};
         $scope.isUploaded = false;
@@ -52,7 +47,7 @@ app.controller('PDFUploadCtrl',
 
         $scope.upload($scope.data.upload.file).then(function(res) {
           if (res.status === 200) {
-            $scope.data.upload = {school: defaultSchool};
+            $scope.data.upload = {school: $scope.defaultSchool};
             $scope.data.upload.message =
               'Confirm you want to upload the following...';
             $scope.result = res;

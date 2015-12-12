@@ -4,14 +4,21 @@ angular.module('app').controller('SidebarCtrl',
   function($scope, $state, $window, Auth, Sidebar, matchmedia) {
     $scope.states = [{
       name: 'dashboard',
+      url: 'dashboard',
       displayName: 'Dashboard',
       icon: 'fa-dashboard'
     }, {
+      name: 'student',
+      displayName: 'Student',
+      icon: 'fa-child'
+    }, {
       name: 'pdf-upload',
+      url: 'pdf-upload',
       displayName: 'Upload Absence Report',
       icon: 'fa-upload'
     }, {
       name: 'admin',
+      url: 'admin',
       displayName: 'Admin',
       icon: 'fa-wrench',
       requiredRole: 'admin'
@@ -22,9 +29,11 @@ angular.module('app').controller('SidebarCtrl',
     };
     $scope.userIs = Auth.userIs;
     $scope.navigateTo = function(state) {
-      if (matchmedia.isPhone()) {
-        $scope.sidebar.toggle();
+      if (state) {
+        if (matchmedia.isPhone()) {
+          $scope.sidebar.toggle();
+        }
+        $state.go(state);
       }
-      $state.go(state);
     };
   });

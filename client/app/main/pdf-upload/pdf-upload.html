@@ -6,7 +6,7 @@
     <div class="form-group"
       ng-class="data.upload.school ? 'has-success' : 'has-error'">
       <label>School</label>
-      <ui-select theme="bootstrap" ng-model="data.upload.school" ng-disabled="isTeacher" required>
+      <ui-select theme="bootstrap" ng-model="data.upload.school" ng-disabled="defaultSchool" required>
         <ui-select-match placeholder="Select a school">{{$select.selected.name}}</ui-select-match>
         <ui-select-choices repeat="school in schools | filter: $select.search">
           <div ng-bind-html="school.name | highlight: $select.search"></div>
@@ -75,7 +75,7 @@
           <td>{{listing.entry.tardies}}</td>
         </tr>
       </table>
-    </div>  
+    </div>
     <div class="row">
       <button class="btn btn-success" ng-click="confirmUpload()">Confirm Upload</button>
       <button class="btn btn-danger" ng-click="cancelUpload()">Cancel Upload</button>
