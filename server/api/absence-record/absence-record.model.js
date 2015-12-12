@@ -9,7 +9,9 @@ var AbsenceRecordSchema = new Schema({
   entries: [{
     student: {type: Schema.Types.ObjectId, ref: 'Student', required: true},
     absences: {type: Number, required: true},
+    absencesDelta: {type: Number, required: true},
     tardies: {type: Number, required: true},
+    tardiesDelta: {type: Number, required: true},
     present: {type: Number, required: true},
     enrolled: {type: Number, required: true}
   }]
