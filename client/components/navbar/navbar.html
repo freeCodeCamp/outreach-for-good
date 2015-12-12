@@ -6,7 +6,7 @@
       ng-if="showSidebarToggle()"
       ng-click="sidebar.toggle()">
       <span class="sr-only">Toggle sidebar menu</span>
-      <i class="fa fa-bars fa-lg" 
+      <i class="fa fa-bars fa-lg"
         ng-class="{'fa-rotate-90': sidebar.isCollapsed}"></i>
     </button>
     <a ui-sref="dashboard" class="navbar-brand">Child First Authority</a>
@@ -21,7 +21,7 @@
   <div uib-collapse="isCollapsed" class="navbar-collapse collapse" id="navbar-main">
     <ul class="nav navbar-nav navbar-right">
       <li><p class="navbar-text">Hello {{ getCurrentUser().name }}</p></li>
-      <li><a href="" ng-click="logout()">Logout</a></li>
+      <li><a href="" ng-mousedown="logout()">Logout</a></li>
     </ul>
   </div>
 </div>
