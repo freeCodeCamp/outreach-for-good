@@ -10,6 +10,7 @@ var app = angular.module('app', [
   'ui.grid',
   'ui.grid.autoResize',
   'ui.grid.exporter',
+  'ui.grid.grouping',
   'ui.grid.pinning',
   'ui.grid.selection',
   'ui.router',

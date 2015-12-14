@@ -47,9 +47,10 @@
     </div>
   </div>
   <div class="heading">
-    <h3>List of student participants</h3>
+    <h3 ng-if="!assignment">Students</h3>
+    <h3 ng-if="assignment">{{assignment.name}}</h3>
   </div>
   <div class="student-list">
-    <div ui-grid="studentGridOptions" ui-grid-auto-resize ui-grid-selection class="grid"></div>
+    <div ui-grid="studentGridOptions" ui-grid-auto-resize ui-grid-selection ui-grid-grouping class="grid"></div>
   </div>
 </div>
