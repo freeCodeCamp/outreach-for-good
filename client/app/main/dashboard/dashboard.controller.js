@@ -15,8 +15,7 @@ function DashboardCtrl($scope, Data, Auth, uiGridGroupingConstants) {
     displayName: 'Student Id',
     minWidth: 150,
     cellTemplate: '<div class="ui-grid-cell-contents">' +
-                  '<a ui-sref="student({id: ' +
-                  '\'{{row.entity.entries.student._id}}\'})">' +
+                  '<a href="/student/{{row.entity.entries.student._id}}">' +
                   '{{row.entity.entries.student.studentId}}</a>' +
                   '</div>'
   }, {
