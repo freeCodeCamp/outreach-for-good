@@ -8,7 +8,7 @@ var router = express.Router();
 
 router.post('/',
   auth.hasRole('teacher'),
-  auth.schoolAuth('body'),
+  auth.authorizeSchool('body'),
   controller.create);
 
 router.get('/schools',
@@ -17,7 +17,7 @@ router.get('/schools',
 
 router.get('/schools/:schoolId',
   auth.hasRole('teacher'),
-  auth.schoolAuth('params'),
+  auth.authorizeSchool('params'),
   controller.school);
 
 router.get('/', auth.hasRole('manager'), controller.index);

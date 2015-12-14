@@ -16,7 +16,7 @@ var upload = multer({storage: storage});
 router.post('/',
   auth.hasRole('teacher'),
   upload.single('file'),
-  auth.schoolAuth('body'),
+  auth.authorizeSchool('body'),
   controller.upload);
 
 module.exports = router;

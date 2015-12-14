@@ -9,7 +9,7 @@ var router = express.Router();
 
 router.get('/', auth.hasRole('manager'), controller.index);
 
-// School Authentication in controller
+// CurrentSchool authorization in controller
 router.get('/:id', auth.hasRole('teacher'), controller.show);
 
 /**

@@ -2,6 +2,7 @@
 
 var _ = require('lodash');
 var Student = require('./student.model');
+var auth = require('../../auth/auth.service');
 
 /**
  * Get list of all students
@@ -17,12 +18,6 @@ exports.index = function(req, res) {
     });
 };
 
-/** TODO: Refactor school auth into its own service to keep DRY. **/
-function schoolMsg(schoolId) {
-  return 'Your current role of teacher and assignment to schoolId: ' +
-         schoolId + ' does not allow access to requested resource.';
-}
-
 /**
  * Get single student by id
  * restriction: 'teacher'
@@ -34,13 +29,12 @@ exports.show = function(req, res) {
     .exec(function(err, student) {
       if (err) return handleError(res, err);
       if (!student) return res.send(404);
-      if (req.user.role === 'teacher' &&
-          student.currentSchool.id !== req.user.assignment.toString()) {
+      if (!auth.authorizeStudent(student, req)) {
         return res.status(403).json({
-          reason: schoolMsg(req.user.assignment.toString())
+          reason: auth.studentMsg(student, req)
         });
       }
-      return res.json(student);
+      return res.status(200).json(student);
     });
 };
 
