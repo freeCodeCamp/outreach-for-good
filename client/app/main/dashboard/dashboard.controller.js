@@ -32,10 +32,18 @@ function DashboardCtrl($scope, Data, Auth, uiGridGroupingConstants) {
     minWidth: 150,
     treeAggregationType: uiGridGroupingConstants.aggregation.SUM
   }, {
+    name: 'entries.absencesDelta',
+    displayName: "Δ",
+    minWidth: 50
+  }, {
     name: 'entries.tardies',
     displayName: 'Tardies',
     minWidth: 150,
     treeAggregationType: uiGridGroupingConstants.aggregation.SUM
+  }, {
+    name: 'entries.tardiesDelta',
+    displayName: "Δ",
+    minWidth: 50
   }, {
     name: 'entries.present',
     displayName: 'Present',
