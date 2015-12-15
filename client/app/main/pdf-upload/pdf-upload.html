@@ -34,45 +34,54 @@
   </form>
   <div ng-if="forms.upload.file.$invalid && forms.upload.file.$dirty" class="form-group has-error">
     <div ng-messages="forms.upload.file.$error" class="help-block">
-      <div ng-message-exp="['required', 'pattern']"><span class="label label-warning">Choose an absence report PDF to upload</span></div>
+      <div ng-message-exp="['required', 'pattern']"><span class="label label-warning">Choose an absence report PDF to upload</span>
+      </div>
       <div ng-message="server"><span class="label label-danger">{{data.upload.fileError}}</span></div>
     </div>
   </div>
   <div ng-if="!forms.upload.$dirty" class="form-group has-success">
     <div class="help-block"><span class="label label-primary">{{data.upload.message}}</span></div>
   </div>
-  <div ng-if="isUploaded" class="row">
+  <div ng-if="isUploaded" class="row confirm-table">
     <div class="table-responsive">
       <table class="table table-condensed">
+        <thead class="cf">
         <tr>
-          <th>NAME</th>
-          <th>SID</th>
-          <th>ABSENCES</th>
-          <th>ENROLLED</th>
-          <th>PRESENT</th>
-          <th>TARDIES</th>
+          <th>Name</th>
+          <th>Student Id</th>
+          <th>Absences</th>
+          <th>Δ Absences</th>
+          <th>Tardies</th>
+          <th>Δ Tardies</th>
+          <th>Present</th>
+          <th>Enrolled</th>
         </tr>
-        <tr class="info">
+        </thead>
+        <tr class="info" ng-if="result.data.creates">
           <th>New Students</th>
         </tr>
-        <tr class="info" ng-repeat="listing in result.data.creates">
-          <td>{{listing.student.lastName}}, {{listing.student.firstName}}</td>
-          <td>{{listing.student.studentId}}</td>
-          <td>{{listing.entry.absences}}</td>
-          <td>{{listing.entry.enrolled}}</td>
-          <td>{{listing.entry.present}}</td>
-          <td>{{listing.entry.tardies}}</td>
+        <tr class="info" ng-if="result.data.creates" ng-repeat="listing in result.data.creates">
+          <td data-title="Name">{{listing.student.lastName}}, {{listing.student.firstName}}</td>
+          <td data-title="Student Id">{{listing.student.studentId}}</td>
+          <td data-title="Absences">{{listing.entry.absences}}</td>
+          <td data-title="Δ Absences">{{listing.entry.absencesDelta}}</td>
+          <td data-title="Tardies">{{listing.entry.tardies}}</td>
+          <td data-title="Δ Tardies">{{listing.entry.tardiesDelta}}</td>
+          <td data-title="Present">{{listing.entry.present}}</td>
+          <td data-title="Enrolled">{{listing.entry.enrolled}}</td>
         </tr>
-        <tr class="success">
+        <tr class="success" ng-if="result.data.updates">
           <th>Existing Students</th>
         </tr>
-        <tr class="success" ng-repeat="listing in result.data.updates">
-          <td>{{listing.student.lastName}}, {{listing.student.firstName}}</td>
-          <td>{{listing.student.studentId}}</td>
-          <td>{{listing.entry.absences}}</td>
-          <td>{{listing.entry.enrolled}}</td>
-          <td>{{listing.entry.present}}</td>
-          <td>{{listing.entry.tardies}}</td>
+        <tr class="success" ng-if="result.data.updates" ng-repeat="listing in result.data.updates">
+          <td data-title="Name">{{listing.student.lastName}}, {{listing.student.firstName}}</td>
+          <td data-title="Student Id">{{listing.student.studentId}}</td>
+          <td data-title="Absences">{{listing.entry.absences}}</td>
+          <td data-title="Δ Absences">{{listing.entry.absencesDelta}}</td>
+          <td data-title="Tardies">{{listing.entry.tardies}}</td>
+          <td data-title="Δ Tardies">{{listing.entry.tardiesDelta}}</td>
+          <td data-title="Present">{{listing.entry.present}}</td>
+          <td data-title="Enrolled">{{listing.entry.enrolled}}</td>
         </tr>
       </table>
     </div>
