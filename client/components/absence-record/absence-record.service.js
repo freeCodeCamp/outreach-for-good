@@ -6,18 +6,11 @@ app.factory('AbsenceRecord', function($resource) {
   return $resource('/api/absence-records/:id/:controller/:selector', {
     id: '@_id'
   }, {
-    list: {
+    listCurrent: {
       method: 'GET',
       isArray: true,
       params: {
-        controller: 'schools'
-      }
-    },
-    school: {
-      method: 'GET',
-      isArray: true,
-      params: {
-        controller: 'schools'
+        controller: 'current'
       }
     }
   });

@@ -5,12 +5,20 @@ var School = require('./school.model');
 var Student = require('../student/student.model');
 
 /**
- * Get list of schools
- * restriction: 'manager'
+ * Get a list of schools
+ * restriction: 'teacher'
+ *
+ * Returns a list of schools based on the req user role:
+ * - teachers will get a list containing the assignment school
+ * - manager+ will get a list of all schools
  */
 exports.index = function(req, res) {
-  School.find(function(err, schools) {
-    if (err) { return handleError(res, err); }
+  var options = {};
+  if (req.user.role === 'teacher') {
+    options._id = req.user.assignment._id;
+  }
+  School.find(options).exec(function(err, schools) {
+    if (err) return handleError(res, err);
     return res.status(200).json(schools);
   });
 };

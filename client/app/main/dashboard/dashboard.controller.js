@@ -3,6 +3,7 @@
 var app = angular.module('app');
 
 function DashboardCtrl($scope, Data, Auth, uiGridGroupingConstants) {
+  $scope.data = Data;
   $scope.studentGridOptions = {
     enableSorting: true,
     enableGridMenu: true,
@@ -68,8 +69,14 @@ function DashboardCtrl($scope, Data, Auth, uiGridGroupingConstants) {
 
   $scope.studentGridOptions.onRegisterApi = function(gridApi) {
     $scope.studentGridApi = gridApi;
-    $scope.studentGridOptions.data = Data.entries();
+    $scope.studentGridOptions.data = $scope.data.entries;
   };
+
+  $scope.$watch('data.entries', function(newEntries, oldEntries) {
+    if (newEntries !== oldEntries) {
+      $scope.studentGridOptions.data = newEntries;
+    }
+  });
 
   $scope.letters = 45;
   $scope.calls = 3;

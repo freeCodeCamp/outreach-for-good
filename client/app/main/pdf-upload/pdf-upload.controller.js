@@ -6,7 +6,7 @@ app.controller('PDFUploadCtrl',
   function($scope, AbsenceRecord, Auth, Data, Upload) {
     $scope.forms = {};
     $scope.isUploaded = false;
-    $scope.schools = Data.schools();
+    $scope.schools = Data.schools;
 
     if (Auth.getCurrentUser().role === 'teacher') {
       $scope.defaultSchool = Auth.getCurrentUser().assignment;
@@ -32,6 +32,7 @@ app.controller('PDFUploadCtrl',
         $scope.data.upload.message = 'Upload Confirmed!';
         $scope.result.data = {};
         $scope.isUploaded = false;
+        Data.refreshEntries();
       }, function(err) {
         console.log(err);
         $scope.data.upload.message = 'Confirmation Error: ' + err;

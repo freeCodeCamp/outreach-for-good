@@ -11,14 +11,9 @@ router.post('/',
   auth.authorizeSchool('body'),
   controller.create);
 
-router.get('/schools',
-  auth.hasRole('manager'),
-  controller.allSchools);
-
-router.get('/schools/:schoolId',
+router.get('/current',
   auth.hasRole('teacher'),
-  auth.authorizeSchool('params'),
-  controller.school);
+  controller.current);
 
 router.get('/', auth.hasRole('manager'), controller.index);
 router.get('/:id', auth.hasRole('teacher'), controller.show);
