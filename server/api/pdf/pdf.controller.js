@@ -66,26 +66,21 @@ exports.upload = function(req, res) {
       previousRecord(schoolId, schoolYear).then(function(prev) {
         var idToPrev = _.indexBy((prev || {}).entries, 'student.studentId');
         var result = groupByType(students, idToPrev);
-        if (result.updates) {
-          _.forEach(result.updates, function(student) {
-            var prevAbsRec = idToPrev[student.student.studentId];
-            var prevStudent = idToPrev[student.student.studentId].student;
-            student.entry.student = prevStudent._id;
-            // Calculate Deltas
-            student.entry.tardiesDelta = student.entry.tardies -  prevAbsRec.tardies;
-            student.entry.absencesDelta = student.entry.absences -  prevAbsRec.absences;
-            console.log(student);
-          });
-        }
-        // Deltas are equivilent to their entry counterpart if creating new student
-        if (result.creates) {
-          _.forEach(result.creates, function(student) {
-            // Calculate Deltas
-            student.entry.tardiesDelta = student.entry.tardies;
-            student.entry.absencesDelta = student.entry.absences;
-            console.log(student);
-          });
-        }
+        // Deltas are equal to their entry counterpart minus previous entry
+        // total for students with existing records.
+        _.forEach(result.updates || [], function(student) {
+          var entry = student.entry;
+          var prevEntry = idToPrev[student.student.studentId];
+          entry.student = prevEntry.student._id;
+          entry.tardiesDelta = entry.tardies - prevEntry.tardies;
+          entry.absencesDelta = entry.absences - prevEntry.absences;
+        });
+        // Deltas are equal to their entry counterpart if creating new student.
+        _.forEach(result.creates || [], function(student) {
+          var entry = student.entry;
+          entry.tardiesDelta = entry.tardies;
+          entry.absencesDelta = entry.absences;
+        });
         result.missing =
           _.difference(_.keys(idToPrev), _.map(students, 'student.studentId'));
         result.schoolId = schoolId;
