@@ -17,39 +17,15 @@ exports.index = function(req, res) {
 };
 
 /**
- * Get current absence records for all schools
- * restriction: 'manager'
- */
-exports.allSchools = function(req, res) {
-  var options = [{
-    $sort: {_id: -1}
-  }, {
-    $group: {
-      _id: '$school',
-      school: {$first: '$school'},
-      entries: {$first: '$entries'}
-    }
-  }, {
-    $unwind: '$entries'
-  }];
-  AbsenceRecord.aggregate(options, function(err, results) {
-    if (err) return handleError(res, err);
-    AbsenceRecord.populate(results, 'school entries.student',
-      function(err, entries) {
-        if (err) return handleError(res, err);
-        return res.status(200).json(entries);
-      });
-  });
-};
-
-/**
- * Get current absence record for school
+ * Get entries from current absence records
  * restriction: 'teacher'
+ *
+ * Returns an aggregation for entries based on the req user role:
+ * - teachers will get entries for assignment school
+ * - manager+ will get entries for all schools
  */
-exports.school = function(req, res) {
+exports.current = function(req, res) {
   var options = [{
-    $match: {school: new ObjectId(req.params.schoolId)}
-  }, {
     $sort: {_id: -1}
   }, {
     $group: {
@@ -60,6 +36,9 @@ exports.school = function(req, res) {
   }, {
     $unwind: '$entries'
   }];
+  if (req.user.role === 'teacher') {
+    options.unshift({$match: {school: req.user.assignment}});
+  }
   AbsenceRecord.aggregate(options, function(err, results) {
     if (err) return handleError(res, err);
     AbsenceRecord.populate(results, 'school entries.student',

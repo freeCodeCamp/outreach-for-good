@@ -4,6 +4,7 @@ var app = angular.module('app');
 
 function AdminCtrl($scope, Auth, Data, User, School, Modal, ROLES) {
   $scope.roles = ROLES.slice(0, ROLES.indexOf(Auth.getCurrentUser().role) + 1);
+  $scope.data = Data;
 
   // Users
 
@@ -62,8 +63,8 @@ function AdminCtrl($scope, Auth, Data, User, School, Modal, ROLES) {
       return;
     }
     var updateFn = function() {
-      User.updateRole({id: user._id}, {role: role})
-        .$promise.then(function(updatedUser) {
+      User.updateRole({id: user._id}, {role: role}).$promise
+        .then(function(updatedUser) {
           _.assign(user, updatedUser);
         });
     };
@@ -75,8 +76,8 @@ function AdminCtrl($scope, Auth, Data, User, School, Modal, ROLES) {
       return;
     }
     var updateFn = function() {
-      User.updateAssignment({id: user._id}, {assignment: assignment})
-        .$promise.then(function() {
+      User.updateAssignment({id: user._id}, {assignment: assignment}).$promise
+        .then(function() {
           user.assignment = assignment;
         });
     };
@@ -110,13 +111,13 @@ function AdminCtrl($scope, Auth, Data, User, School, Modal, ROLES) {
 
   $scope.schoolGridOptions.onRegisterApi = function(gridApi) {
     $scope.schoolGridOptions = gridApi;
-    $scope.schoolGridOptions.data = Data.schools();
+    $scope.schoolGridOptions.data = $scope.data.schools;
   };
 
   $scope.addSchool = function() {
     var addSchoolFn = function(model) {
-      return School.save({}, model, function(school) {
-        Data.schools().push(school);
+      return School.save({}, model, function() {
+        Data.refreshSchools();
       });
     };
     Modal.form('Add New School', 'app/main/admin/partial/modal.add-school.html',
@@ -126,11 +127,17 @@ function AdminCtrl($scope, Auth, Data, User, School, Modal, ROLES) {
   $scope.deleteSchool = function(school) {
     var deleteSchoolFn = function() {
       School.remove({id: school._id}).$promise.then(function() {
-        _.pull(Data.schools(), school);
+        _.pull($scope.data.schools, school);
       });
     };
     Modal.confirm.delete(deleteSchoolFn)(school.name);
   };
+
+  $scope.$watch('data.schools', function(newSchools, oldSchools) {
+    if (newSchools !== oldSchools) {
+      $scope.schoolGridOptions.data = newSchools;
+    }
+  });
 }
 
 app.controller('AdminCtrl', AdminCtrl);
