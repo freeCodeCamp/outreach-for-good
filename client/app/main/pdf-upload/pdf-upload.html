@@ -43,6 +43,10 @@
     <div class="help-block"><span class="label label-primary">{{data.upload.message}}</span></div>
   </div>
   <div ng-if="isUploaded" class="row confirm-table">
+    <div class="row">
+      <button class="btn btn-success" ng-click="confirmUpload()">Confirm Upload</button>
+      <button class="btn btn-danger" ng-click="cancelUpload()">Cancel Upload</button>
+    </div>
     <div class="table-responsive">
       <table class="table table-condensed">
         <thead class="cf">
@@ -55,6 +59,7 @@
           <th>Δ Tardies</th>
           <th>Present</th>
           <th>Enrolled</th>
+          <th>Interventions</th>
         </tr>
         </thead>
         <tr class="info" ng-if="result.data.creates">
@@ -69,6 +74,7 @@
           <td data-title="Δ Tardies">{{listing.entry.tardiesDelta}}</td>
           <td data-title="Present">{{listing.entry.present}}</td>
           <td data-title="Enrolled">{{listing.entry.enrolled}}</td>
+          <td data-title="Interventions">{{listing.entry.interventions.length}}</td>
         </tr>
         <tr class="success" ng-if="result.data.updates">
           <th>Existing Students</th>
@@ -82,12 +88,9 @@
           <td data-title="Δ Tardies">{{listing.entry.tardiesDelta}}</td>
           <td data-title="Present">{{listing.entry.present}}</td>
           <td data-title="Enrolled">{{listing.entry.enrolled}}</td>
+          <td data-title="Interventions">{{listing.entry.interventions.length}}</td>
         </tr>
       </table>
-    </div>
-    <div class="row">
-      <button class="btn btn-success" ng-click="confirmUpload()">Confirm Upload</button>
-      <button class="btn btn-danger" ng-click="cancelUpload()">Cancel Upload</button>
     </div>
   </div>
 </div>

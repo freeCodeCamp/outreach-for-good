@@ -21,7 +21,17 @@
     <h3>Interventions</h3>
   </div>
   <div class="interventions">
-    PlaceHolder
-    <pre></pre>
+    <div class="well" ng-repeat="intervention in student.interventions">
+      <dl class="dl-horizontal">
+        <dt>Type</dt>
+        <dd>{{intervention.type}} {{intervention.tier}}</dd>
+
+        <dt>Absences</dt>
+        <dd>{{intervention.absences}}</dd>
+
+        <dt>Triggered On</dt>
+        <dd>{{intervention.triggerDate | date:'yyyy-MM-dd'}}</dd>
+      </dl>
+    </div>
   </div>
 </div>
