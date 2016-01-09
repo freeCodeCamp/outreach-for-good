@@ -5,17 +5,20 @@
 
 'use strict';
 
+var AbsenceRecord = require('../api/absence-record/absence-record.model');
+var Intervention = require('../api/intervention/intervention.model');
 var School = require('../api/school/school.model');
 var Student = require('../api/student/student.model');
 var User = require('../api/user/user.model');
-var AbsenceRecord = require('../api/absence-record/absence-record.model');
 
-User.remove().exec().then(function() {
+AbsenceRecord.remove().exec().then(function() {
+  return Intervention.remove().exec();
+}).then(function() {
   return School.remove().exec();
 }).then(function() {
   return Student.remove().exec();
 }).then(function() {
-  return AbsenceRecord.remove().exec();
+  return User.remove().exec();
 }).then(function() {
   return User.create({
     provider: 'local',
