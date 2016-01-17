@@ -2,6 +2,7 @@
 
 var _ = require('lodash');
 var Student = require('./student.model');
+var Intervention = require('../intervention/intervention.model');
 var auth = require('../../auth/auth.service');
 
 /**
@@ -26,6 +27,7 @@ exports.show = function(req, res) {
   Student
     .findById(req.params.id)
     .populate('currentSchool', 'name')
+    .lean()
     .exec(function(err, student) {
       if (err) return handleError(res, err);
       if (!student) return res.send(404);
@@ -34,7 +36,12 @@ exports.show = function(req, res) {
           reason: auth.studentMsg(student, req)
         });
       }
-      return res.status(200).json(student);
+      Intervention
+        .find({student: req.params.id})
+        .exec(function(err, interventions) {
+          student.interventions = interventions;
+          return res.status(200).json(student);
+        });
     });
 };
 

@@ -2,7 +2,7 @@
 
 var _ = require('lodash');
 var AbsenceRecord = require('./absence-record.model');
-var ObjectId = require('mongoose').Types.ObjectId;
+var Intervention = require('../intervention/intervention.model');
 var Student = require('../student/student.model');
 
 /**
@@ -64,9 +64,24 @@ exports.show = function(req, res) {
 function newAbsenceRecord(record, res, createdStudents) {
   return AbsenceRecord.create(record, function(err, createdRecord) {
     if (err) return handleError(res, err);
-    return res
-      .status(200)
-      .json({record: createdRecord, students: createdStudents});
+    var interventions = [];
+    _.forEach(record.entries, function(entry) {
+      _.forEach(entry.interventions, function(intervention) {
+        intervention.student = entry.student;
+        intervention.record = createdRecord.id;
+        interventions.push(intervention);
+      });
+    });
+    Intervention.create(interventions, function(err, createdInterventions) {
+      if (err) return handleError(res, err);
+      return res
+        .status(200)
+        .json({
+          record: createdRecord,
+          interventions: createdInterventions,
+          students: createdStudents
+        });
+    });
   });
 }
 

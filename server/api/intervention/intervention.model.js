@@ -14,13 +14,14 @@ var types = [
 var InterventionSchema = new Schema({
   type: {type: String, required: true, enum: types},
   tier: {type: Number, required: true},
+  absences: {type: Number, required: true},
 
   student: {type: Schema.Types.ObjectId, ref: 'Student', required: true},
   school: {type: Schema.Types.ObjectId, ref: 'School', required: true},
 
   record: {type: Schema.Types.ObjectId, ref: 'AbsenceRecord', required: true},
   schoolYear: {type: String, required: true},
-  triggerDate: {type: Date, required: true},
+  triggerDate: {type: Date, required: true, default: Date.now},
 
   actionDate: {type: Date},
   notes: [{
