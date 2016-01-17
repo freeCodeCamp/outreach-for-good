@@ -19,4 +19,11 @@
     </div>
     <div ui-grid="schoolGridOptions" ui-grid-auto-resize id="school-grid" class="grid"></div>
   </div>
+  <div ng-if="auth.userIs('super')" class="dev">
+    <div class="heading">
+      <h3>DEV
+        <button ng-click="reset()" class="btn btn-danger">RESET APP</button>
+      </h3>
+    </div>
+  </div>
 </div>

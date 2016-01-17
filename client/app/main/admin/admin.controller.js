@@ -2,10 +2,11 @@
 
 var app = angular.module('app');
 
-function AdminCtrl($scope, uiGridConstants, Auth, Data, User, School, Modal,
-  ROLES) {
+function AdminCtrl($scope, $http, uiGridConstants, Auth, Data, User, School,
+  Modal, ROLES) {
   $scope.roles = ROLES.slice(0, ROLES.indexOf(Auth.getCurrentUser().role) + 1);
   $scope.data = Data;
+  $scope.auth = Auth;
 
   // Users
 
@@ -156,6 +157,18 @@ function AdminCtrl($scope, uiGridConstants, Auth, Data, User, School, Modal,
       $scope.schoolGridOptions.data = newSchools;
     }
   });
+
+  // Development
+
+  $scope.reset = function() {
+    var resetFn = function() {
+      $http.delete('/api/devs/reset').then(function() {
+        $scope.userGridOptions.data = User.query();
+        Data.initialize();
+      });
+    };
+    Modal.confirm.reset(resetFn)();
+  };
 }
 
 app.controller('AdminCtrl', AdminCtrl);
