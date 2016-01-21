@@ -11,6 +11,12 @@ app.factory('Intervention', function($resource) {
       params: {
         controller: 'action'
       }
+    },
+    addNote: {
+      method: 'POST',
+      params: {
+        controller: 'note'
+      }
     }
   });
 });

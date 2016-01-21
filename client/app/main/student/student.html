@@ -56,19 +56,19 @@
         <dt>Notes</dt>
         <dd>
           <div class="input-group">
-            <input type="text" class="form-control"/>
+            <input type="text" class="form-control" ng-model="intervention.newNote" />
             <span class="input-group-btn">
-              <button type="button" class="btn btn-success" ng-click="newNote($index)">
+              <button type="button" class="btn btn-success" ng-click="addNote(intervention)">
                 <i class="fa fa-plus"></i>
               </button>
             </span>
           </div>
         </dd>
-        <dd ng-if="intervention.notes.length">
-          <pre>{{intervention.notes | json}}</pre>
-          <p>
-            <textarea ng-repeat="note in intervention.notes">{{note}}</textarea>
-          </p>
+        <dd ng-repeat="note in intervention.notes | orderBy:$index:true">
+          <div class="input-group">
+            <input type="text" class="form-control" readonly value="{{note.note}}"/>
+            <span class="input-group-addon">{{note.date | date:'yyyy-MM-dd'}}</span>
+          </div>
         </dd>
       </dl>
     </div>
