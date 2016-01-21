@@ -24,13 +24,52 @@
     <div class="well" ng-repeat="intervention in student.interventions">
       <dl class="dl-horizontal">
         <dt>Type</dt>
-        <dd>{{intervention.type}} {{intervention.tier}}</dd>
+        <dd><input class="form-control" readonly value="{{intervention.type}} {{intervention.tier}}"/></dd>
 
         <dt>Absences</dt>
-        <dd>{{intervention.absences}}</dd>
+        <dd><input class="form-control" readonly value="{{intervention.absences}}"/></dd>
 
         <dt>Triggered On</dt>
-        <dd>{{intervention.triggerDate | date:'yyyy-MM-dd'}}</dd>
+        <dd><input class="form-control" readonly value="{{intervention.triggerDate | date:'yyyy-MM-dd'}}"/></dd>
+
+        <dt>Action Taken</dt>
+        <dd>
+          <div class="input-group">
+            <span class="input-group-btn">
+              <button type="button" class="btn btn-success" ng-click="open($index)">
+                <i class="fa fa-calendar"></i>
+              </button>
+            </span>
+            <input type="text"
+              class="form-control"
+              uib-datepicker-popup="yyyy-MM-dd"
+              ng-model="intervention.actionDate"
+              is-open="datePopups[$index]"
+              min-date="intervention.triggerDate"
+              datepicker-options="dateOptions"
+              close-text="Close"
+              ng-change="updateActionDate(intervention)"
+              readonly/>
+          </div>
+        </dd>
+
+        <dt>Notes</dt>
+        <dd>
+          <div class="input-group">
+            <input type="text" class="form-control"/>
+            <span class="input-group-btn">
+              <button type="button" class="btn btn-success" ng-click="newNote($index)">
+                <i class="fa fa-plus"></i>
+              </button>
+            </span>
+          </div>
+        </dd>
+        <dd ng-if="intervention.notes.length">
+          <pre>{{intervention.notes | json}}</pre>
+          <p>
+            <textarea ng-repeat="note in intervention.notes">{{note}}</textarea>
+          </p>
+        </dd>
       </dl>
     </div>
   </div>

@@ -6,7 +6,8 @@ var auth = require('../../auth/auth.service');
 
 var router = express.Router();
 
-router.get('/', auth.hasRole('manager'), controller.index);
+router.get('/', auth.hasRole('teacher'), controller.index);
+router.put('/:id/action', auth.hasRole('teacher'), controller.updateAction);
 
 // TODO: Add role and assignment authorization checks.
 router.get('/:id', controller.show);
