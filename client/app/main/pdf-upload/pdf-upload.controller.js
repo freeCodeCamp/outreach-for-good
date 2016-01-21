@@ -3,7 +3,7 @@
 var app = angular.module('app');
 
 app.controller('PDFUploadCtrl',
-  function($scope, AbsenceRecord, Auth, Data, Upload) {
+  function($scope, AbsenceRecord, Auth, Data, Upload, toastr) {
     $scope.forms = {};
     $scope.isUploaded = false;
     $scope.schools = Data.schools;
@@ -28,11 +28,30 @@ app.controller('PDFUploadCtrl',
     };
 
     $scope.confirmUpload = function() {
-      AbsenceRecord.save({}, $scope.result.data, function() {
+      AbsenceRecord.save({}, $scope.result.data, function(res) {
         $scope.data.upload.message = 'Upload Confirmed!';
         $scope.result.data = {};
         $scope.isUploaded = false;
         Data.refreshEntries();
+
+        console.log(res);
+        var schoolName = res.record.school.name;
+        if (res.students.length) {
+          toastr.success(
+            res.students.length + ' new students added.',
+            schoolName,
+            {timeOut: 10000}
+          );
+        }
+        toastr.success(
+          [
+            'Absence report with',
+            res.record.entries.length,
+            'entries added.'
+          ].join(' '),
+          schoolName,
+          {timeOut: 10000}
+        );
       }, function(err) {
         console.log(err);
         $scope.data.upload.message = 'Confirmation Error: ' + err;
