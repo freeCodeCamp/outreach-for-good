@@ -1,6 +1,7 @@
 'use strict';
 
 var app = angular.module('app', [
+  'ngAnimate',
   'ngCookies',
   'ngMessages',
   'ngResource',
@@ -15,7 +16,8 @@ var app = angular.module('app', [
   'ui.grid.selection',
   'ui.router',
   'ui.select',
-  'matchmedia-ng'
+  'matchmedia-ng',
+  'toastr'
 ]);
 
 app.config(function($stateProvider, $urlRouterProvider, $locationProvider,

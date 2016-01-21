@@ -504,6 +504,7 @@ module.exports = function (grunt) {
     sass: {
       server: {
         options: {
+          precision: 10,
           loadPath: [
             '<%= yeoman.client %>/bower_components',
             '<%= yeoman.client %>/app',
