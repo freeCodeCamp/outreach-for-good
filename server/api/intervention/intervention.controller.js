@@ -1,6 +1,7 @@
 'use strict';
 
 var _ = require('lodash');
+var auth = require('../../auth/auth.service');
 var Intervention = require('./intervention.model');
 
 // Get list of interventions
@@ -40,6 +41,28 @@ exports.update = function(req, res) {
       return res.status(200).json(intervention);
     });
   });
+};
+
+// Updates an existing intervention's actionDate in the DB.
+exports.updateAction = function(req, res) {
+  Intervention
+    .findById(req.params.id)
+    .populate('student')
+    .exec(function(err, intervention) {
+      if (err) return handleError(res, err);
+      if (!intervention) return res.status(404).send('Not Found');
+      if (!auth.meetsRoleRequirements(req.user.role, 'manager') &&
+          req.user.assignment !== intervention.school) {
+        return res.status(403).json({
+          reason: auth.schoolMsg(req.user.assignment || 'None')
+        });
+      }
+      intervention.actionDate = req.body.actionDate;
+      intervention.save(function(err) {
+        if (err) return handleError(res, err);
+        return res.status(200).json(intervention);
+      });
+    });
 };
 
 // Deletes a intervention from the DB.
