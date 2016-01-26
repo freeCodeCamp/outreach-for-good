@@ -72,15 +72,18 @@ function newAbsenceRecord(record, res, createdStudents) {
         interventions.push(intervention);
       });
     });
-    Intervention.create(interventions, function(err, createdInterventions) {
+    createdRecord.populate('school', function(err) {
       if (err) return handleError(res, err);
-      return res
-        .status(200)
-        .json({
-          record: createdRecord,
-          interventions: createdInterventions,
-          students: createdStudents
-        });
+      Intervention.create(interventions, function(err, createdInterventions) {
+        if (err) return handleError(res, err);
+        return res
+          .status(200)
+          .json({
+            record: createdRecord,
+            interventions: createdInterventions,
+            students: createdStudents
+          });
+      });
     });
   });
 }
