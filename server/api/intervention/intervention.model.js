@@ -26,7 +26,8 @@ var InterventionSchema = new Schema({
   actionDate: {type: Date},
   notes: [{
     note: {type: String, required: true},
-    user: {type: Schema.Types.ObjectId, ref: 'User', required: true}
+    user: {type: Schema.Types.ObjectId, ref: 'User', required: true},
+    date: {type: Date, required: true, default: Date.now}
   }]
 });
 

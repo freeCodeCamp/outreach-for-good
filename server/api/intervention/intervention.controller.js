@@ -65,6 +65,32 @@ exports.updateAction = function(req, res) {
     });
 };
 
+
+// Add a note to an intervention.
+exports.addNote = function(req, res) {
+  Intervention
+    .findById(req.params.id)
+    .populate('student')
+    .exec(function(err, intervention) {
+      if (err) return handleError(res, err);
+      if (!intervention) return res.status(404).send('Not Found');
+      if (!auth.meetsRoleRequirements(req.user.role, 'manager') &&
+          req.user.assignment !== intervention.school) {
+        return res.status(403).json({
+          reason: auth.schoolMsg(req.user.assignment || 'None')
+        });
+      }
+      intervention.notes.push({
+        user: req.user.id,
+        note: req.body.note
+      });
+      intervention.save(function(err) {
+        if (err) return handleError(res, err);
+        return res.status(200).json(intervention);
+      });
+    });
+};
+
 // Deletes a intervention from the DB.
 exports.destroy = function(req, res) {
   Intervention.findById(req.params.id, function(err, intervention) {
