@@ -21,7 +21,56 @@
     <h3>Interventions</h3>
   </div>
   <div class="interventions">
-    PlaceHolder
-    <pre></pre>
+    <div class="well" ng-repeat="intervention in student.interventions">
+      <dl class="dl-horizontal">
+        <dt>Type</dt>
+        <dd><input class="form-control" readonly value="{{intervention.type}} {{intervention.tier}}"/></dd>
+
+        <dt>Absences</dt>
+        <dd><input class="form-control" readonly value="{{intervention.absences}}"/></dd>
+
+        <dt>Triggered On</dt>
+        <dd><input class="form-control" readonly value="{{intervention.triggerDate | date:'yyyy-MM-dd'}}"/></dd>
+
+        <dt>Action Taken</dt>
+        <dd>
+          <div class="input-group">
+            <span class="input-group-btn">
+              <button type="button" class="btn btn-success" ng-click="open($index)">
+                <i class="fa fa-calendar"></i>
+              </button>
+            </span>
+            <input type="text"
+              class="form-control"
+              uib-datepicker-popup="yyyy-MM-dd"
+              ng-model="intervention.actionDate"
+              is-open="datePopups[$index]"
+              min-date="intervention.triggerDate"
+              datepicker-options="dateOptions"
+              close-text="Close"
+              ng-change="updateActionDate(intervention)"
+              readonly/>
+          </div>
+        </dd>
+
+        <dt>Notes</dt>
+        <dd>
+          <div class="input-group">
+            <input type="text" class="form-control" ng-model="intervention.newNote" />
+            <span class="input-group-btn">
+              <button type="button" class="btn btn-success" ng-click="addNote(intervention)">
+                <i class="fa fa-plus"></i>
+              </button>
+            </span>
+          </div>
+        </dd>
+        <dd ng-repeat="note in intervention.notes | orderBy:$index:true">
+          <div class="input-group">
+            <input type="text" class="form-control" readonly value="{{note.note}}"/>
+            <span class="input-group-addon">{{note.date | date:'yyyy-MM-dd'}}</span>
+          </div>
+        </dd>
+      </dl>
+    </div>
   </div>
 </div>

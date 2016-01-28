@@ -2,9 +2,11 @@
 
 var app = angular.module('app');
 
-function AdminCtrl($scope, Auth, Data, User, School, Modal, ROLES) {
+function AdminCtrl($scope, $http, uiGridConstants, Auth, Data, User, School,
+  Modal, ROLES) {
   $scope.roles = ROLES.slice(0, ROLES.indexOf(Auth.getCurrentUser().role) + 1);
   $scope.data = Data;
+  $scope.auth = Auth;
 
   // Users
 
@@ -28,7 +30,7 @@ function AdminCtrl($scope, Auth, Data, User, School, Modal, ROLES) {
   }, {
     name: 'name',
     displayName: 'Name',
-    minWidth: 150
+    minWidth: 150,
   }, {
     name: 'email',
     displayName: 'Email Address',
@@ -37,6 +39,19 @@ function AdminCtrl($scope, Auth, Data, User, School, Modal, ROLES) {
     name: 'assignment',
     displayName: 'Assigned School',
     minWidth: 200,
+    sortingAlgorithm: function(a, b, rowA, rowB) {
+      var nulls = $scope.userGridApi.core.sortHandleNulls(a, b);
+      if (nulls !== null) {
+        return nulls;
+      } else {
+        var nameA = rowA.entity.assignment.name;
+        var nameB = rowB.entity.assignment.name;
+        if (nameA === nameB) {
+          return 0;
+        }
+        return nameA < nameB ? -1 : 1;
+      }
+    },
     cellClass: 'assignment-col',
     cellTemplate: 'app/main/admin/partial/cell.assignment.html'
   }, {
@@ -66,6 +81,8 @@ function AdminCtrl($scope, Auth, Data, User, School, Modal, ROLES) {
       User.updateRole({id: user._id}, {role: role}).$promise
         .then(function(updatedUser) {
           _.assign(user, updatedUser);
+          $scope.userGridApi.core.notifyDataChange(
+            uiGridConstants.dataChange.EDIT);
         });
     };
     Modal.confirm.update(updateFn)(user.name, 'Role', user.role, role);
@@ -79,6 +96,8 @@ function AdminCtrl($scope, Auth, Data, User, School, Modal, ROLES) {
       User.updateAssignment({id: user._id}, {assignment: assignment}).$promise
         .then(function() {
           user.assignment = assignment;
+          $scope.userGridApi.core.notifyDataChange(
+            uiGridConstants.dataChange.EDIT);
         });
     };
     Modal.confirm.update(updateFn)(user.name, 'Assigned School',
@@ -138,6 +157,18 @@ function AdminCtrl($scope, Auth, Data, User, School, Modal, ROLES) {
       $scope.schoolGridOptions.data = newSchools;
     }
   });
+
+  // Development
+
+  $scope.reset = function() {
+    var resetFn = function() {
+      $http.delete('/api/devs/reset').then(function() {
+        $scope.userGridOptions.data = User.query();
+        Data.initialize();
+      });
+    };
+    Modal.confirm.reset(resetFn)();
+  };
 }
 
 app.controller('AdminCtrl', AdminCtrl);

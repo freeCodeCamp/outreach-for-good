@@ -4,6 +4,7 @@ var _ = require('lodash');
 var pdf2table = require('pdf2table');
 var fs = require('fs');
 var AbsenceRecord = require('../absence-record/absence-record.model');
+var School = require('../school/school.model');
 
 // Returns an array of arrays, each nested array represents data for a student.
 function studentDataArrays(rows) {
@@ -52,10 +53,71 @@ function groupByType(students, idToPrev) {
   });
 }
 
+function createInterventions(entry, prevEntry, school, schoolYear) {
+  var delta = entry.tardiesDelta + entry.absencesDelta;
+  if (!delta) return [];
+
+  var prevTotal = prevEntry.tardies || 0 + prevEntry.absences || 0;
+  var currentTotal = prevTotal + delta;
+  return _(school.triggers)
+    .filter(function(trigger) {
+      return trigger.absences > prevTotal && trigger.absences <= currentTotal;
+    })
+    .map(function(trigger) {
+      return {
+        type: trigger.type,
+        tier: trigger.tier,
+        absences: trigger.absences,
+        student: entry.student,
+        school: school.id,
+        schoolYear: schoolYear
+      }
+    })
+    .value();
+}
+
+function parsePDF(buffer, school, res) {
+  pdf2table.parse(buffer, function(err, rows) {
+    if (err) return handleError(res, err);
+    // TODO: Try catch for failure to parse.
+    var students = studentDataArrays(rows).map(parseStudent);
+    // This will throw if no students, add guard statement (invalid upload?).
+    var schoolYear = students[0].schoolYear;
+
+    previousRecord(school.id, schoolYear).then(function(prev) {
+      var idToPrev = _.indexBy((prev || {}).entries, 'student.studentId');
+      var result = groupByType(students, idToPrev);
+      // Deltas are equal to their entry counterpart minus previous entry
+      // total for students with existing records.
+      _.forEach(result.updates || [], function(student) {
+        var entry = student.entry;
+        var prevEntry = idToPrev[student.student.studentId];
+        entry.student = prevEntry.student._id;
+        entry.tardiesDelta = entry.tardies - prevEntry.tardies;
+        entry.absencesDelta = entry.absences - prevEntry.absences;
+        entry.interventions =
+          createInterventions(entry, prevEntry, school, schoolYear);
+      });
+      // Deltas are equal to their entry counterpart if creating new student.
+      _.forEach(result.creates || [], function(student) {
+        var entry = student.entry;
+        entry.tardiesDelta = entry.tardies;
+        entry.absencesDelta = entry.absences;
+        entry.interventions =
+          createInterventions(entry, {}, school, schoolYear);
+      });
+      result.missing =
+        _.difference(_.keys(idToPrev), _.map(students, 'student.studentId'));
+      result.schoolId = school.id;
+      res.status(200).json(result);
+    });
+  });
+}
+
 exports.upload = function(req, res) {
   fs.readFile(req.file.path, function(err, buffer) {
     if (err) return handleError(res, err);
-    pdf2table.parse(buffer, function(err, rows) {
+    School.findById(req.body.schoolId, function(err, school) {
       if (err) return handleError(res, err);
       var date = req.body.date;
       var schoolId = req.body.schoolId;
@@ -88,6 +150,7 @@ exports.upload = function(req, res) {
         result.date = date;
         res.status(200).json(result);
       });
+      parsePDF(buffer, school, res);
     });
   });
 };

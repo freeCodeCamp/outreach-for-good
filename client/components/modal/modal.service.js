@@ -134,8 +134,49 @@ app.factory('Modal', function($rootScope, $uibModal) {
             upd.apply(event, args);
           });
         };
+      },
+
+      /**
+       * Create a function to open a reset confirmation modal (ex.
+       * ng-click='reset()')
+       * @param  {Function} rst - callback, ran when reset is confirmed
+       * @return {Function}     - the function to open the modal (ex. reset)
+       */
+      reset: function(rst) {
+        rst = rst || angular.noop;
+
+        /** Open a update confirmation modal */
+        return function() {
+          var resetModal = openModal({
+            modal: {
+              dismissable: true,
+              title: 'Confirm Application Reset',
+              html: '<p>Are you sure you want to reset entire application? ' +
+                    '<b>ALL DATA except user data will be destroyed!</b>' +
+                    '</p>',
+              buttons: [{
+                classes: 'btn-danger',
+                text: 'Reset',
+                click: function(e) {
+                  resetModal.close(e);
+                }
+              }, {
+                classes: 'btn-default',
+                text: 'Cancel',
+                click: function(e) {
+                  resetModal.dismiss(e);
+                }
+              }]
+            }
+          }, 'modal-danger');
+
+          resetModal.result.then(function(event) {
+            rst.apply(event);
+          });
+        };
       }
     },
+
     form: function(title, templateUrl, cb) {
       var formModal = openModal({
         modal: {

@@ -140,4 +140,7 @@ exports.hasRole = hasRole;
 exports.authorizeSchool = authorizeSchool;
 exports.authorizeStudent = authorizeStudent;
 
+exports.meetsRoleRequirements = meetsRoleRequirements;
+
 exports.studentMsg = studentMsg;
+exports.schoolMsg = schoolMsg;
