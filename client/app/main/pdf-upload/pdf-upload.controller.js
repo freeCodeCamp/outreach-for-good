@@ -1,4 +1,4 @@
-'use strict';
+  'use strict';
 
 var app = angular.module('app');
 
@@ -17,7 +17,10 @@ app.controller('PDFUploadCtrl',
     $scope.upload = function(file) {
       return Upload.upload({
         url: '/api/pdfs/',
-        data: {file: file, schoolId: $scope.data.upload.school._id}
+        data: { file: file, 
+                schoolId: $scope.data.upload.school._id, 
+                date: $scope.date 
+              }
       });
     };
 
@@ -30,6 +33,7 @@ app.controller('PDFUploadCtrl',
     $scope.confirmUpload = function() {
       AbsenceRecord.save({}, $scope.result.data, function() {
         $scope.data.upload.message = 'Upload Confirmed!';
+        console.log($scope.result);
         $scope.result.data = {};
         $scope.isUploaded = false;
         Data.refreshEntries();

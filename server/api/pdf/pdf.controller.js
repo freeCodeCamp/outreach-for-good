@@ -57,6 +57,7 @@ exports.upload = function(req, res) {
     if (err) return handleError(res, err);
     pdf2table.parse(buffer, function(err, rows) {
       if (err) return handleError(res, err);
+      var date = req.body.date;
       var schoolId = req.body.schoolId;
       // TODO: Try catch for failure to parse.
       var students = studentDataArrays(rows).map(parseStudent);
@@ -84,6 +85,7 @@ exports.upload = function(req, res) {
         result.missing =
           _.difference(_.keys(idToPrev), _.map(students, 'student.studentId'));
         result.schoolId = schoolId;
+        result.date = date;
         res.status(200).json(result);
       });
     });

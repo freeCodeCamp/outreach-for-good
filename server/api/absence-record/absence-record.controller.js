@@ -75,12 +75,14 @@ function newAbsenceRecord(record, res, createdStudents) {
  * restriction: 'teacher'
  */
 exports.create = function(req, res) {
+  console.log(req.body);
   var school = req.body.schoolId;
   var existingEntries = _.pluck(req.body.updates || [], 'entry');
   if (!req.body.creates) {
     return newAbsenceRecord({
       schoolYear: req.body.updates[0].schoolYear,
       school: school,
+      date: req.body.date,
       entries: existingEntries
     }, res, []);
   }
@@ -98,6 +100,7 @@ exports.create = function(req, res) {
     return newAbsenceRecord({
       schoolYear: req.body.creates[0].schoolYear,
       school: school,
+      date: req.body.date,
       entries: [].concat.apply(newEntries, existingEntries)
     }, res, createdStudents);
   });

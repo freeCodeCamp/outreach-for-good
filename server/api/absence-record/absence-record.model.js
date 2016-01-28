@@ -6,6 +6,7 @@ var mongoose = require('mongoose'),
 var AbsenceRecordSchema = new Schema({
   schoolYear: {type: String, required: true},
   school: {type: Schema.Types.ObjectId, ref: 'School', required: true},
+  date: {type: Date /*required: true*/},
   entries: [{
     student: {type: Schema.Types.ObjectId, ref: 'Student', required: true},
     absences: {type: Number, required: true},

@@ -28,6 +28,12 @@
         ngf-select
         required>
     </div>
+    <div class="form-group">
+      <label class="control-label" for="date">Date</label>
+      <input type="date"
+        class="form-control"
+        ng-model="date">
+    </div>
     <button class="btn btn-primary" type="submit" ng-disabled="forms.upload.$invalid || data.upload.processingUpload">
       Submit
     </button>
@@ -43,6 +49,7 @@
     <div class="help-block"><span class="label label-primary">{{data.upload.message}}</span></div>
   </div>
   <div ng-if="isUploaded" class="row confirm-table">
+    {{date}}
     <div class="table-responsive">
       <table class="table table-condensed">
         <thead class="cf">
