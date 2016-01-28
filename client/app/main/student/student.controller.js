@@ -41,6 +41,40 @@ function StudentCtrl($scope, $stateParams, Intervention, Student, toastr) {
         });
     }
   };
+
+  $scope.updateIEP = function() {
+    var oldValue = !$scope.student.iep;
+    var promise = Student.updateIEP({
+      id: $scope.student._id
+    }, {
+      iep: $scope.student.iep
+    }).$promise;
+    promise.then(function() {
+      toastr.success(
+        'IEP updated to ' + $scope.student.iep,
+        $scope.student.firstName + ' ' + $scope.student.lastName);
+    }, function(err) {
+      $scope.student.iep = oldValue;
+      toastr.error(err);
+    });
+  };
+
+  $scope.updateCFA = function() {
+    var oldValue = !$scope.student.cfa;
+    var promise = Student.updateCFA({
+      id: $scope.student._id
+    }, {
+      cfa: $scope.student.cfa
+    }).$promise;
+    promise.then(function() {
+      toastr.success(
+        'CFA updated to ' + $scope.student.cfa,
+        $scope.student.firstName + ' ' + $scope.student.lastName);
+    }, function(err) {
+      $scope.student.cfa = oldValue;
+      toastr.error(err);
+    });
+  };
 }
 
 app.controller('StudentCtrl', StudentCtrl);

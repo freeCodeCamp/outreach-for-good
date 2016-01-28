@@ -13,8 +13,11 @@
       <dt>School</dt>
       <dd>{{student.currentSchool.name}}</dd>
 
-      <dt>Is Active</dt>
-      <dd>{{student.active}}</dd>
+      <dt>IEP</dt>
+      <dd><input type="checkbox" ng-model="student.iep" ng-change="updateIEP()"></dd>
+
+      <dt>CFA</dt>
+      <dd><input type="checkbox" ng-model="student.cfa" ng-change="updateCFA()"></dd>
     </dl>
   </div>
   <div class="heading">

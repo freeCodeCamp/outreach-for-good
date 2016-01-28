@@ -8,6 +8,8 @@ var StudentSchema = new Schema({
   lastName: {type: String, required: true, trim: true},
   firstName: {type: String, required: true, trim: true},
   currentSchool: {type: Schema.Types.ObjectId, ref: 'School'},
+  iep: {type: Boolean, default: false},
+  cfa: {type: Boolean, default: false},
   active: {type: Boolean, default: true}
 });
 
