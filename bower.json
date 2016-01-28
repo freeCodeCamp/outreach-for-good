@@ -15,7 +15,7 @@
     "es5-shim": "~3.0.1",
     "font-awesome": ">=4.1.0",
     "json3": "~3.3.1",
-    "lodash": "~3.10.1",
+    "lodash": "~4.0.1",
     "matchmedia-ng": "~1.0.5",
     "ng-file-upload": "~9.1.1",
     "ui-select": "angular-ui-select#~0.13.2",

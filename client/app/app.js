@@ -74,7 +74,7 @@ app.run(function($rootScope, $state, Auth) {
   $rootScope.$on('$stateChangeStart', function(event, next, params) {
     // Bypass the preventDefault when authentication and authorization pass
     // http://stackoverflow.com/a/28827077/635411
-    if ($rootScope.stateChangeBypass || _.contains(bypass, next.name)) {
+    if ($rootScope.stateChangeBypass || _.includes(bypass, next.name)) {
       $rootScope.stateChangeBypass = false;
       return;
     }
