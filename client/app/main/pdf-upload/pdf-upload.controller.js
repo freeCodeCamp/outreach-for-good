@@ -17,7 +17,10 @@ app.controller('PDFUploadCtrl',
     $scope.upload = function(file) {
       return Upload.upload({
         url: '/api/pdfs/',
-        data: {file: file, schoolId: $scope.data.upload.school._id}
+        data: { file: file, 
+                schoolId: $scope.data.upload.school._id, 
+                date: $scope.date 
+              }
       });
     };
 
