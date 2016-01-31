@@ -62,6 +62,7 @@ app.controller('PDFUploadCtrl',
     };
 
     $scope.submit = function() {
+      $scope.schoolName = $scope.data.upload.school.name;
       delete $scope.data.upload.message;
       if ($scope.forms.upload.$valid) {
         $scope.data.upload.processingUpload = true;
