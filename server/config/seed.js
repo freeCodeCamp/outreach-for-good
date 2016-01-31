@@ -68,6 +68,7 @@ AbsenceRecord.remove().exec().then(function() {
   return AbsenceRecord.create({
     schoolYear: '2015-2016',
     school: studentA.currentSchool,
+    date: Date.now(),
     entries:[
     {
       student: studentA._id,
@@ -98,6 +99,7 @@ AbsenceRecord.remove().exec().then(function() {
   }, {
     schoolYear: '2015-2016',
     school: studentD.currentSchool,
+    date: Date.now(),
     entries:[
     {
       student: studentD._id,

@@ -76,7 +76,7 @@ function createInterventions(entry, prevEntry, school, schoolYear) {
     .value();
 }
 
-function parsePDF(buffer, school, res) {
+function parsePDF(buffer, school, date, res) {
   pdf2table.parse(buffer, function(err, rows) {
     if (err) return handleError(res, err);
     // TODO: Try catch for failure to parse.
@@ -109,6 +109,7 @@ function parsePDF(buffer, school, res) {
       result.missing =
         _.difference(_.keys(idToPrev), _.map(students, 'student.studentId'));
       result.schoolId = school.id;
+      result.date = date;
       res.status(200).json(result);
     });
   });
@@ -119,38 +120,7 @@ exports.upload = function(req, res) {
     if (err) return handleError(res, err);
     School.findById(req.body.schoolId, function(err, school) {
       if (err) return handleError(res, err);
-      var date = req.body.date;
-      var schoolId = req.body.schoolId;
-      // TODO: Try catch for failure to parse.
-      var students = studentDataArrays(rows).map(parseStudent);
-      // This will throw if no students, add guard statement (invalid upload?).
-      var schoolYear = students[0].schoolYear;
-
-      previousRecord(schoolId, schoolYear).then(function(prev) {
-        var idToPrev = _.indexBy((prev || {}).entries, 'student.studentId');
-        var result = groupByType(students, idToPrev);
-        // Deltas are equal to their entry counterpart minus previous entry
-        // total for students with existing records.
-        _.forEach(result.updates || [], function(student) {
-          var entry = student.entry;
-          var prevEntry = idToPrev[student.student.studentId];
-          entry.student = prevEntry.student._id;
-          entry.tardiesDelta = entry.tardies - prevEntry.tardies;
-          entry.absencesDelta = entry.absences - prevEntry.absences;
-        });
-        // Deltas are equal to their entry counterpart if creating new student.
-        _.forEach(result.creates || [], function(student) {
-          var entry = student.entry;
-          entry.tardiesDelta = entry.tardies;
-          entry.absencesDelta = entry.absences;
-        });
-        result.missing =
-          _.difference(_.keys(idToPrev), _.map(students, 'student.studentId'));
-        result.schoolId = schoolId;
-        result.date = date;
-        res.status(200).json(result);
-      });
-      parsePDF(buffer, school, res);
+      parsePDF(buffer, school, req.body.date, res);
     });
   });
 };
