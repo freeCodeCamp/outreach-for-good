@@ -93,7 +93,6 @@ function newAbsenceRecord(record, res, createdStudents) {
  * restriction: 'teacher'
  */
 exports.create = function(req, res) {
-  console.log(req.body);
   var school = req.body.schoolId;
   var existingEntries = _.pluck(req.body.updates || [], 'entry');
   if (!req.body.creates) {
