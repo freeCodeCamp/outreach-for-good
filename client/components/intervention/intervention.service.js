@@ -17,6 +17,13 @@ app.factory('Intervention', function($resource) {
       params: {
         controller: 'note'
       }
+    },
+    current: {
+      method: 'GET',
+      isArray: true,
+      params: {
+        controller: 'current'
+      }
     }
   });
 });

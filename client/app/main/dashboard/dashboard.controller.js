@@ -2,8 +2,8 @@
 
 var app = angular.module('app');
 
-function DashboardCtrl($scope, Auth, Data, Student, uiGridGroupingConstants,
-  toastr) {
+function DashboardCtrl($scope, Auth, Data, Intervention, Student,
+  uiGridGroupingConstants, toastr) {
   $scope.data = Data;
   $scope.studentGridOptions = {
     enableSorting: true,
@@ -137,11 +137,14 @@ function DashboardCtrl($scope, Auth, Data, Student, uiGridGroupingConstants,
     }
   });
 
-  $scope.letters = 45;
-  $scope.calls = 3;
-  $scope.home = 0;
-  $scope.court = 4;
-  $scope.sst = 20;
+  Intervention.current().$promise.then(function(res) {
+    var counts = _.keyBy(res, '_id');
+    $scope.calls = (counts['Phone Call'] || {}).count || 0;
+    $scope.letters = (counts['Letter Sent'] || {}).count || 0;
+    $scope.home = (counts['Home Visit'] || {}).count || 0;
+    $scope.sst = (counts['SST Referral'] || {}).count || 0;
+    $scope.court = (counts['Court Referral'] || {}).count || 0;
+  });
 }
 
 app.controller('DashboardCtrl', DashboardCtrl);

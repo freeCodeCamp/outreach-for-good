@@ -12,6 +12,33 @@ exports.index = function(req, res) {
   });
 };
 
+
+/**
+ * Get current unmarked interventions.
+ * restriction: 'teacher'
+ *
+ * Returns an aggregation for entries based on the req user role:
+ * - teachers will get interventions for assignment school
+ * - manager+ will get interventions for all schools
+ */
+exports.current = function(req, res) {
+  var options = [{
+    $match: {actionDate: null}
+  }, {
+    $group: {
+      _id: '$type',
+      count: {$sum: 1}
+    }
+  }];
+  if (req.user.role === 'teacher') {
+    options[0].$match.school = req.user.assignment;
+  }
+  Intervention.aggregate(options, function(err, results) {
+    if (err) return handleError(res, err);
+    return res.status(200).json(results);
+  });
+};
+
 // Get a single intervention
 exports.show = function(req, res) {
   Intervention.findById(req.params.id, function(err, intervention) {
@@ -104,5 +131,6 @@ exports.destroy = function(req, res) {
 };
 
 function handleError(res, err) {
+  console.log(err);
   return res.status(500).send(err);
 }
