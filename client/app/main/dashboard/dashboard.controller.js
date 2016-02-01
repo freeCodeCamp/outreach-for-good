@@ -2,7 +2,8 @@
 
 var app = angular.module('app');
 
-function DashboardCtrl($scope, Data, Auth, uiGridGroupingConstants) {
+function DashboardCtrl($scope, Auth, Data, Student, uiGridGroupingConstants,
+  toastr) {
   $scope.data = Data;
   $scope.studentGridOptions = {
     enableSorting: true,
@@ -35,7 +36,7 @@ function DashboardCtrl($scope, Data, Auth, uiGridGroupingConstants) {
   }, {
     name: 'entries.absencesDelta',
     displayName: 'Δ',
-    minWidth: 50
+    width: 50
   }, {
     name: 'entries.tardies',
     displayName: 'Tardies',
@@ -44,7 +45,7 @@ function DashboardCtrl($scope, Data, Auth, uiGridGroupingConstants) {
   }, {
     name: 'entries.tardiesDelta',
     displayName: 'Δ',
-    minWidth: 50
+    width: 50
   }, {
     name: 'entries.present',
     displayName: 'Present',
@@ -53,7 +54,53 @@ function DashboardCtrl($scope, Data, Auth, uiGridGroupingConstants) {
     name: 'entries.enrolled',
     displayName: 'Enrolled',
     minWidth: 150
+  }, {
+    name: 'entries.student.iep',
+    displayName: 'IEP',
+    enableCellEdit: true,
+    type: 'boolean',
+    width: 100,
+    treeAggregationType: uiGridGroupingConstants.aggregation.SUM
+  }, {
+    name: 'entries.student.cfa',
+    displayName: 'CFA',
+    enableCellEdit: true,
+    type: 'boolean',
+    width: 100,
+    treeAggregationType: uiGridGroupingConstants.aggregation.SUM
   }];
+
+  $scope.updateIEP = function(student) {
+    if (student._id) {
+      var oldVal = !student.iep;
+      var promise =
+        Student.updateIEP({id: student._id}, {iep: student.iep}).$promise;
+      promise.then(function() {
+        toastr.success(
+          'IEP updated to ' + student.iep,
+          student.firstName + ' ' + student.lastName);
+      }, function(err) {
+        student.iep = oldVal;
+        toastr.error(err);
+      });
+    }
+  };
+
+  $scope.updateCFA = function(student) {
+    if (student._id) {
+      var oldVal = !student.cfa;
+      var promise =
+        Student.updateCFA({id: student._id}, {cfa: student.cfa}).$promise;
+      promise.then(function() {
+        toastr.success(
+          'CFA updated to ' + student.cfa,
+          student.firstName + ' ' + student.lastName);
+      }, function(err) {
+        student.cfa = oldVal;
+        toastr.error(err);
+      });
+    }
+  };
 
   if (Auth.getCurrentUser().role !== 'teacher') {
     $scope.studentGridOptions.columnDefs.push({
@@ -70,6 +117,18 @@ function DashboardCtrl($scope, Data, Auth, uiGridGroupingConstants) {
   $scope.studentGridOptions.onRegisterApi = function(gridApi) {
     $scope.studentGridApi = gridApi;
     $scope.studentGridOptions.data = $scope.data.entries;
+    gridApi.edit.on.afterCellEdit($scope, function(rowEntity, colDef, n, o) {
+      if (n !== o) {
+        switch (colDef.name) {
+          case 'entries.student.iep':
+            $scope.updateIEP(rowEntity.entries.student);
+            break;
+          case 'entries.student.cfa':
+            $scope.updateCFA(rowEntity.entries.student);
+            break;
+        }
+      }
+    });
   };
 
   $scope.$watch('data.entries', function(newEntries, oldEntries) {
