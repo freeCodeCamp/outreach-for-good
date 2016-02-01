@@ -103,8 +103,9 @@ function schoolMsg(schoolId) {
  * @param type Indicates where to look for the school id for authorization.
  */
 function authorizeSchool(type) {
-  if (!schoolIdForType.hasOwnProperty(type))
+  if (!schoolIdForType.hasOwnProperty(type)) {
     throw new Error('Valid type needs to be set for authorizeSchool function.');
+  }
 
   return compose()
     .use(function(req, res, next) {
@@ -124,12 +125,14 @@ function authorizeSchool(type) {
 function studentMsg(student, req) {
   return 'Your current role of teacher and assignment to schoolId: ' +
          req.user.assignment.toString() +
-         ' does not allow access to student._id: ' + student.id + '.';
+         ' does not allow access to student._id: ' + student._id + '.';
 }
 
 function authorizeStudent(student, req) {
-  return meetsRoleRequirements(req.user.role, 'manager') ||
-         student.currentSchool.id === req.user.assignment.toString();
+  var user = req.user;
+  var studentSchoolId = student.currentSchool._id || student.currentSchool;
+  return meetsRoleRequirements(user.role, 'manager') ||
+         studentSchoolId.toString() === user.assignment.toString();
 }
 
 exports.isAuthenticated = isAuthenticated;

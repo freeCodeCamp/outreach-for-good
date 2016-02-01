@@ -78,8 +78,7 @@ exports.updateAction = function(req, res) {
     .exec(function(err, intervention) {
       if (err) return handleError(res, err);
       if (!intervention) return res.status(404).send('Not Found');
-      if (!auth.meetsRoleRequirements(req.user.role, 'manager') &&
-          req.user.assignment !== intervention.school) {
+      if (!auth.authorizeStudent(intervention.student, req)) {
         return res.status(403).json({
           reason: auth.schoolMsg(req.user.assignment || 'None')
         });
@@ -101,8 +100,7 @@ exports.addNote = function(req, res) {
     .exec(function(err, intervention) {
       if (err) return handleError(res, err);
       if (!intervention) return res.status(404).send('Not Found');
-      if (!auth.meetsRoleRequirements(req.user.role, 'manager') &&
-          req.user.assignment !== intervention.school) {
+      if (!auth.authorizeStudent(intervention.student, req)) {
         return res.status(403).json({
           reason: auth.schoolMsg(req.user.assignment || 'None')
         });
