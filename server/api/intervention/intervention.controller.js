@@ -12,7 +12,6 @@ exports.index = function(req, res) {
   });
 };
 
-
 /**
  * Get current unmarked interventions.
  * restriction: 'teacher'
@@ -58,13 +57,13 @@ exports.create = function(req, res) {
 
 // Updates an existing intervention in the DB.
 exports.update = function(req, res) {
-  if (req.body._id) { delete req.body._id; }
+  if (req.body._id) delete req.body._id;
   Intervention.findById(req.params.id, function(err, intervention) {
     if (err) return handleError(res, err);
     if (!intervention) return res.status(404).send('Not Found');
     var updated = _.merge(intervention, req.body);
     updated.save(function(err) {
-      if (err) { return handleError(res, err); }
+      if (err) return handleError(res, err);
       return res.status(200).json(intervention);
     });
   });
@@ -90,7 +89,6 @@ exports.updateAction = function(req, res) {
       });
     });
 };
-
 
 // Add a note to an intervention.
 exports.addNote = function(req, res) {
@@ -129,6 +127,5 @@ exports.destroy = function(req, res) {
 };
 
 function handleError(res, err) {
-  console.log(err);
   return res.status(500).send(err);
 }

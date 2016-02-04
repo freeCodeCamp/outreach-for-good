@@ -21,59 +21,90 @@
     </dl>
   </div>
   <div class="heading">
-    <h3>Interventions</h3>
+    <h3>Interventions and Outreaches <a href><i ng-click="addOutreach()" class="fa fa-plus-circle"></i></a></h3>
   </div>
-  <div class="interventions">
-    <div class="well" ng-repeat="intervention in student.interventions">
-      <dl class="dl-horizontal">
-        <dt>Type</dt>
-        <dd><input class="form-control" readonly value="{{intervention.type}} {{intervention.tier}}"/></dd>
+  <div>
+    <div class="interventions col-lg-6 col-md-12" ng-if="student.interventions.length">
+      <div class="well" ng-repeat="intervention in student.interventions">
+        <dl class="dl-horizontal">
+          <dt>Type</dt>
+          <dd><input class="form-control" readonly value="{{intervention.type}} {{intervention.tier}}"/></dd>
 
-        <dt>Absences</dt>
-        <dd><input class="form-control" readonly value="{{intervention.absences}}"/></dd>
+          <dt>Absences</dt>
+          <dd><input class="form-control" readonly value="{{intervention.absences}}"/></dd>
 
-        <dt>Triggered On</dt>
-        <dd><input class="form-control" readonly value="{{intervention.triggerDate | date:'yyyy-MM-dd'}}"/></dd>
+          <dt>Triggered On</dt>
+          <dd><input class="form-control" readonly value="{{intervention.triggerDate | date:'yyyy-MM-dd'}}"/></dd>
 
-        <dt>Action Taken</dt>
-        <dd>
-          <div class="input-group">
+          <dt>Action Taken</dt>
+          <dd>
+            <div class="input-group">
             <span class="input-group-btn">
               <button type="button" class="btn btn-success" ng-click="open($index)">
                 <i class="fa fa-calendar"></i>
               </button>
             </span>
-            <input type="text"
-              class="form-control"
-              uib-datepicker-popup="yyyy-MM-dd"
-              ng-model="intervention.actionDate"
-              is-open="datePopups[$index]"
-              min-date="intervention.triggerDate"
-              datepicker-options="dateOptions"
-              close-text="Close"
-              ng-change="updateActionDate(intervention)"
-              readonly/>
-          </div>
-        </dd>
+              <input type="text"
+                class="form-control"
+                uib-datepicker-popup="yyyy-MM-dd"
+                ng-model="intervention.actionDate"
+                is-open="datePopups[$index]"
+                min-date="intervention.triggerDate"
+                datepicker-options="dateOptions"
+                close-text="Close"
+                ng-change="updateActionDate(intervention)"
+                readonly/>
+            </div>
+          </dd>
 
-        <dt>Notes</dt>
-        <dd>
-          <div class="input-group">
-            <input type="text" class="form-control" ng-model="intervention.newNote" />
+          <dt>Notes</dt>
+          <dd>
+            <div class="input-group">
+              <input type="text" class="form-control" ng-model="intervention.newNote" />
             <span class="input-group-btn">
-              <button type="button" class="btn btn-success" ng-click="addNote(intervention)">
+              <button type="button" class="btn btn-success" ng-click="addInterventionNote(intervention)">
                 <i class="fa fa-plus"></i>
               </button>
             </span>
-          </div>
-        </dd>
-        <dd ng-repeat="note in intervention.notes | orderBy:$index:true">
-          <div class="input-group">
-            <input type="text" class="form-control" readonly value="{{note.note}}"/>
-            <span class="input-group-addon">{{note.date | date:'yyyy-MM-dd'}}</span>
-          </div>
-        </dd>
-      </dl>
+            </div>
+          </dd>
+          <dd ng-repeat="note in intervention.notes | orderBy:$index:true">
+            <div class="input-group">
+              <input type="text" class="form-control" readonly value="{{note.note}}"/>
+              <span class="input-group-addon">{{note.date | date:'yyyy-MM-dd'}}</span>
+            </div>
+          </dd>
+        </dl>
+      </div>
+    </div>
+    <div class="outreaches col-lg-6 col-md-12" ng-if="student.outreaches.length">
+      <div class="well" ng-repeat="outreach in student.outreaches | orderBy:createdDate:true">
+        <dl class="dl-horizontal">
+          <dt>Outreach Type</dt>
+          <dd><input class="form-control" readonly value="{{outreach.type}}"/></dd>
+
+          <dt>Created</dt>
+          <dd><input class="form-control" readonly value="{{outreach.createdDate | date:'yyyy-MM-dd'}}"/></dd>
+
+          <dt>Notes</dt>
+          <dd>
+            <div class="input-group">
+              <input type="text" class="form-control" ng-model="outreach.newNote" />
+            <span class="input-group-btn">
+              <button type="button" class="btn btn-success" ng-click="addOutreachNote(outreach)">
+                <i class="fa fa-plus"></i>
+              </button>
+            </span>
+            </div>
+          </dd>
+          <dd ng-repeat="note in outreach.notes | orderBy:$index:true">
+            <div class="input-group">
+              <input type="text" class="form-control" readonly value="{{note.note}}"/>
+              <span class="input-group-addon">{{note.date | date:'yyyy-MM-dd'}}</span>
+            </div>
+          </dd>
+        </dl>
+      </div>
     </div>
   </div>
 </div>

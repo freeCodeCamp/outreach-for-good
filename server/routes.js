@@ -12,6 +12,7 @@ module.exports = function(app) {
   // models
   app.use('/api/absence-records', require('./api/absence-record'));
   app.use('/api/interventions', require('./api/intervention'));
+  app.use('/api/outreaches', require('./api/outreach'));
   app.use('/api/schools', require('./api/school'));
   app.use('/api/students', require('./api/student'));
   app.use('/api/users', require('./api/user'));

@@ -3,6 +3,7 @@
 var _ = require('lodash');
 var Student = require('./student.model');
 var Intervention = require('../intervention/intervention.model');
+var Outreach = require('../outreach/outreach.model');
 var auth = require('../../auth/auth.service');
 
 /**
@@ -24,24 +25,31 @@ exports.index = function(req, res) {
  * restriction: 'teacher'
  */
 exports.show = function(req, res) {
+  var student;
   Student
     .findById(req.params.id)
     .populate('currentSchool', 'name')
-    .lean()
-    .exec(function(err, student) {
+    .exec(function(err, data) {
       if (err) return handleError(res, err);
-      if (!student) return res.send(404);
-      if (!auth.authorizeStudent(student, req)) {
+      if (!data) return res.send(404);
+      if (!auth.authorizeStudent(data, req)) {
         return res.status(403).json({
-          reason: auth.studentMsg(student, req)
+          reason: auth.studentMsg(data, req)
         });
       }
-      Intervention
-        .find({student: req.params.id})
-        .exec(function(err, interventions) {
-          student.interventions = interventions;
-          return res.status(200).json(student);
-        });
+      return data;
+    })
+    .then(function(data) {
+      student = data.toObject();
+      return Intervention.find({student: req.params.id}).exec();
+    })
+    .then(function(interventions) {
+      student.interventions = interventions;
+      return Outreach.find({student: req.params.id}).exec();
+    })
+    .then(function(outreaches) {
+      student.outreaches = outreaches;
+      return res.status(200).json(student);
     });
 };
 
