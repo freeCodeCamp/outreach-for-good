@@ -83,9 +83,8 @@ function parsePDF(buffer, school, date, res) {
     var students = studentDataArrays(rows).map(parseStudent);
     // This will throw if no students, add guard statement (invalid upload?).
     var schoolYear = students[0].schoolYear;
-
     previousRecord(school.id, schoolYear).then(function(prev) {
-      var idToPrev = _.indexBy((prev || {}).entries, 'student.studentId');
+      var idToPrev = _.keyBy((prev || {}).entries, 'student.studentId');
       var result = groupByType(students, idToPrev);
       // Deltas are equal to their entry counterpart minus previous entry
       // total for students with existing records.
