@@ -52,14 +52,13 @@ function AdminCtrl($scope, $http, uiGridConstants, Auth, Data, User, School,
         return nameA < nameB ? -1 : 1;
       }
     },
-    cellClass: 'assignment-col',
-    cellTemplate: 'app/main/admin/partial/cell.assignment.html'
+    editableCellTemplate: 'app/main/admin/partial/cell.assignment.html',
+    cellTemplate: '<div class="ui-grid-cell-contents">{{ COL_FIELD.name }}</div>'
   }, {
     name: 'role',
     displayName: 'Role',
     width: 125,
-    cellClass: 'role-col',
-    cellTemplate: 'app/main/admin/partial/cell.role.html'
+    editableCellTemplate: 'app/main/admin/partial/cell.role.html'
   }, {
     name: 'Actions',
     width: 108,
