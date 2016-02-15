@@ -2,9 +2,8 @@
 
 var app = angular.module('app');
 
-function MainCtrl($scope, Data, Sidebar) {
+function MainCtrl($scope, Sidebar) {
   $scope.sidebar = Sidebar;
-  Data.initialize();
 }
 
 app.controller('MainCtrl', MainCtrl);

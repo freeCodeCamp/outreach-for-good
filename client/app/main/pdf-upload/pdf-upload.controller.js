@@ -3,13 +3,15 @@
 var app = angular.module('app');
 
 app.controller('PDFUploadCtrl',
-  function($scope, AbsenceRecord, Auth, Data, Upload, toastr) {
+  function($scope, AbsenceRecord, Auth, School, Upload, toastr) {
     $scope.forms = {};
     $scope.isUploaded = false;
-    $scope.schools = Data.schools;
 
     if (Auth.getCurrentUser().role === 'teacher') {
       $scope.defaultSchool = Auth.getCurrentUser().assignment;
+      $scope.schools = [$scope.defaultSchool];
+    } else {
+      $scope.schools = School.query();
     }
 
     $scope.data = {upload: {school: $scope.defaultSchool}};
@@ -35,7 +37,6 @@ app.controller('PDFUploadCtrl',
         $scope.data.upload.message = 'Upload Confirmed!';
         $scope.result.data = {};
         $scope.isUploaded = false;
-        Data.refreshEntries();
 
         var schoolName = res.record.school.name;
         if (res.students.length) {

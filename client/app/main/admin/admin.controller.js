@@ -2,10 +2,9 @@
 
 var app = angular.module('app');
 
-function AdminCtrl($scope, $http, uiGridConstants, Auth, Data, User, School,
+function AdminCtrl($scope, $http, uiGridConstants, Auth, User, School,
   Modal, ROLES) {
   $scope.roles = ROLES.slice(0, ROLES.indexOf(Auth.getCurrentUser().role) + 1);
-  $scope.data = Data;
   $scope.auth = Auth;
 
   // Users
@@ -129,13 +128,13 @@ function AdminCtrl($scope, $http, uiGridConstants, Auth, Data, User, School,
 
   $scope.schoolGridOptions.onRegisterApi = function(gridApi) {
     $scope.schoolGridOptions = gridApi;
-    $scope.schoolGridOptions.data = $scope.data.schools;
+    $scope.schoolGridOptions.data = School.query();
   };
 
   $scope.addSchool = function() {
     var addSchoolFn = function(model) {
       return School.save({}, model, function() {
-        Data.refreshSchools();
+        $scope.schoolGridOptions.data = School.query();
       });
     };
     Modal.form('Add New School', 'app/main/admin/partial/modal.add-school.html',
@@ -151,19 +150,13 @@ function AdminCtrl($scope, $http, uiGridConstants, Auth, Data, User, School,
     Modal.confirm.delete(deleteSchoolFn)(school.name);
   };
 
-  $scope.$watch('data.schools', function(newSchools, oldSchools) {
-    if (newSchools !== oldSchools) {
-      $scope.schoolGridOptions.data = newSchools;
-    }
-  });
-
   // Development
 
   $scope.reset = function() {
     var resetFn = function() {
       $http.delete('/api/devs/reset').then(function() {
         $scope.userGridOptions.data = User.query();
-        Data.initialize();
+        $scope.schoolGridOptions.data = School.query();
       });
     };
     Modal.confirm.reset(resetFn)();
