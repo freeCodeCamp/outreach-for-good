@@ -1,39 +1,39 @@
 <div class="dashboard row">
   <div class="widgets">
     <div class="widget">
-      <a href="#" tooltip-placement="top" uib-tooltip="Phone calls">
+      <a href="#" tooltip-placement="top" uib-tooltip="Students" ng-click="setSelector()">
+        <i class="fa fa-child fa-2x"></i>
+      </a>
+    </div>
+    <div class="widget">
+      <a href="#" tooltip-placement="top" uib-tooltip="Phone calls" ng-click="setSelector('Phone Call')">
         <i class="fa fa-phone fa-2x"></i>
       </a>
       <div class="badge">{{calls}}</div>
     </div>
     <div class="widget">
-      <a href="#" tooltip-placement="top" uib-tooltip="Letters">
+      <a href="#" tooltip-placement="top" uib-tooltip="Letters" ng-click="setSelector('Letter Sent')">
         <i class="fa fa-envelope fa-2x"></i>
       </a>
       <div class="badge">{{letters}}</div>
     </div>
     <div class="widget">
-      <a href="#" tooltip-placement="top" uib-tooltip="Home visits">
+      <a href="#" tooltip-placement="top" uib-tooltip="Home visits" ng-click="setSelector('Home Visit')">
         <i class="fa fa-home fa-2x"></i>
       </a>
       <div class="badge">{{home}}</div>
     </div>
     <div class="widget">
-      <a href="#" tooltip-placement="top" uib-tooltip="SST referrals">
+      <a href="#" tooltip-placement="top" uib-tooltip="SST referrals" ng-click="setSelector('SST Referral')">
         <i class="fa fa-support fa-2x"></i>
       </a>
       <div class="badge">{{sst}}</div>
     </div>
     <div class="widget">
-      <a href="#" tooltip-placement="top" uib-tooltip="Court referrals">
+      <a href="#" tooltip-placement="top" uib-tooltip="Court referrals" ng-click="setSelector('Court Referral')">
         <i class="fa fa-gavel fa-2x"></i>
       </a>
       <div class="badge">{{court}}</div>
-    </div>
-    <div class="widget">
-      <a href="#" tooltip-placement="top" uib-tooltip="Students">
-        <i class="fa fa-child fa-2x"></i>
-      </a>
     </div>
     <div class="widget">
       <a href="#" tooltip-placement="top" uib-tooltip="Reports">
@@ -47,7 +47,7 @@
     </div>
   </div>
   <div class="heading">
-    <h3 ng-if="!assignment">Students</h3>
+    <h3><span ng-if="!assignment">Students</span><span ng-if="selector"> with {{selector}} Interventions</span></h3>
     <h3 ng-if="assignment">{{assignment.name}}</h3>
   </div>
   <div class="student-list">
