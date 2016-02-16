@@ -71,16 +71,3 @@
     }
   }
 }
-
-.dropdown-menu {
-  &.role-menu {
-    min-width: 125px;
-  }
-  &.assignment-menu {
-    min-width: 200px;
-  }
-  li a {
-    line-height: 30px;
-    vertical-align: middle;
-  }
-}

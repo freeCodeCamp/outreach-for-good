@@ -42,7 +42,7 @@ body,
 
 // Fix for inline forms for ui-select
 @media (min-width: 768px) {
-  .ui-select-container {
+  .form-inline .ui-select-container {
     min-width: 291px;
     display: inline-block;
   }
