@@ -31,7 +31,7 @@ function DashboardCtrl($scope, Auth, Data, Intervention, Student,
   }, {
     name: 'entries.absences',
     displayName: 'Absences',
-    minWidth: 150,
+    minWidth: 100,
     treeAggregationType: uiGridGroupingConstants.aggregation.SUM
   }, {
     name: 'entries.absencesDelta',
@@ -40,7 +40,7 @@ function DashboardCtrl($scope, Auth, Data, Intervention, Student,
   }, {
     name: 'entries.tardies',
     displayName: 'Tardies',
-    minWidth: 150,
+    minWidth: 100,
     treeAggregationType: uiGridGroupingConstants.aggregation.SUM
   }, {
     name: 'entries.tardiesDelta',
@@ -49,11 +49,11 @@ function DashboardCtrl($scope, Auth, Data, Intervention, Student,
   }, {
     name: 'entries.present',
     displayName: 'Present',
-    minWidth: 150
+    minWidth: 100
   }, {
     name: 'entries.enrolled',
     displayName: 'Enrolled',
-    minWidth: 150
+    minWidth: 100
   }, {
     name: 'entries.student.iep',
     displayName: 'IEP',
