@@ -15,6 +15,10 @@ router.get('/current',
   auth.hasRole('teacher'),
   controller.current);
 
+router.get('/current/:selector',
+  auth.hasRole('teacher'),
+  controller.filtered);
+
 router.get('/', auth.hasRole('manager'), controller.index);
 router.get('/:id', auth.hasRole('teacher'), controller.show);
 router.put('/:id', auth.hasRole('teacher'), controller.update);

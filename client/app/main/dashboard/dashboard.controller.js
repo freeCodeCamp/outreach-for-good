@@ -146,6 +146,10 @@ function DashboardCtrl($scope, Auth, AbsenceRecord, Intervention, Student,
     $scope.sst = (counts['SST Referral'] || {}).count || 0;
     $scope.court = (counts['Court Referral'] || {}).count || 0;
   });
+
+  $scope.setSelector = function(selector) {
+    $scope.selector = selector;
+  };
 }
 
 app.controller('DashboardCtrl', DashboardCtrl);
