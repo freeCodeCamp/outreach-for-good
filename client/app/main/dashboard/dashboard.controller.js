@@ -2,9 +2,8 @@
 
 var app = angular.module('app');
 
-function DashboardCtrl($scope, Auth, Data, Intervention, Student,
+function DashboardCtrl($scope, Auth, AbsenceRecord, Intervention, Student,
   uiGridGroupingConstants, toastr) {
-  $scope.data = Data;
   $scope.studentGridOptions = {
     enableSorting: true,
     enableGridMenu: true,
@@ -116,7 +115,7 @@ function DashboardCtrl($scope, Auth, Data, Intervention, Student,
 
   $scope.studentGridOptions.onRegisterApi = function(gridApi) {
     $scope.studentGridApi = gridApi;
-    $scope.studentGridOptions.data = $scope.data.entries;
+    $scope.studentGridOptions.data = AbsenceRecord.current();
     gridApi.edit.on.afterCellEdit($scope, function(rowEntity, colDef, n, o) {
       if (n !== o) {
         switch (colDef.name) {
@@ -131,9 +130,11 @@ function DashboardCtrl($scope, Auth, Data, Intervention, Student,
     });
   };
 
-  $scope.$watch('data.entries', function(newEntries, oldEntries) {
-    if (newEntries !== oldEntries) {
-      $scope.studentGridOptions.data = newEntries;
+  $scope.$watch('selector', function(selector, old) {
+    if (selector !== old) {
+      $scope.studentGridOptions.data = AbsenceRecord.current({
+        selector: selector
+      });
     }
   });
 

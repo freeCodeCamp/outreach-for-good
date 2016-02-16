@@ -6,7 +6,7 @@ app.factory('AbsenceRecord', function($resource) {
   return $resource('/api/absence-records/:id/:controller/:selector', {
     id: '@_id'
   }, {
-    listCurrent: {
+    current: {
       method: 'GET',
       isArray: true,
       params: {
