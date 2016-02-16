@@ -94,7 +94,7 @@ function newAbsenceRecord(record, res, createdStudents) {
  */
 exports.create = function(req, res) {
   var school = req.body.schoolId;
-  var existingEntries = _.pluck(req.body.updates || [], 'entry');
+  var existingEntries = _.map(req.body.updates || [], 'entry');
   if (!req.body.creates) {
     return newAbsenceRecord({
       schoolYear: req.body.updates[0].schoolYear,
@@ -103,8 +103,8 @@ exports.create = function(req, res) {
       entries: existingEntries
     }, res, []);
   }
-  var newStudents = _.pluck(req.body.creates, 'student');
-  var newEntries = _.pluck(req.body.creates, 'entry');
+  var newStudents = _.map(req.body.creates, 'student');
+  var newEntries = _.map(req.body.creates, 'entry');
   _.forEach(newStudents, function(student) {
     student.currentSchool = school;
   });
