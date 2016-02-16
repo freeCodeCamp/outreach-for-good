@@ -17,9 +17,9 @@ app.controller('PDFUploadCtrl',
     $scope.upload = function(file) {
       return Upload.upload({
         url: '/api/pdfs/',
-        data: { file: file, 
-                schoolId: $scope.data.upload.school._id, 
-                date: $scope.date 
+        data: { file: file,
+                schoolId: $scope.data.upload.school._id,
+                date: $scope.date
               }
       });
     };
@@ -37,7 +37,6 @@ app.controller('PDFUploadCtrl',
         $scope.isUploaded = false;
         Data.refreshEntries();
 
-        console.log(res);
         var schoolName = res.record.school.name;
         if (res.students.length) {
           toastr.success(
