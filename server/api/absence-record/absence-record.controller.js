@@ -17,6 +17,29 @@ exports.index = function (req, res) {
   });
 };
 
+function currentAbsenceRecordPipeline(user) {
+  var pipeline = [];
+  if (user.role === 'teacher') {
+    pipeline.push({
+      $match: {school: user.assignment}
+    });
+  }
+  pipeline.push({
+    $sort: {date: -1}
+  });
+  pipeline.push({
+    $group: {
+      _id: '$school',
+      school: {$first: '$school'},
+      entries: {$first: '$entries'}
+    }
+  });
+  pipeline.push({
+    $unwind: '$entries'
+  });
+  return pipeline;
+}
+
 /**
  * Get entries from current absence records
  * restriction: 'teacher'
@@ -26,21 +49,8 @@ exports.index = function (req, res) {
  * - manager+ will get entries for all schools
  */
 exports.current = function (req, res) {
-  var options = [{
-    $sort: {_id: -1}
-  }, {
-    $group: {
-      _id: '$school',
-      school: {$first: '$school'},
-      entries: {$first: '$entries'}
-    }
-  }, {
-    $unwind: '$entries'
-  }];
-  if (req.user.role === 'teacher') {
-    options.unshift({$match: {school: req.user.assignment}});
-  }
-  AbsenceRecord.aggregate(options, function (err, results) {
+  var pipeline = currentAbsenceRecordPipeline(req.user);
+  AbsenceRecord.aggregate(pipeline, function (err, results) {
     if (err) return handleError(res, err);
     AbsenceRecord.populate(results, 'school entries.student',
       function (err, entries) {
@@ -65,25 +75,8 @@ exports.filtered = function (req, res) {
   });
   query.distinct('student');
   query.exec(function (err, students) {
-    var pipeline = [];
-    if (req.user.role === 'teacher') {
-      pipeline.push({
-        $match: {school: req.user.assignment}
-      });
-    }
-    pipeline.push({
-      $sort: {_id: -1}
-    });
-    pipeline.push({
-      $group: {
-        _id: '$school',
-        school: {$first: '$school'},
-        entries: {$first: '$entries'}
-      }
-    });
-    pipeline.push({
-      $unwind: '$entries'
-    });
+    if (err) return handleError(res, err);
+    var pipeline = currentAbsenceRecordPipeline(req.user);
     pipeline.push({
       $match: {
         'entries.student': {$in: students}
