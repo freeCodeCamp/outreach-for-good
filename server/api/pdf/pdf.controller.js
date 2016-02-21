@@ -20,21 +20,28 @@ function splitRowChunks(rows) {
   return _.zip.apply(null, propertyArrays);
 }
 
+//Checks if value is a valid number, including 0 
+function isValNum(num){
+  return (num === undefined || isNaN(num)) && num !== 0;
+}
+
 function parseStudent(arr) {
   var result = {};
   var names = arr[0][0].split(', ');
   result.student = {
-    lastName: names[0],
-    firstName: names[1],
-    studentId: arr[0][1]
+    lastName: _.isString(names[0]) ? names[0] : undefined,
+    firstName: _.isString(names[1]) ? names[1] : undefined,
+    studentId: _.isString(arr[0][1]) ? arr[0][1] : undefined
   };
   result.entry = {
-    absences: +arr[1][1],
-    tardies: +arr[2][1],
-    present: +arr[3][1],
-    enrolled: +arr[4][1]
+    absences: (isValNum(+arr[1][1])) ? NaN : +arr[1][1],
+    tardies: (isValNum(+arr[2][1])) ? NaN : +arr[2][1],
+    present: (isValNum(+arr[3][1])) ? NaN : +arr[3][1],
+    enrolled: (isValNum(+arr[4][1])) ? NaN : +arr[4][1]
   };
   result.schoolYear = arr[5][1].replace(/\s/g, '');
+  // TODO: Use undefined or NaN data in fields to provide user with
+  // reason why PDF did not upload.
   return result;
 }
 
@@ -79,9 +86,14 @@ function createInterventions(entry, prevEntry, school, schoolYear) {
 function parsePDF(buffer, school, date, res) {
   pdf2table.parse(buffer, function(err, rows) {
     if (err) return handleError(res, err);
-    // TODO: Try catch for failure to parse.
-    var students = studentDataArrays(rows).map(parseStudent);
-    // This will throw if no students, add guard statement (invalid upload?).
+    var students;
+    try {
+      students = studentDataArrays(rows).map(parseStudent);
+    }
+    // Try catch for failure to parse.
+    catch(err) {
+      return res.status(500).json(err);
+    }
     var schoolYear = students[0].schoolYear;
     previousRecord(school.id, schoolYear).then(function(prev) {
       var idToPrev = _.keyBy((prev || {}).entries, 'student.studentId');
@@ -110,7 +122,7 @@ function parsePDF(buffer, school, date, res) {
       result.schoolId = school.id;
       result.date = date;
       res.status(200).json(result);
-    });
+    })
   });
 }
 
