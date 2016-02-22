@@ -92,7 +92,7 @@ function PDFUploadCtrl($scope, AbsenceRecord, Auth, School, Upload, toastr) {
           $scope.forms.upload.file.$setValidity('server', false);
           $scope.data.upload.fileError = 
             'Error uploading PDF... Refresh page to try again.' + 
-            '{ ' + err.status + ': ' + err.statusText + ' }';
+            ' { ' + err.status + ': ' + err.statusText + ' }';
           $scope.data.upload.processingUpload = false;
           // TODO: Find way to reset form so user doesn't have to refresh page
         });
