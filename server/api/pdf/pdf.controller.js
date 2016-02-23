@@ -24,15 +24,15 @@ function parseStudent(arr) {
   var result = {};
   var names = arr[0][0].split(', ');
   result.student = {
-    lastName: names[0],
-    firstName: names[1],
-    studentId: arr[0][1]
+    lastName:     names[0], 
+    firstName:    names[1], 
+    studentId:    arr[0][1]
   };
   result.entry = {
-    absences: +arr[1][1],
-    tardies: +arr[2][1],
-    present: +arr[3][1],
-    enrolled: +arr[4][1]
+    absences:     +arr[1][1],
+    tardies:      +arr[2][1],
+    present:      +arr[3][1],
+    enrolled:     +arr[4][1]
   };
   result.schoolYear = arr[5][1].replace(/\s/g, '');
   return result;
@@ -79,9 +79,14 @@ function createInterventions(entry, prevEntry, school, schoolYear) {
 function parsePDF(buffer, school, date, res) {
   pdf2table.parse(buffer, function(err, rows) {
     if (err) return handleError(res, err);
-    // TODO: Try catch for failure to parse.
-    var students = studentDataArrays(rows).map(parseStudent);
-    // This will throw if no students, add guard statement (invalid upload?).
+    var students;
+    try {
+      students = studentDataArrays(rows).map(parseStudent);
+    }
+    // Try catch for failure to parse.
+    catch(err) {
+      return res.status(500).json(err);
+    }
     var schoolYear = students[0].schoolYear;
     previousRecord(school.id, schoolYear).then(function(prev) {
       var idToPrev = _.keyBy((prev || {}).entries, 'student.studentId');

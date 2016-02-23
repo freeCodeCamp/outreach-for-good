@@ -73,20 +73,29 @@ function PDFUploadCtrl($scope, AbsenceRecord, Auth, School, Upload, toastr) {
       $scope.forms.upload.file.$setValidity('server', true);
       delete $scope.data.upload.fileError;
 
-      $scope.upload($scope.data.upload.file).then(function(res) {
-        if (res.status === 200) {
-          $scope.data.upload = {school: $scope.defaultSchool};
-          $scope.data.upload.message =
-            'Confirm you want to upload the following...';
-          $scope.result = res;
-          $scope.forms.upload.$setPristine();
-          $scope.isUploaded = true;
-        } else {
+      $scope.upload($scope.data.upload.file)
+        .then(function(res) {
+          if (res.status === 200) {
+            $scope.data.upload = {school: $scope.defaultSchool};
+            $scope.data.upload.message =
+              'Confirm you want to upload the following...';
+            $scope.result = res;
+            $scope.forms.upload.$setPristine();
+            $scope.isUploaded = true;
+          } else {
+            $scope.forms.upload.file.$setValidity('server', false);
+            $scope.data.upload.fileError = res.status + ': ' + res.statusText;
+          }
+          $scope.data.upload.processingUpload = false;
+        })
+        .catch(function(err) {
           $scope.forms.upload.file.$setValidity('server', false);
-          $scope.data.upload.fileError = res.status + ': ' + res.statusText;
-        }
-        $scope.data.upload.processingUpload = false;
-      });
+          $scope.data.upload.fileError = 
+            'Error uploading PDF... Refresh page to try again.' + 
+            ' { ' + err.status + ': ' + err.statusText + ' }';
+          $scope.data.upload.processingUpload = false;
+          // TODO: Find way to reset form so user doesn't have to refresh page
+        });
     }
   };
 }
