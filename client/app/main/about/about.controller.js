@@ -13,7 +13,7 @@ function AboutCtrl($scope) {
 	};
 	$scope.urls = {
 		'fcc' : 'http://freecodecamp.com',
-		'github-issues' : 'https://github.com/child-first-authority-fcc-project/webapp/issues'
+		'issues' : 'https://github.com/child-first-authority-fcc-project/webapp/issues'
 	};
 }
 
