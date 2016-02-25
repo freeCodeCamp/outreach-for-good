@@ -22,6 +22,11 @@ angular.module('app').controller('SidebarCtrl',
       displayName: 'Admin',
       icon: 'fa-wrench',
       requiredRole: 'admin'
+    }, {
+      name: 'about',
+      url: 'about',
+      displayName: 'About',
+      icon: 'fa-question'
     }];
     $scope.sidebar = Sidebar;
     $scope.active = function(state) {
