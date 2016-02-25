@@ -7,6 +7,6 @@ angular.module('app')
         url: '/about',
         parent: 'main',
         templateUrl: 'app/main/about/about.html',
-        controller: 'aboutCtrl'
+        controller: 'AboutCtrl'
       });
   });
