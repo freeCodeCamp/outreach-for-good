@@ -5,10 +5,11 @@ var mongoose = require('mongoose'),
 
 var types = [
   'Phone Call',
-  'Letter Sent',
+  'Send Letter',
   'Home Visit',
   'SST Referral',
-  'Court Referral'
+  'Court Referral',
+  'Other'
 ];
 
 var InterventionSchema = new Schema({
