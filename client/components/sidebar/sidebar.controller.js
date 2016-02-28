@@ -12,6 +12,11 @@ angular.module('app').controller('SidebarCtrl',
       displayName: 'Student',
       icon: 'fa-child'
     }, {
+      name: 'school-reports',
+      url: 'school-reports',
+      displayName: 'School Reports',
+      icon: 'fa-graduation-cap'      
+    }, {
       name: 'pdf-upload',
       url: 'pdf-upload',
       displayName: 'Upload Absence Report',
