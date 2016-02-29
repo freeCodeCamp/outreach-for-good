@@ -1,9 +1,11 @@
 <div class="school-reports">
   <div class="heading row">
-    <h3>Interventions</h3>
+    <h3>At Risk Chronic Absenteeism Rate
+      <div class="badge">0</div>
+    </h3>
   </div>
   <div class="student-list">
-    <div ui-grid="studentGridOptions" 
+    <div ui-grid="atRiskChronicAbsentGridOptions" 
       ui-grid-auto-resize 
       ui-grid-selection 
       ui-grid-grouping 
@@ -12,49 +14,12 @@
       class="grid"></div>
   </div>
   <div class="heading row">
-    <h3>Chronically Absent</h3>
-  </div>
-  <div class="widgets">
-    <div class="widget">
-      <a href="#" tooltip-placement="top" uib-tooltip="At Risk for Chronic Absenteeism Rate" ng-click="">
-        <i class="fa fa-exclamation-triangle fa-2x"></i>
-      </a>
+    <h3>Chronically Absent
       <div class="badge">0</div>
-    </div>
-    <div class="widget">
-      <a href="#" tooltip-placement="top" uib-tooltip="Official Chronic Absenteeism Rate" ng-click="">
-        <i class="fa fa-exclamation fa-2x"></i>
-      </a>
-      <div class="badge">0</div>
-    </div>
+    </h3>
   </div>
-  <div class="clearfix"></div>
   <div class="student-list">
     <div ui-grid="chronicAbsentGridOptions" 
-      ui-grid-auto-resize 
-      ui-grid-selection 
-      ui-grid-grouping 
-      ui-grid-edit 
-      ui-grid-exporter
-      class="grid"></div>
-  </div>   
-  <div class="heading row">
-    <h3>Average Daly Attendance</h3>
-  </div>
-  <div class="student-list">
-    <div ui-grid="dalyAtttendanceGridOptions" 
-      ui-grid-auto-resize 
-      ui-grid-selection 
-      ui-grid-grouping 
-      ui-grid-edit 
-      ui-grid-exporter
-      class="grid"></div>
-  </div>   
-  <div class="heading row">
-    <h3>Require First Call</h3>
-  </div>
-  <div class="student-list">
-    <div ui-grid="firstCallGridOptions" 
       ui-grid-auto-resize 
       ui-grid-selection 
       ui-grid-grouping 
