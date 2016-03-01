@@ -60,7 +60,7 @@ function StudentCtrl($rootScope, $scope, $stateParams, Intervention, Modal, Outr
     Modal.form(
       'Add New Outreach',
       'app/main/student/partial/modal.add-outreach.html',
-      addOutreachFn)
+      addOutreachFn);
   };
 
   $scope.addOutreachNote = function(outreach) {

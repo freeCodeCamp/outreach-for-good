@@ -163,7 +163,7 @@ function SchoolReports($scope, Auth, uiGridGroupingConstants,
   var arca = AbsenceRecord.arca();
 
   curCAR.$promise.then(function(data) {
-    $scope.chronicAbsentGridOptions.data = data
+    $scope.chronicAbsentGridOptions.data = data;
     $scope.curCARCount = data.length;
   });
   arca.$promise.then(function(data) {

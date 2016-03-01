@@ -104,7 +104,7 @@ exports.arca = function (req, res) {
             var present = entry.entries.present;
             var enrolled = entry.entries.enrolled;
             var tot = ( present / enrolled ).toFixed(2);
-            return tot === .9;
+            return tot === 0.9;
           });
         return res.status(200).json(entries);
       });
