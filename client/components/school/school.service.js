@@ -12,6 +12,12 @@ app.factory('School', function($resource) {
       params: {
         controller: 'students'
       }
+    },
+    updateTriggers: {
+      method: 'PUT',
+      params: {
+        controller: 'update-triggers'
+      }
     }
   });
 });
