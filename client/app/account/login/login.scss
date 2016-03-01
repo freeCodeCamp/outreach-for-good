@@ -3,11 +3,11 @@
 // Colors
 // --------------------------------------------------
 
-$btnText:                           #FFF;
-$btnTextAlt:                        #000;
+$btnText: #FFF;
+$btnTextAlt: #000;
 
-$btnGooglePlusBackground:           #DC4E41;
-$btnGooglePlusBackgroundHighlight:  #C53727;
+$btnGooglePlusBackground: #DC4E41;
+$btnGooglePlusBackgroundHighlight: #C53727;
 
 // Social buttons
 // --------------------------------------------------
@@ -17,7 +17,6 @@ $btnGooglePlusBackgroundHighlight:  #C53727;
   display: inline-block;
   white-space: nowrap;
   color: $btnText;
-  width: 200px;
   font-family: 'Roboto', sans-serif;
   background-color: $btnGooglePlusBackground;
   border-radius: 5px;

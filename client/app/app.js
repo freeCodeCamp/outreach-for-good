@@ -18,7 +18,8 @@ var app = angular.module('app', [
   'ui.router',
   'ui.select',
   'matchmedia-ng',
-  'toastr'
+  'toastr',
+  'highcharts-ng'
 ]);
 
 app.config(function($stateProvider, $urlRouterProvider, $locationProvider,

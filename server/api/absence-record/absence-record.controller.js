@@ -1,7 +1,7 @@
 'use strict';
 
 var _ = require('lodash');
-var mongoose = require('mongoose')
+var mongoose = require('mongoose');
 var AbsenceRecord = require('./absence-record.model');
 var Intervention = require('../intervention/intervention.model');
 var Student = require('../student/student.model');
