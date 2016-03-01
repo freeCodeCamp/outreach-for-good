@@ -1,8 +1,24 @@
 .student {
-  .info, .interventions, .outreaches {
-    padding: 15px;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  @media(min-width: 768px) {
+    .info {
+      height: 108px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-around;
+    }
   }
-  dl {
-    margin: 0;
+  @media(max-width: 768px) {
+    .info {
+      padding: 15px 0;
+    }
+  }
+  .interventions-outreaches {
+    display: flex;
+    flex-direction: column;
+    flex: 1 0 0;
+    padding: 15px 0;
   }
 }
