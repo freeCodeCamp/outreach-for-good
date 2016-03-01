@@ -1,0 +1,18 @@
+<section class="data-visualization">
+  <div class="heading row">
+    <h3>Data Visualization</h3>
+  </div>
+  <div class="chart row">
+    <highchart id="chart1" config="chartConfig" class="col-xs-12"></highchart>
+  </div>
+  <div class="options row">
+    <div class="btn-group">
+      <label class="btn btn-default" ng-model="statType" uib-btn-radio="'Cumulative'">Cumulative</label>
+      <label class="btn btn-default" ng-model="statType" uib-btn-radio="'Average'">Average</label>
+    </div>
+    <div class="btn-group">
+      <label class="btn btn-default" ng-model="truancyType" uib-btn-radio="'Absences'">Absences</label>
+      <label class="btn btn-default" ng-model="truancyType" uib-btn-radio="'Tardies'">Tardies</label>
+    </div>
+  </div>
+</section>

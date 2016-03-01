@@ -8,13 +8,18 @@ angular.module('app').controller('SidebarCtrl',
       displayName: 'Dashboard',
       icon: 'fa-dashboard'
     }, {
+      name: 'visualization',
+      url: 'visualization',
+      displayName: 'Data Visualization',
+      icon: 'fa-area-chart'
+    }, {
       name: 'student',
       displayName: 'Student',
       icon: 'fa-child'
     }, {
       name: 'pdf-upload',
       url: 'pdf-upload',
-      displayName: 'Upload Absence Report',
+      displayName: 'Upload',
       icon: 'fa-upload'
     }, {
       name: 'admin',
