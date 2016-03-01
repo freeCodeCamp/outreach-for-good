@@ -93,7 +93,8 @@ function AdminCtrl($scope, $http, uiGridConstants, Auth, User, School,
     var updateFn = function() {
       User.updateRole({id: user._id}, {role: role}).$promise
         .then(function(updatedUser) {
-          _.assign(user, updatedUser);
+          user.role = updatedUser.role;
+          delete user.assignment;
           $scope.userGridApi.core.notifyDataChange(
             uiGridConstants.dataChange.EDIT);
         });
