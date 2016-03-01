@@ -101,8 +101,9 @@ exports.arca = function (req, res) {
         if (err) return handleError(res, err);
         entries = _.filter(entries, 
           function(entry){
-            var tot = (entry.entries.present / entry.entries.enrolled).toFixed(2);
-            console.log(entry.entries.student + ": " + tot);
+            var present = entry.entries.present;
+            var enrolled = entry.entries.enrolled;
+            var tot = ( present / enrolled ).toFixed(2);
             return tot === .9;
           });
         return res.status(200).json(entries);
