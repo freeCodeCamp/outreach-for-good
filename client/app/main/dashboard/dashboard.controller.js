@@ -2,8 +2,8 @@
 
 var app = angular.module('app');
 
-function DashboardCtrl($scope, Auth, AbsenceRecord, Intervention, Student,
-  uiGridGroupingConstants, toastr) {
+function DashboardCtrl($scope, $timeout, Auth, AbsenceRecord, Intervention,
+  Student, uiGridGroupingConstants, toastr) {
   $scope.studentGridOptions = {
     enableSorting: true,
     enableGridMenu: true,
@@ -11,16 +11,20 @@ function DashboardCtrl($scope, Auth, AbsenceRecord, Intervention, Student,
     treeRowHeaderAlwaysVisible: false,
     exporterPdfDefaultStyle: {fontSize: 9},
     exporterPdfTableHeaderStyle: {fontSize: 10, bold: true, color: 'grey'},
-    exporterPdfHeader: { text: 'Student Data', style: 'headerStyle' },
+    exporterPdfHeader: {text: 'Student Data', style: 'headerStyle'},
     exporterPdfOrientation: 'landscape',
     exporterPdfPageSize: 'LETTER',
     exporterPdfMaxGridWidth: 500,
-    exporterPdfFooter: function ( currentPage, pageCount ) {
-      return { text: currentPage.toString() + ' of ' + pageCount.toString(), style: 'footerStyle' };
+    exporterPdfFooter: function(currentPage, pageCount) {
+      return {
+        text: currentPage.toString() + ' of ' + pageCount.toString(),
+        style: 'footerStyle'
+      };
     },
-    exporterPdfCustomFormatter: function ( docDefinition ) {
-      docDefinition.styles.headerStyle = { fontSize: 22, bold: true, color: '#265E6D' };
-      docDefinition.styles.footerStyle = { fontSize: 10, bold: true };
+    exporterPdfCustomFormatter: function(docDefinition) {
+      docDefinition.styles.headerStyle =
+      {fontSize: 22, bold: true, color: '#265E6D'};
+      docDefinition.styles.footerStyle = {fontSize: 10, bold: true};
       return docDefinition;
     }
   };
@@ -140,6 +144,14 @@ function DashboardCtrl($scope, Auth, AbsenceRecord, Intervention, Student,
             $scope.updateCFA(rowEntity.entries.student);
             break;
         }
+      }
+    });
+
+    // NOTE: Hack to default to expanded rows on initial load.
+    // https://github.com/angular-ui/ui-grid/issues/3841
+    $scope.studentGridOptions.data.$promise.then(function() {
+      if ($scope.studentGridApi.treeBase.expandAllRows) {
+        $timeout($scope.studentGridApi.treeBase.expandAllRows);
       }
     });
   };
