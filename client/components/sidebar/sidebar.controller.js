@@ -18,6 +18,11 @@ angular.module('app').controller('SidebarCtrl',
       displayName: 'Upload',
       icon: 'fa-upload'
     }, {
+      name: 'school',
+      url: 'school',
+      displayName: 'School Settings',
+      icon: 'fa-cogs'
+    }, {
       name: 'admin',
       url: 'admin',
       displayName: 'Admin',
