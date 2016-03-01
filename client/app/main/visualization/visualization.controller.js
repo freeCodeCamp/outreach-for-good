@@ -95,7 +95,7 @@ function VisualizationCtrl($scope, $timeout, Sidebar, Visualization) {
 
   // Timeout used to redraw the chart after animation delay of resizing the
   // sidebar.
-  $scope.$watch('sidebar.isCollapsed', function(n, o) {
+  $scope.$watch('sidebar.isCollapsed', function() {
     $timeout(function() {$scope.chartObj.reflow();}, 510);
   });
 }
