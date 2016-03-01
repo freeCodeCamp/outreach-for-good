@@ -12,6 +12,20 @@ app.factory('AbsenceRecord', function($resource) {
       params: {
         controller: 'current'
       }
-    }
+    },
+    curCAR: {
+      method: 'GET',
+      isArray: true,
+      params: {
+        controller: 'cur-car'
+      }
+    },
+    arca: {
+      method: 'GET',
+      isArray: true,
+      params: {
+        controller: 'arca'
+      }
+    },
   });
 });

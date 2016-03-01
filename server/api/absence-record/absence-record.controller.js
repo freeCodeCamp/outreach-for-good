@@ -1,7 +1,7 @@
 'use strict';
 
 var _ = require('lodash');
-var mongoose = require('mongoose')
+var mongoose = require('mongoose');
 var AbsenceRecord = require('./absence-record.model');
 var Intervention = require('../intervention/intervention.model');
 var Student = require('../student/student.model');
@@ -55,6 +55,56 @@ exports.current = function (req, res) {
     AbsenceRecord.populate(results, 'school entries.student',
       function (err, entries) {
         if (err) return handleError(res, err);
+        return res.status(200).json(entries);
+      });
+  });
+};
+
+/**
+ * Get Current Chronic Absence Report from current absence records
+ * restriction: 'teacher'
+ *
+ * Returns an aggregation for entries based on the req user role:
+ * - teachers will get entries for assignment school
+ * - manager+ will get entries for all schools
+ */
+exports.curCAR = function (req, res) {
+  var pipeline = currentAbsenceRecordPipeline(req.user);
+  AbsenceRecord.aggregate(pipeline, function (err, results) {
+    if (err) return handleError(res, err);
+    AbsenceRecord.populate(results, 'school entries.student',
+      function (err, entries) {
+        if (err) return handleError(res, err);
+        entries = _.filter(entries, 
+          function(entry){
+            return entry.entries.absences > 20;
+          });
+        return res.status(200).json(entries);
+      });
+  });
+};
+
+/**
+ * Get At Risk Chronic Absence Report from current absence records
+ * restriction: 'teacher'
+ *
+ * Returns an aggregation for entries based on the req user role:
+ * - teachers will get entries for assignment school
+ * - manager+ will get entries for all schools
+ */
+exports.arca = function (req, res) {
+  var pipeline = currentAbsenceRecordPipeline(req.user);
+  AbsenceRecord.aggregate(pipeline, function (err, results) {
+    if (err) return handleError(res, err);
+    AbsenceRecord.populate(results, 'school entries.student',
+      function (err, entries) {
+        if (err) return handleError(res, err);
+        entries = _.filter(entries, 
+          function(entry){
+            var tot = (entry.entries.present / entry.entries.enrolled).toFixed(2);
+            console.log(entry.entries.student + ": " + tot);
+            return tot === .9;
+          });
         return res.status(200).json(entries);
       });
   });

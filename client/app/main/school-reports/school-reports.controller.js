@@ -2,7 +2,10 @@
 
 var app = angular.module('app');
 
-function SchoolReports($scope, uiGridGroupingConstants) {
+function SchoolReports($scope, Auth, uiGridGroupingConstants,
+	Student, AbsenceRecord) {
+  $scope.officialRate = AbsenceRecord.curCAR();
+  $scope.arca = AbsenceRecord.arca();
 	$scope.chronicAbsentGridOptions = {
 		enableSorting: true,
     enableGridMenu: true,

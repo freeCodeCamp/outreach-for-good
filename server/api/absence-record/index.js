@@ -15,6 +15,14 @@ router.get('/current',
   auth.hasRole('teacher'),
   controller.current);
 
+router.get('/cur-car', 
+	auth.hasRole('teacher'), 
+	controller.curCAR);
+
+router.get('/arca', 
+	auth.hasRole('teacher'), 
+	controller.arca);
+
 router.get('/current/:selector',
   auth.hasRole('teacher'),
   controller.filtered);
