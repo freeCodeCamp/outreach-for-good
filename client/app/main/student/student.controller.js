@@ -2,7 +2,7 @@
 
 var app = angular.module('app');
 
-function StudentCtrl($rootScope, $scope, $stateParams, Intervention, Modal, Outreach,
+function StudentCtrl($scope, $stateParams, Intervention, Modal, Outreach,
   Student, toastr) {
 
   $scope.student = Student.get({id: $stateParams.id});
@@ -14,8 +14,7 @@ function StudentCtrl($rootScope, $scope, $stateParams, Intervention, Modal, Outr
     formatYear: 'yy',
     startingDay: 1
   };
-  // Look for another solution, only needed in add new outreach modal
-  $rootScope.outreachTypes = Outreach.getTypes();
+
   $scope.updateActionDate = function(intervention) {
     Intervention.updateAction(
       {id: intervention._id},

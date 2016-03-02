@@ -3,17 +3,8 @@
 var mongoose = require('mongoose'),
   Schema = mongoose.Schema;
 
-var types = [
-  'Phone Call',
-  'Letter Sent',
-  'Home Visit',
-  'SST Referral',
-  'Court Referral',
-  'Other'
-];
-
 var OutreachSchema = new Schema({
-  type: {type: String, required: true, enum: types},
+  type: {type: String, required: true},
 
   student: {type: Schema.Types.ObjectId, ref: 'Student', required: true},
   school: {type: Schema.Types.ObjectId, ref: 'School', required: true},

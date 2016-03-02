@@ -3,8 +3,16 @@
 var mongoose = require('mongoose'),
   Schema = mongoose.Schema;
 
+var types = [
+  'Phone Call',
+  'Letter Sent',
+  'Home Visit',
+  'SST Referral',
+  'Court Referral'
+];
+
 var InterventionSchema = new Schema({
-  type: {type: String, required: true},
+  type: {type: String, required: true, enum: types},
   tier: {type: Number, required: true},
   absences: {type: Number, required: true},
 
