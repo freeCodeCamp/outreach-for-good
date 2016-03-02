@@ -3,28 +3,34 @@
     <h3>Student Info</h3>
   </div>
   <div class="info">
-    <dl class="dl-horizontal">
-      <dt>Name</dt>
-      <dd>{{student.firstName}} {{student.lastName}}</dd>
-
-      <dt>Student Id</dt>
-      <dd>{{student.studentId}}</dd>
-
-      <dt>School</dt>
-      <dd>{{student.currentSchool.name}}</dd>
-
-      <dt>IEP</dt>
-      <dd><input type="checkbox" ng-model="student.iep" ng-change="updateIEP()"></dd>
-
-      <dt>CFA</dt>
-      <dd><input type="checkbox" ng-model="student.cfa" ng-change="updateCFA()"></dd>
-    </dl>
+    <div class="form-horizontal">
+      <label class="col-sm-3 col-md-2 control-label">Name</label>
+      <div class="col-sm-3 col-md-2">
+        <p class="form-control-static">{{student.firstName}} {{student.lastName}}</p>
+      </div>
+      <label class="col-sm-3 col-md-2 control-label">Student Id</label>
+      <div class="col-sm-3 col-md-2">
+        <p class="form-control-static">{{student.studentId}}</p>
+      </div>
+      <label class="col-sm-3 col-md-2 control-label">School</label>
+      <div class="col-sm-9 col-md-2">
+        <p class="form-control-static">{{student.currentSchool.name}}</p>
+      </div>
+      <label class="col-sm-3 col-md-2 control-label">IEP</label>
+      <div class="col-sm-3 col-md-6">
+        <input type="checkbox" ng-model="student.iep" ng-change="updateIEP()">
+      </div>
+      <label class="col-sm-3 col-md-2 control-label">CFA</label>
+      <div class="col-sm-3 col-md-2">
+        <input type="checkbox" ng-model="student.cfa" ng-change="updateCFA()">
+      </div>
+    </div>
   </div>
   <div class="heading">
     <h3>Interventions and Outreaches <a href><i ng-click="addOutreach()" class="fa fa-plus-circle"></i></a></h3>
   </div>
-  <div>
-    <div class="interventions col-lg-6 col-md-12" ng-if="student.interventions.length">
+  <div class="interventions-outreaches">
+    <div class="col-lg-6 col-md-12" ng-if="student.interventions.length">
       <div class="well" ng-repeat="intervention in student.interventions">
         <dl class="dl-horizontal">
           <dt>Type</dt>
@@ -60,7 +66,7 @@
           <dt>Notes</dt>
           <dd>
             <div class="input-group">
-              <input type="text" class="form-control" ng-model="intervention.newNote" />
+              <input type="text" class="form-control" ng-model="intervention.newNote"/>
             <span class="input-group-btn">
               <button type="button" class="btn btn-success" ng-click="addInterventionNote(intervention)">
                 <i class="fa fa-plus"></i>
@@ -77,7 +83,7 @@
         </dl>
       </div>
     </div>
-    <div class="outreaches col-lg-6 col-md-12" ng-if="student.outreaches.length">
+    <div class="col-lg-6 col-md-12" ng-if="student.outreaches.length">
       <div class="well" ng-repeat="outreach in student.outreaches | orderBy:createdDate:true">
         <dl class="dl-horizontal">
           <dt>Outreach Type</dt>
@@ -89,7 +95,7 @@
           <dt>Notes</dt>
           <dd>
             <div class="input-group">
-              <input type="text" class="form-control" ng-model="outreach.newNote" />
+              <input type="text" class="form-control" ng-model="outreach.newNote"/>
             <span class="input-group-btn">
               <button type="button" class="btn btn-success" ng-click="addOutreachNote(outreach)">
                 <i class="fa fa-plus"></i>

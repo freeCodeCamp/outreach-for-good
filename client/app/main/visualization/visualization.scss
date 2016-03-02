@@ -1,0 +1,18 @@
+.data-visualization {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  .chart {
+    display: flex;
+    flex: 1 0 0;
+    #chart1 {
+      display: flex;
+      flex: 1 0 0;
+    }
+  }
+  .options {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+  }
+}

@@ -27,6 +27,8 @@ module.exports = function(config) {
       'client/bower_components/lodash/lodash.js',
       'client/bower_components/matchmedia-ng/matchmedia-ng.js',
       'client/bower_components/ui-select/dist/select.js',
+      'client/bower_components/highcharts-ng/dist/highcharts-ng.js',
+      'client/bower_components/highcharts/highcharts.js',
       'client/app/app.js',
       'client/app/**/*.js',
       'client/components/**/*.js',

@@ -29,8 +29,8 @@ exports.index = function(req, res) {
  */
 exports.show = function(req, res) {
   School.findById(req.params.id, function(err, school) {
-    if (err) { return handleError(res, err); }
-    if (!school) { return res.status(404).send('Not Found'); }
+    if (err) return handleError(res, err);
+    if (!school) return res.status(404).send('Not Found');
     return res.json(school);
   });
 };
@@ -41,13 +41,13 @@ exports.show = function(req, res) {
  */
 exports.students = function(req, res) {
   School.findById(req.params.id, function(err, school) {
-    if (err) { return handleError(res, err); }
-    if (!school) { return res.status(404).send('Not Found'); }
+    if (err) return handleError(res, err);
+    if (!school) return res.status(404).send('Not Found');
     Student
       .find({currentSchool: school})
       .populate('currentSchool', 'name')
       .exec(function(err, students) {
-        if (err) { return handleError(res, err); }
+        if (err) return handleError(res, err);
         return res.status(200).json(students);
       });
   });
@@ -59,7 +59,7 @@ exports.students = function(req, res) {
  */
 exports.create = function(req, res) {
   School.create(req.body, function(err, school) {
-    if (err) { return handleError(res, err); }
+    if (err) return handleError(res, err);
     return res.status(201).json(school);
   });
 };
@@ -71,11 +71,28 @@ exports.create = function(req, res) {
 exports.update = function(req, res) {
   if (req.body._id) { delete req.body._id; }
   School.findById(req.params.id, function(err, school) {
-    if (err) { return handleError(res, err); }
-    if (!school) { return res.status(404).send('Not Found'); }
+    if (err) return handleError(res, err);
+    if (!school) return res.status(404).send('Not Found');
     var updated = _.merge(school, req.body);
     updated.save(function(err) {
-      if (err) { return handleError(res, err); }
+      if (err) return handleError(res, err);
+      return res.status(200).json(school);
+    });
+  });
+};
+
+/**
+ * Updates an existing school's triggers in the DB.
+ * restriction: 'teacher'
+ */
+exports.updateTriggers = function(req, res) {
+  if (req.body._id) delete req.body._id;
+  School.findById(req.params.schoolId, function(err, school) {
+    if (err) return handleError(res, err);
+    if (!school) return res.status(404).send('Not Found');
+    school.triggers = req.body.triggers;
+    school.save(function(err) {
+      if (err) return handleError(res, err);
       return res.status(200).json(school);
     });
   });
@@ -87,10 +104,10 @@ exports.update = function(req, res) {
  */
 exports.destroy = function(req, res) {
   School.findById(req.params.id, function(err, school) {
-    if (err) { return handleError(res, err); }
-    if (!school) { return res.status(404).send('Not Found'); }
+    if (err) return handleError(res, err);
+    if (!school) return res.status(404).send('Not Found');
     school.remove(function(err) {
-      if (err) { return handleError(res, err); }
+      if (err) return handleError(res, err);
       return res.status(204).send('No Content');
     });
   });

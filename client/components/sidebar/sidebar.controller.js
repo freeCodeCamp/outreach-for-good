@@ -8,9 +8,10 @@ angular.module('app').controller('SidebarCtrl',
       displayName: 'Dashboard',
       icon: 'fa-dashboard'
     }, {
-      name: 'student',
-      displayName: 'Student',
-      icon: 'fa-child'
+      name: 'visualization',
+      url: 'visualization',
+      displayName: 'Data Visualization',
+      icon: 'fa-area-chart'
     }, {
       name: 'school-reports',
       url: 'school-reports',
@@ -19,19 +20,19 @@ angular.module('app').controller('SidebarCtrl',
     }, {
       name: 'pdf-upload',
       url: 'pdf-upload',
-      displayName: 'Upload Absence Report',
+      displayName: 'Upload',
       icon: 'fa-upload'
+    }, {
+      name: 'school',
+      url: 'school',
+      displayName: 'School Settings',
+      icon: 'fa-cogs'
     }, {
       name: 'admin',
       url: 'admin',
       displayName: 'Admin',
       icon: 'fa-wrench',
       requiredRole: 'admin'
-    }, {
-      name: 'about',
-      url: 'about',
-      displayName: 'About',
-      icon: 'fa-question'
     }];
     $scope.sidebar = Sidebar;
     $scope.active = function(state) {

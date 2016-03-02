@@ -29,6 +29,7 @@ $sidebar-highlight: #EB9531;
 .sidebar-nav {
   position: absolute;
   top: 0;
+  bottom: 0;
   width: 250px;
   margin: 0;
   padding: 0;
@@ -53,6 +54,13 @@ $sidebar-highlight: #EB9531;
       background: rgba(255, 255, 255, 0.2);
       border-left: #D35400 2px solid;
     }
+    @media(min-width: 768px) {
+      &.about {
+        position: absolute;
+        bottom: 0;
+        width: 250px;
+      }
+    }
   }
 }
 
@@ -72,7 +80,7 @@ $sidebar-highlight: #EB9531;
     > a, > a:focus {
       background-color: $sidebar-highlight !important;
       color: white;
-    } 
+    }
     a:hover {
       background-color: default;
       color: white;

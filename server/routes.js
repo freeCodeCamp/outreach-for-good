@@ -20,6 +20,7 @@ module.exports = function(app) {
   // services
   app.use('/auth', require('./auth'));
   app.use('/api/pdfs', require('./api/pdf'));
+  app.use('/api/visualizations', require('./api/visualization'));
 
   // development
   app.use('/api/devs', require('./api/dev'));
