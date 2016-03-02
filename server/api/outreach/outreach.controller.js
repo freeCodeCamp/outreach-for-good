@@ -3,47 +3,31 @@
 var _ = require('lodash');
 var auth = require('../../auth/auth.service');
 var Outreach = require('./outreach.model');
+var Student = require('../student/student.model');
 
-// Get list of outreaches
-exports.index = function(req, res) {
-  Outreach.find(function(err, outreaches) {
-    if (err) return handleError(res, err);
-    return res.status(200).json(outreaches);
-  });
-};
-
-// Get a single outreach
-exports.show = function(req, res) {
-  Outreach.findById(req.params.id, function(err, intervention) {
-    if (err) return handleError(res, err);
-    if (!intervention) return res.status(404).send('Not Found');
-    return res.status(200).json(intervention);
-  });
-};
-
-// Creates a new outreach in the DB.
+/**
+ * Creates an outreach in the DB.
+ * restriction: 'teacher'
+ */
 exports.create = function(req, res) {
-  Outreach.create(req.body, function(err, outreach) {
+  Student.findById({_id: req.body.student}).exec(function(err, student) {
     if (err) return handleError(res, err);
-    return res.status(201).json(outreach);
-  });
-};
-
-// Updates an existing outreach in the DB.
-exports.update = function(req, res) {
-  if (req.body._id) delete req.body._id;
-  Outreach.findById(req.params.id, function(err, outreach) {
-    if (err) return handleError(res, err);
-    if (!outreach) return res.status(404).send('Not Found');
-    var updated = _.merge(outreach, req.body);
-    updated.save(function(err) {
+    if (!auth.authorizeStudent(student, req)) {
+      return res.status(403).json({
+        reason: auth.schoolMsg(req.user.assignment || 'None')
+      });
+    }
+    Outreach.create(req.body, function(err, outreach) {
       if (err) return handleError(res, err);
-      return res.status(200).json(outreach);
+      return res.status(201).json(outreach);
     });
   });
 };
 
-// Add a note to an outreach.
+/**
+ * Add a note to an existing outreach.
+ * restriction: 'teacher'
+ */
 exports.addNote = function(req, res) {
   Outreach
     .findById(req.params.id)
@@ -65,18 +49,6 @@ exports.addNote = function(req, res) {
         return res.status(200).json(outreach);
       });
     });
-};
-
-// Deletes a outreach from the DB.
-exports.destroy = function(req, res) {
-  Outreach.findById(req.params.id, function(err, outreach) {
-    if (err) return handleError(res, err);
-    if (!outreach) return res.status(404).send('Not Found');
-    outreach.remove(function(err) {
-      if (err) return handleError(res, err);
-      return res.status(204).send('No Content');
-    });
-  });
 };
 
 function handleError(res, err) {
