@@ -8,6 +8,7 @@ var router = express.Router();
 
 router.get('/', auth.hasRole('teacher'), controller.index);
 router.post('/:id/note', auth.hasRole('teacher'), controller.addNote);
+router.get('/types', controller.getTypes);
 
 // TODO: Add role and assignment authorization checks.
 router.get('/:id', controller.show);

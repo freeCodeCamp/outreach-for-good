@@ -1,0 +1,30 @@
+<div class="school-reports">
+  <div class="heading row">
+    <h3>At Risk Chronic Absenteeism Rate
+      <div class="badge">{{curCARCount}}</div>
+    </h3>
+  </div>
+  <div class="student-list">
+    <div ui-grid="atRiskChronicAbsentGridOptions" 
+      ui-grid-auto-resize 
+      ui-grid-selection 
+      ui-grid-grouping 
+      ui-grid-edit 
+      ui-grid-exporter
+      class="grid"></div>
+  </div>
+  <div class="heading row">
+    <h3>Chronically Absent
+      <div class="badge">{{arcaCount * 100 | number: 1}}&#37;</div>
+    </h3>
+  </div>
+  <div class="student-list">
+    <div ui-grid="chronicAbsentGridOptions" 
+      ui-grid-auto-resize 
+      ui-grid-selection 
+      ui-grid-grouping 
+      ui-grid-edit 
+      ui-grid-exporter
+      class="grid"></div>
+  </div>
+</div>

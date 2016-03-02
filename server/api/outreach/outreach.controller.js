@@ -67,6 +67,20 @@ exports.addNote = function(req, res) {
     });
 };
 
+// Gets outreach types from the DB.
+exports.getTypes = function(req, res) {
+  var vals = Outreach
+              .schema
+              .path('type')
+              .enumValues;
+  var length = Outreach
+              .schema
+              .path('type')
+              .enumValues.length;
+  var obj = {vals: vals, length: length};
+  return res.status(200).send(obj);
+};
+
 // Deletes a outreach from the DB.
 exports.destroy = function(req, res) {
   Outreach.findById(req.params.id, function(err, outreach) {

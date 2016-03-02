@@ -3,8 +3,17 @@
 var mongoose = require('mongoose'),
   Schema = mongoose.Schema;
 
-var InterventionSchema = new Schema({
-  type: {type: String, required: true},
+var types = [
+  'Phone Call',
+  'Letter Sent',
+  'Home Visit',
+  'SST Referral',
+  'Court Referral',
+  'Other'
+];
+
+var OutreachSchema = new Schema({
+  type: {type: String, required: true, enum: types},
 
   student: {type: Schema.Types.ObjectId, ref: 'Student', required: true},
   school: {type: Schema.Types.ObjectId, ref: 'School', required: true},
@@ -18,4 +27,4 @@ var InterventionSchema = new Schema({
   }]
 });
 
-module.exports = mongoose.model('Outreach', InterventionSchema);
+module.exports = mongoose.model('Outreach', OutreachSchema);

@@ -13,6 +13,11 @@ angular.module('app').controller('SidebarCtrl',
       displayName: 'Data Visualization',
       icon: 'fa-area-chart'
     }, {
+      name: 'school-reports',
+      url: 'school-reports',
+      displayName: 'School Reports',
+      icon: 'fa-graduation-cap'      
+    }, {
       name: 'pdf-upload',
       url: 'pdf-upload',
       displayName: 'Upload',

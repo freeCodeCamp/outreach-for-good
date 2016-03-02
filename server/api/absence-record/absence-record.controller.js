@@ -61,6 +61,56 @@ exports.current = function (req, res) {
 };
 
 /**
+ * Get Current Chronic Absence Report from current absence records
+ * restriction: 'teacher'
+ *
+ * Returns an aggregation for entries based on the req user role:
+ * - teachers will get entries for assignment school
+ * - manager+ will get entries for all schools
+ */
+ exports.curCAR = function (req, res) {
+   var pipeline = currentAbsenceRecordPipeline(req.user);
+   pipeline.push({
+     $match: {'entries.absences': {$gte: 20}} 
+   });
+   AbsenceRecord.aggregate(pipeline, function (err, results) {
+     if (err) return handleError(res, err);
+     AbsenceRecord.populate(results, 'school entries.student',
+       function (err, entries) {
+         if (err) return handleError(res, err);
+         return res.status(200).json(entries);
+       });
+   });
+ };
+
+/**
+ * Get At Risk Chronic Absence Report from current absence records
+ * restriction: 'teacher'
+ *
+ * Returns an aggregation for entries based on the req user role:
+ * - teachers will get entries for assignment school
+ * - manager+ will get entries for all schools
+ */
+exports.arca = function (req, res) {
+  var pipeline = currentAbsenceRecordPipeline(req.user);
+  AbsenceRecord.aggregate(pipeline, function (err, results) {
+    if (err) return handleError(res, err);
+    AbsenceRecord.populate(results, 'school entries.student',
+      function (err, entries) {
+        if (err) return handleError(res, err);
+        entries = _.filter(entries, 
+          function(entry){
+            var present = entry.entries.present;
+            var enrolled = entry.entries.enrolled;
+            var tot = ( present / enrolled ).toFixed(2);
+            return tot === 0.9;
+          });
+        return res.status(200).json(entries);
+      });
+  });
+};
+
+/**
  * Get entries from current absence records with intervention filter
  * restriction: 'teacher'
  *

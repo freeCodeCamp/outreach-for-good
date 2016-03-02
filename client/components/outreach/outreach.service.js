@@ -11,6 +11,12 @@ app.factory('Outreach', function($resource) {
       params: {
         controller: 'note'
       }
+    },
+    getTypes: {
+      method: 'GET',
+      params: {
+        controller: 'types'
+      }
     }
   });
 });
