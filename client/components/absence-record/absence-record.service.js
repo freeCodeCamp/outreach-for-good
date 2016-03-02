@@ -26,6 +26,6 @@ app.factory('AbsenceRecord', function($resource) {
       params: {
         controller: 'arca'
       }
-    },
+    }
   });
 });
