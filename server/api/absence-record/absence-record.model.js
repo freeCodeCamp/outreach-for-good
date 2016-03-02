@@ -18,8 +18,4 @@ var AbsenceRecordSchema = new Schema({
   }]
 });
 
-AbsenceRecordSchema.virtual('created_at').get(function() {
-  return this._id.getTimestamp();
-});
-
 module.exports = mongoose.model('AbsenceRecord', AbsenceRecordSchema);
