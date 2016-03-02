@@ -15,16 +15,16 @@ router.get('/current',
   auth.hasRole('teacher'),
   controller.current);
 
-router.get('/cur-car', 
-	auth.hasRole('teacher'), 
-	controller.curCAR);
-
-router.get('/arca', 
-	auth.hasRole('teacher'), 
-	controller.arca);
-
-router.get('/current/:selector',
+router.get('/current/filtered',
   auth.hasRole('teacher'),
   controller.filtered);
+
+router.get('/current/at-risk',
+  auth.hasRole('teacher'),
+  controller.atRisk);
+
+router.get('/current/chronic',
+  auth.hasRole('teacher'),
+  controller.chronic);
 
 module.exports = router;
