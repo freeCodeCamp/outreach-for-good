@@ -5,7 +5,7 @@ var mongoose = require('mongoose'),
 
 var types = [
   'Phone Call',
-  'Send Letter',
+  'Letter Sent',
   'Home Visit',
   'SST Referral',
   'Court Referral',

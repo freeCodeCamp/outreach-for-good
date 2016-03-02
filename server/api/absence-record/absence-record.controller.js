@@ -68,21 +68,20 @@ exports.current = function (req, res) {
  * - teachers will get entries for assignment school
  * - manager+ will get entries for all schools
  */
-exports.curCAR = function (req, res) {
-  var pipeline = currentAbsenceRecordPipeline(req.user);
-  AbsenceRecord.aggregate(pipeline, function (err, results) {
-    if (err) return handleError(res, err);
-    AbsenceRecord.populate(results, 'school entries.student',
-      function (err, entries) {
-        if (err) return handleError(res, err);
-        entries = _.filter(entries, 
-          function(entry){
-            return entry.entries.absences > 20;
-          });
-        return res.status(200).json(entries);
-      });
-  });
-};
+ exports.curCAR = function (req, res) {
+   var pipeline = currentAbsenceRecordPipeline(req.user);
+   pipeline.push({
+     $match: {'entries.absences': {$gte: 20}} 
+   });
+   AbsenceRecord.aggregate(pipeline, function (err, results) {
+     if (err) return handleError(res, err);
+     AbsenceRecord.populate(results, 'school entries.student',
+       function (err, entries) {
+         if (err) return handleError(res, err);
+         return res.status(200).json(entries);
+       });
+   });
+ };
 
 /**
  * Get At Risk Chronic Absence Report from current absence records
