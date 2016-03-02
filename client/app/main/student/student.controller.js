@@ -45,12 +45,10 @@ function StudentCtrl($scope, $stateParams, Intervention, Modal, Outreach,
     }
   };
   $scope.addOutreach = function() {
-    console.log($scope.student);
     var addOutreachFn = function(model) {
       model.student = $scope.student._id;
       model.school = $scope.student.currentSchool._id;
       return Outreach.save({}, model, function(res) {
-        console.log(res);
         $scope.$evalAsync(function() {
           $scope.student.outreaches.push(res);
         });
