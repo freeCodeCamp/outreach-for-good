@@ -41,6 +41,7 @@ exports.updateRole = function(req, res) {
       if (err) return res.status(500).send(err);
       auth.hasRole(user.role)(req, res, function() {
         user.role = req.body.role;
+        user.assignment = undefined;
         user.save(function(err) {
           if (err) return res.status(500).send(err);
           res.json(user);
@@ -77,7 +78,7 @@ exports.destroy = function(req, res) {
   User.findById(req.params.id, function(err, user) {
     if (err) return res.status(500).send(err);
     auth.hasRole(user.role)(req, res, function() {
-      User.remove(user, function(err, user) {
+      user.remove(function(err) {
         if (err) return res.status(500).send(err);
         return res.status(204).send('No Content');
       });
