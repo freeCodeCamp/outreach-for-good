@@ -1,8 +1,7 @@
 <div class="form-group">
   <label class="control-label">Outreach Type:</label>
-  <select class="form-control" name="name" ng-model="model.type" required>
-		<option ng-repeat="oType in outreachTypes.vals" value="{{oType}}">{{oType}}</option>
-  </select>
+  <input type="text" class="form-control" name="name" ng-model="model.type" placeholder="Type" required>
 
-  <p class="help-block error-text" ng-if="(form.$dirty || form.$submitted) && form.$invalid">The outreach type is required</p>
+  <p class="help-block error-text" ng-if="(form.$dirty || form.$submitted) && form.$invalid">The outreach type is
+    required</p>
 </div>
