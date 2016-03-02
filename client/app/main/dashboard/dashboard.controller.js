@@ -156,11 +156,14 @@ function DashboardCtrl($scope, $timeout, Auth, AbsenceRecord, Intervention,
     });
   };
 
-  $scope.$watch('selector', function(selector, old) {
-    if (selector !== old) {
-      $scope.studentGridOptions.data = AbsenceRecord.current({
-        selector: selector
-      });
+  $scope.$watch('type', function(type, old) {
+    if (type !== old) {
+      var options = {};
+      if (type) {
+        options.selector = 'filtered';
+        options.type = type;
+      }
+      $scope.studentGridOptions.data = AbsenceRecord.current(options);
     }
   });
 
@@ -173,8 +176,8 @@ function DashboardCtrl($scope, $timeout, Auth, AbsenceRecord, Intervention,
     $scope.court = (counts['Court Referral'] || {}).count || 0;
   });
 
-  $scope.setSelector = function(selector) {
-    $scope.selector = selector;
+  $scope.setType = function(type) {
+    $scope.type = type;
   };
 }
 
