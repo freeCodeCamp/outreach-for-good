@@ -24,15 +24,15 @@ function parseStudent(arr) {
   var result = {};
   var names = arr[0][0].split(', ');
   result.student = {
-    lastName:     names[0], 
-    firstName:    names[1], 
-    studentId:    arr[0][1]
+    lastName: names[0],
+    firstName: names[1],
+    studentId: arr[0][1]
   };
   result.entry = {
-    absences:     +arr[1][1],
-    tardies:      +arr[2][1],
-    present:      +arr[3][1],
-    enrolled:     +arr[4][1]
+    absences: +arr[1][1],
+    tardies: +arr[2][1],
+    present: +arr[3][1],
+    enrolled: +arr[4][1]
   };
   result.schoolYear = arr[5][1].replace(/\s/g, '');
   return result;
@@ -41,7 +41,7 @@ function parseStudent(arr) {
 function previousRecord(schoolId, schoolYear) {
   return AbsenceRecord
     .findOne({school: schoolId, schoolYear: schoolYear})
-    .sort({_id: -1})
+    .sort({date: -1})
     .populate('entries.student')
     .exec();
 }
@@ -54,14 +54,11 @@ function groupByType(students, idToPrev) {
 }
 
 function createInterventions(entry, prevEntry, school, schoolYear) {
-  var delta = entry.tardiesDelta + entry.absencesDelta;
-  if (!delta) return [];
-
-  var prevTotal = prevEntry.tardies || 0 + prevEntry.absences || 0;
-  var currentTotal = prevTotal + delta;
+  if (!entry.absencesDelta) return [];
+  var prevTotal = prevEntry.absences || 0;
   return _(school.triggers)
     .filter(function(trigger) {
-      return trigger.absences > prevTotal && trigger.absences <= currentTotal;
+      return trigger.absences > prevTotal && trigger.absences <= entry.absences;
     })
     .map(function(trigger) {
       return {
@@ -82,10 +79,8 @@ function parsePDF(buffer, school, date, res) {
     var students;
     try {
       students = studentDataArrays(rows).map(parseStudent);
-    }
-    // Try catch for failure to parse.
-    catch(err) {
-      return res.status(500).json(err);
+    } catch (err) {
+      return handleError(res, err);
     }
     var schoolYear = students[0].schoolYear;
     previousRecord(school.id, schoolYear).then(function(prev) {
