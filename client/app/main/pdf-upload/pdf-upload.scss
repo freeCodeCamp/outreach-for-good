@@ -1,11 +1,14 @@
-.upload-form {
-  padding: 15px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  form {
-    width: 100%;
+.pdf {
+  .upload-inputs,
+  .parsing-progress,
+  .upload-buttons,
+  .confirm-buttons,
+  .confirm-table {
+    margin-top: 15px;
+  }
+  .upload-buttons,
+  .confirm-buttons {
+    text-align: center;
   }
 }
 

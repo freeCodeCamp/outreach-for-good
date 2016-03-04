@@ -2,46 +2,43 @@
 
 var app = angular.module('app');
 
-function PDFUploadCtrl($scope, AbsenceRecord, Auth, School, Upload, toastr) {
-  $scope.maxDate = Date.now();
-
-  $scope.forms = {};
-  $scope.date = Date.now();
-  $scope.isUploaded = false;
+function PDFUploadCtrl($scope, PDF, AbsenceRecord, Auth, School, toastr) {
+  function resetState() {
+    delete $scope.pending;
+    delete $scope.parsedRecord;
+    delete $scope.file;
+    $scope.date = Date.now();
+    $scope.progress = 0;
+    $scope.result = {};
+    $scope.selected = {
+      school: $scope.defaultSchool
+    };
+  }
 
   if (Auth.getCurrentUser().role === 'teacher') {
     $scope.defaultSchool = Auth.getCurrentUser().assignment;
-    $scope.schools = [$scope.defaultSchool];
   } else {
     $scope.schools = School.query();
   }
+  $scope.maxDate = Date.now();
+  resetState();
 
-  $scope.data = {upload: {school: $scope.defaultSchool}};
-
-  $scope.upload = function(file) {
-    return Upload.upload({
-      url: '/api/pdfs/',
-      data: {
-        file: file,
-        schoolId: $scope.data.upload.school._id,
-        date: $scope.date
-      }
+  $scope.uploadPDF = function() {
+    $scope.pending = true;
+    $scope.parsedRecord.date = $scope.date;
+    $scope.parsedRecord.schoolId = $scope.selected.school._id;
+    PDF.save({}, $scope.parsedRecord, function(res) {
+      delete $scope.pending;
+      $scope.result.data = res;
     });
   };
 
-  $scope.cancelUpload = function() {
-    $scope.isUploaded = false;
-    $scope.result.data = {};
-    $scope.data.upload.message = 'Upload Cancelled';
-  };
+  $scope.cancelUpload = resetState;
 
   $scope.confirmUpload = function() {
+    $scope.pending = true;
     AbsenceRecord.save({}, $scope.result.data, function(res) {
-      $scope.data.upload.message = 'Upload Confirmed!';
-      $scope.result.data = {};
-      $scope.date = Date.now();
-      $scope.isUploaded = false;
-
+      resetState();
       var schoolName = res.record.school.name;
       if (res.students.length) {
         toastr.success(
@@ -60,44 +57,29 @@ function PDFUploadCtrl($scope, AbsenceRecord, Auth, School, Upload, toastr) {
         {timeOut: 10000}
       );
     }, function(err) {
+      resetState();
       console.log(err);
-      $scope.data.upload.message = 'Confirmation Error: ' + err;
+      toastr.error(err, {timeOut: 0, closeButton: true});
     });
   };
 
-  $scope.submit = function() {
-    $scope.schoolName = $scope.data.upload.school.name;
-    delete $scope.data.upload.message;
-    if ($scope.forms.upload.$valid) {
-      $scope.data.upload.processingUpload = true;
-      $scope.forms.upload.file.$setValidity('server', true);
-      delete $scope.data.upload.fileError;
-
-      $scope.upload($scope.data.upload.file)
-        .then(function(res) {
-          if (res.status === 200) {
-            $scope.data.upload = {school: $scope.defaultSchool};
-            $scope.data.upload.message =
-              'Confirm you want to upload the following...';
-            $scope.result = res;
-            $scope.forms.upload.$setPristine();
-            $scope.isUploaded = true;
-          } else {
-            $scope.forms.upload.file.$setValidity('server', false);
-            $scope.data.upload.fileError = res.status + ': ' + res.statusText;
-          }
-          $scope.data.upload.processingUpload = false;
-        })
-        .catch(function(err) {
-          $scope.forms.upload.file.$setValidity('server', false);
-          $scope.data.upload.fileError = 
-            'Error uploading PDF... Refresh page to try again.' + 
-            ' { ' + err.status + ': ' + err.statusText + ' }';
-          $scope.data.upload.processingUpload = false;
-          // TODO: Find way to reset form so user doesn't have to refresh page
+  $scope.$watch('file', function(n, o) {
+    if (n !== o) {
+      delete $scope.parsedRecord;
+      $scope.progress = 0;
+      if (n) {
+        var promise = PDF.parse(n);
+        promise.then(function(parsedRecord) {
+          $scope.parsedRecord = parsedRecord;
+        }, function(err) {
+          // TODO: handle errors.
+          console.log(err);
+        }, function(progress) {
+          $scope.progress = progress;
         });
+      }
     }
-  };
+  });
 }
 
 app.controller('PDFUploadCtrl', PDFUploadCtrl);

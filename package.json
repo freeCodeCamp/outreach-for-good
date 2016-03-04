@@ -18,12 +18,9 @@
     "method-override": "~2.3.5",
     "mongoose": "~4.4.2",
     "morgan": "~1.6.1",
-    "multer": "^1.0.6",
-    "multer-autoreap": "0.0.9",
     "passport": "~0.3.2",
     "passport-google-oauth": "latest",
     "passport-local": "~1.0.0",
-    "pdf2table": "0.0.1",
     "serve-favicon": "~2.3.0"
   },
   "devDependencies": {
