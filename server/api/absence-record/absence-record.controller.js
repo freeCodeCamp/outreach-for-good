@@ -42,7 +42,7 @@ exports.create = function(req, res) {
   var existingEntries = _.map(req.body.updates || [], 'entry');
   if (!req.body.creates) {
     return newAbsenceRecord({
-      schoolYear: req.body.updates[0].schoolYear,
+      schoolYear: req.body.schoolYear,
       school: school,
       date: req.body.date,
       entries: existingEntries
@@ -60,7 +60,7 @@ exports.create = function(req, res) {
       newEntries[index].student = student._id;
     });
     return newAbsenceRecord({
-      schoolYear: req.body.creates[0].schoolYear,
+      schoolYear: req.body.schoolYear,
       school: school,
       date: req.body.date,
       entries: [].concat.apply(newEntries, existingEntries)
