@@ -85,7 +85,25 @@
     </div>
     <div class="col-lg-6 col-md-12" ng-if="student.outreaches.length">
       <div class="well" ng-repeat="outreach in student.outreaches | orderBy:createdDate:true">
+
         <dl class="dl-horizontal">
+          <dd>
+            <span class="input-group-btn">
+              <button
+                type="button"
+                class="btn btn-warning"
+                ng-click="toggleArchiveOutreach(outreach)">
+                <i class="fa fa-archive"></i>
+              </button>
+              <button
+                type="button"
+                class="btn btn-danger"
+                ng-click="deleteOutreach(outreach)"
+                ng-disabled="!(outreach.archived)">
+                <i class="fa fa-trash"></i>
+              </button>
+            </span>
+          </dd>
           <dt>Outreach Type</dt>
           <dd><input class="form-control" readonly value="{{outreach.type}}"/></dd>
 
@@ -97,7 +115,9 @@
             <div class="input-group">
               <input type="text" class="form-control" ng-model="outreach.newNote"/>
             <span class="input-group-btn">
-              <button type="button" class="btn btn-success" ng-click="addOutreachNote(outreach)">
+              <button
+                type="button"
+                class="btn btn-success" ng-click="addOutreachNote(outreach)">
                 <i class="fa fa-plus"></i>
               </button>
             </span>

@@ -6,6 +6,8 @@ var mongoose = require('mongoose'),
 var OutreachSchema = new Schema({
   type: {type: String, required: true},
 
+  archived: {type: Boolean, required: true, default: false},
+
   student: {type: Schema.Types.ObjectId, ref: 'Student', required: true},
   school: {type: Schema.Types.ObjectId, ref: 'School', required: true},
 

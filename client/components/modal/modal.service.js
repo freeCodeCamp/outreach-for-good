@@ -207,6 +207,40 @@ app.factory('Modal', function($rootScope, $uibModal) {
         },
         model: {}
       }, 'modal-success', 'components/modal/form-modal.html');
+    },
+
+    confirmDelete: function(title, templateUrl, model, cb) {
+      var confirmDelete = openModal({
+        modal: {
+          dismissable: true,
+          title: title,
+          templateUrl: templateUrl,
+          // submitFn: function(form, model) {
+          //   if (form.$valid) {
+          //     cb(model).$promise.then(function() {
+          //       confirmDelete.close();
+          //     }, function() {
+          //       // TODO: Handle error from submitting form.
+          //     });
+          //   }
+          // },
+          buttons: [{
+            classes: 'btn-danger',
+            text: 'Delete',
+            click: function(e) {
+              cb;
+              confirmDelete.close();
+            }
+          }, {
+            classes: 'btn-default',
+            text: 'Cancel',
+            click: function(e) {
+              confirmDelete.dismiss(e);
+            }
+          }]
+        },
+        model: model
+      }, 'modal-danger', 'components/modal/form-modal.html');
     }
   };
 });
