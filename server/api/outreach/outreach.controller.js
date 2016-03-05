@@ -70,7 +70,7 @@ exports.delOutreach = function(req, res) {
       if (!outreach) return res.send(404);
       outreach.remove(function(err, outreach) {
         if(err) return handleError(res, err);
-        return res.status(204);
+        return res.status(200);
       });
   });
 };

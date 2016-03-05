@@ -215,22 +215,15 @@ app.factory('Modal', function($rootScope, $uibModal) {
           dismissable: true,
           title: title,
           templateUrl: templateUrl,
-          // submitFn: function(form, model) {
-          //   if (form.$valid) {
-          //     cb(model).$promise.then(function() {
-          //       confirmDelete.close();
-          //     }, function() {
-          //       // TODO: Handle error from submitting form.
-          //     });
-          //   }
-          // },
+          submitFn: function(form, model) {
+            console.log(model);
+            cb(model)
+            confirmDelete.close();
+          },
           buttons: [{
             classes: 'btn-danger',
             text: 'Delete',
-            click: function(e) {
-              cb;
-              confirmDelete.close();
-            }
+            type: 'submit'
           }, {
             classes: 'btn-default',
             text: 'Cancel',

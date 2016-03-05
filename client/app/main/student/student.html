@@ -85,8 +85,7 @@
     </div>
     <div class="col-lg-6 col-md-12" ng-if="student.outreaches.length">
       <div class="well" ng-repeat="outreach in student.outreaches | orderBy:createdDate:true">
-
-        <dl class="dl-horizontal">
+        <dl>
           <dd>
             <span class="input-group-btn">
               <button
@@ -104,6 +103,8 @@
               </button>
             </span>
           </dd>
+        </dl>
+        <dl class="dl-horizontal">
           <dt>Outreach Type</dt>
           <dd><input class="form-control" readonly value="{{outreach.type}}"/></dd>
 

@@ -137,23 +137,16 @@ function StudentCtrl($scope, $stateParams, Intervention, Modal, Outreach,
   $scope.deleteOutreach = function(outreach) {
     var model = outreach;
     var deleteFn = function(model) {
-      var promise = Outreach
-        .delete({id: model._id})
-        .$promise;
-      return  promise
-              .then(function(outreach) {
-                var outreaches = $scope.student.outreaches
-                outreaches.map(function(oldOutreach, i) {
-                    if(oldOutreach._id === outreach._id) {
-                      outreaches.splice(i, 1);
-                    }
-                });
-                console.log('toastr!');
-                toastr.warning('Outreach ' + outreach.type +
-                  ' has been deleted.');
-              }, function(err) {
-                toastr.error(err);
-              });
+      Outreach.delete({id: model._id});
+      var outreaches = $scope.student.outreaches
+      outreaches.map(function(oldOutreach, i) {
+          if(oldOutreach._id === outreach._id) {
+            outreaches.splice(i, 1);
+          }
+      });
+      console.log('toastr!');
+      toastr.warning('Outreach ' + outreach.type +
+          ' has been deleted.');
     };
     Modal.confirmDelete(
       'Delete Outreach',
