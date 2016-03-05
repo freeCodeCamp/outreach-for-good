@@ -87,21 +87,28 @@
       <div class="well" ng-repeat="outreach in student.outreaches | orderBy:createdDate:true">
         <dl>
           <dd>
-            <span class="input-group-btn">
-              <button
-                type="button"
-                class="btn btn-warning"
-                ng-click="toggleArchiveOutreach(outreach)">
-                <i class="fa fa-archive"></i>
-              </button>
-              <button
-                type="button"
-                class="btn btn-danger"
-                ng-click="deleteOutreach(outreach)"
-                ng-disabled="!(outreach.archived)">
-                <i class="fa fa-trash"></i>
-              </button>
-            </span>
+            <div class="btn-group" uib-dropdown>
+              <i uib-dropdown-toggle class="fa fa-caret-down fa-lg toggle"></i>
+              <ul uib-dropdown-menu role="menu" class="invisible-menu">
+                <li role="menuitem">
+                  <button
+                    type="button"
+                    class="btn btn-warning btn-block"
+                    ng-click="toggleArchiveOutreach(outreach)">Archive<!-- todo: make label change: Archive / Unarchive -->
+                    <i class="fa fa-archive"></i>
+                  </button>
+                </li>
+                <li role="menuitem">
+                  <button
+                    type="button"
+                    class="btn btn-danger btn-block"
+                    ng-click="deleteOutreach(outreach)"
+                    ng-show="outreach.archived">Delete
+                    <i class="fa fa-trash"></i>
+                  </button>
+                </li>
+              </ul>
+            </div>
           </dd>
         </dl>
         <dl class="dl-horizontal">

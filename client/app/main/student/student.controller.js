@@ -144,7 +144,6 @@ function StudentCtrl($scope, $stateParams, Intervention, Modal, Outreach,
             outreaches.splice(i, 1);
           }
       });
-      console.log('toastr!');
       toastr.warning('Outreach ' + outreach.type +
           ' has been deleted.');
     };

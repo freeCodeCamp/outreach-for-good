@@ -216,7 +216,6 @@ app.factory('Modal', function($rootScope, $uibModal) {
           title: title,
           templateUrl: templateUrl,
           submitFn: function(form, model) {
-            console.log(model);
             cb(model)
             confirmDelete.close();
           },
