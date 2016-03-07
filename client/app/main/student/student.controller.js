@@ -109,6 +109,70 @@ function StudentCtrl($scope, $stateParams, Intervention, Modal, Outreach,
       toastr.error(err);
     });
   };
+  // $scope.toggleArchiveOutreach = function(outreach) {
+  //   var oldValue = outreach.archived;
+  //   var promise = Outreach.toggleArchive({
+  //     id: outreach._id
+  //   }, {
+  //     archived: !(outreach.archived)
+  //   }).$promise;
+  //   promise.then(function(outreach) {
+  //     $scope.$evalAsync(function() {
+  //       var outreaches = $scope.student.outreaches
+  //       outreaches.map(function(oldOutreach, i) {
+  //           if(oldOutreach._id === outreach._id) {
+  //             outreaches[i].archived = outreach.archived;
+  //           }
+  //       });
+  //     });
+  //     toastr.info(
+  //       'The ' + outreach.type +
+  //       ' outreach has been' +
+  //       (outreach.archived === true ? ' archived.' : ' unarchived.'));
+  //   }, function(err) {
+  //     outreach.archived = oldValue;
+  //     toastr.error(err);
+  //   });
+  // };
+
+  $scope.toggleArchiveOutreach = function(outreach) {
+      Outreach.toggleArchive({
+        id: outreach._id
+      }, {
+        archived: !outreach.archived
+      }, function(toggledOutreach) {
+        outreach.archived = toggledOutreach.archived;
+        toastr.info(
+          'The ' + outreach.type + ' outreach has been ' +
+          (toggledOutreach.archived ? '' : 'un') + 'archived.');
+      }, function(err) {
+        console.log(err);
+        toastr.error(err);
+      });
+    };
+
+  $scope.deleteOutreach = function(outreach) {
+    var model = outreach;
+    var deleteFn = function(model) {
+      Outreach.delete({id: model._id});
+      var outreaches = $scope.student.outreaches;
+      outreaches.forEach(function(oldOutreach) {
+          if(oldOutreach._id === outreach._id) {
+            outreaches = _.pull(outreaches, oldOutreach._id);
+          }
+      toastr.warning('Outreach ' + outreach.type +
+          ' has been deleted.');
+      }, function(err) {
+        console.log(err);
+        toastr.error(err);
+      });
+    };
+    Modal.confirmDelete(
+      'Delete Outreach',
+      'app/main/student/partial/modal.delete-outreach.html',
+      model,
+      deleteFn);
+  };
 }
 
 app.controller('StudentCtrl', StudentCtrl);

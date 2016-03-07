@@ -51,6 +51,30 @@ exports.addNote = function(req, res) {
     });
 };
 
+exports.toggleArchive = function(req, res) {
+  Outreach
+    .findById(req.params.id, function(err, outreach) {
+      if(err) return handleError(res, err);
+      if (!outreach) return res.send(404);
+      outreach.archived = req.body.archived;
+      outreach.save(function(err) {
+        if(err) return handleError(res, err);
+        return res.status(200).json(outreach);
+      });
+    });
+};
+
+exports.delOutreach = function(req, res) {
+  Outreach
+    .findById(req.params.id, function(err, outreach) {
+      if (!outreach) return res.send(404);
+      outreach.remove(function(err, outreach) {
+        if(err) return handleError(res, err);
+        return res.status(200);
+      });
+  });
+};
+
 function handleError(res, err) {
   console.log(err);
   return res.status(500).send(err);
