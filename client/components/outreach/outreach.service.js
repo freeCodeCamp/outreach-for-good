@@ -11,17 +11,11 @@ app.factory('Outreach', function($resource) {
       params: {
         controller: 'note'
       }
-    }, 
+    },
     toggleArchive: {
       method: 'PUT',
       params: {
-        controller: 'toggleArchive'
-      }
-    } , 
-    delete: {
-      method: 'DELETE',
-      params: {
-        controller: 'delete'
+        controller: 'archive'
       }
     }
   });
