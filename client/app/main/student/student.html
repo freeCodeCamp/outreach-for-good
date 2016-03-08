@@ -97,7 +97,7 @@
                     type="button"
                     class="btn btn-block"
                     ng-class="outreach.archived ? 'btn-info' : 'btn-warning'"
-                    ng-click="toggleArchiveOutreach(outreach)">
+                    ng-click="toggleOutreachArchived(outreach)">
                     {{ outreach.archived ? 'Unarchive' : 'Archive'}} <i class="fa fa-archive"></i>
                   </button>
                 </li>
@@ -128,7 +128,7 @@
             <span class="input-group-btn">
               <button
                 type="button"
-                class="btn btn-success" ng-click="addOutreachNote(outreach)">
+                class="btn btn-success" ng-click="createOutreachNote(outreach)">
                 <i class="fa fa-plus"></i>
               </button>
             </span>
