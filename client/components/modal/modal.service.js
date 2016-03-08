@@ -187,7 +187,8 @@ app.factory('Modal', function($rootScope, $uibModal) {
             if (form.$valid) {
               cb(model).$promise.then(function() {
                 formModal.close();
-              }, function() {
+              }, function(err) {
+                console.log(err);
                 // TODO: Handle error from submitting form.
               });
             }
@@ -216,8 +217,12 @@ app.factory('Modal', function($rootScope, $uibModal) {
           title: title,
           templateUrl: templateUrl,
           submitFn: function(form, model) {
-            cb(model);
-            confirmDelete.close();
+            cb(model).$promise.then(function() {
+              confirmDelete.close();
+            }, function(err) {
+              console.log(err);
+              // TODO: Handle error from deleting.
+            });
           },
           buttons: [{
             classes: 'btn-danger',

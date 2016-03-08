@@ -53,26 +53,41 @@ exports.addNote = function(req, res) {
 
 exports.toggleArchive = function(req, res) {
   Outreach
-    .findById(req.params.id, function(err, outreach) {
-      if(err) return handleError(res, err);
+    .findById(req.params.id)
+    .populate('student')
+    .exec(function(err, outreach) {
+      if (err) return handleError(res, err);
       if (!outreach) return res.send(404);
+      if (!auth.authorizeStudent(outreach.student, req)) {
+        return res.status(403).json({
+          reason: auth.schoolMsg(req.user.assignment || 'None')
+        });
+      }
       outreach.archived = req.body.archived;
       outreach.save(function(err) {
-        if(err) return handleError(res, err);
+        if (err) return handleError(res, err);
         return res.status(200).json(outreach);
       });
     });
 };
 
-exports.delOutreach = function(req, res) {
+exports.delete = function(req, res) {
   Outreach
-    .findById(req.params.id, function(err, outreach) {
+    .findById(req.params.id)
+    .populate('student')
+    .exec(function(err, outreach) {
+      if (err) return handleError(res, err);
       if (!outreach) return res.send(404);
-      outreach.remove(function(err, outreach) {
-        if(err) return handleError(res, err);
-        return res.status(200);
+      if (!auth.authorizeStudent(outreach.student, req)) {
+        return res.status(403).json({
+          reason: auth.schoolMsg(req.user.assignment || 'None')
+        });
+      }
+      outreach.remove(function(err) {
+        if (err) return handleError(res, err);
+        return res.status(204).send('No Content');
       });
-  });
+    });
 };
 
 function handleError(res, err) {
