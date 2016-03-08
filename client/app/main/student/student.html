@@ -84,7 +84,9 @@
       </div>
     </div>
     <div class="col-lg-6 col-md-12" ng-if="student.outreaches.length">
-      <div class="well" ng-repeat="outreach in student.outreaches | orderBy:createdDate:true">
+      <div class="well"
+        ng-repeat="outreach in student.outreaches | orderBy:createdDate:true"
+        ng-class="outreach.archived ? 'archived' : ''">
         <dl>
           <dd>
             <div class="btn-group" uib-dropdown>
@@ -93,9 +95,10 @@
                 <li role="menuitem">
                   <button
                     type="button"
-                    class="btn btn-warning btn-block"
-                    ng-click="toggleArchiveOutreach(outreach)">Archive<!-- todo: make label change: Archive / Unarchive -->
-                    <i class="fa fa-archive"></i>
+                    class="btn btn-block"
+                    ng-class="outreach.archived ? 'btn-info' : 'btn-warning'"
+                    ng-click="toggleArchiveOutreach(outreach)">
+                    {{ outreach.archived ? 'Unarchive' : 'Archive'}} <i class="fa fa-archive"></i>
                   </button>
                 </li>
                 <li role="menuitem">
@@ -103,8 +106,8 @@
                     type="button"
                     class="btn btn-danger btn-block"
                     ng-click="deleteOutreach(outreach)"
-                    ng-show="outreach.archived">Delete
-                    <i class="fa fa-trash"></i>
+                    ng-if="outreach.archived">
+                    Delete <i class="fa fa-trash"></i>
                   </button>
                 </li>
               </ul>
