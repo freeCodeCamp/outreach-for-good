@@ -1,7 +1,5 @@
 <div class="student row">
-  <div class="heading">
-    <h3>Student Info</h3>
-  </div>
+  <heading title="'Student Info'"></heading>
   <div class="info">
     <div class="form-horizontal">
       <label class="col-sm-3 col-md-2 control-label">Name</label>
@@ -26,9 +24,7 @@
       </div>
     </div>
   </div>
-  <div class="heading">
-    <h3>Interventions and Outreaches <a href><i ng-click="addOutreach()" class="fa fa-plus-circle"></i></a></h3>
-  </div>
+  <heading title="'Interventions and Outreaches'" menu-items="interventionAndOutreachMenuItems"></heading>
   <div class="interventions-outreaches">
     <div class="col-lg-6 col-md-12" ng-if="student.interventions.length">
       <div class="well" ng-repeat="intervention in student.interventions">

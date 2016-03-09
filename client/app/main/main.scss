@@ -8,20 +8,6 @@
   transition: all 0.5s ease;
 }
 
-.heading {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  min-height: 54px;
-  height: 54px;
-  background-color: lightblue;
-  h3 {
-    margin: 0;
-    text-align: center;
-  }
-}
-
 @media(min-width: 768px) {
   #main-view {
     left: 250px;

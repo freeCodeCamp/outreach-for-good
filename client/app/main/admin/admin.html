@@ -1,8 +1,6 @@
 <div class="admin row">
   <div class="user">
-    <div class="heading">
-      <h3>Users</h3>
-    </div>
+    <heading title="'Users'"></heading>
     <div ui-grid="userGridOptions"
       ui-grid-auto-resize
       ui-grid-edit
@@ -14,11 +12,7 @@
     </div>
   </div>
   <div class="school">
-    <div class="heading">
-      <h3>Schools
-        <a href><i ng-click="addSchool()" class="fa fa-plus-circle"></i></a>
-      </h3>
-    </div>
+    <heading title="'Schools'" menu-items="schoolMenuItems"></heading>
     <div ui-grid="schoolGridOptions" ui-grid-auto-resize id="school-grid" class="grid"></div>
   </div>
   <div ng-if="auth.userIs('super')" class="dev">
