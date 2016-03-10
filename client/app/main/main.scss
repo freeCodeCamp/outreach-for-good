@@ -1,3 +1,5 @@
+@import '../common.scss';
+
 #main-view {
   position: absolute;
   top: 54px;
@@ -14,5 +16,36 @@
   }
   #main-view.isCollapsed {
     left: 54px;
+  }
+}
+
+.ui-grid {
+  :focus {
+    outline: thin dotted !important;
+  }
+  .ui-grid-menu-button {
+    width: 26px;
+    height: 26px;
+    .ui-grid-icon-container {
+      text-align: center;
+      i.ui-grid-icon-menu {
+        margin: 1px;
+      }
+    }
+  }
+  .ui-grid-header-viewport {
+    .ui-grid-header-canvas {
+      height: 54px;
+    }
+  }
+  .ui-grid-filter-container {
+    padding: 0;
+    input[type="text"].ui-grid-filter-input {
+      text-align: center ;
+      font-weight: 200;
+      border: none;
+      border-top: 1px solid $cfa-background;
+      border-bottom: 1px solid $cfa-background;
+    }
   }
 }
