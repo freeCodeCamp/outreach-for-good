@@ -46,10 +46,7 @@
       </a>
     </div>
   </div>
-  <div class="heading">
-    <h3><span ng-if="!assignment">Students</span><span ng-if="selector"> with {{selector}} Interventions</span></h3>
-    <h3 ng-if="assignment">{{assignment.name}}</h3>
-  </div>
+  <heading title="tableTitle()"></heading>
   <div class="student-list">
     <div ui-grid="studentGridOptions"
     ui-grid-auto-resize

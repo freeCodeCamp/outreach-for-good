@@ -82,22 +82,6 @@ function StudentCtrl($scope, $stateParams, Intervention, Modal, Outreach,
 
   // Outreaches
 
-  $scope.addOutreach = function() {
-    var addOutreachFn = function(model) {
-      model.student = $scope.student._id;
-      model.school = $scope.student.currentSchool._id;
-      return Outreach.save({}, model, function(res) {
-        $scope.$evalAsync(function() {
-          $scope.student.outreaches.push(res);
-        });
-      });
-    };
-    Modal.form(
-      'Add New Outreach',
-      'app/main/student/partial/modal.add-outreach.html',
-      addOutreachFn);
-  };
-
   $scope.createOutreachNote = function(outreach) {
     if (outreach.newNote) {
       var newNote = outreach.newNote;
@@ -148,6 +132,25 @@ function StudentCtrl($scope, $stateParams, Intervention, Modal, Outreach,
       outreach,
       deleteFn);
   };
+
+  $scope.interventionAndOutreachMenuItems = [{
+    text: 'Create New Outreach',
+    action: function() {
+      var createOutreachFn = function(model) {
+        model.student = $scope.student._id;
+        model.school = $scope.student.currentSchool._id;
+        return Outreach.save({}, model, function(res) {
+          $scope.$evalAsync(function() {
+            $scope.student.outreaches.push(res);
+          });
+        });
+      };
+      Modal.form(
+        'Create New Outreach',
+        'app/main/student/partial/modal.create-outreach.html',
+        createOutreachFn);
+    }
+  }];
 }
 
 app.controller('StudentCtrl', StudentCtrl);

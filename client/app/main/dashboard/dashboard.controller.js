@@ -179,6 +179,11 @@ function DashboardCtrl($scope, $timeout, Auth, AbsenceRecord, Intervention,
   $scope.setType = function(type) {
     $scope.type = type;
   };
+
+  $scope.tableTitle = function() {
+    return ($scope.assignment ? $scope.assignment.name : 'Students') +
+           ($scope.type ? ' (' + $scope.type + ')' : '');
+  };
 }
 
 app.controller('DashboardCtrl', DashboardCtrl);

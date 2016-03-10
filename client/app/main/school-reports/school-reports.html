@@ -1,9 +1,5 @@
 <div class="school-reports row">
-  <div class="heading">
-    <h3>At Risk for Chronic Absenteeism
-      <span class="badge">{{atRiskCount}}</span>
-    </h3>
-  </div>
+  <heading title="'At Risk for Chronic Absenteeism'" badge="atRiskCount"></heading>
   <div class="student-list">
     <div ui-grid="atRiskGridOptions"
       ui-grid-auto-resize
@@ -13,11 +9,7 @@
       ui-grid-exporter
       class="grid"></div>
   </div>
-  <div class="heading row">
-    <h3>Chronically Absent
-      <span class="badge">{{chronicCount}}</span>
-    </h3>
-  </div>
+  <heading title="'Chronically Absent'" badge="chronicCount"></heading>
   <div class="student-list">
     <div ui-grid="chronicGridOptions"
       ui-grid-auto-resize

@@ -147,16 +147,6 @@ function AdminCtrl($scope, $http, uiGridConstants, Auth, User, School,
     $scope.schoolGridOptions.data = School.query();
   };
 
-  $scope.addSchool = function() {
-    var addSchoolFn = function(model) {
-      return School.save({}, model, function() {
-        $scope.schoolGridOptions.data = School.query();
-      });
-    };
-    Modal.form('Add New School', 'app/main/admin/partial/modal.add-school.html',
-      addSchoolFn);
-  };
-
   $scope.deleteSchool = function(school) {
     var deleteSchoolFn = function() {
       School.remove({id: school._id}).$promise.then(function() {
@@ -177,6 +167,20 @@ function AdminCtrl($scope, $http, uiGridConstants, Auth, User, School,
     };
     Modal.confirm.reset(resetFn)();
   };
+
+  $scope.schoolMenuItems = [{
+    text: 'Add New School',
+    action: function() {
+      var addSchoolFn = function(model) {
+        return School.save({}, model, function() {
+          $scope.schoolGridOptions.data = School.query();
+        });
+      };
+      Modal.form('Add New School',
+        'app/main/admin/partial/modal.add-school.html',
+        addSchoolFn);
+    }
+  }];
 }
 
 app.controller('AdminCtrl', AdminCtrl);
