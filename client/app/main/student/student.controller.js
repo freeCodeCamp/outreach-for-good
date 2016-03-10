@@ -98,26 +98,26 @@ function StudentCtrl($scope, $stateParams, Intervention, Modal, Outreach,
       addOutreachFn);
   };
 
-  $scope.addOutreachNote = function(outreach) {
+  $scope.createOutreachNote = function(outreach) {
     if (outreach.newNote) {
       var newNote = outreach.newNote;
       delete outreach.newNote;
-      Outreach.addNote(
+      Outreach.createNote(
         {id: outreach._id},
         {note: newNote},
         function(res) {
           outreach.notes.push(res.notes[res.notes.length - 1]);
           var student = res.student;
           toastr.success(
-            'New outreach note added.',
+            'New outreach note created.',
             [student.firstName, student.lastName, res.type, res.tier].join(' ')
           );
         });
     }
   };
 
-  $scope.toggleArchiveOutreach = function(outreach) {
-    Outreach.toggleArchive({
+  $scope.toggleOutreachArchived = function(outreach) {
+    Outreach.updateArchived({
       id: outreach._id
     }, {
       archived: !outreach.archived

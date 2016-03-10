@@ -28,7 +28,7 @@ exports.create = function(req, res) {
  * Add a note to an existing outreach.
  * restriction: 'teacher'
  */
-exports.addNote = function(req, res) {
+exports.createNote = function(req, res) {
   Outreach
     .findById(req.params.id)
     .populate('student')
@@ -51,7 +51,7 @@ exports.addNote = function(req, res) {
     });
 };
 
-exports.toggleArchive = function(req, res) {
+exports.updateArchived = function(req, res) {
   Outreach
     .findById(req.params.id)
     .populate('student')
