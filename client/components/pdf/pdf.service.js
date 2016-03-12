@@ -5,30 +5,29 @@ var app = angular.module('app');
 app.factory('PDF', function($q, $resource) {
   PDFJS.workerSrc = 'bower_components/pdfjs-dist/build/pdf.worker.js';
 
-  function parsePages(pages) {
-    var items = [].concat.apply([], pages);
-    var students = [];
-    for (var offset = 0; offset < items.length; offset += 36) {
-      for (var col = 0; col < 3; col++) {
-        var name = items[offset + col * 2 + 30].split(', ');
-        var parsed = {};
-        parsed.student = {
-          lastName: name[0],
-          firstName: name[1],
-          studentId: items[offset + col * 2 + 31]
-        };
-        parsed.entry = {
-          enrolled: +items[offset + col * 2 + 7],
-          present: +items[offset + col * 2 + 13],
-          tardies: +items[offset + col * 2 + 19],
-          absences: +items[offset + col * 2 + 25]
-        };
-        students.push(parsed);
-      }
-    }
+  /**
+   * Returns a partial record that needs to be sent to the server to get
+   * deltas and be organized into existing and new students.
+   */
+  function partialRecord(items) {
     return {
-      students: students,
-      schoolYear: items[1].replace(/\s/g, '')
+      students: _(items, 12).chunk(12).map(function(item) {
+        var name = item[0].split(', ');
+        return {
+          student: {
+            lastName: name[0],
+            firstName: name[1],
+            studentId: item[1]
+          },
+          entry: {
+            enrolled: +item[3],
+            present: +item[5],
+            tardies: +item[7],
+            absences: +item[9]
+          }
+        };
+      }),
+      schoolYear: items[11].replace(/\s/g, '')
     };
   }
 
@@ -52,7 +51,16 @@ app.factory('PDF', function($q, $resource) {
             });
           });
         })).then(function(pages) {
-          deferred.resolve(parsePages(pages));
+          var items = [].concat.apply([], pages);
+          try {
+            deferred.resolve(partialRecord(items));
+          } catch (e) {
+            // PDF data format error.
+            deferred.reject({text: items, exception: e});
+          }
+        }, function(err) {
+          // Parsing error.
+          deferred.reject({error: err});
         });
       });
     };
