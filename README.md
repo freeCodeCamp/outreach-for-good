@@ -44,3 +44,7 @@ The env variables that need to be set:
 - SUPER_USER_EMAIL = *EMAIL OF SUPER USER*
 
 Google id and secret need to be obtained by creating an application on [Google Developers Console](https://console.developers.google.com/project). 
+
+## Sample PDFs
+
+https://github.com/child-first-authority-fcc-project/sample-pdfs
