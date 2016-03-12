@@ -23,6 +23,13 @@
   :focus {
     outline: thin dotted !important;
   }
+  .ui-grid-top-panel {
+    font-weight: 400;
+  }
+  .ui-grid-column-menu {
+    // Override the inline dynamic style from ui-grid
+    top: 54px !important;;
+  }
   .ui-grid-menu-button {
     width: 26px;
     height: 26px;
@@ -41,11 +48,43 @@
   .ui-grid-filter-container {
     padding: 0;
     input[type="text"].ui-grid-filter-input {
-      text-align: center ;
+      text-align: center;
       font-weight: 200;
       border: none;
       border-top: 1px solid $cfa-background;
       border-bottom: 1px solid $cfa-background;
     }
+  }
+  .ui-grid-menu {
+    padding: 0;
+    .ui-grid-menu-mid {
+      overflow-y: scroll;
+      max-height: 234px;
+      border: 1px solid #d4d4d4;
+    }
+    ::-webkit-scrollbar {
+      width: 5px;
+      height: 0;
+    }
+
+    ::-webkit-scrollbar-track {
+      background-color: lightblue;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background-color: $cfa-background;
+    }
+
+    .ui-grid-menu-inner {
+      border: none;
+      ul li button {
+        padding: 3px 8px;
+        border: none;
+      }
+    }
+  }
+  .ui-grid-menu-button .ui-grid-menu {
+    // The menu button is inset by 1px use 53 instead of 54px
+    top: 53px;
   }
 }
