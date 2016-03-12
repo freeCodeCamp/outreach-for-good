@@ -1,5 +1,11 @@
 @import '../../common.scss';
 
+// Animations
+// --------------------------------------------------
+.fade-in {
+  opacity: 1 !important;
+}
+
 // Colors
 // --------------------------------------------------
 
@@ -52,5 +58,15 @@ $btnGooglePlusBackgroundHighlight: #C53727;
   color: white;
   img {
     max-height: 300px;
+    transition: opacity 1s ease;  
+    opacity: 0;
+  }
+  p {
+    transition: opacity 2s ease;
+    opacity: 0;
+  }
+  .glogin {
+    transition: opacity 2.75s ease;
+    opacity: 0;
   }
 }
