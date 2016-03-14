@@ -1,0 +1,66 @@
+.tab-heading.navbar,
+.tab-heading.navbar-default {
+  position: relative;
+  width: 100%;
+  background-color: lightblue;
+  padding: 0;
+  margin: 0;
+  border: none;
+  border-radius: 0;
+  li.active {
+    background-color: darken(lightblue, 20);
+  }
+  h3 {
+    display: inline-block;
+    margin: 0;
+    padding: 0 10px;
+    line-height: 54px;
+    font-weight: 200;
+  }
+  .navbar-collapse {
+    background-color: lightblue;
+  }
+  .navbar-toggle {
+    margin-right: 8px;
+    background-color: lightblue;
+    color: #3a8fa6;
+    border: 1px solid #3a8fa6;
+    border-radius: 4px;
+  }
+  .menu-button-group {
+    margin: 8px;
+    .menu-button {
+      background-color: lightblue;
+      color: #3a8fa6;
+      border: 1px solid #3a8fa6;
+      border-radius: 4px;
+      width: 28px;
+      height: 28px;
+      i {
+        transition: transform 0.5s ease;
+      }
+    }
+  }
+
+  @media (min-width: 768px) {
+    .navbar-collapse {
+      padding: 0;
+      margin: 0;
+    }
+    .menu-button-group {
+      display: block;
+      position: absolute;
+      top: 0;
+      right: 0;
+      .menu-button {
+        width: 38px;
+        height: 38px;
+      }
+    }
+    .dropdown-menu {
+      top: 48px;
+      left: auto;
+      right: 0;
+    }
+  }
+}
