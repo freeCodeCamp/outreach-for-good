@@ -124,6 +124,12 @@
             <span class="input-group-btn">
               <button
                 type="button"
+                class="btn btn-default"
+                ng-click="toggleExpandInput()">
+                <i class="fa fa-expand"></i>
+              </button>
+              <button
+                type="button"
                 class="btn btn-success" ng-click="createOutreachNote(outreach)">
                 <i class="fa fa-plus"></i>
               </button>
@@ -134,6 +140,8 @@
             <div class="input-group">
               <input type="text" class="form-control" readonly value="{{note.note}}"/>
               <span class="input-group-addon">{{note.date | date:'yyyy-MM-dd'}}</span>
+              <span class="input-group-btn"><button class="btn btn-info" ng-click="viewNote(note, student)"><i class="fa fa-search"></i></button>
+              </span>
             </div>
           </dd>
         </dl>

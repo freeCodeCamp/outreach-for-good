@@ -3,7 +3,7 @@
 var app = angular.module('app');
 
 function StudentCtrl($scope, $stateParams, Intervention, Modal, Outreach,
-  Student, toastr) {
+  Student, toastr, $filter) {
 
   $scope.student = Student.get({id: $stateParams.id});
   $scope.datePopups = {};
@@ -14,6 +14,7 @@ function StudentCtrl($scope, $stateParams, Intervention, Modal, Outreach,
     formatYear: 'yy',
     startingDay: 1
   };
+  $scope.expand = false;
 
   $scope.updateIEP = function() {
     var oldValue = !$scope.student.iep;
@@ -151,6 +152,22 @@ function StudentCtrl($scope, $stateParams, Intervention, Modal, Outreach,
         createOutreachFn);
     }
   }];
+
+  $scope.viewNote = function(note, student) {
+    var label = 'Note for : ' + 
+      student.firstName + ' ' + 
+      student.lastName + ' on ' + 
+      $filter('date')(note.date);
+    Modal.viewNote(
+      label,
+      'app/main/student/partial/modal.view-note.html',
+      note.note);
+  };
+
+  // Boolean value for toggling expansion of input field
+  $scope.toggleExpandInput = function() {
+    $scope.expand = !$scope.expand;
+  };
 }
 
 app.controller('StudentCtrl', StudentCtrl);
