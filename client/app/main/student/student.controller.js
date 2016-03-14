@@ -14,7 +14,6 @@ function StudentCtrl($scope, $stateParams, Intervention, Modal, Outreach,
     formatYear: 'yy',
     startingDay: 1
   };
-  $scope.expand = false;
 
   $scope.updateIEP = function() {
     var oldValue = !$scope.student.iep;
@@ -164,9 +163,18 @@ function StudentCtrl($scope, $stateParams, Intervention, Modal, Outreach,
       note.note);
   };
 
-  // Boolean value for toggling expansion of input field
-  $scope.toggleExpandInput = function() {
-    $scope.expand = !$scope.expand;
+  $scope.openNoteModule = function(newNote, student) {
+    var label ='Create note for : ' + 
+      student.firstName + ' ' + 
+      student.lastName;
+    var updateNoteField = function() {
+      // Take modal text and send it to outreach note field for confirmation
+    }
+    Modal.addNote(
+      label,
+      'app/main/student/partial/modal.create-note.html',
+      newNote,
+      updateNoteField);
   };
 }
 

@@ -256,6 +256,30 @@ app.factory('Modal', function($rootScope, $uibModal) {
           }]
         },
       }, 'components/modal/form-modal.html');
+    },
+
+    addNote: function(title, templateUrl, newNote, cb) {
+      var confirmDelete = openModal({
+        modal: {
+          title: title,
+          templateUrl: templateUrl,
+          newNote: newNote,
+          buttons: [{
+            classes: 'btn-default',
+            text: 'Close',
+            click: function(e) {
+              // Return updated note value to outreach input field
+              // cb(model).$promise.then(function() {
+                confirmDelete.dismiss(e);
+              // }, function(err) {
+                // console.log(err);
+                // TODO: Handle error from submitting form.
+              // });
+            }
+          }]
+        },
+      }, 'components/modal/form-modal.html');
     }
+
   };
 });

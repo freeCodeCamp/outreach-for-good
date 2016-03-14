@@ -125,7 +125,7 @@
               <button
                 type="button"
                 class="btn btn-default"
-                ng-click="toggleExpandInput()">
+                ng-click="openNoteModule(outreach.newNote, student)">
                 <i class="fa fa-expand"></i>
               </button>
               <button
@@ -138,6 +138,7 @@
           </dd>
           <dd ng-repeat="note in outreach.notes | orderBy:$index:true">
             <div class="input-group">
+              <!-- create filter to limit string and append in input field -->
               <input type="text" class="form-control" readonly value="{{note.note}}"/>
               <span class="input-group-addon">{{note.date | date:'yyyy-MM-dd'}}</span>
               <span class="input-group-btn"><button class="btn btn-info" ng-click="viewNote(note, student)"><i class="fa fa-search"></i></button>
