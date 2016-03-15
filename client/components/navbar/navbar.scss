@@ -6,8 +6,8 @@ $colDefault: #fff;
 $colHighlight: #c8f7c5;
 $navbar-height: 54px;
 
-.navbar-default,
-.navbar {
+.cfa.navbar-default,
+.cfa.navbar {
   background-color: $bgDefault;
   border: none;
   .navbar-brand {
@@ -78,7 +78,7 @@ $navbar-height: 54px;
 }
 
 @media (max-width: 767px) {
-  .navbar-default .navbar-nav .open .dropdown-menu {
+  .cfa.navbar-default .navbar-nav .open .dropdown-menu {
     li {
       a {
         color: $colDefault;

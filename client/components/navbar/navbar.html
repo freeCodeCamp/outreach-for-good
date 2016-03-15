@@ -1,4 +1,4 @@
-<div class="navbar navbar-default navbar-fixed-top">
+<div class="cfa navbar navbar-default navbar-fixed-top">
   <div class="navbar-header fixed-brand">
     <button class="navbar-toggle pull-left"
       type="button"
@@ -6,8 +6,7 @@
       ng-if="showSidebarToggle()"
       ng-click="sidebar.toggle()">
       <span class="sr-only">Toggle sidebar menu</span>
-      <i class="fa fa-bars fa-lg"
-        ng-class="{'fa-rotate-90': sidebar.isCollapsed}"></i>
+      <i class="fa fa-bars fa-lg" ng-class="{'fa-rotate-90': sidebar.isCollapsed}"></i>
     </button>
     <a ui-sref="dashboard" class="navbar-brand">Child First Authority</a>
     <button class="navbar-toggle"

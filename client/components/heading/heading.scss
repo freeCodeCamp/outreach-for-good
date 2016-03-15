@@ -1,12 +1,18 @@
-.heading {
+.heading.navbar,
+.heading.navbar-default {
   position: relative;
   width: 100%;
   height: 54px;
   background-color: lightblue;
-  padding: 8px;
+  padding: 0;
+  margin: 0;
+  border: none;
+  border-radius: 0;
   h3 {
-    line-height: 38px;
+    display: inline-block;
     margin: 0;
+    padding: 0 10px;
+    line-height: 54px;
     font-weight: 200;
   }
   .menu-button-group {

@@ -1,0 +1,28 @@
+<div class="tab-heading navbar navbar-default">
+  <div class="navbar-header">
+    <button type="button" class="navbar-toggle" ng-click="isCollapsed = !isCollapsed">
+      <i class="fa fa-bars fa-lg" ng-class="{'fa-rotate-90': sidebar.isCollapsed}"></i>
+    </button>
+    <h3 class="visible-xs-inline-block">{{ tabs.selected.title }}</h3>
+  </div>
+  <div class="collapse navbar-collapse" ng-class="!isCollapsed && 'in'">
+    <ul class="nav navbar-nav">
+      <li ng-repeat="tab in tabs" ng-click="select(tab)" ng-class="{active: tabs.selected === tab}">
+        <h3>{{ tab.title }}</h3>
+      </li>
+    </ul>
+    <ul class="nav navbar-nav navbar-right" ng-if="menuItems">
+      <li class="btn-group menu-button-group" uib-dropdown is-open="isopen" uib-dropdown-toggle>
+        <button type="button" class="menu-button">
+          <i class="fa fa-caret-right fa-lg" ng-class="{'fa-rotate-90': isopen}"></i>
+        </button>
+        <span class="visible-xs-inline-block">{{tabs.selected.title}} Menu</span>
+        <ul uib-dropdown-menu role="menu">
+          <li role="menuitem" ng-repeat="item in menuItems" ng-click="item.action()">
+            <a href>{{ item.text }}</a>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+</div>
