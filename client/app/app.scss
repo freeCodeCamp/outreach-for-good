@@ -58,3 +58,8 @@ body,
     width: 100%;
   }
 }
+
+// Makes the outline on focus less intrusive.
+:focus {
+  outline: thin dotted !important;
+}

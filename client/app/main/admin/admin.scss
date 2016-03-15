@@ -42,13 +42,12 @@
         margin-left: 3px;
       }
     }
-    .ui-grid-icon-cancel,
-    .ui-grid-menu-close-button,
-    .ui-grid-column-menu-button {
-      &:focus {
-        outline: none;
-        display: none;
-      }
+    .ui-select-container {
+      padding: 0 2px;
+    }
+    .btn-default-focus {
+      outline: none;
+      box-shadow: none;
     }
   }
   #user-grid {
