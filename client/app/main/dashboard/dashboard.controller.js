@@ -125,7 +125,13 @@ function DashboardCtrl($scope, $timeout, Auth, AbsenceRecord, Intervention,
       displayName: 'School Name',
       minWidth: 150,
       grouping: {groupPriority: 0},
-      sort: {priority: 0, direction: 'asc'}
+      sort: {priority: 0, direction: 'asc'},
+      cellTemplate: '<div class="ui-grid-cell-contents" title="TOOLTIP">' +
+                    '{{COL_FIELD CUSTOM_FILTERS}} ' +
+                    '<span ng-if="row.treeLevel > -1">' +
+                    '<i class="fa fa-child"></i>' +
+                    '</span>' +
+                    '</div>'
     });
   } else {
     $scope.assignment = Auth.getCurrentUser().assignment;
