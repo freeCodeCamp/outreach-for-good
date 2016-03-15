@@ -56,13 +56,13 @@ $navbar-height: 54px;
     line-height: 18px;
     margin: 8px;
     color: $colDefault;
-    border-color: transparent !important;
+    border-color: transparent;
     &:hover, &:focus {
       color: $colHighlight;
-      background-color: transparent !important;
+      background-color: transparent;
     }
     .icon-bar {
-      background-color: transparent !important;
+      background-color: transparent;
     }
   }
   .navbar-collapse,
@@ -99,6 +99,6 @@ $navbar-height: 54px;
 #sidebar-toggle {
   display: block;
   i {
-    transition: all 0.5s ease;  
+    transition: transform 0.5s ease;  
   }
 }

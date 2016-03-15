@@ -1,11 +1,5 @@
 @import '../../common.scss';
 
-// Animations
-// --------------------------------------------------
-.fade-in {
-  opacity: 1 !important;
-}
-
 // Colors
 // --------------------------------------------------
 
@@ -15,40 +9,6 @@ $btnTextAlt: #000;
 $btnGooglePlusBackground: #DC4E41;
 $btnGooglePlusBackgroundHighlight: #C53727;
 
-// Social buttons
-// --------------------------------------------------
-
-.glogin {
-  text-align: center;
-  display: inline-block;
-  white-space: nowrap;
-  color: $btnText;
-  font-family: 'Roboto', sans-serif;
-  background-color: $btnGooglePlusBackground;
-  border-radius: 5px;
-  &:hover:not(:active) {
-    cursor: pointer;
-    background-color: $btnGooglePlusBackgroundHighlight;
-  }
-  span.glogin-icon {
-    display: inline-block;
-    vertical-align: middle;
-    width: 42px;
-    height: 42px;
-    line-height: 42px;
-    font-size: 18px;
-    border-right: white 1px solid;
-  }
-  span.glogin-text {
-    display: inline-block;
-    vertical-align: middle;
-    padding: 0 18px;
-    font-size: 14px;
-    font-weight: bold;
-    font-family: 'Roboto', sans-serif;
-  }
-}
-
 .login-page {
   background-color: $cfa-background;
 }
@@ -56,17 +16,54 @@ $btnGooglePlusBackgroundHighlight: #C53727;
 .banner {
   text-align: center;
   color: white;
-  img {
+  .logo {
     max-height: 300px;
-    transition: opacity 1s ease;  
-    opacity: 0;
+    &.ng-enter {
+      transition: opacity 1s ease 0.5s;
+    }
   }
-  p {
-    transition: opacity 2s ease;
-    opacity: 0;
+  .lead {
+    &.ng-enter {
+      transition: opacity 1.5s ease 0.5s;
+    }
   }
   .glogin {
-    transition: opacity 2.75s ease;
+    text-align: center;
+    display: inline-block;
+    white-space: nowrap;
+    color: $btnText;
+    font-family: 'Roboto', sans-serif;
+    background-color: $btnGooglePlusBackground;
+    border-radius: 5px;
+    &:hover:not(:active) {
+      cursor: pointer;
+      background-color: $btnGooglePlusBackgroundHighlight;
+    }
+    span.glogin-icon {
+      display: inline-block;
+      vertical-align: middle;
+      width: 42px;
+      height: 42px;
+      line-height: 42px;
+      font-size: 18px;
+      border-right: white 1px solid;
+    }
+    span.glogin-text {
+      display: inline-block;
+      vertical-align: middle;
+      padding: 0 18px;
+      font-size: 14px;
+      font-weight: bold;
+      font-family: 'Roboto', sans-serif;
+    }
+    &.ng-enter {
+      transition: opacity 2s ease 0.5s;
+    }
+  }
+  .ng-enter {
     opacity: 0;
+    &.ng-enter-active {
+      opacity: 1;
+    }
   }
 }
