@@ -81,6 +81,7 @@ function currentAbsenceRecordPipeline(user) {
   pipeline.push({
     $group: {
       _id: '$school',
+      date: {$first: '$date'},
       school: {$first: '$school'},
       entries: {$first: '$entries'}
     }
