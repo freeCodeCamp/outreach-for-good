@@ -11,7 +11,7 @@
         <h3>{{ tab.title }}</h3>
       </li>
     </ul>
-    <ul class="nav navbar-nav navbar-right" ng-if="menuItems">
+    <ul class="nav navbar-nav navbar-right" ng-if="menuItems && menuItems.length">
       <li class="btn-group menu-button-group" uib-dropdown is-open="isopen" uib-dropdown-toggle>
         <button type="button" class="menu-button">
           <i class="fa fa-caret-right fa-lg" ng-class="{'fa-rotate-90': isopen}"></i>

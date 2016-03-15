@@ -121,26 +121,30 @@ exports.current = function(req, res) {
  * - manager+ will get entries for all schools
  */
 exports.filtered = function(req, res) {
-  var query = Intervention.find({
+  var options = {
     actionDate: null,
     type: req.query.type
-  });
-  query.distinct('student');
-  query.exec(function(err, students) {
-    if (err) return handleError(res, err);
-    var pipeline = currentAbsenceRecordPipeline(req.user);
-    pipeline.push({
-      $match: {'entries.student': {$in: students}}
-    });
-    AbsenceRecord.aggregate(pipeline, function(err, results) {
+  };
+  if (req.query.tier) {
+    options.tier = req.query.tier
+  }
+  Intervention.find(options)
+    .distinct('student')
+    .exec(function(err, students) {
       if (err) return handleError(res, err);
-      AbsenceRecord.populate(results, 'school entries.student',
-        function(err, entries) {
-          if (err) return handleError(res, err);
-          return res.status(200).json(entries);
-        });
+      var pipeline = currentAbsenceRecordPipeline(req.user);
+      pipeline.push({
+        $match: {'entries.student': {$in: students}}
+      });
+      AbsenceRecord.aggregate(pipeline, function(err, results) {
+        if (err) return handleError(res, err);
+        AbsenceRecord.populate(results, 'school entries.student',
+          function(err, entries) {
+            if (err) return handleError(res, err);
+            return res.status(200).json(entries);
+          });
+      });
     });
-  });
 };
 
 /**

@@ -4,6 +4,9 @@ var app = angular.module('app');
 
 function DashboardCtrl($scope, $timeout, Auth, AbsenceRecord, Intervention,
   Student, uiGridGroupingConstants, toastr) {
+  $scope.menuItems = [];
+  $scope.filter = {};
+
   $scope.studentGridOptions = {
     enableSorting: true,
     enableGridMenu: true,
@@ -161,17 +164,6 @@ function DashboardCtrl($scope, $timeout, Auth, AbsenceRecord, Intervention,
     });
   };
 
-  $scope.$watch('type', function(type, old) {
-    if (type !== old) {
-      var options = {};
-      if (type) {
-        options.selector = 'filtered';
-        options.type = type;
-      }
-      $scope.studentGridOptions.data = AbsenceRecord.current(options);
-    }
-  });
-
   Intervention.current().$promise.then(function(res) {
     var counts = _.keyBy(res, '_id');
     $scope.calls = (counts['Phone Call'] || {}).count || 0;
@@ -181,13 +173,43 @@ function DashboardCtrl($scope, $timeout, Auth, AbsenceRecord, Intervention,
     $scope.court = (counts['Court Referral'] || {}).count || 0;
   });
 
-  $scope.setType = function(type) {
-    $scope.type = type;
+  $scope.setFilter = function(type, tier) {
+    if ($scope.filter.type !== type || $scope.filter.tier !== tier) {
+      var filter = {};
+      if (type) {
+        filter.selector = 'filtered';
+        filter.type = type;
+        if (tier) {
+          filter.tier = tier;
+        }
+      }
+      $scope.filter = filter;
+      $scope.studentGridOptions.data = AbsenceRecord.current($scope.filter);
+      $scope.menuItems.length = 0;
+      if (_.includes(['Phone Call', 'Letter Sent', 'Home Visit'], type)) {
+        [].push.apply($scope.menuItems, [{
+          text: type + ' #1',
+          action: function() {$scope.setFilter(type, 1);}
+        }, {
+          text: type + ' #2',
+          action: function() {$scope.setFilter(type, 2);}
+        }, {
+          text: type + ' #3',
+          action: function() {$scope.setFilter(type, 3);}
+        }, {
+          // Separator
+        }, {
+          text: type + ' (All)',
+          action: function() {$scope.setFilter(type);}
+        }]);
+      }
+    }
   };
 
   $scope.tableTitle = function() {
     return ($scope.assignment ? $scope.assignment.name : 'Students') +
-           ($scope.type ? ' (' + $scope.type + ')' : '');
+           ($scope.filter.type ? ' (' + $scope.filter.type +
+           ($scope.filter.tier ? ' #' + $scope.filter.tier : '') + ')' : '');
   };
 }
 
