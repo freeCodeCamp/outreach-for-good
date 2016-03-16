@@ -45,11 +45,9 @@ function StudentCtrl($scope, $state, $stateParams, Student, toastr) {
     state: 'outreaches'
   }];
 
-  if (!$scope.tabs.selected) {
-    $scope.tabs.selected =
-      _.find($scope.tabs, {state: $state.$current.name}) || $scope.tabs[0];
-    $state.go($scope.tabs.selected.state);
-  }
+  $scope.tabs.selected =
+    _.find($scope.tabs, {state: $state.$current.name}) || $scope.tabs[0];
+  $state.go($scope.tabs.selected.state);
 }
 
 function StudentInterventionCtrl($scope, Intervention, toastr) {
