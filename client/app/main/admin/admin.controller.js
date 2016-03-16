@@ -38,6 +38,7 @@ function AdminCtrl($scope, $http, uiGridConstants, Auth, User, School,
     cellTooltip: function(row) {
       return row.entity.name;
     },
+    enableCellEdit: false,
     enableSorting: false,
     enableMenu: false,
     pinnedLeft: true
@@ -45,10 +46,12 @@ function AdminCtrl($scope, $http, uiGridConstants, Auth, User, School,
     name: 'name',
     displayName: 'Name',
     minWidth: 150,
+    enableCellEdit: false
   }, {
     name: 'email',
     displayName: 'Email Address',
-    minWidth: 200
+    minWidth: 200,
+    enableCellEdit: false
   }, {
     name: 'assignment',
     displayName: 'Assigned School',
@@ -78,7 +81,8 @@ function AdminCtrl($scope, $http, uiGridConstants, Auth, User, School,
     width: 108,
     enableSorting: false,
     cellClass: 'action-col',
-    cellTemplate: 'app/main/admin/partial/cell.action.html'
+    cellTemplate: 'app/main/admin/partial/cell.action.html',
+    enableCellEdit: false,
   }];
 
   $scope.userGridOptions.onRegisterApi = function(gridApi) {
