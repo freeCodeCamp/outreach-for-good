@@ -2,7 +2,7 @@
 
 var app = angular.module('app');
 
-function SchoolReports($scope, $timeout, Auth, uiGridGroupingConstants, Student,
+function SchoolReportsCtrl($scope, $timeout, Auth, uiGridGroupingConstants, Student,
   AbsenceRecord, toastr) {
   $scope.atRiskGridOptions = {
     rowHeight: 27,
@@ -281,4 +281,4 @@ function SchoolReports($scope, $timeout, Auth, uiGridGroupingConstants, Student,
   };
 }
 
-app.controller('SchoolReports', SchoolReports);
+app.controller('SchoolReportsCtrl', SchoolReportsCtrl);

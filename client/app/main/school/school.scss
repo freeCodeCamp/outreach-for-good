@@ -1,5 +1,24 @@
-.school {
+.school-settings {
   .settings {
     padding: 15px;
+  }
+}
+
+.school-reports {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  .student-list {
+    display: flex;
+    flex-direction: column;
+    flex: 1 0 0;
+    min-height: 250px;
+    .grid {
+      height: 100%;
+      display: flex;
+      flex: 1 0 0;
+      vertical-align: middle;
+      border: 0 solid #fff;
+    }
   }
 }
