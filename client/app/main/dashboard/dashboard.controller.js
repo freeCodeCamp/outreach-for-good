@@ -85,6 +85,11 @@ function DashboardCtrl($scope, $timeout, Auth, AbsenceRecord, Intervention,
     type: 'boolean',
     width: 100,
     treeAggregationType: uiGridGroupingConstants.aggregation.SUM
+  }, {
+    name: 'date',
+    displayName: 'Uploaded',
+    cellFilter: 'date:\'yyyy-MM-dd\'',
+    width: 125
   }];
 
   $scope.updateIEP = function(student) {
