@@ -217,8 +217,9 @@ app.factory('Modal', function($rootScope, $uibModal) {
           title: title,
           templateUrl: templateUrl,
           submitFn: function(form, model) {
-            cb(model).$promise.then(function() {
+            cb(model).$promise.then(function(data) {
               confirmDelete.close();
+              console.log(data);
             }, function(err) {
               console.log(err);
               // TODO: Handle error from deleting.
@@ -240,31 +241,6 @@ app.factory('Modal', function($rootScope, $uibModal) {
       }, 'modal-danger', 'components/modal/form-modal.html');
     },
 
-    addNote: function(title, templateUrl, newNote, cb) {
-      var addNote = openModal({
-        modal: {
-          title: title,
-          dismissable: true,
-          templateUrl: templateUrl,
-          newNote: newNote,
-          buttons: [{
-            classes: 'btn-default',
-            text: 'Close',
-            click: function(e) {
-              // Return updated note value to outreach input field
-              cb(modal.newNote).$promise.then(function() {
-                addNote.dismiss(e);
-              }, function(err) {
-                console.log(err);
-                // TODO: Handle error from
-                console.warn(err);
-              });
-            }
-          }]
-        },
-      }, 'components/modal/form-modal.html');
-    },
-
     viewNote: function(title, templateUrl, note) {
       var viewNote = openModal({
         modal: {
@@ -280,7 +256,7 @@ app.factory('Modal', function($rootScope, $uibModal) {
             }
           }]
         },
-      }, 'components/modal/form-modal.html');
+      }, 'modal-info', 'components/modal/form-modal.html');
     }
   };
 });

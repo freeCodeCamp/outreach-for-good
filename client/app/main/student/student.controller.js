@@ -144,21 +144,6 @@ function StudentOutreachesCtrl($scope, Outreach, Modal, toastr, $filter) {
       deleteFn);
   };
 
-  $scope.openNoteModule = function(newNote, student) {
-      var label ='Create note for : ' + 
-        student.firstName + ' ' + 
-        student.lastName;
-      var updateNoteField = function() {
-        // Take modal text and send it to outreach note 
-        // field for confirmation
-      }
-      Modal.addNote(
-        label,
-        'app/main/student/partial/modal.create-note.html',
-        newNote,
-        updateNoteField);
-  };
-
   $scope.viewNote = function(note, student) {
     var label = 'Note for : ' + 
       student.firstName + ' ' + 
