@@ -1,6 +1,6 @@
 'use strict';
 
-function SchoolCtrl($scope, Auth, School, toastr) {
+function SchoolSettingsCtrl($scope, Auth, School, toastr) {
   $scope.triggerOptions = _.range(1, 16);
   $scope.currentUser = Auth.getCurrentUser();
   $scope.userIs = Auth.userIs;
@@ -27,4 +27,4 @@ function SchoolCtrl($scope, Auth, School, toastr) {
   };
 }
 
-angular.module('app').controller('SchoolCtrl', SchoolCtrl);
+angular.module('app').controller('SchoolSettingsCtrl', SchoolSettingsCtrl);

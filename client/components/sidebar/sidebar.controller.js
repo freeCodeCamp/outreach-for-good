@@ -13,18 +13,18 @@ angular.module('app').controller('SidebarCtrl',
       displayName: 'Data Visualization',
       icon: 'fa-area-chart'
     }, {
-      name: 'school-reports',
-      url: 'school-reports',
-      displayName: 'School Reports',
-      icon: 'fa-graduation-cap'      
-    }, {
       name: 'pdf-upload',
       url: 'pdf-upload',
       displayName: 'Upload',
       icon: 'fa-upload'
     }, {
-      name: 'school',
-      url: 'school',
+      name: 'school-reports',
+      url: 'school-reports',
+      displayName: 'School Reports',
+      icon: 'fa-graduation-cap'
+    }, {
+      name: 'school-settings',
+      url: 'school-settings',
       displayName: 'School Settings',
       icon: 'fa-cogs'
     }, {

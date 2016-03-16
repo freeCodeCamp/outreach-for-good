@@ -8,6 +8,7 @@ function DashboardCtrl($scope, $timeout, Auth, AbsenceRecord, Intervention,
   $scope.filter = {};
 
   $scope.studentGridOptions = {
+    rowHeight: 27,
     enableSorting: true,
     enableGridMenu: true,
     enableFiltering: true,
