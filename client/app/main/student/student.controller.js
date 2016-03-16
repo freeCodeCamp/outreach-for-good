@@ -4,17 +4,6 @@ var app = angular.module('app');
 
 function StudentCtrl($scope, $stateParams, Intervention, Modal, Outreach,
   Student, toastr, $filter) {
-
-  $scope.student = Student.get({id: $stateParams.id});
-  $scope.datePopups = {};
-  $scope.open = function(index) {
-    $scope.datePopups[index] = true;
-  };
-  $scope.dateOptions = {
-    formatYear: 'yy',
-    startingDay: 1
-  };
-
   $scope.updateIEP = function() {
     var oldValue = !$scope.student.iep;
     Student.updateIEP({
@@ -47,7 +36,30 @@ function StudentCtrl($scope, $stateParams, Intervention, Modal, Outreach,
     });
   };
 
-  // Interventions
+  $scope.tabs = [{
+    title: 'Interventions',
+    state: 'interventions'
+  }, {
+    title: 'Outreaches',
+    state: 'outreaches'
+  }];
+
+  if (!$scope.tabs.selected) {
+    $scope.tabs.selected =
+      _.find($scope.tabs, {state: $state.$current.name}) || $scope.tabs[0];
+    $state.go($scope.tabs.selected.state);
+  }
+}
+
+function StudentInterventionCtrl($scope, Intervention, toastr) {
+  $scope.datePopups = {};
+  $scope.open = function(index) {
+    $scope.datePopups[index] = true;
+  };
+  $scope.dateOptions = {
+    formatYear: 'yy',
+    startingDay: 1
+  };
 
   $scope.updateActionDate = function(intervention) {
     Intervention.updateAction(
@@ -79,9 +91,9 @@ function StudentCtrl($scope, $stateParams, Intervention, Modal, Outreach,
         });
     }
   };
+}
 
-  // Outreaches
-
+function StudentOutreachesCtrl($scope, Outreach, Modal, toastr) {
   $scope.createOutreachNote = function(outreach) {
     if (outreach.newNote) {
       var newNote = outreach.newNote;
@@ -133,7 +145,7 @@ function StudentCtrl($scope, $stateParams, Intervention, Modal, Outreach,
       deleteFn);
   };
 
-  $scope.interventionAndOutreachMenuItems = [{
+  $scope.menuItems = [{
     text: 'Create New Outreach',
     action: function() {
       var createOutreachFn = function(model) {
@@ -179,3 +191,6 @@ function StudentCtrl($scope, $stateParams, Intervention, Modal, Outreach,
 }
 
 app.controller('StudentCtrl', StudentCtrl);
+app.controller('StudentInterventionCtrl', StudentInterventionCtrl);
+app.controller('StudentOutreachesCtrl', StudentOutreachesCtrl);
+

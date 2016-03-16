@@ -67,7 +67,12 @@
   }
   .dev {
     .heading {
+      line-height: 54px;
       background-color: orange;
+      button {
+        position: absolute;
+        top: 12px;
+      }
     }
   }
 }

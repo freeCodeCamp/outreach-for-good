@@ -1,8 +1,8 @@
 <section class="fill login-page">
   <div class="container banner">
-    <img src="assets/images/CFALogoLarge.jpg" alt="Child First Authority Logo">
-    <p class="lead">Student absenteeism tracking and reporting</p>
-    <div class="glogin" ng-click="loginOauth('google')">
+    <img src="assets/images/CFALogoLarge.jpg" alt="Child First Authority Logo" class="logo" ng-if="isLoaded">
+    <p class="lead" ng-if="isLoaded">Student absenteeism tracking and reporting</p>
+    <div class="glogin" ng-click="loginOauth('google')" ng-if="isLoaded">
       <span class="glogin-icon"><i class="fa fa-google-plus"></i></span>
       <span class="glogin-text"> Sign in with Google</span>
     </div>

@@ -20,10 +20,10 @@ app.factory('PDF', function($q, $resource) {
             studentId: item[1]
           },
           entry: {
-            enrolled: +item[3],
-            present: +item[5],
-            tardies: +item[7],
-            absences: +item[9]
+            absences: +item[3],
+            tardies: +item[5],
+            present: +item[7],
+            enrolled: +item[9]
           }
         };
       }),

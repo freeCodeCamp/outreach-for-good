@@ -6,8 +6,8 @@ $colDefault: #fff;
 $colHighlight: #c8f7c5;
 $navbar-height: 54px;
 
-.navbar-default,
-.navbar {
+.cfa.navbar-default,
+.cfa.navbar {
   background-color: $bgDefault;
   border: none;
   .navbar-brand {
@@ -56,13 +56,13 @@ $navbar-height: 54px;
     line-height: 18px;
     margin: 8px;
     color: $colDefault;
-    border-color: $bgHighlight;
+    border-color: transparent;
     &:hover, &:focus {
       color: $colHighlight;
-      background-color: $bgHighlight;
+      background-color: transparent;
     }
     .icon-bar {
-      background-color: $colDefault;
+      background-color: transparent;
     }
   }
   .navbar-collapse,
@@ -78,7 +78,7 @@ $navbar-height: 54px;
 }
 
 @media (max-width: 767px) {
-  .navbar-default .navbar-nav .open .dropdown-menu {
+  .cfa.navbar-default .navbar-nav .open .dropdown-menu {
     li {
       a {
         color: $colDefault;
@@ -98,4 +98,7 @@ $navbar-height: 54px;
 
 #sidebar-toggle {
   display: block;
+  i {
+    transition: transform 0.5s ease;  
+  }
 }

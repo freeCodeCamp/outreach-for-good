@@ -1,0 +1,72 @@
+<tab-heading tabs="tabs" menu-items="menuItems"></tab-heading>
+<div class="outreaches">
+  <div class="col-lg-6 col-md-12" ng-repeat="outreach in student.outreaches | orderBy:createdDate:true">
+    <div class="well" ng-class="outreach.archived ? 'archived' : ''">
+      <dl>
+        <dd>
+          <div class="btn-group" uib-dropdown>
+            <i uib-dropdown-toggle class="fa fa-caret-down fa-lg toggle"></i>
+            <ul uib-dropdown-menu role="menu" class="invisible-menu">
+              <li role="menuitem">
+                <button
+                  type="button"
+                  class="btn btn-block"
+                  ng-class="outreach.archived ? 'btn-info' : 'btn-warning'"
+                  ng-click="toggleOutreachArchived(outreach)">
+                  {{ outreach.archived ? 'Unarchive' : 'Archive'}} <i class="fa fa-archive"></i>
+                </button>
+              </li>
+              <li role="menuitem">
+                <button
+                  type="button"
+                  class="btn btn-danger btn-block"
+                  ng-click="deleteOutreach(outreach)"
+                  ng-if="outreach.archived">
+                  Delete <i class="fa fa-trash"></i>
+                </button>
+              </li>
+            </ul>
+          </div>
+        </dd>
+      </dl>
+      <dl class="dl-horizontal">
+        <dt>Outreach Type</dt>
+        <dd><input class="form-control" readonly value="{{outreach.type}}"/></dd>
+
+        <dt>Created</dt>
+        <dd><input class="form-control" readonly value="{{outreach.createdDate | date:'yyyy-MM-dd'}}"/></dd>
+
+        <dt>Notes</dt>
+        <dd>
+          <div class="input-group">
+            <input type="text" class="form-control" ng-model="outreach.newNote"/>
+            <span class="input-group-btn">
+              <button
+                type="button"
+                class="btn btn-default"
+                ng-click="openNoteModule(outreach.newNote, student)">
+                <i class="fa fa-expand"></i>
+              </button>
+              <button
+                type="button"
+                class="btn btn-success" ng-click="createOutreachNote(outreach)">
+                <i class="fa fa-plus"></i>
+              </button>
+            </span>
+          </div>
+        </dd>
+        <dd ng-repeat="note in outreach.notes | orderBy:$index:true">
+          <div class="input-group">
+            <input type="text" class="form-control" readonly value="{{note.note}}"/>
+            <span class="input-group-addon">{{note.date | date:'yyyy-MM-dd'}}</span>
+            <span class="input-group-btn">
+              <button class="btn btn-info" ng-click="viewNote(note, student)">
+                <i class="fa fa-search"></i>
+              </button>
+            </span>
+          </div>
+        </dd>
+      </dl>
+    </div>
+  </div>
+</div>
