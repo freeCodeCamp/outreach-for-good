@@ -241,9 +241,10 @@ app.factory('Modal', function($rootScope, $uibModal) {
     },
 
     addNote: function(title, templateUrl, newNote, cb) {
-      var confirmDelete = openModal({
+      var addNote = openModal({
         modal: {
           title: title,
+          dismissable: true,
           templateUrl: templateUrl,
           newNote: newNote,
           buttons: [{
@@ -251,8 +252,8 @@ app.factory('Modal', function($rootScope, $uibModal) {
             text: 'Close',
             click: function(e) {
               // Return updated note value to outreach input field
-              cb(model).$promise.then(function() {
-                confirmDelete.dismiss(e);
+              cb(modal.newNote).$promise.then(function() {
+                addNote.dismiss(e);
               }, function(err) {
                 console.log(err);
                 // TODO: Handle error from
@@ -265,7 +266,7 @@ app.factory('Modal', function($rootScope, $uibModal) {
     },
 
     viewNote: function(title, templateUrl, note) {
-      var confirmDelete = openModal({
+      var viewNote = openModal({
         modal: {
           dismissable: true,
           title: title,
@@ -275,7 +276,7 @@ app.factory('Modal', function($rootScope, $uibModal) {
             classes: 'btn-default',
             text: 'Close',
             click: function(e) {
-              confirmDelete.dismiss(e);
+              viewNote.dismiss(e);
             }
           }]
         },

@@ -2,8 +2,9 @@
 
 var app = angular.module('app');
 
-function StudentCtrl($scope, $state, $stateParams, Student, 
-  toastr, Modal) {
+function StudentCtrl($scope, $state, $stateParams, Student, toastr) {
+  $scope.student = Student.get({id: $stateParams.id});
+
   $scope.updateIEP = function() {
     var oldValue = !$scope.student.iep;
     Student.updateIEP({
@@ -91,7 +92,7 @@ function StudentInterventionCtrl($scope, Intervention, toastr) {
   };
 }
 
-function StudentOutreachesCtrl($scope, Outreach, Modal, toastr) {
+function StudentOutreachesCtrl($scope, Outreach, Modal, toastr, $filter) {
   $scope.createOutreachNote = function(outreach) {
     if (outreach.newNote) {
       var newNote = outreach.newNote;
@@ -143,6 +144,32 @@ function StudentOutreachesCtrl($scope, Outreach, Modal, toastr) {
       deleteFn);
   };
 
+  $scope.openNoteModule = function(newNote, student) {
+      var label ='Create note for : ' + 
+        student.firstName + ' ' + 
+        student.lastName;
+      var updateNoteField = function() {
+        // Take modal text and send it to outreach note 
+        // field for confirmation
+      }
+      Modal.addNote(
+        label,
+        'app/main/student/partial/modal.create-note.html',
+        newNote,
+        updateNoteField);
+  };
+
+  $scope.viewNote = function(note, student) {
+    var label = 'Note for : ' + 
+      student.firstName + ' ' + 
+      student.lastName + ' on ' + 
+      $filter('date')(note.date);
+    Modal.viewNote(
+      label,
+      'app/main/student/partial/modal.view-note.html',
+      note.note);
+  };
+
   $scope.menuItems = [{
     text: 'Create New Outreach',
     action: function() {
@@ -161,36 +188,8 @@ function StudentOutreachesCtrl($scope, Outreach, Modal, toastr) {
         createOutreachFn);
     }
   }];
-
-  $scope.openNoteModule = function(newNote, student) {
-    var label ='Create note for : ' + 
-      student.firstName + ' ' + 
-      student.lastName;
-    var updateNoteField = function() {
-      // Take modal text and send it to outreach note 
-      // field for confirmation
-
-    }
-    Modal.addNote(
-      label,
-      'app/main/student/partial/modal.create-note.html',
-      newNote,
-      updateNoteField);
-  };
-
-  $scope.viewNote = function(note, student) {
-    var label = 'Note for : ' + 
-      student.firstName + ' ' + 
-      student.lastName + ' on ' + 
-      $filter('date')(note.date);
-    Modal.viewNote(
-      label,
-      'app/main/student/partial/modal.view-note.html',
-      note.note);
-  };
-};
+}
 
 app.controller('StudentCtrl', StudentCtrl);
 app.controller('StudentInterventionCtrl', StudentInterventionCtrl);
 app.controller('StudentOutreachesCtrl', StudentOutreachesCtrl);
-
