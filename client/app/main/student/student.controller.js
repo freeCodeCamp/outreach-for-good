@@ -2,8 +2,8 @@
 
 var app = angular.module('app');
 
-function StudentCtrl($scope, $stateParams, Intervention, Modal, Outreach,
-  Student, toastr, $filter) {
+function StudentCtrl($scope, $state, $stateParams, Student, 
+  toastr, Modal) {
   $scope.updateIEP = function() {
     var oldValue = !$scope.student.iep;
     Student.updateIEP({
@@ -164,6 +164,22 @@ function StudentOutreachesCtrl($scope, Outreach, Modal, toastr) {
     }
   }];
 
+  $scope.openNoteModule = function(newNote, student) {
+    var label ='Create note for : ' + 
+      student.firstName + ' ' + 
+      student.lastName;
+    var updateNoteField = function() {
+      // Take modal text and send it to outreach note 
+      // field for confirmation
+
+    }
+    Modal.addNote(
+      label,
+      'app/main/student/partial/modal.create-note.html',
+      newNote,
+      updateNoteField);
+  };
+
   $scope.viewNote = function(note, student) {
     var label = 'Note for : ' + 
       student.firstName + ' ' + 
@@ -174,21 +190,7 @@ function StudentOutreachesCtrl($scope, Outreach, Modal, toastr) {
       'app/main/student/partial/modal.view-note.html',
       note.note);
   };
-
-  $scope.openNoteModule = function(newNote, student) {
-    var label ='Create note for : ' + 
-      student.firstName + ' ' + 
-      student.lastName;
-    var updateNoteField = function() {
-      // Take modal text and send it to outreach note field for confirmation
-    }
-    Modal.addNote(
-      label,
-      'app/main/student/partial/modal.create-note.html',
-      newNote,
-      updateNoteField);
-  };
-}
+};
 
 app.controller('StudentCtrl', StudentCtrl);
 app.controller('StudentInterventionCtrl', StudentInterventionCtrl);
