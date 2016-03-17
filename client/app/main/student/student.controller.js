@@ -173,6 +173,16 @@ function StudentOutreachesCtrl($scope, Outreach, Modal, toastr, $filter) {
         'app/main/student/partial/modal.create-outreach.html',
         createOutreachFn);
     }
+  }, {
+    separator: true,
+    text: ' Archived Outreaches',
+    action: function() {
+      $scope.showArchived = !$scope.showArchived;
+    },
+    iconFn: function() {
+      return $scope.showArchived ?
+             'fa-check-square-o text-success' : 'fa-square-o';
+    }
   }];
 }
 

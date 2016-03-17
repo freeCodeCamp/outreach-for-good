@@ -1,6 +1,8 @@
 <tab-heading tabs="tabs" menu-items="menuItems"></tab-heading>
 <div class="outreaches">
-  <div class="col-lg-6 col-md-12" ng-repeat="outreach in student.outreaches | orderBy:createdDate:true">
+  <div class="col-lg-6 col-md-12"
+    ng-repeat="outreach in student.outreaches | orderBy:createdDate:true"
+    ng-if="!outreach.archived || showArchived">
     <div class="well" ng-class="outreach.archived ? 'archived' : ''">
       <dl>
         <dd>

@@ -204,8 +204,7 @@ function DashboardCtrl($scope, $timeout, Auth, AbsenceRecord, Intervention,
           text: type + ' #3',
           action: function() {$scope.setFilter(type, 3);}
         }, {
-          // Separator
-        }, {
+          separator: true,
           text: type + ' (All)',
           action: function() {$scope.setFilter(type);}
         }]);
