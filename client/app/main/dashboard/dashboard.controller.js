@@ -92,7 +92,7 @@ function DashboardCtrl($scope, $timeout, Auth, AbsenceRecord, Intervention,
   }, {
     name: 'date',
     displayName: 'Uploaded',
-    cellFilter: 'date:\'yyyy-MM-dd\'',
+    cellFilter: 'date:\'MM/dd/yy\'',
     width: 125
   }];
 
