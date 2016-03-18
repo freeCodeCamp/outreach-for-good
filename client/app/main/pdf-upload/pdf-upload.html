@@ -36,12 +36,11 @@
             <input id="date"
               type="text"
               class="form-control"
-              uib-datepicker-popup="shortDate"
               ng-model="date"
               is-open="open"
-              max-date="maxDate"
+              datepicker-options="datepickerOptions"
+              uib-datepicker-popup="shortDate"
               ng-required="true"
-              close-text="Close"
               readonly/>
             <span class="input-group-btn">
               <button type="button" class="btn btn-success" ng-click="open = !open" ng-disabled="result.data">

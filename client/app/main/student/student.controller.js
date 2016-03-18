@@ -4,6 +4,14 @@ var app = angular.module('app');
 
 function StudentCtrl($scope, $state, $stateParams, Student, toastr) {
   $scope.student = Student.get({id: $stateParams.id});
+  $scope.student.$promise.then(function(student) {
+    _.forEach(student.interventions, function(intervention) {
+      // Replaces actionDates with Date objects expected by uib-datepicker.
+      if (intervention.actionDate) {
+        intervention.actionDate = new Date(intervention.actionDate);
+      }
+    });
+  });
 
   $scope.updateIEP = function() {
     var oldValue = !$scope.student.iep;
@@ -51,14 +59,11 @@ function StudentCtrl($scope, $state, $stateParams, Student, toastr) {
 }
 
 function StudentInterventionCtrl($scope, Intervention, toastr) {
-  $scope.datePopups = {};
+  $scope.datePopups = [];
   $scope.open = function(index) {
     $scope.datePopups[index] = true;
   };
-  $scope.dateOptions = {
-    formatYear: 'yy',
-    startingDay: 1
-  };
+  $scope.maxDate = Date.now();
 
   $scope.updateActionDate = function(intervention) {
     Intervention.updateAction(

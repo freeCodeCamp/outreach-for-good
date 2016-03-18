@@ -34,7 +34,7 @@
         <dd><input class="form-control" readonly value="{{outreach.type}}"/></dd>
 
         <dt>Created</dt>
-        <dd><input class="form-control" readonly value="{{outreach.createdDate | date:'yyyy-MM-dd'}}"/></dd>
+        <dd><input class="form-control" readonly value="{{outreach.createdDate | date:'MM/dd/yy'}}"/></dd>
 
         <dt>Notes</dt>
         <dd>
@@ -52,7 +52,7 @@
         <dd ng-repeat="note in outreach.notes | orderBy:$index:true">
           <div class="input-group">
             <input type="text" class="form-control" readonly value="{{note.note}}"/>
-            <span class="input-group-addon">{{note.date | date:'yyyy-MM-dd'}}</span>
+            <span class="input-group-addon">{{note.date | date:'MM/dd/yy'}}</span>
           </div>
         </dd>
       </dl>
