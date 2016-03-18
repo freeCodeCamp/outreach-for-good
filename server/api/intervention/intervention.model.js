@@ -21,7 +21,7 @@ var InterventionSchema = new Schema({
 
   record: {type: Schema.Types.ObjectId, ref: 'AbsenceRecord', required: true},
   schoolYear: {type: String, required: true},
-  triggerDate: {type: Date, required: true, default: Date.now},
+  triggerDate: {type: Date, required: true},
 
   actionDate: {type: Date},
   notes: [{
