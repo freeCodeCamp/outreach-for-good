@@ -15,11 +15,9 @@
         <dt>Action Taken</dt>
         <dd>
           <div class="input-group">
-            <span class="input-group-btn">
-              <button type="button" class="btn btn-success" ng-click="open($index)">
-                <i class="fa fa-calendar"></i>
-              </button>
-            </span>
+            <input type="text" class="form-control truncate" readonly value="{{note.note}}"/>
+            <span class="input-group-addon">{{note.date | date:'yyyy-MM-dd'}}</span>
+          </div>
             <input type="text"
               class="form-control"
               uib-datepicker-popup="yyyy-MM-dd"
@@ -36,7 +34,7 @@
         <dt>Notes</dt>
         <dd>
           <div class="input-group">
-            <input type="text" class="form-control" ng-model="intervention.newNote"/>
+            <input type="text" class="form-control truncate" ng-model="intervention.newNote"/>
             <span class="input-group-btn">
               <button type="button" class="btn btn-success" ng-click="addInterventionNote(intervention)">
                 <i class="fa fa-plus"></i>
@@ -46,8 +44,13 @@
         </dd>
         <dd ng-repeat="note in intervention.notes | orderBy:$index:true">
           <div class="input-group">
-            <input type="text" class="form-control" readonly value="{{note.note}}"/>
+            <input type="text" class="form-control truncate" readonly value="{{note.note}}"/>
             <span class="input-group-addon">{{note.date | date:'yyyy-MM-dd'}}</span>
+            <span class="input-group-btn">
+              <button class="btn btn-info" ng-click="viewNote(note, student)">
+                <i class="fa fa-ellipsis-h"></i>
+              </button>
+            </span>
           </div>
         </dd>
       </dl>

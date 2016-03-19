@@ -219,7 +219,6 @@ app.factory('Modal', function($rootScope, $uibModal) {
           submitFn: function(form, model) {
             cb(model).$promise.then(function(data) {
               confirmDelete.close();
-              console.log(data);
             }, function(err) {
               console.log(err);
               // TODO: Handle error from deleting.

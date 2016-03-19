@@ -39,11 +39,9 @@
         <dt>Notes</dt>
         <dd>
           <div class="input-group">
-            <textarea type="text" class="form-control" ng-model="outreach.newNote" cols="30" rows="2" style="resize: vertical;"></textarea>
-            <span class="input-group-btn" style="vertical-align: top;">
-              <button
-                type="button"
-                class="btn btn-success" ng-click="createOutreachNote(outreach)">
+            <input type="text" class="form-control truncate" ng-model="outreach.newNote"/>
+            <span class="input-group-btn">
+              <button type="button" class="btn btn-success" ng-click="createOutreachNote(outreach)">
                 <i class="fa fa-plus"></i>
               </button>
             </span>
@@ -51,11 +49,11 @@
         </dd>
         <dd ng-repeat="note in outreach.notes | orderBy:$index:true">
           <div class="input-group">
-            <input type="text" class="form-control" readonly value="{{note.note | parseString}}"/>
+            <input type="text" class="form-control truncate" readonly value="{{note.note}}"/>
             <span class="input-group-addon">{{note.date | date:'yyyy-MM-dd'}}</span>
             <span class="input-group-btn">
               <button class="btn btn-info" ng-click="viewNote(note, student)">
-                <i class="fa fa-search"></i>
+                <i class="fa fa-ellipsis-h"></i>
               </button>
             </span>
           </div>
