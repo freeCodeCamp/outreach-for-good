@@ -14,6 +14,7 @@ function newAbsenceRecord(record, res, createdStudents) {
       _.forEach(entry.interventions, function(intervention) {
         intervention.student = entry.student;
         intervention.record = createdRecord.id;
+        intervention.triggerDate = record.date;
         interventions.push(intervention);
       });
     });

@@ -8,6 +8,7 @@ function DashboardCtrl($scope, $timeout, Auth, AbsenceRecord, Intervention,
   $scope.filter = {};
 
   $scope.studentGridOptions = {
+    rowHeight: 27,
     enableSorting: true,
     enableGridMenu: true,
     enableFiltering: true,
@@ -91,7 +92,7 @@ function DashboardCtrl($scope, $timeout, Auth, AbsenceRecord, Intervention,
   }, {
     name: 'date',
     displayName: 'Uploaded',
-    cellFilter: 'date:\'yyyy-MM-dd\'',
+    cellFilter: 'date:\'MM/dd/yy\'',
     width: 125
   }];
 

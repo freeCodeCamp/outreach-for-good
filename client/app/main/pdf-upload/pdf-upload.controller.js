@@ -20,7 +20,9 @@ function PDFUploadCtrl($scope, PDF, AbsenceRecord, Auth, School, toastr) {
   } else {
     $scope.schools = School.query();
   }
-  $scope.maxDate = Date.now();
+  $scope.datepickerOptions = {
+    maxDate: Date.now()
+  };
   resetState();
 
   $scope.uploadPDF = function() {

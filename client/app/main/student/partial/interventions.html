@@ -1,6 +1,6 @@
 <tab-heading tabs="tabs"></tab-heading>
 <div class="interventions">
-  <div class="col-lg-6" ng-repeat="intervention in student.interventions">
+  <div class="col-lg-6" ng-repeat="intervention in student.interventions | orderBy:intervention.triggerDate:true">
     <div class="well">
       <dl class="dl-horizontal">
         <dt>Type</dt>
@@ -10,7 +10,7 @@
         <dd><input class="form-control" readonly value="{{intervention.absences}}"/></dd>
 
         <dt>Triggered On</dt>
-        <dd><input class="form-control" readonly value="{{intervention.triggerDate | date:'yyyy-MM-dd'}}"/></dd>
+        <dd><input class="form-control" readonly value="{{intervention.triggerDate | date:'MM/dd/yy'}}"/></dd>
 
         <dt>Action Taken</dt>
         <dd>
@@ -20,12 +20,10 @@
           </div>
             <input type="text"
               class="form-control"
-              uib-datepicker-popup="yyyy-MM-dd"
               ng-model="intervention.actionDate"
               is-open="datePopups[$index]"
-              min-date="intervention.triggerDate"
-              datepicker-options="dateOptions"
-              close-text="Close"
+              datepicker-options="{minDate: intervention.triggerDate, maxDate: maxDate}"
+              uib-datepicker-popup="shortDate"
               ng-change="updateActionDate(intervention)"
               readonly/>
           </div>
