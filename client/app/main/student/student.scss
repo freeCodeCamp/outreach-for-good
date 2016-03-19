@@ -1,3 +1,5 @@
+@import '../../common.scss';
+
 .student {
   height: 100%;
   .info {
@@ -12,54 +14,215 @@
       padding: 15px 0;
     }
   }
-  .interventions,
-  .outreaches {
-    flex: 1 0 0;
-    padding: 15px 0;
-    dl {
-      margin: 0;
+  .outreaches,
+  .interventions {
+    display: flex;
+    flex-flow: row wrap;
+  }
+  .intervention-widget,
+  .outreach-widget {
+    display: flex;
+    flex-direction: column;
+    border-right: 1px lightgrey solid;
+    border-bottom: 1px lightgrey solid;
+    .title {
+      padding-left: 15px;
+      height: 27px;
+      background-color: $state-success-bg;
+      h4 {
+        margin-top: 0;
+        margin-bottom: 0;
+        line-height: 27px;
+        font-weight: 200;
+      }
+    }
+    .body {
+      flex: 1;
+      display: flex;
+      padding-left: 15px;
+      padding-right: 15px;
+      line-height: 27px;
+      background-color: #f1f1f1;
+      .notes {
+        display: flex;
+        flex-direction: column;
+        .new-notes {
+          display: flex;
+          flex-direction: row;
+          min-height: 27px;
+          .notes-label {
+            height: 27px;
+            font-weight: bold;
+            padding-right: 15px;
+          }
+        }
+        .notes-input {
+          flex: 1;
+          height: 27px;
+          input {
+            padding-left: 10px;
+            padding-right: 10px;
+            width: 100%;
+            height: 25px;
+            line-height: 25px;
+            border: none;
+            border-top-left-radius: 4px;
+            border-bottom-left-radius: 4px;
+            box-shadow: inset 0 0 0 1px darkgray;
+            vertical-align: top;
+          }
+        }
+        .notes-button {
+          height: 25px;
+          width: 25px;
+          vertical-align: middle;
+          text-align: center;
+          border-top-right-radius: 4px;
+          border-bottom-right-radius: 4px;
+        }
+        .notes-list {
+          flex: 1;
+          overflow-y: auto;
+          width: 100%;
+          box-shadow: inset 0 0 0 1px darkgray;
+          .list-group {
+            margin-bottom: 0;
+            .list-group-item {
+              overflow-wrap: break-word;
+              background: none;
+              line-height: 27px;
+              padding: 0 5px;
+              margin: 0;
+              border: none;
+              border-radius: 0;
+              box-shadow: inset 1px 0 1px -1px, inset -1px 0 1px -1px,
+              inset 0 1px 1px -1px;
+              &:last-child {
+                box-shadow: inset 1px 0 1px -1px, inset -1px 0 1px -1px,
+                inset 0 1px 1px -1px, inset 0 -1px 1px -1px;
+              }
+              .badge {
+                float: none;
+                cursor: pointer;
+                background-color: darken(lightblue, 20%);
+              }
+            }
+          }
+        }
+        ::-webkit-scrollbar {
+          width: 5px;
+          height: 0;
+        }
+        ::-webkit-scrollbar-track {
+          background-color: lightblue;
+        }
+        ::-webkit-scrollbar-thumb {
+          background-color: $cfa-background;
+        }
+      }
+    }
+    @media(min-width: 1200px) {
+      width: 50%;
+      height: 162px;
+    }
+    @media(max-width: 1200px) {
+      width: 100%;
+      height: 270px;
     }
   }
-  .outreaches .well {
-    position: relative;
-    .outreach-dropdown {
-      .dropdown-toggle {
-        cursor: pointer;
-      }
-      .dropdown-menu {
-        background: none;
-        border: none;
-        box-shadow: none;
-      }
-      &.btn-group {
-        i {
-          transition: transform 0.5s ease;
-        }
-        &.open .dropdown-toggle {
-          box-shadow: none;
-          @extend .fa-rotate-90;
+  .intervention-widget {
+    .action-required {
+      @extend .bg-warning;
+    }
+    @media(min-width: 1200px) {
+      .body {
+        flex-direction: row;
+        align-items: center;
+        .notes {
+          flex: 1;
+          width: calc(100% - 150px);
         }
       }
-      @media(min-width: 768px) {
+    }
+    @media(max-width: 1200px) {
+      .body {
+        flex-direction: column;
+        justify-content: center;
+      }
+    }
+    .body {
+      .dates {
+        min-width: 150px;
+        height: 108px;
+        .action-date {
+          height: 27px;
+        }
+        .date-label {
+          height: 27px;
+          font-weight: bold;
+        }
+      }
+      .notes {
+        height: 108px;
+      }
+    }
+  }
+  .outreach-widget {
+    .title {
+      position: relative;
+      .dropdown {
         position: absolute;
-        top: 20px;
-        left: 20px;
-      }
-      @media(max-width: 768px) {
-        width: 100%;
+        width: 27px;
+        height: 27px;
+        right: 0;
+        top: 0;
+        .dropdown-toggle {
+          cursor: pointer;
+        }
         .dropdown-menu {
-          position: relative;
-          float: none;
+          left: inherit;
+          right: 0;
+        }
+        &.btn-group {
+          text-align: center;
+          vertical-align: middle;
+          line-height: 27px;
+          i {
+            width: 14px;
+            transition: transform 0.5s ease;
+          }
+          &.open .dropdown-toggle {
+            box-shadow: none;
+            @extend .fa-rotate-90;
+          }
+        }
+      }
+    }
+    .body {
+      flex-direction: row;
+      align-items: center;
+      .notes {
+        width: 100%;
+        @media(min-width: 1200px) {
+          flex: 1;
+          height: 108px;
+        }
+        @media(max-width: 1200px) {
+          height: 216px;
         }
       }
     }
     &.archived {
-      background-color: lightgrey;
-    }
-    .truncate {
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
+      .body {
+        background-color: darken(#f1f1f1, 10%);
+      }
+      .title {
+        background-color: darken($state-warning-bg, 10%);
+      }
     }
   }
+}
+
+.note.well {
+  overflow-wrap: break-word;
 }

@@ -1,59 +1,51 @@
 <tab-heading tabs="tabs"></tab-heading>
 <div class="interventions">
-  <div class="col-lg-6" ng-repeat="intervention in student.interventions | orderBy:intervention.triggerDate:true">
-    <div class="well">
-      <dl class="dl-horizontal">
-        <dt>Type</dt>
-        <dd><input class="form-control" readonly value="{{intervention.type}} {{intervention.tier}}"/></dd>
-
-        <dt>Absences</dt>
-        <dd><input class="form-control" readonly value="{{intervention.absences}}"/></dd>
-
-        <dt>Triggered On</dt>
-        <dd><input class="form-control" readonly value="{{intervention.triggerDate | date:'MM/dd/yy'}}"/></dd>
-
-        <dt>Action Taken</dt>
-        <dd>
-          <div class="input-group">
-            <span class="input-group-btn">
-              <button type="button" class="btn btn-success" ng-click="open($index)">
-                <i class="fa fa-calendar"></i>
-              </button>
-            </span>
-            <input type="text"
-              class="form-control"
-              ng-model="intervention.actionDate"
-              is-open="datePopups[$index]"
-              datepicker-options="{minDate: intervention.triggerDate, maxDate: maxDate}"
-              uib-datepicker-popup="shortDate"
-              ng-change="updateActionDate(intervention)"
-              readonly/>
+  <div ng-repeat="intervention in student.interventions | orderBy:intervention.triggerDate:true"
+    class="intervention-widget">
+    <div class="title" ng-class="{'action-required':!intervention.actionDate}">
+      <h4>{{intervention.type}} #{{intervention.tier}}
+        <small>({{intervention.absences}} Absences)</small>
+      </h4>
+    </div>
+    <div class="body">
+      <div class="dates">
+        <div class="date-label">Triggered</div>
+        <div>{{intervention.triggerDate | date:'MM/dd/yy'}}</div>
+        <div class="date-label">
+          Action Taken
+          <span>
+            <i class="fa fa-calendar"
+              ng-class="intervention.actionDate ? 'text-success' : 'text-warning'"
+              ng-click="open($index)"></i>
+          </span>
+        </div>
+        <div ng-model="intervention.actionDate"
+          is-open="datePopups[$index]"
+          datepicker-options="{minDate: intervention.triggerDate, maxDate: maxDate}"
+          uib-datepicker-popup="shortDate"
+          ng-change="updateActionDate(intervention)">{{intervention.actionDate | date:'MM/dd/yy'}}&nbsp;</div>
+      </div>
+      <div class="notes">
+        <div class="new-notes">
+          <div class="notes-label">Notes</div>
+          <div class="notes-input">
+            <input type="text" ng-model="intervention.newNote"/>
           </div>
-        </dd>
-
-        <dt>Notes</dt>
-        <dd>
-          <div class="input-group">
-            <input type="text" class="form-control truncate" ng-model="intervention.newNote"/>
-            <span class="input-group-btn">
-              <button type="button" class="btn btn-success" ng-click="addInterventionNote(intervention)">
-                <i class="fa fa-plus"></i>
-              </button>
-            </span>
+          <div class="notes-button btn-success" ng-click="addInterventionNote(intervention)">
+            <i class="fa fa-plus"></i>
           </div>
-        </dd>
-        <dd ng-repeat="note in intervention.notes | orderBy:$index:true">
-          <div class="input-group">
-            <input type="text" class="form-control truncate" readonly value="{{note.note}}"/>
-            <span class="input-group-addon">{{note.date | date:'MM/dd/yy'}}</span>
-            <span class="input-group-btn">
-              <button class="btn btn-info" ng-click="viewNote(note, intervention.type + ' #' + intervention.tier)">
-                <i class="fa fa-ellipsis-h"></i>
-              </button>
-            </span>
-          </div>
-        </dd>
-      </dl>
+        </div>
+        <div class="notes-list">
+          <ul class="list-group">
+            <li class="list-group-item" ng-repeat="note in intervention.notes | orderBy:$index:true">
+              <span class="badge bg-info" ng-click="viewNote(note, intervention.type + ' #' + intervention.tier)">
+                {{note.date | date:'MM/dd/yy'}}
+              </span>
+              {{note.note}}
+            </li>
+          </ul>
+        </div>
+      </div>
     </div>
   </div>
 </div>
