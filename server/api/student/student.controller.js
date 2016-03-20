@@ -41,11 +41,17 @@ exports.show = function(req, res) {
     })
     .then(function(data) {
       student = data.toObject();
-      return Intervention.find({student: req.params.id}).exec();
+      return Intervention
+        .find({student: req.params.id})
+        .populate('notes.user')
+        .exec();
     })
     .then(function(interventions) {
       student.interventions = interventions;
-      return Outreach.find({student: req.params.id}).exec();
+      return Outreach
+        .find({student: req.params.id})
+        .populate('notes.user')
+        .exec();
     })
     .then(function(outreaches) {
       student.outreaches = outreaches;

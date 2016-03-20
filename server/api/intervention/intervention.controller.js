@@ -52,7 +52,11 @@ exports.addNote = function(req, res) {
       });
       intervention.save(function(err) {
         if (err) return handleError(res, err);
-        return res.status(200).json(intervention);
+        Intervention.populate(intervention, {path: 'notes.user'},
+          function(err, intervention) {
+            if (err) return handleError(res, err);
+            return res.status(200).json(intervention);
+          });
       });
     });
 };

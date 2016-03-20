@@ -1,6 +1,8 @@
 <tab-heading tabs="tabs" menu-items="menuItems"></tab-heading>
 <div class="outreaches">
-  <div class="col-lg-6 col-md-12" ng-repeat="outreach in student.outreaches | orderBy:createdDate:true">
+  <div class="col-lg-6 col-md-12"
+    ng-repeat="outreach in student.outreaches | orderBy:createdDate:true"
+    ng-if="!outreach.archived || showArchived">
     <div class="well" ng-class="outreach.archived ? 'archived' : ''">
       <dl>
         <dd>
@@ -50,9 +52,9 @@
         <dd ng-repeat="note in outreach.notes | orderBy:$index:true">
           <div class="input-group">
             <input type="text" class="form-control truncate" readonly value="{{note.note}}"/>
-            <span class="input-group-addon">{{note.date | date:'yyyy-MM-dd'}}</span>
+            <span class="input-group-addon">{{note.date | date:'MM/dd/yy'}}</span>
             <span class="input-group-btn">
-              <button class="btn btn-info" ng-click="viewNote(note, student)">
+              <button class="btn btn-info" ng-click="viewNote(note, outreach.type)">
                 <i class="fa fa-ellipsis-h"></i>
               </button>
             </span>
