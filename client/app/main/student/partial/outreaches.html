@@ -50,9 +50,9 @@
         <dd ng-repeat="note in outreach.notes | orderBy:$index:true">
           <div class="input-group">
             <input type="text" class="form-control truncate" readonly value="{{note.note}}"/>
-            <span class="input-group-addon">{{note.date | date:'yyyy-MM-dd'}}</span>
+            <span class="input-group-addon">{{note.date | date:'MM/dd/yy'}}</span>
             <span class="input-group-btn">
-              <button class="btn btn-info" ng-click="viewNote(note, student)">
+              <button class="btn btn-info" ng-click="viewNote(note, outreach.type)">
                 <i class="fa fa-ellipsis-h"></i>
               </button>
             </span>

@@ -46,7 +46,11 @@ exports.createNote = function(req, res) {
       });
       outreach.save(function(err) {
         if (err) return handleError(res, err);
-        return res.status(200).json(outreach);
+        Outreach.populate(outreach, {path: 'notes.user'},
+          function(err, outreach) {
+            if (err) return handleError(res, err);
+            return res.status(200).json(outreach);
+          });
       });
     });
 };

@@ -2,7 +2,7 @@
 
 var app = angular.module('app');
 
-function StudentCtrl($scope, $state, $stateParams, Student, toastr) {
+function StudentCtrl($scope, $state, $stateParams, Student, toastr, Modal) {
   $scope.student = Student.get({id: $stateParams.id});
   $scope.student.$promise.then(function(student) {
     _.forEach(student.interventions, function(intervention) {
@@ -56,6 +56,13 @@ function StudentCtrl($scope, $state, $stateParams, Student, toastr) {
   $scope.tabs.selected =
     _.find($scope.tabs, {state: $state.$current.name}) || $scope.tabs[0];
   $state.go($scope.tabs.selected.state);
+
+  $scope.viewNote = function(note, type) {
+    Modal.viewNote(
+      type + ' Note',
+      'app/main/student/partial/modal.view-note.html',
+      note);
+  };
 }
 
 function StudentInterventionCtrl($scope, Intervention, toastr) {
@@ -147,17 +154,6 @@ function StudentOutreachesCtrl($scope, Outreach, Modal, toastr, $filter) {
       'app/main/student/partial/modal.delete-outreach.html',
       outreach,
       deleteFn);
-  };
-
-  $scope.viewNote = function(note, student) {
-    var label = 'Note for : ' + 
-      student.firstName + ' ' + 
-      student.lastName + ' on ' + 
-      $filter('date')(note.date);
-    Modal.viewNote(
-      label,
-      'app/main/student/partial/modal.view-note.html',
-      note.note);
   };
 
   $scope.menuItems = [{
