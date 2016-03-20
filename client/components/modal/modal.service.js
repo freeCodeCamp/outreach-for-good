@@ -217,7 +217,7 @@ app.factory('Modal', function($rootScope, $uibModal) {
           title: title,
           templateUrl: templateUrl,
           submitFn: function(form, model) {
-            cb(model).$promise.then(function() {
+            cb(model).$promise.then(function(data) {
               confirmDelete.close();
             }, function(err) {
               console.log(err);
@@ -238,6 +238,24 @@ app.factory('Modal', function($rootScope, $uibModal) {
         },
         model: model
       }, 'modal-danger', 'components/modal/form-modal.html');
+    },
+
+    viewNote: function(title, templateUrl, note) {
+      var viewNote = openModal({
+        modal: {
+          dismissable: true,
+          title: title,
+          templateUrl: templateUrl,
+          note: note,
+          buttons: [{
+            classes: 'btn-default',
+            text: 'Close',
+            click: function(e) {
+              viewNote.dismiss(e);
+            }
+          }]
+        },
+      }, 'modal-info', 'components/modal/form-modal.html');
     }
   };
 });
