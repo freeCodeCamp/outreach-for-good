@@ -1,34 +1,59 @@
 .student {
-  display: flex;
-  flex-direction: column;
   height: 100%;
-  @media(min-width: 768px) {
-    .info {
-      height: 108px;
+  .info {
+    @media(min-width: 768px) {
+      min-height: 108px;
       display: flex;
       flex-direction: column;
       justify-content: space-around;
     }
-  }
-  @media(max-width: 768px) {
-    .info {
-      padding: 15px 0;
+    @media(max-width: 768px) {
       min-height: 324px;
+      padding: 15px 0;
     }
   }
   .interventions,
   .outreaches {
     flex: 1 0 0;
     padding: 15px 0;
-    .toggle {
-      cursor: pointer;
+    dl {
+      margin: 0;
     }
-    .invisible-menu {
-      background: none !important;
-      border: none !important;
-      box-shadow: none !important;
+  }
+  .outreaches .well {
+    position: relative;
+    .outreach-dropdown {
+      .dropdown-toggle {
+        cursor: pointer;
+      }
+      .dropdown-menu {
+        background: none;
+        border: none;
+        box-shadow: none;
+      }
+      &.btn-group {
+        i {
+          transition: transform 0.5s ease;
+        }
+        &.open .dropdown-toggle {
+          box-shadow: none;
+          @extend .fa-rotate-90;
+        }
+      }
+      @media(min-width: 768px) {
+        position: absolute;
+        top: 20px;
+        left: 20px;
+      }
+      @media(max-width: 768px) {
+        width: 100%;
+        .dropdown-menu {
+          position: relative;
+          float: none;
+        }
+      }
     }
-    .archived {
+    &.archived {
       background-color: lightgrey;
     }
     .truncate {

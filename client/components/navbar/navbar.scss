@@ -87,7 +87,7 @@ $navbar-height: 54px;
         }
       }
       .active {
-        a, a:hover, a:focus, {
+        a, a:hover, a:focus {
           color: $colHighlight;
           background-color: $bgHighlight;
         }
@@ -99,6 +99,6 @@ $navbar-height: 54px;
 #sidebar-toggle {
   display: block;
   i {
-    transition: transform 0.5s ease;  
+    transition: transform 0.5s ease;
   }
 }
