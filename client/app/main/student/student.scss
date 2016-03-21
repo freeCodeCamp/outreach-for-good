@@ -131,8 +131,8 @@
     }
   }
   .intervention-widget {
-    .action-required {
-      @extend .bg-warning;
+    .title.action-required {
+      background-color: $state-warning-bg;
     }
     @media(min-width: 1200px) {
       .body {
