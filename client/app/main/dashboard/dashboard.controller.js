@@ -52,28 +52,34 @@ function DashboardCtrl($scope, $timeout, Auth, AbsenceRecord, Intervention,
   }, {
     name: 'entries.absences',
     displayName: 'Absences',
+    type: 'number',
     minWidth: 100,
     treeAggregationType: uiGridGroupingConstants.aggregation.SUM
   }, {
     name: 'entries.absencesDelta',
     displayName: 'Δ',
+    type: 'number',
     width: 50
   }, {
     name: 'entries.tardies',
     displayName: 'Tardies',
+    type: 'number',
     minWidth: 100,
     treeAggregationType: uiGridGroupingConstants.aggregation.SUM
   }, {
     name: 'entries.tardiesDelta',
     displayName: 'Δ',
+    type: 'number',
     width: 50
   }, {
     name: 'entries.present',
     displayName: 'Present',
+    type: 'number',
     minWidth: 100
   }, {
     name: 'entries.enrolled',
     displayName: 'Enrolled',
+    type: 'number',
     minWidth: 100
   }, {
     name: 'entries.student.iep',
