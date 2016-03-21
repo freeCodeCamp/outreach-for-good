@@ -104,7 +104,7 @@ function StudentInterventionCtrl($scope, Intervention, toastr) {
   };
 }
 
-function StudentOutreachesCtrl($scope, Outreach, Modal, toastr, $filter) {
+function StudentOutreachesCtrl($scope, Outreach, Modal, toastr) {
   $scope.createOutreachNote = function(outreach) {
     if (outreach.newNote) {
       var newNote = outreach.newNote;
