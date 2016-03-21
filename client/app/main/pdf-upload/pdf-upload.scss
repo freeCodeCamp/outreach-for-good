@@ -1,69 +1,87 @@
 .pdf {
+  @extend .row;
   .upload-inputs,
   .parsing-progress,
   .upload-buttons,
-  .confirm-buttons,
-  .confirm-table {
+  .confirm-buttons {
     margin-top: 15px;
   }
   .upload-buttons,
   .confirm-buttons {
     text-align: center;
   }
-}
-
-.confirm-table {
-  width: 100%;
-  thead th {
-    text-align: center;
+  .ui-select-container.open .dropdown-menu {
+    left: 15px;
+    right: 15px;
+    width: auto;
+    border: 1px solid #ccc;
+  }
+  @media (max-width: 1200px) {
+    min-height: 324px;
+  }
+  @media (min-width: 1200px) {
+    min-height: 162px;
   }
 }
 
-// http://stackoverflow.com/questions/28046506/bootstrap-responsive-table-change-rows-with-column
-@media (max-width: 767px) {
+.confirm {
+  @extend .row;
   .confirm-table {
-    /* Force table to not be like tables anymore */
-    table,
-    thead,
-    tbody,
-    th,
-    td,
-    tr {
-      display: block;
+    width: 100%;
+    thead th {
+      text-align: center;
     }
-
-    /* Hide table headers (but not display: none;, for accessibility) */
-    thead tr {
-      position: absolute;
-      top: -9999px;
-      left: -9999px;
+    .table,
+    .table-responsive {
+      margin-bottom: 0;
     }
+  }
+  // http://stackoverflow.com/questions/28046506/bootstrap-responsive-table-change-rows-with-column
+  @media (max-width: 1200px) {
+    .confirm-table {
+      /* Force table to not be like tables anymore */
+      table,
+      thead,
+      tbody,
+      th,
+      td,
+      tr {
+        display: block;
+      }
 
-    tr { border: 1px solid #ccc; }
+      /* Hide table headers (but not display: none;, for accessibility) */
+      thead tr {
+        position: absolute;
+        top: -9999px;
+        left: -9999px;
+      }
 
-    /* Behave like a "row" */
-    tbody tr td {
-      border: none;
-      border-bottom: 1px solid #eee;
-      position: relative;
-      padding-left: 50%;
-      white-space: normal;
-      text-align: left;
+      tr { border: 1px solid #ccc; }
+
+      /* Behave like a "row" */
+      tbody tr td {
+        border: none;
+        border-bottom: 1px solid #eee;
+        position: relative;
+        padding-left: 50%;
+        white-space: normal;
+        text-align: left;
+      }
+
+      td:before {
+        /* Now like a table header */
+        position: absolute;
+        /* Top/left values mimic padding */
+        top: 6px;
+        left: 6px;
+        width: 45%;
+        padding-right: 10px;
+        white-space: nowrap;
+        text-align: left;
+        font-weight: bold;
+      }
+
+      td:before { content: attr(data-title); }
     }
-
-    td:before {
-      /* Now like a table header */
-      position: absolute;
-      /* Top/left values mimic padding */
-      top: 6px;
-      left: 6px;
-      width: 45%;
-      padding-right: 10px;
-      white-space: nowrap;
-      text-align: left;
-      font-weight: bold;
-    }
-
-    td:before { content: attr(data-title); }
   }
 }

@@ -2,24 +2,24 @@
   <heading title="'Student Info'"></heading>
   <div class="info">
     <div class="form-horizontal">
-      <label class="col-sm-3 col-md-2 control-label">Name</label>
-      <div class="col-sm-3 col-md-2">
+      <label class="col-lg-2 control-label">Name</label>
+      <div class="col-lg-2">
         <p class="form-control-static">{{student.firstName}} {{student.lastName}}</p>
       </div>
-      <label class="col-sm-3 col-md-2 control-label">Student Id</label>
-      <div class="col-sm-3 col-md-2">
+      <label class="col-lg-2 control-label">Student Id</label>
+      <div class="col-lg-2">
         <p class="form-control-static">{{student.studentId}}</p>
       </div>
-      <label class="col-sm-3 col-md-2 control-label">School</label>
-      <div class="col-sm-9 col-md-2">
+      <label class="col-lg-2 control-label">School</label>
+      <div class="col-lg-2">
         <p class="form-control-static">{{student.currentSchool.name}}</p>
       </div>
-      <label class="col-sm-3 col-md-2 control-label">IEP</label>
-      <div class="col-sm-3 col-md-6">
+      <label class="col-lg-2 control-label">IEP</label>
+      <div class="col-lg-6">
         <input type="checkbox" ng-model="student.iep" ng-change="updateIEP()">
       </div>
-      <label class="col-sm-3 col-md-2 control-label">CFA</label>
-      <div class="col-sm-3 col-md-2">
+      <label class="col-lg-2 control-label">CFA</label>
+      <div class="col-lg-2">
         <input type="checkbox" ng-model="student.cfa" ng-change="updateCFA()">
       </div>
     </div>
