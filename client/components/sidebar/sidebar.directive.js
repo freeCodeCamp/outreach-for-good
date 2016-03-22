@@ -9,13 +9,16 @@ app.directive('sidebar', function(matchmedia) {
     scope: {},
     restrict: 'E',
     link: function(scope) {
-      var cleanup = matchmedia.onPhone(function(mediaQueryList) {
+      function collapseSidebar(mediaQueryList) {
         if (mediaQueryList.matches) {
           scope.sidebar.isCollapsed = true;
         }
-      });
+      }
+      var maxCleanup = matchmedia.on('(max-width: 1200px)', collapseSidebar);
+      var minCleanup = matchmedia.on('(min-width: 1200px)', collapseSidebar);
       scope.$on('$destroy', function() {
-        cleanup();
+        maxCleanup();
+        minCleanup();
       });
     }
   };

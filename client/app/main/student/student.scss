@@ -1,15 +1,13 @@
-@import '../../common.scss';
-
 .student {
   height: 100%;
   .info {
-    @media(min-width: 768px) {
+    @media(min-width: 1200px) {
       min-height: 108px;
       display: flex;
       flex-direction: column;
       justify-content: space-around;
     }
-    @media(max-width: 768px) {
+    @media(max-width: 1200px) {
       min-height: 324px;
       padding: 15px 0;
     }

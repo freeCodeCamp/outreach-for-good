@@ -5,6 +5,8 @@ $fa-font-path: "../bower_components/font-awesome/fonts";
 @import '../bower_components/font-awesome/scss/font-awesome';
 @import url(//fonts.googleapis.com/css?family=Roboto);
 
+@import 'common.scss';
+
 /**
  * App-wide Styles
  */
@@ -30,7 +32,6 @@ body,
 // injector
 @import 'access/access.scss';
 @import 'account/login/login.scss';
-@import 'common.scss';
 @import 'main/about/about.scss';
 @import 'main/admin/admin.scss';
 @import 'main/dashboard/dashboard.scss';
@@ -46,8 +47,8 @@ body,
 @import 'tab-heading/tab-heading.scss';
 // endinjector
 
-// Fix for inline forms for ui-select
-@media (min-width: 768px) {
+// Fix for for ui-select styles.
+@media (min-width: 1200px) {
   .form-inline .ui-select-container {
     min-width: 291px;
     display: inline-block;

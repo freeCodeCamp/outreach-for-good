@@ -17,7 +17,7 @@ $sidebar-highlight: #EB9531;
   &.isCollapsed {
     width: 0;
   }
-  @media(min-width: 768px) {
+  @media(min-width: 1200px) {
     &.isCollapsed {
       width: 54px;
     }
@@ -54,7 +54,7 @@ $sidebar-highlight: #EB9531;
       background: rgba(255, 255, 255, 0.2);
       border-left: #D35400 2px solid;
     }
-    @media(min-width: 768px) {
+    @media(min-width: 1200px) {
       &.about {
         position: absolute;
         bottom: 0;
