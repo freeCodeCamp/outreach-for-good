@@ -94,6 +94,11 @@ function SchoolReportsCtrl($scope, $timeout, Auth, uiGridGroupingConstants, Stud
     type: 'boolean',
     width: 100,
     treeAggregationType: uiGridGroupingConstants.aggregation.SUM
+  }, {
+    name: 'date',
+    displayName: 'Uploaded',
+    cellFilter: 'date:\'MM/dd/yy\'',
+    width: 125
   }];
 
   $scope.atRiskGridOptions.onRegisterApi = function(gridApi) {
@@ -212,6 +217,11 @@ function SchoolReportsCtrl($scope, $timeout, Auth, uiGridGroupingConstants, Stud
     type: 'boolean',
     width: 100,
     treeAggregationType: uiGridGroupingConstants.aggregation.SUM
+  }, {
+    name: 'date',
+    displayName: 'Uploaded',
+    cellFilter: 'date:\'MM/dd/yy\'',
+    width: 125
   }];
 
   $scope.chronicGridOptions.onRegisterApi = function(gridApi) {
