@@ -1,9 +1,10 @@
 'use strict';
 
 var _ = require('lodash');
-var Student = require('./student.model');
+var AbsenceRecord = require('../absence-record/absence-record.model');
 var Intervention = require('../intervention/intervention.model');
 var Outreach = require('../outreach/outreach.model');
+var Student = require('./student.model');
 var auth = require('../../auth/auth.service');
 
 /**
@@ -25,7 +26,7 @@ exports.index = function(req, res) {
  * restriction: 'teacher'
  */
 exports.show = function(req, res) {
-  var student;
+  var result = {};
   Student
     .findById(req.params.id)
     .populate('currentSchool', 'name')
@@ -39,23 +40,38 @@ exports.show = function(req, res) {
       }
       return data;
     })
-    .then(function(data) {
-      student = data.toObject();
+    .then(function(student) {
+      result.student = student;
       return Intervention
         .find({student: req.params.id})
         .populate('notes.user')
         .exec();
     })
     .then(function(interventions) {
-      student.interventions = interventions;
+      result.interventions = interventions;
       return Outreach
         .find({student: req.params.id})
         .populate('notes.user')
         .exec();
     })
     .then(function(outreaches) {
-      student.outreaches = outreaches;
-      return res.status(200).json(student);
+      result.outreaches = outreaches;
+      return AbsenceRecord.findOne({
+          school: result.student.currentSchool.id,
+          'entries.student': result.student.id
+        }, {
+          schoolYear: 1,
+          date: 1,
+          entries: {
+            $elemMatch: {student: result.student.id}
+          }
+        })
+        .sort('-date')
+        .exec();
+    })
+    .then(function(currentRecord) {
+      result.currentRecord = currentRecord;
+      return res.status(200).json(result);
     });
 };
 

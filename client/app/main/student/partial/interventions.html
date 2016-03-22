@@ -1,6 +1,6 @@
 <tab-heading tabs="tabs"></tab-heading>
 <div class="interventions">
-  <div ng-repeat="intervention in student.interventions | orderBy:intervention.triggerDate:true"
+  <div ng-repeat="intervention in interventions | orderBy:intervention.triggerDate:true"
     class="intervention-widget">
     <div class="title" ng-class="{'action-required':!intervention.actionDate}">
       <h4>{{intervention.type}} #{{intervention.tier}}
