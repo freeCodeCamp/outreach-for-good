@@ -2,17 +2,30 @@
 
 var app = angular.module('app');
 
+function dateOnly(dateStr) {
+  var date = new Date(dateStr);
+  return new Date(date.getFullYear(), date.getMonth(), date.getDate());
+}
+
 function PDFUploadCtrl($scope, PDF, AbsenceRecord, Auth, School, toastr) {
   function resetState() {
     delete $scope.pending;
     delete $scope.parsedRecord;
     delete $scope.file;
-    $scope.date = Date.now();
+    $scope.maxDate = dateOnly(Date.now());
     $scope.progress = 0;
-    $scope.result = {};
     $scope.selected = {
-      school: $scope.defaultSchool
+      school: $scope.defaultSchool,
+      date: new Date()
     };
+    AbsenceRecord.current().$promise.then(function(records) {
+      _.forEach(records, function(record) {
+        var minDate = dateOnly(record.date);
+        minDate.setDate(minDate.getDate() + 1);
+        record.minDate = minDate;
+      });
+      $scope.records = _.keyBy(records, '_id');
+    });
   }
 
   if (Auth.getCurrentUser().role === 'teacher') {
@@ -20,26 +33,20 @@ function PDFUploadCtrl($scope, PDF, AbsenceRecord, Auth, School, toastr) {
   } else {
     $scope.schools = School.query();
   }
-  $scope.datepickerOptions = {
-    maxDate: new Date()
-  };
   resetState();
 
-  $scope.uploadPDF = function() {
-    $scope.pending = true;
-    $scope.parsedRecord.date = $scope.date;
-    $scope.parsedRecord.schoolId = $scope.selected.school._id;
-    PDF.save({}, $scope.parsedRecord, function(res) {
-      delete $scope.pending;
-      $scope.result.data = res;
-    });
+  $scope.hasCurrentRecord = function() {
+    var selectedRecordDate =
+      ($scope.records[$scope.selected.school._id] || {}).date;
+    return selectedRecordDate && $scope.maxDate <= dateOnly(selectedRecordDate);
   };
 
   $scope.cancelUpload = resetState;
 
   $scope.confirmUpload = function() {
     $scope.pending = true;
-    AbsenceRecord.save({}, $scope.result.data, function(res) {
+    $scope.parsedRecord.date = $scope.selected.date;
+    AbsenceRecord.save({}, $scope.parsedRecord, function(res) {
       resetState();
       var schoolName = res.record.school.name;
       if (res.students.length) {
@@ -61,9 +68,75 @@ function PDFUploadCtrl($scope, PDF, AbsenceRecord, Auth, School, toastr) {
     }, function(err) {
       resetState();
       console.log(err);
-      toastr.error(err, {timeOut: 0, closeButton: true});
+      toastr.error(err.data.error, {timeOut: 0, closeButton: true});
     });
   };
+
+  // TODO: This controller is getting rather unwieldy. Some of this
+  // logic should probably be moved to services to keep the controller thin.
+
+  function groupByType(students, idToPrev) {
+    return _.groupBy(students, function(student) {
+      return student.student.studentId in idToPrev ? 'updates' : 'creates';
+    });
+  }
+
+  function createInterventions(entry, prevEntry, school, schoolYear) {
+    if (!entry.absencesDelta) {
+      return [];
+    }
+    var prevTotal = prevEntry.absences || 0;
+    return _(school.triggers)
+      .filter(function(trigger) {
+        return trigger.absences > prevTotal &&
+               trigger.absences <= entry.absences;
+      })
+      .map(function(trigger) {
+        return {
+          type: trigger.type,
+          tier: trigger.tier,
+          absences: trigger.absences,
+          student: entry.student,
+          school: school._id,
+          schoolYear: schoolYear
+        };
+      })
+      .value();
+  }
+
+  function completeRecord(partialRecord) {
+    var school = $scope.selected.school;
+    var previousRecord = $scope.records[school._id] || {};
+    var idToPrev = _.keyBy((previousRecord).entries, 'student.studentId');
+    var record = groupByType(partialRecord.students, idToPrev);
+    // Deltas are equal to their entry counterpart minus previous entry
+    // total for students with existing records.
+    _.forEach(record.updates || [], function(student) {
+      var entry = student.entry;
+      var prevEntry = idToPrev[student.student.studentId];
+      entry.student = prevEntry.student._id;
+      entry.tardiesDelta = entry.tardies - prevEntry.tardies;
+      entry.absencesDelta = entry.absences - prevEntry.absences;
+      entry.interventions =
+        createInterventions(entry, prevEntry, school, partialRecord.schoolYear);
+    });
+    // Deltas are equal to their entry counterpart if creating new student.
+    _.forEach(record.creates || [], function(student) {
+      var entry = student.entry;
+      entry.tardiesDelta = entry.tardies;
+      entry.absencesDelta = entry.absences;
+      entry.interventions =
+        createInterventions(entry, {}, school, partialRecord.schoolYear);
+    });
+    record.missing = _.difference(_.keys(idToPrev),
+      _.map(partialRecord.students, 'student.studentId'));
+    record.schoolId = $scope.selected.school._id;
+    record.schoolYear = partialRecord.schoolYear;
+    // TODO: Validate the previous record is still the newest current
+    // record on the server to prevent committing stale data.
+    record.previousRecordId = previousRecord.recordId;
+    return record;
+  }
 
   $scope.$watch('file', function(n, o) {
     if (n !== o) {
@@ -71,8 +144,8 @@ function PDFUploadCtrl($scope, PDF, AbsenceRecord, Auth, School, toastr) {
       $scope.progress = 0;
       if (n) {
         var promise = PDF.parse(n);
-        promise.then(function(parsedRecord) {
-          $scope.parsedRecord = parsedRecord;
+        promise.then(function(partialRecord) {
+          $scope.parsedRecord = completeRecord(partialRecord);
         }, function(err) {
           // TODO: handle errors.
           console.log(err);

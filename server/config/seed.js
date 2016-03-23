@@ -64,13 +64,12 @@ AbsenceRecord.remove().exec().then(function() {
     firstName: 'Sue',
     currentSchool: schoolB._id
   }, logCreateResults('students'));
-}).then(function(studentA, studentB, studentC, studentD, studentE){
+}).then(function(studentA, studentB, studentC, studentD, studentE) {
   return AbsenceRecord.create({
     schoolYear: '2015-2016',
     school: studentA.currentSchool,
     date: Date.now(),
-    entries:[
-    {
+    entries: [{
       student: studentA._id,
       absences: 1.0,
       absencesDelta: 1.0,
@@ -94,14 +93,12 @@ AbsenceRecord.remove().exec().then(function() {
       tardiesDelta: 0.0,
       present: 21.0,
       enrolled: 22.0
-    }
-    ]
+    }]
   }, {
     schoolYear: '2015-2016',
     school: studentD.currentSchool,
     date: Date.now(),
-    entries:[
-    {
+    entries: [{
       student: studentD._id,
       absences: 0.0,
       absencesDelta: 0.0,
@@ -117,8 +114,7 @@ AbsenceRecord.remove().exec().then(function() {
       tardiesDelta: 0.0,
       present: 22.0,
       enrolled: 22.0
-    }
-    ]
+    }]
   }, logCreateResults('AbsenceRecords'));
 }).then(function() {
   return Student.find().populate('currentSchool').exec(function(err, students) {

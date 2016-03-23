@@ -2,6 +2,7 @@
 
 var _ = require('lodash');
 var mongoose = require('mongoose');
+var ObjectId = require('mongoose').Types.ObjectId;
 var AbsenceRecord = require('./absence-record.model');
 var Intervention = require('../intervention/intervention.model');
 var Student = require('../student/student.model');
@@ -33,6 +34,38 @@ function newAbsenceRecord(record, res, createdStudents) {
     });
   });
 }
+
+function dateOnly(dateStr) {
+  var date = new Date(dateStr);
+  return new Date(date.getFullYear(), date.getMonth(), date.getDate());
+}
+
+/**
+ * Absence record creation validation requires the date selected to be
+ * greater than the current newest record's date and the expected previous
+ * record date to match.
+ */
+exports.validateCreate = function(req, res, next) {
+  AbsenceRecord
+    .findOne({school: new ObjectId(req.body.schoolId)})
+    .sort({date: -1})
+    .exec(function(err, record) {
+      if (!record) return next();
+      // Validate data is not stale by matching previousRecordId.
+      if (record.id !== req.body.previousRecordId) {
+        return res.status(500).send({
+          error: 'Submitted previous record id does not match.'
+        });
+      }
+      // Validate date selected is more recent than previous record.
+      if (dateOnly(req.body.date) <= dateOnly(record.date)) {
+        return res.status(500).send({
+          error: 'Date for upload must be more recent than current record date.'
+        });
+      }
+      return next();
+    });
+};
 
 /**
  * Creates a new absence record in the DB.
@@ -82,6 +115,7 @@ function currentAbsenceRecordPipeline(user) {
   pipeline.push({
     $group: {
       _id: '$school',
+      recordId: {$first: '$_id'},
       date: {$first: '$date'},
       school: {$first: '$school'},
       entries: {$first: '$entries'}

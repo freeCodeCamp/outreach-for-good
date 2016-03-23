@@ -11,7 +11,7 @@ app.factory('PDF', function($q, $resource) {
    */
   function partialRecord(items) {
     return {
-      students: _(items, 12).chunk(12).map(function(item) {
+      students: _(items).chunk(12).map(function(item) {
         var name = item[0].split(', ');
         return {
           student: {
@@ -26,7 +26,7 @@ app.factory('PDF', function($q, $resource) {
             enrolled: +item[9]
           }
         };
-      }),
+      }).value(),
       schoolYear: items[11].replace(/\s/g, '')
     };
   }

@@ -1,13 +1,13 @@
 <section class="pdf">
   <heading title="'Parse and Upload Absence Records'"></heading>
   <div class="upload-inputs">
-    <div class="form-horizontal">
-      <div ng-class="selected.school ? 'has-success' : 'has-error'">
-        <label class="control-label col-lg-1">School</label>
-        <ui-select class="col-lg-3"
+    <div class="col-lg-4 upload-input-group">
+      <div ng-class="selected.school && !hasCurrentRecord() ? 'has-success' : 'has-error'">
+        <label class="control-label col-xs-2">School</label>
+        <ui-select class="col-xs-10"
           theme="bootstrap"
           ng-model="selected.school"
-          ng-disabled="defaultSchool || result.data"
+          ng-disabled="defaultSchool || selected.file || parsedRecord"
           required>
           <ui-select-match class="ui-select-match" placeholder="Select a school">{{$select.selected.name}}
           </ui-select-match>
@@ -16,34 +16,45 @@
           </ui-select-choices>
         </ui-select>
       </div>
-      <div ng-class="parsedRecord ? 'has-success' : 'has-error'">
-        <label class="control-label col-lg-1" for="pdfInput">PDF</label>
-        <div class="col-lg-3">
-          <input id="pdfInput"
-            class="form-control"
-            type="file"
-            ng-model="file"
-            ngf-pattern="'application/pdf'"
-            ngf-select
-            ng-disabled="result.data"
-            required>
-        </div>
+    </div>
+
+    <div class="col-lg-8 upload-input-group" ng-if="selected.school && hasCurrentRecord()">
+      <div class="current-record-warning">
+        Selected school already has current absence record.
       </div>
-      <div ng-class="date ? 'has-success' : 'has-error'">
-        <label class="control-label col-lg-1" for="date">Date</label>
-        <div class="col-lg-3">
+    </div>
+
+    <div class="col-lg-4 upload-input-group"
+      ng-class="parsedRecord ? 'has-success' : 'has-error'"
+      ng-show="selected.school && !hasCurrentRecord()">
+      <label class="control-label col-xs-2">PDF</label>
+      <div class="col-xs-10">
+        <input class="form-control"
+          type="file"
+          ng-model="file"
+          ngf-pattern="'application/pdf'"
+          ngf-select
+          ng-disabled="parsedRecord"
+          required>
+      </div>
+    </div>
+
+    <div class="col-lg-4 upload-input-group" ng-if="selected.school && !hasCurrentRecord()">
+      <div ng-class="selected.date ? 'has-success' : 'has-error'">
+        <label class="control-label col-xs-2">Date</label>
+        <div class="col-xs-10">
           <div class="input-group ">
-            <input id="date"
+            <input class="form-control"
               type="text"
-              class="form-control"
-              ng-model="date"
+              ng-model="selected.date"
               is-open="open"
-              datepicker-options="datepickerOptions"
+              datepicker-options="{minDate: records[selected.school._id].minDate, maxDate: maxDate}"
               uib-datepicker-popup="shortDate"
               ng-required="true"
+              ng-click="open = !open"
               readonly/>
             <span class="input-group-btn">
-              <button type="button" class="btn btn-success" ng-click="open = !open" ng-disabled="result.data">
+              <button type="button" class="btn btn-success" ng-click="open = !open">
                 <i class="fa fa-calendar"></i>
               </button>
             </span>
@@ -53,26 +64,18 @@
     </div>
   </div>
 
-  <div class="upload-buttons col-xs-12" ng-if="!result.data">
-    <button class="btn btn-primary"
-      type="button"
-      ng-click="uploadPDF()"
-      ng-disabled="!date || !parsedRecord || !selected.school || pending">
-      Submit
-    </button>
+  <div class="parsing-progress col-xs-12" ng-if="file && !parsedRecord">
+    <uib-progressbar value="progress" type="default"></uib-progressbar>
   </div>
+</section>
+<section class="confirm" ng-if="parsedRecord">
+  <heading title="selected.school.name"></heading>
 
-  <div class="confirm-buttons col-xs-12" ng-if="result.data">
+  <div class="confirm-buttons" ng-if="parsedRecord">
     <button class="btn btn-success" ng-click="confirmUpload()" ng-disabled="pending">Confirm</button>
     <button class="btn btn-danger" ng-click="cancelUpload()" ng-disabled="pending">Cancel</button>
   </div>
 
-  <div class="parsing-progress col-xs-12" ng-if="file && !result.data">
-    <uib-progressbar value="progress" type="default"></uib-progressbar>
-  </div>
-</section>
-<section class="confirm" ng-if="result.data">
-  <heading title="selected.school.name"></heading>
   <div class="confirm-table">
     <div class="table-responsive">
       <table class="table table-condensed">
@@ -89,10 +92,10 @@
           <th>Interventions</th>
         </tr>
         </thead>
-        <tr class="info" ng-if="result.data.creates">
+        <tr class="info" ng-if="parsedRecord.creates">
           <th>New Students</th>
         </tr>
-        <tr class="info" ng-if="result.data.creates" ng-repeat="listing in result.data.creates">
+        <tr class="info" ng-if="parsedRecord.creates" ng-repeat="listing in parsedRecord.creates">
           <td data-title="Name">{{listing.student.lastName}}, {{listing.student.firstName}}</td>
           <td data-title="Student Id">{{listing.student.studentId}}</td>
           <td data-title="Absences">{{listing.entry.absences}}</td>
@@ -103,10 +106,10 @@
           <td data-title="Enrolled">{{listing.entry.enrolled}}</td>
           <td data-title="Interventions">{{listing.entry.interventions.length}}</td>
         </tr>
-        <tr class="success" ng-if="result.data.updates">
+        <tr class="success" ng-if="parsedRecord.updates">
           <th>Existing Students</th>
         </tr>
-        <tr class="success" ng-if="result.data.updates" ng-repeat="listing in result.data.updates">
+        <tr class="success" ng-if="parsedRecord.updates" ng-repeat="listing in parsedRecord.updates">
           <td data-title="Name">{{listing.student.lastName}}, {{listing.student.firstName}}</td>
           <td data-title="Student Id">{{listing.student.studentId}}</td>
           <td data-title="Absences">{{listing.entry.absences}}</td>

@@ -9,6 +9,7 @@ var router = express.Router();
 router.post('/',
   auth.hasRole('teacher'),
   auth.authorizeSchool('body'),
+  controller.validateCreate,
   controller.create);
 
 router.get('/current',
