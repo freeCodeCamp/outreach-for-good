@@ -166,7 +166,7 @@ function StudentOutreachesCtrl($scope, Outreach, Modal, toastr) {
         model.school = $scope.student.currentSchool._id;
         return Outreach.save({}, model, function(res) {
           $scope.$evalAsync(function() {
-            $scope.outreaches.push(res);
+            $scope.outreaches.unshift(res);
           });
         });
       };

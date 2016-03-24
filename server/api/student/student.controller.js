@@ -45,6 +45,7 @@ exports.show = function(req, res) {
       return Intervention
         .find({student: req.params.id})
         .populate('notes.user')
+        .sort({_id: -1})
         .exec();
     })
     .then(function(interventions) {
@@ -52,6 +53,7 @@ exports.show = function(req, res) {
       return Outreach
         .find({student: req.params.id})
         .populate('notes.user')
+        .sort({_id: -1})
         .exec();
     })
     .then(function(outreaches) {

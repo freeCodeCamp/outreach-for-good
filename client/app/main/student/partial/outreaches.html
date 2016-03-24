@@ -1,6 +1,6 @@
 <tab-heading tabs="tabs" menu-items="menuItems"></tab-heading>
 <div class="outreaches">
-  <div ng-repeat="outreach in outreaches | orderBy:createdDate:true"
+  <div ng-repeat="outreach in outreaches"
     class="outreach-widget"
     ng-class="{archived: outreach.archived}"
     ng-if="!outreach.archived || showArchived">
