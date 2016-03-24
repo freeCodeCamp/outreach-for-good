@@ -6,6 +6,7 @@ function StudentCtrl($scope, $state, $stateParams, Student, toastr, Modal) {
   Student.get({id: $stateParams.id}, function(result) {
     _.forEach(result.interventions, function(intervention) {
       // Replaces actionDates with Date objects expected by uib-datepicker.
+      intervention.triggerDate = new Date(intervention.triggerDate);
       if (intervention.actionDate) {
         intervention.actionDate = new Date(intervention.actionDate);
       }
@@ -72,7 +73,7 @@ function StudentInterventionCtrl($scope, Intervention, toastr) {
   $scope.open = function(index) {
     $scope.datePopups[index] = true;
   };
-  $scope.maxDate = Date.now();
+  $scope.maxDate = new Date();
 
   $scope.updateActionDate = function(intervention) {
     Intervention.updateAction(
