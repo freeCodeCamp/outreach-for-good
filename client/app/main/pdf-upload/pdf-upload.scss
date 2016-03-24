@@ -1,14 +1,28 @@
 .pdf {
   @extend .row;
-  .upload-inputs,
-  .parsing-progress,
-  .upload-buttons,
-  .confirm-buttons {
-    margin-top: 15px;
-  }
-  .upload-buttons,
   .confirm-buttons {
     text-align: center;
+  }
+  .control-label {
+    text-align: right;
+    line-height: 34px;
+    margin: 0;
+    padding-right: 0;
+  }
+  .parsing-progress {
+    height: 54px;
+    padding: 17px 10px;
+  }
+  .upload-input-group {
+    min-height: 54px;
+    padding: 10px;
+  }
+  .current-record-warning {
+    @extend .alert;
+    @extend .alert-danger;
+    height: 34px;
+    line-height: 34px;
+    padding: 0 15px;
   }
   .ui-select-container.open .dropdown-menu {
     left: 15px;
@@ -20,16 +34,15 @@
     outline: inherit;
     box-shadow: inherit;
   }
-  @media (max-width: 1200px) {
-    min-height: 324px;
-  }
-  @media (min-width: 1200px) {
-    min-height: 162px;
-  }
 }
 
 .confirm {
   @extend .row;
+  .confirm-buttons {
+    min-height: 54px;
+    padding: 10px;
+    text-align: center;
+  }
   .confirm-table {
     width: 100%;
     thead th {
