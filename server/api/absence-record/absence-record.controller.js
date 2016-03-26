@@ -4,30 +4,30 @@ var _ = require('lodash');
 var mongoose = require('mongoose');
 var ObjectId = require('mongoose').Types.ObjectId;
 var AbsenceRecord = require('./absence-record.model');
-var Intervention = require('../intervention/intervention.model');
+var Outreach = require('../outreach/outreach.model');
 var Student = require('../student/student.model');
 
 function newAbsenceRecord(record, res, createdStudents) {
   return AbsenceRecord.create(record, function(err, createdRecord) {
     if (err) return handleError(res, err);
-    var interventions = [];
+    var outreaches = [];
     _.forEach(record.entries, function(entry) {
-      _.forEach(entry.interventions, function(intervention) {
-        intervention.student = entry.student;
-        intervention.record = createdRecord.id;
-        intervention.triggerDate = record.date;
-        interventions.push(intervention);
+      _.forEach(entry.outreaches, function(outreach) {
+        outreach.student = entry.student;
+        outreach.record = createdRecord.id;
+        outreach.triggerDate = record.date;
+        outreaches.push(outreach);
       });
     });
     createdRecord.populate('school', function(err) {
       if (err) return handleError(res, err);
-      Intervention.create(interventions, function(err, createdInterventions) {
+      Outreach.create(outreaches, function(err, createdOutreaches) {
         if (err) return handleError(res, err);
         return res
           .status(200)
           .json({
             record: createdRecord,
-            interventions: createdInterventions,
+            outreaches: createdOutreaches,
             students: createdStudents
           });
       });

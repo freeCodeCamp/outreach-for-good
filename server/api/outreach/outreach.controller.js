@@ -3,32 +3,38 @@
 var _ = require('lodash');
 var auth = require('../../auth/auth.service');
 var Outreach = require('./outreach.model');
-var Student = require('../student/student.model');
 
 /**
- * Creates an outreach in the DB.
+ * Get current unmarked outreach counts.
  * restriction: 'teacher'
+ *
+ * Returns an aggregation for entries based on the req user role:
+ * - teachers will get outreach counts for assignment school
+ * - manager+ will get outreach counts for all schools
  */
-exports.create = function(req, res) {
-  Student.findById({_id: req.body.student}).exec(function(err, student) {
-    if (err) return handleError(res, err);
-    if (!auth.authorizeStudent(student, req)) {
-      return res.status(403).json({
-        reason: auth.schoolMsg(req.user.assignment || 'None')
-      });
+exports.current = function(req, res) {
+  var pipeline = [{
+    $match: {actionDate: null}
+  }, {
+    $group: {
+      _id: '$type',
+      count: {$sum: 1}
     }
-    Outreach.create(req.body, function(err, outreach) {
-      if (err) return handleError(res, err);
-      return res.status(201).json(outreach);
-    });
+  }];
+  if (req.user.role === 'teacher') {
+    pipeline[0].$match.school = req.user.assignment;
+  }
+  Outreach.aggregate(pipeline, function(err, results) {
+    if (err) return handleError(res, err);
+    return res.status(200).json(results);
   });
 };
 
 /**
- * Add a note to an existing outreach.
+ * Add a note to an outreach.
  * restriction: 'teacher'
  */
-exports.createNote = function(req, res) {
+exports.addNote = function(req, res) {
   Outreach
     .findById(req.params.id)
     .populate('student')
@@ -55,19 +61,23 @@ exports.createNote = function(req, res) {
     });
 };
 
-exports.updateArchived = function(req, res) {
+/**
+ * Update actionDate for an outreach.
+ * restriction: 'teacher'
+ */
+exports.updateAction = function(req, res) {
   Outreach
     .findById(req.params.id)
     .populate('student')
     .exec(function(err, outreach) {
       if (err) return handleError(res, err);
-      if (!outreach) return res.send(404);
+      if (!outreach) return res.status(404).send('Not Found');
       if (!auth.authorizeStudent(outreach.student, req)) {
         return res.status(403).json({
           reason: auth.schoolMsg(req.user.assignment || 'None')
         });
       }
-      outreach.archived = req.body.archived;
+      outreach.actionDate = req.body.actionDate;
       outreach.save(function(err) {
         if (err) return handleError(res, err);
         return res.status(200).json(outreach);
@@ -75,26 +85,6 @@ exports.updateArchived = function(req, res) {
     });
 };
 
-exports.delete = function(req, res) {
-  Outreach
-    .findById(req.params.id)
-    .populate('student')
-    .exec(function(err, outreach) {
-      if (err) return handleError(res, err);
-      if (!outreach) return res.send(404);
-      if (!auth.authorizeStudent(outreach.student, req)) {
-        return res.status(403).json({
-          reason: auth.schoolMsg(req.user.assignment || 'None')
-        });
-      }
-      outreach.remove(function(err) {
-        if (err) return handleError(res, err);
-        return res.status(204).send('No Content');
-      });
-    });
-};
-
 function handleError(res, err) {
-  console.log(err);
   return res.status(500).send(err);
 }

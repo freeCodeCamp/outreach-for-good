@@ -6,23 +6,16 @@ app.factory('Intervention', function($resource) {
   return $resource('/api/interventions/:id/:controller', {
     id: '@_id'
   }, {
-    updateAction: {
-      method: 'PUT',
-      params: {
-        controller: 'action'
-      }
-    },
-    addNote: {
+    createNote: {
       method: 'POST',
       params: {
         controller: 'note'
       }
     },
-    current: {
-      method: 'GET',
-      isArray: true,
+    updateArchived: {
+      method: 'PUT',
       params: {
-        controller: 'current'
+        controller: 'archived'
       }
     }
   });

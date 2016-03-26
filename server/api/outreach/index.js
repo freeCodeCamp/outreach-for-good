@@ -6,10 +6,8 @@ var auth = require('../../auth/auth.service');
 
 var router = express.Router();
 
-router.post('/', auth.hasRole('teacher'), controller.create);
-router.put('/:id/archived', auth.hasRole('teacher'), controller.updateArchived);
-router.delete('/:id', auth.hasRole('teacher'), controller.delete);
-
-router.post('/:id/note', auth.hasRole('teacher'), controller.createNote);
+router.get('/current', auth.hasRole('teacher'), controller.current);
+router.post('/:id/note', auth.hasRole('teacher'), controller.addNote);
+router.put('/:id/action', auth.hasRole('teacher'), controller.updateAction);
 
 module.exports = router;

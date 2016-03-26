@@ -42,14 +42,6 @@ exports.show = function(req, res) {
     })
     .then(function(student) {
       result.student = student;
-      return Intervention
-        .find({student: req.params.id})
-        .populate('notes.user')
-        .sort({_id: -1})
-        .exec();
-    })
-    .then(function(interventions) {
-      result.interventions = interventions;
       return Outreach
         .find({student: req.params.id})
         .populate('notes.user')
@@ -58,6 +50,14 @@ exports.show = function(req, res) {
     })
     .then(function(outreaches) {
       result.outreaches = outreaches;
+      return Intervention
+        .find({student: req.params.id})
+        .populate('notes.user')
+        .sort({_id: -1})
+        .exec();
+    })
+    .then(function(interventions) {
+      result.interventions = interventions;
       return AbsenceRecord.findOne({
           school: result.student.currentSchool.id,
           'entries.student': result.student.id

@@ -6,16 +6,23 @@ app.factory('Outreach', function($resource) {
   return $resource('/api/outreaches/:id/:controller', {
     id: '@_id'
   }, {
-    createNote: {
+    updateAction: {
+      method: 'PUT',
+      params: {
+        controller: 'action'
+      }
+    },
+    addNote: {
       method: 'POST',
       params: {
         controller: 'note'
       }
     },
-    updateArchived: {
-      method: 'PUT',
+    current: {
+      method: 'GET',
+      isArray: true,
       params: {
-        controller: 'archived'
+        controller: 'current'
       }
     }
   });

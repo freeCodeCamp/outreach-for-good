@@ -4,16 +4,16 @@ var app = angular.module('app');
 
 function StudentCtrl($scope, $state, $stateParams, Student, toastr, Modal) {
   Student.get({id: $stateParams.id}, function(result) {
-    _.forEach(result.interventions, function(intervention) {
+    _.forEach(result.outreaches, function(outreach) {
       // Replaces actionDates with Date objects expected by uib-datepicker.
-      intervention.triggerDate = new Date(intervention.triggerDate);
-      if (intervention.actionDate) {
-        intervention.actionDate = new Date(intervention.actionDate);
+      outreach.triggerDate = new Date(outreach.triggerDate);
+      if (outreach.actionDate) {
+        outreach.actionDate = new Date(outreach.actionDate);
       }
     });
     $scope.student = result.student;
-    $scope.interventions = result.interventions;
     $scope.outreaches = result.outreaches;
+    $scope.interventions = result.interventions;
   });
 
   $scope.updateIEP = function() {
@@ -49,11 +49,11 @@ function StudentCtrl($scope, $state, $stateParams, Student, toastr, Modal) {
   };
 
   $scope.tabs = [{
-    title: 'Interventions',
-    state: 'interventions'
-  }, {
     title: 'Outreaches',
     state: 'outreaches'
+  }, {
+    title: 'Interventions',
+    state: 'interventions'
   }];
 
   $scope.tabs.selected =
@@ -68,17 +68,17 @@ function StudentCtrl($scope, $state, $stateParams, Student, toastr, Modal) {
   };
 }
 
-function StudentInterventionCtrl($scope, Intervention, toastr) {
+function StudentOutreachesCtrl($scope, Outreach, toastr) {
   $scope.datePopups = [];
   $scope.open = function(index) {
     $scope.datePopups[index] = true;
   };
   $scope.maxDate = new Date();
 
-  $scope.updateActionDate = function(intervention) {
-    Intervention.updateAction(
-      {id: intervention._id},
-      {actionDate: intervention.actionDate},
+  $scope.updateActionDate = function(outreach) {
+    Outreach.updateAction(
+      {id: outreach._id},
+      {actionDate: outreach.actionDate},
       function(res) {
         var student = res.student;
         toastr.success(
@@ -88,18 +88,18 @@ function StudentInterventionCtrl($scope, Intervention, toastr) {
       });
   };
 
-  $scope.addInterventionNote = function(intervention) {
-    if (intervention.newNote) {
-      var newNote = intervention.newNote;
-      delete intervention.newNote;
-      Intervention.addNote(
-        {id: intervention._id},
+  $scope.addOutreachNote = function(outreach) {
+    if (outreach.newNote) {
+      var newNote = outreach.newNote;
+      delete outreach.newNote;
+      outreach.addNote(
+        {id: outreach._id},
         {note: newNote},
         function(res) {
-          intervention.notes.push(res.notes[res.notes.length - 1]);
+          outreach.notes.push(res.notes[res.notes.length - 1]);
           var student = res.student;
           toastr.success(
-            'New intervention note added.',
+            'New outreach note added.',
             [student.firstName, student.lastName, res.type, res.tier].join(' ')
           );
         });
@@ -107,78 +107,78 @@ function StudentInterventionCtrl($scope, Intervention, toastr) {
   };
 }
 
-function StudentOutreachesCtrl($scope, Outreach, Modal, toastr) {
-  $scope.createOutreachNote = function(outreach) {
-    if (outreach.newNote) {
-      var newNote = outreach.newNote;
-      delete outreach.newNote;
-      Outreach.createNote(
-        {id: outreach._id},
+function StudentInterventionsCtrl($scope, Intervention, Modal, toastr) {
+  $scope.createInterventionNote = function(intervention) {
+    if (intervention.newNote) {
+      var newNote = intervention.newNote;
+      delete intervention.newNote;
+      Intervention.createNote(
+        {id: intervention._id},
         {note: newNote},
         function(res) {
-          outreach.notes.push(res.notes[res.notes.length - 1]);
+          intervention.notes.push(res.notes[res.notes.length - 1]);
           var student = res.student;
           toastr.success(
-            'New outreach note created.',
+            'New intervention note created.',
             [student.firstName, student.lastName, res.type, res.tier].join(' ')
           );
         });
     }
   };
 
-  $scope.toggleOutreachArchived = function(outreach) {
-    Outreach.updateArchived({
-      id: outreach._id
+  $scope.toggleInterventionArchived = function(intervention) {
+    Intervention.updateArchived({
+      id: intervention._id
     }, {
-      archived: !outreach.archived
-    }, function(toggledOutreach) {
-      outreach.archived = toggledOutreach.archived;
+      archived: !intervention.archived
+    }, function(toggledIntervention) {
+      intervention.archived = toggledIntervention.archived;
       toastr.info(
-        'The ' + outreach.type + ' outreach has been ' +
-        (toggledOutreach.archived ? '' : 'un') + 'archived.');
+        'The ' + intervention.type + ' intervention has been ' +
+        (toggledIntervention.archived ? '' : 'un') + 'archived.');
     }, function(err) {
       console.log(err);
       toastr.error(err);
     });
   };
 
-  $scope.deleteOutreach = function(outreach) {
+  $scope.deleteIntervention = function(intervention) {
     var deleteFn = function(model) {
-      return Outreach.remove({}, model, function() {
-        _.pull($scope.student.outreaches, model);
-        toastr.warning('Outreach ' + model.type + ' has been deleted.');
+      return Intervention.remove({}, model, function() {
+        _.pull($scope.student.interventions, model);
+        toastr.warning(model.type + ' intervention has been deleted.');
       }, function(err) {
         console.log(err);
         toastr.error(err);
       });
     };
     Modal.confirmDelete(
-      'Delete Outreach',
-      'app/main/student/partial/modal.delete-outreach.html',
-      outreach,
+      'Delete Intervention',
+      'app/main/student/partial/modal.delete-intervention.html',
+      intervention,
       deleteFn);
   };
 
   $scope.menuItems = [{
-    text: 'Create New Outreach',
+    text: 'Create New Intervention',
     action: function() {
-      var createOutreachFn = function(model) {
+      var createInterventionFn = function(model) {
         model.student = $scope.student._id;
         model.school = $scope.student.currentSchool._id;
-        return Outreach.save({}, model, function(res) {
+        return Intervention.save({}, model, function(res) {
           $scope.$evalAsync(function() {
-            $scope.outreaches.unshift(res);
+            $scope.interventions.unshift(res);
           });
         });
       };
       Modal.form(
-        'Create New Outreach',
-        'app/main/student/partial/modal.create-outreach.html',
-        createOutreachFn);
+        'Create New Intervention',
+        'app/main/student/partial/modal.create-intervention.html',
+        createInterventionFn);
     }
   }, {
     separator: true,
-    text: ' Archived Outreaches',
+    text: ' Archived Interventions',
     action: function() {
       $scope.showArchived = !$scope.showArchived;
     },
@@ -190,5 +190,5 @@ function StudentOutreachesCtrl($scope, Outreach, Modal, toastr) {
 }
 
 app.controller('StudentCtrl', StudentCtrl);
-app.controller('StudentInterventionCtrl', StudentInterventionCtrl);
 app.controller('StudentOutreachesCtrl', StudentOutreachesCtrl);
+app.controller('StudentInterventionsCtrl', StudentInterventionsCtrl);

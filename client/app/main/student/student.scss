@@ -12,13 +12,13 @@
       padding: 15px 0;
     }
   }
-  .outreaches,
-  .interventions {
+  .interventions,
+  .outreaches {
     display: flex;
     flex-flow: row wrap;
   }
-  .intervention-widget,
-  .outreach-widget {
+  .outreach-widget,
+  .intervention-widget {
     display: flex;
     flex-direction: column;
     border-right: 1px lightgrey solid;
@@ -130,7 +130,7 @@
       height: 270px;
     }
   }
-  .intervention-widget {
+  .outreach-widget {
     .title.action-required {
       background-color: $state-warning-bg;
     }
@@ -179,7 +179,7 @@
       }
     }
   }
-  .outreach-widget {
+  .intervention-widget {
     .title {
       position: relative;
       .dropdown {

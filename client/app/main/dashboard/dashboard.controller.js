@@ -2,7 +2,7 @@
 
 var app = angular.module('app');
 
-function DashboardCtrl($scope, $timeout, Auth, AbsenceRecord, Intervention,
+function DashboardCtrl($scope, $timeout, Auth, AbsenceRecord, Outreach,
   Student, uiGridGroupingConstants, toastr) {
   $scope.menuItems = [];
   $scope.filter = {};
@@ -177,7 +177,7 @@ function DashboardCtrl($scope, $timeout, Auth, AbsenceRecord, Intervention,
     });
   };
 
-  Intervention.current().$promise.then(function(res) {
+  Outreach.current().$promise.then(function(res) {
     var counts = _.keyBy(res, '_id');
     $scope.calls = (counts['Phone Call'] || {}).count || 0;
     $scope.letters = (counts['Letter Sent'] || {}).count || 0;

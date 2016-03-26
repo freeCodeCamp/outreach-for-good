@@ -81,7 +81,7 @@ function PDFUploadCtrl($scope, PDF, AbsenceRecord, Auth, School, toastr) {
     });
   }
 
-  function createInterventions(entry, prevEntry, school, schoolYear) {
+  function createOutreaches(entry, prevEntry, school, schoolYear) {
     if (!entry.absencesDelta) {
       return [];
     }
@@ -115,15 +115,15 @@ function PDFUploadCtrl($scope, PDF, AbsenceRecord, Auth, School, toastr) {
       entry.student = prevEntry.student._id;
       entry.tardiesDelta = entry.tardies - prevEntry.tardies;
       entry.absencesDelta = entry.absences - prevEntry.absences;
-      entry.interventions =
-        createInterventions(entry, prevEntry, school, partialRecord.schoolYear);
+      entry.outreaches =
+        createOutreaches(entry, prevEntry, school, partialRecord.schoolYear);
     });
     _.forEach(record.creates || [], function(student) {
       var entry = student.entry;
       entry.tardiesDelta = entry.tardies;
       entry.absencesDelta = entry.absences;
-      entry.interventions =
-        createInterventions(entry, {}, school, partialRecord.schoolYear);
+      entry.outreaches =
+        createOutreaches(entry, {}, school, partialRecord.schoolYear);
     });
     record.missing = _.difference(_.keys(idToPrev),
       _.map(partialRecord.students, 'student.studentId'));

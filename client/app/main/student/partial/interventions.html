@@ -1,49 +1,40 @@
-<tab-heading tabs="tabs"></tab-heading>
+<tab-heading tabs="tabs" menu-items="menuItems"></tab-heading>
 <div class="interventions">
-  <div ng-repeat="intervention in interventions" class="intervention-widget">
-    <div class="title" ng-class="{'action-required':!intervention.actionDate}">
-      <h4>{{intervention.type}} #{{intervention.tier}}
-        <small>({{intervention.absences}} Absences)</small>
+  <div ng-repeat="intervention in interventions"
+    class="intervention-widget"
+    ng-class="{archived: intervention.archived}"
+    ng-if="!intervention.archived || showArchived">
+    <div class="title bg-success">
+      <h4>{{intervention.type}}
+        <small>({{intervention.createdDate | date:'MM/dd/yy'}})</small>
       </h4>
+      <div class="btn-group" uib-dropdown>
+        <i uib-dropdown-toggle class="fa fa-caret-right fa-lg"></i>
+        <ul uib-dropdown-menu role="menu">
+          <li role="menuitem" ng-click="toggleInterventionArchived(intervention)">
+            <a href=""> <i class="fa fa-archive text-info"></i> {{ intervention.archived ? 'Unarchive' : 'Archive'}} </a>
+          </li>
+          <li role="menuitem" ng-click="deleteIntervention(intervention)" ng-if="intervention.archived">
+            <a href=""> <i class="fa fa-trash text-danger"></i> Delete</a>
+          </li>
+        </ul>
+      </div>
     </div>
     <div class="body">
-      <div class="dates">
-        <div class="date-item">
-          <div class="date-label">Triggered</div>
-          <div>{{intervention.triggerDate | date:'MM/dd/yy'}}</div>
-        </div>
-        <div class="date-item">
-          <div class="date-label">
-            Action Taken
-          <span>
-            <i class="fa fa-calendar"
-              ng-class="intervention.actionDate ? 'text-success' : 'text-warning'"
-              ng-click="open($index)"></i>
-          </span>
-          </div>
-          <div ng-model="intervention.actionDate"
-            is-open="datePopups[$index]"
-            datepicker-options="{minDate: intervention.triggerDate, maxDate: maxDate}"
-            uib-datepicker-popup="shortDate"
-            ng-change="updateActionDate(intervention)">
-            {{intervention.actionDate | date:'MM/dd/yy'}}&nbsp;
-          </div>
-        </div>
-      </div>
       <div class="notes">
         <div class="new-notes">
           <div class="notes-label">Notes</div>
           <div class="notes-input">
             <input type="text" ng-model="intervention.newNote"/>
           </div>
-          <button class="notes-button btn-success" ng-click="addInterventionNote(intervention)">
+          <button class="notes-button btn-success" ng-click="createInterventionNote(intervention)">
             <i class="fa fa-plus"></i>
           </button>
         </div>
         <div class="notes-list">
           <ul class="list-group">
             <li class="list-group-item" ng-repeat="note in intervention.notes | orderBy:$index:true">
-              <span class="badge bg-info" ng-click="viewNote(note, intervention.type + ' #' + intervention.tier)">
+              <span class="badge bg-info" ng-click="viewNote(note, intervention.type)">
                 {{note.date | date:'MM/dd/yy'}}
               </span>
               {{note.note}}
