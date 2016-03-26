@@ -2,6 +2,7 @@
 
 var express = require('express');
 var controller = require('./absence-record.controller');
+var listController = require('./absence-record.list.controller');
 var auth = require('../../auth/auth.service');
 
 var router = express.Router();
@@ -16,16 +17,20 @@ router.get('/current',
   auth.hasRole('teacher'),
   controller.current);
 
-router.get('/current/filtered',
+router.get('/list/current',
   auth.hasRole('teacher'),
-  controller.filtered);
+  listController.current);
 
-router.get('/current/at-risk',
+router.get('/list/current/query',
   auth.hasRole('teacher'),
-  controller.atRisk);
+  listController.query);
 
-router.get('/current/chronic',
+router.get('/list/current/at-risk',
   auth.hasRole('teacher'),
-  controller.chronic);
+  listController.atRisk);
+
+router.get('/list/current/chronic',
+  auth.hasRole('teacher'),
+  listController.chronic);
 
 module.exports = router;

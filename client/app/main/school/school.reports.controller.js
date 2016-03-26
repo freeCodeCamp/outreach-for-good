@@ -103,7 +103,7 @@ function SchoolReportsCtrl($scope, $timeout, Auth, uiGridGroupingConstants, Stud
 
   $scope.atRiskGridOptions.onRegisterApi = function(gridApi) {
     $scope.atRiskGridOptions.data =
-      AbsenceRecord.current({selector: 'at-risk'});
+      AbsenceRecord.listCurrent({filter: 'at-risk'});
 
     gridApi.edit.on.afterCellEdit($scope, function(rowEntity, colDef, n, o) {
       if (n !== o) {
@@ -227,7 +227,7 @@ function SchoolReportsCtrl($scope, $timeout, Auth, uiGridGroupingConstants, Stud
   $scope.chronicGridOptions.onRegisterApi = function(gridApi) {
     $scope.chronicGridApi = gridApi;
     $scope.chronicGridOptions.data =
-      AbsenceRecord.current({selector: 'chronic'});
+      AbsenceRecord.listCurrent({filter: 'chronic'});
 
     gridApi.edit.on.afterCellEdit($scope, function(rowEntity, colDef, n, o) {
       if (n !== o) {
