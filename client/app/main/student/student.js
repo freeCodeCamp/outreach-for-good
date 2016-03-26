@@ -9,11 +9,11 @@ angular.module('app')
         templateUrl: 'app/main/student/student.html',
         controller: 'StudentCtrl'
       })
-      .state('interventions', {
-        url: '/interventions',
+      .state('somethings', {
+        url: '/somethings',
         parent: 'student',
-        templateUrl: 'app/main/student/partial/interventions.html',
-        controller: 'StudentInterventionCtrl'
+        templateUrl: 'app/main/student/partial/somethings.html',
+        controller: 'StudentSomethingCtrl'
       })
       .state('outreaches', {
         url: '/outreaches',

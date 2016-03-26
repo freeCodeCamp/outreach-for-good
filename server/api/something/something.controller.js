@@ -2,15 +2,15 @@
 
 var _ = require('lodash');
 var auth = require('../../auth/auth.service');
-var Intervention = require('./intervention.model');
+var Something = require('./something.model');
 
 /**
- * Get current unmarked intervention counts.
+ * Get current unmarked something counts.
  * restriction: 'teacher'
  *
  * Returns an aggregation for entries based on the req user role:
- * - teachers will get intervention counts for assignment school
- * - manager+ will get intervention counts for all schools
+ * - teachers will get something counts for assignment school
+ * - manager+ will get something counts for all schools
  */
 exports.current = function(req, res) {
   var pipeline = [{
@@ -24,63 +24,63 @@ exports.current = function(req, res) {
   if (req.user.role === 'teacher') {
     pipeline[0].$match.school = req.user.assignment;
   }
-  Intervention.aggregate(pipeline, function(err, results) {
+  Something.aggregate(pipeline, function(err, results) {
     if (err) return handleError(res, err);
     return res.status(200).json(results);
   });
 };
 
 /**
- * Add a note to an intervention.
+ * Add a note to an something.
  * restriction: 'teacher'
  */
 exports.addNote = function(req, res) {
-  Intervention
+  Something
     .findById(req.params.id)
     .populate('student')
-    .exec(function(err, intervention) {
+    .exec(function(err, something) {
       if (err) return handleError(res, err);
-      if (!intervention) return res.status(404).send('Not Found');
-      if (!auth.authorizeStudent(intervention.student, req)) {
+      if (!something) return res.status(404).send('Not Found');
+      if (!auth.authorizeStudent(something.student, req)) {
         return res.status(403).json({
           reason: auth.schoolMsg(req.user.assignment || 'None')
         });
       }
-      intervention.notes.push({
+      something.notes.push({
         user: req.user.id,
         note: req.body.note
       });
-      intervention.save(function(err) {
+      something.save(function(err) {
         if (err) return handleError(res, err);
-        Intervention.populate(intervention, {path: 'notes.user'},
-          function(err, intervention) {
+        Something.populate(something, {path: 'notes.user'},
+          function(err, something) {
             if (err) return handleError(res, err);
-            return res.status(200).json(intervention);
+            return res.status(200).json(something);
           });
       });
     });
 };
 
 /**
- * Update actionDate for an intervention.
+ * Update actionDate for an something.
  * restriction: 'teacher'
  */
 exports.updateAction = function(req, res) {
-  Intervention
+  Something
     .findById(req.params.id)
     .populate('student')
-    .exec(function(err, intervention) {
+    .exec(function(err, something) {
       if (err) return handleError(res, err);
-      if (!intervention) return res.status(404).send('Not Found');
-      if (!auth.authorizeStudent(intervention.student, req)) {
+      if (!something) return res.status(404).send('Not Found');
+      if (!auth.authorizeStudent(something.student, req)) {
         return res.status(403).json({
           reason: auth.schoolMsg(req.user.assignment || 'None')
         });
       }
-      intervention.actionDate = req.body.actionDate;
-      intervention.save(function(err) {
+      something.actionDate = req.body.actionDate;
+      something.save(function(err) {
         if (err) return handleError(res, err);
-        return res.status(200).json(intervention);
+        return res.status(200).json(something);
       });
     });
 };

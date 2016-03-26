@@ -13,11 +13,11 @@
     }
   }
   .outreaches,
-  .interventions {
+  .somethings {
     display: flex;
     flex-flow: row wrap;
   }
-  .intervention-widget,
+  .something-widget,
   .outreach-widget {
     display: flex;
     flex-direction: column;
@@ -130,7 +130,7 @@
       height: 270px;
     }
   }
-  .intervention-widget {
+  .something-widget {
     .title.action-required {
       background-color: $state-warning-bg;
     }

@@ -1,7 +1,7 @@
 'use strict';
 
 var AbsenceRecord = require('../absence-record/absence-record.model');
-var Intervention = require('../intervention/intervention.model');
+var Something = require('../something/something.model');
 var School = require('../school/school.model');
 var Student = require('../student/student.model');
 
@@ -11,7 +11,7 @@ var Student = require('../student/student.model');
  */
 exports.reset = function(req, res) {
   AbsenceRecord.remove().exec().then(function() {
-    return Intervention.remove().exec();
+    return Something.remove().exec();
   }).then(function() {
     return School.remove().exec();
   }).then(function() {

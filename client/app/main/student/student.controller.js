@@ -4,15 +4,15 @@ var app = angular.module('app');
 
 function StudentCtrl($scope, $state, $stateParams, Student, toastr, Modal) {
   Student.get({id: $stateParams.id}, function(result) {
-    _.forEach(result.interventions, function(intervention) {
+    _.forEach(result.somethings, function(something) {
       // Replaces actionDates with Date objects expected by uib-datepicker.
-      intervention.triggerDate = new Date(intervention.triggerDate);
-      if (intervention.actionDate) {
-        intervention.actionDate = new Date(intervention.actionDate);
+      something.triggerDate = new Date(something.triggerDate);
+      if (something.actionDate) {
+        something.actionDate = new Date(something.actionDate);
       }
     });
     $scope.student = result.student;
-    $scope.interventions = result.interventions;
+    $scope.somethings = result.somethings;
     $scope.outreaches = result.outreaches;
   });
 
@@ -49,8 +49,8 @@ function StudentCtrl($scope, $state, $stateParams, Student, toastr, Modal) {
   };
 
   $scope.tabs = [{
-    title: 'Interventions',
-    state: 'interventions'
+    title: 'Somethings',
+    state: 'somethings'
   }, {
     title: 'Outreaches',
     state: 'outreaches'
@@ -68,17 +68,17 @@ function StudentCtrl($scope, $state, $stateParams, Student, toastr, Modal) {
   };
 }
 
-function StudentInterventionCtrl($scope, Intervention, toastr) {
+function StudentSomethingCtrl($scope, Something, toastr) {
   $scope.datePopups = [];
   $scope.open = function(index) {
     $scope.datePopups[index] = true;
   };
   $scope.maxDate = new Date();
 
-  $scope.updateActionDate = function(intervention) {
-    Intervention.updateAction(
-      {id: intervention._id},
-      {actionDate: intervention.actionDate},
+  $scope.updateActionDate = function(something) {
+    Something.updateAction(
+      {id: something._id},
+      {actionDate: something.actionDate},
       function(res) {
         var student = res.student;
         toastr.success(
@@ -88,18 +88,18 @@ function StudentInterventionCtrl($scope, Intervention, toastr) {
       });
   };
 
-  $scope.addInterventionNote = function(intervention) {
-    if (intervention.newNote) {
-      var newNote = intervention.newNote;
-      delete intervention.newNote;
-      Intervention.addNote(
-        {id: intervention._id},
+  $scope.addSomethingNote = function(something) {
+    if (something.newNote) {
+      var newNote = something.newNote;
+      delete something.newNote;
+      something.addNote(
+        {id: something._id},
         {note: newNote},
         function(res) {
-          intervention.notes.push(res.notes[res.notes.length - 1]);
+          something.notes.push(res.notes[res.notes.length - 1]);
           var student = res.student;
           toastr.success(
-            'New intervention note added.',
+            'New something note added.',
             [student.firstName, student.lastName, res.type, res.tier].join(' ')
           );
         });
@@ -190,5 +190,5 @@ function StudentOutreachesCtrl($scope, Outreach, Modal, toastr) {
 }
 
 app.controller('StudentCtrl', StudentCtrl);
-app.controller('StudentInterventionCtrl', StudentInterventionCtrl);
+app.controller('StudentSomethingCtrl', StudentSomethingCtrl);
 app.controller('StudentOutreachesCtrl', StudentOutreachesCtrl);

@@ -11,7 +11,7 @@ var types = [
   'Court Referral'
 ];
 
-var InterventionSchema = new Schema({
+var SomethingSchema = new Schema({
   type: {type: String, required: true, enum: types},
   tier: {type: Number, required: true},
   absences: {type: Number, required: true},
@@ -31,4 +31,4 @@ var InterventionSchema = new Schema({
   }]
 });
 
-module.exports = mongoose.model('Intervention', InterventionSchema);
+module.exports = mongoose.model('Something', SomethingSchema);

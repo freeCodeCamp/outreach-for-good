@@ -1,0 +1,56 @@
+<tab-heading tabs="tabs"></tab-heading>
+<div class="somethings">
+  <div ng-repeat="something in somethings" class="something-widget">
+    <div class="title" ng-class="{'action-required':!something.actionDate}">
+      <h4>{{something.type}} #{{something.tier}}
+        <small>({{something.absences}} Absences)</small>
+      </h4>
+    </div>
+    <div class="body">
+      <div class="dates">
+        <div class="date-item">
+          <div class="date-label">Triggered</div>
+          <div>{{something.triggerDate | date:'MM/dd/yy'}}</div>
+        </div>
+        <div class="date-item">
+          <div class="date-label">
+            Action Taken
+          <span>
+            <i class="fa fa-calendar"
+              ng-class="something.actionDate ? 'text-success' : 'text-warning'"
+              ng-click="open($index)"></i>
+          </span>
+          </div>
+          <div ng-model="something.actionDate"
+            is-open="datePopups[$index]"
+            datepicker-options="{minDate: something.triggerDate, maxDate: maxDate}"
+            uib-datepicker-popup="shortDate"
+            ng-change="updateActionDate(something)">
+            {{something.actionDate | date:'MM/dd/yy'}}&nbsp;
+          </div>
+        </div>
+      </div>
+      <div class="notes">
+        <div class="new-notes">
+          <div class="notes-label">Notes</div>
+          <div class="notes-input">
+            <input type="text" ng-model="something.newNote"/>
+          </div>
+          <button class="notes-button btn-success" ng-click="addSomethingNote(something)">
+            <i class="fa fa-plus"></i>
+          </button>
+        </div>
+        <div class="notes-list">
+          <ul class="list-group">
+            <li class="list-group-item" ng-repeat="note in something.notes | orderBy:$index:true">
+              <span class="badge bg-info" ng-click="viewNote(note, something.type + ' #' + something.tier)">
+                {{note.date | date:'MM/dd/yy'}}
+              </span>
+              {{note.note}}
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
