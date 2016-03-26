@@ -3,14 +3,22 @@
 var app = angular.module('app');
 
 app.factory('AbsenceRecord', function($resource) {
-  return $resource('/api/absence-records/:id/:controller/:selector', {
+  return $resource('/api/absence-records/:id/:controller/:selector/:filter', {
     id: '@_id'
   }, {
     current: {
       method: 'GET',
       isArray: true,
       params: {
-        controller: 'current'
+        selector: 'current'
+      }
+    },
+    listCurrent: {
+      method: 'GET',
+      isArray: true,
+      params: {
+        controller: 'list',
+        selector: 'current'
       }
     }
   });

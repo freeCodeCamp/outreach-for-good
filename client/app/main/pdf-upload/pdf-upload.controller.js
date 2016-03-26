@@ -107,10 +107,8 @@ function PDFUploadCtrl($scope, PDF, AbsenceRecord, Auth, School, toastr) {
   function completeRecord(partialRecord) {
     var school = $scope.selected.school;
     var previousRecord = $scope.records[school._id] || {};
-    var idToPrev = _.keyBy((previousRecord).entries, 'student.studentId');
+    var idToPrev = _.keyBy(previousRecord.entries, 'student.studentId');
     var record = groupByType(partialRecord.students, idToPrev);
-    // Deltas are equal to their entry counterpart minus previous entry
-    // total for students with existing records.
     _.forEach(record.updates || [], function(student) {
       var entry = student.entry;
       var prevEntry = idToPrev[student.student.studentId];
@@ -120,7 +118,6 @@ function PDFUploadCtrl($scope, PDF, AbsenceRecord, Auth, School, toastr) {
       entry.interventions =
         createInterventions(entry, prevEntry, school, partialRecord.schoolYear);
     });
-    // Deltas are equal to their entry counterpart if creating new student.
     _.forEach(record.creates || [], function(student) {
       var entry = student.entry;
       entry.tardiesDelta = entry.tardies;
@@ -132,8 +129,6 @@ function PDFUploadCtrl($scope, PDF, AbsenceRecord, Auth, School, toastr) {
       _.map(partialRecord.students, 'student.studentId'));
     record.schoolId = $scope.selected.school._id;
     record.schoolYear = partialRecord.schoolYear;
-    // TODO: Validate the previous record is still the newest current
-    // record on the server to prevent committing stale data.
     record.previousRecordId = previousRecord.recordId;
     return record;
   }

@@ -154,7 +154,7 @@ function DashboardCtrl($scope, $timeout, Auth, AbsenceRecord, Intervention,
 
   $scope.studentGridOptions.onRegisterApi = function(gridApi) {
     $scope.studentGridApi = gridApi;
-    $scope.studentGridOptions.data = AbsenceRecord.current();
+    $scope.studentGridOptions.data = AbsenceRecord.listCurrent();
     gridApi.edit.on.afterCellEdit($scope, function(rowEntity, colDef, n, o) {
       if (n !== o) {
         switch (colDef.name) {
@@ -190,14 +190,14 @@ function DashboardCtrl($scope, $timeout, Auth, AbsenceRecord, Intervention,
     if ($scope.filter.type !== type || $scope.filter.tier !== tier) {
       var filter = {};
       if (type) {
-        filter.selector = 'filtered';
+        filter.filter = 'query';
         filter.type = type;
         if (tier) {
           filter.tier = tier;
         }
       }
       $scope.filter = filter;
-      $scope.studentGridOptions.data = AbsenceRecord.current($scope.filter);
+      $scope.studentGridOptions.data = AbsenceRecord.listCurrent($scope.filter);
       $scope.menuItems.length = 0;
       if (_.includes(['Phone Call', 'Letter Sent', 'Home Visit'], type)) {
         [].push.apply($scope.menuItems, [{

@@ -121,19 +121,16 @@ function currentAbsenceRecordPipeline(user) {
       entries: {$first: '$entries'}
     }
   });
-  pipeline.push({
-    $unwind: '$entries'
-  });
   return pipeline;
 }
 
 /**
- * Get entries from current absence records
+ * Get current absence records.
  * restriction: 'teacher'
  *
  * Returns an aggregation for entries based on the req user role:
- * - teachers will get entries for assignment school
- * - manager+ will get entries for all schools
+ * - teachers will get record for assignment school
+ * - manager+ will get records for all schools
  */
 exports.current = function(req, res) {
   var pipeline = currentAbsenceRecordPipeline(req.user);
@@ -147,90 +144,6 @@ exports.current = function(req, res) {
   });
 };
 
-/**
- * Get entries from current absence records with intervention filter
- * restriction: 'teacher'
- *
- * Returns an aggregation for entries based on the req user role:
- * - teachers will get entries for assignment school
- * - manager+ will get entries for all schools
- */
-exports.filtered = function(req, res) {
-  var options = {
-    actionDate: null,
-    type: req.query.type
-  };
-  if (req.query.tier) {
-    options.tier = req.query.tier
-  }
-  Intervention.find(options)
-    .distinct('student')
-    .exec(function(err, students) {
-      if (err) return handleError(res, err);
-      var pipeline = currentAbsenceRecordPipeline(req.user);
-      pipeline.push({
-        $match: {'entries.student': {$in: students}}
-      });
-      AbsenceRecord.aggregate(pipeline, function(err, results) {
-        if (err) return handleError(res, err);
-        AbsenceRecord.populate(results, 'school entries.student',
-          function(err, entries) {
-            if (err) return handleError(res, err);
-            return res.status(200).json(entries);
-          });
-      });
-    });
-};
-
-/**
- * Get list of students at risk of becoming chronically absent from current
- * absence records.
- * restriction: 'teacher'
- *
- * Returns an aggregation for entries based on the req user role:
- * - teachers will get entries for assignment school
- * - manager+ will get entries for all schools
- */
-exports.atRisk = function(req, res) {
-  var pipeline = currentAbsenceRecordPipeline(req.user);
-  pipeline.push({
-    $match: {'entries.absences': {$lte: 19}}
-  });
-  AbsenceRecord.aggregate(pipeline, function(err, results) {
-    if (err) return handleError(res, err);
-    AbsenceRecord.populate(results, 'school entries.student',
-      function(err, entries) {
-        if (err) return handleError(res, err);
-        entries = _.filter(entries, function(entry) {
-          return entry.entries.present / entry.entries.enrolled <= 0.9;
-        });
-        return res.status(200).json(entries);
-      });
-  });
-};
-
-/**
- * Get list of chronically absent student from from current absence records.
- * restriction: 'teacher'
- *
- * Returns an aggregation for entries based on the req user role:
- * - teachers will get entries for assignment school
- * - manager+ will get entries for all schools
- */
-exports.chronic = function(req, res) {
-  var pipeline = currentAbsenceRecordPipeline(req.user);
-  pipeline.push({
-    $match: {'entries.absences': {$gte: 20}}
-  });
-  AbsenceRecord.aggregate(pipeline, function(err, results) {
-    if (err) return handleError(res, err);
-    AbsenceRecord.populate(results, 'school entries.student',
-      function(err, entries) {
-        if (err) return handleError(res, err);
-        return res.status(200).json(entries);
-      });
-  });
-};
 
 function handleError(res, err) {
   return res.status(500).send(err);
