@@ -12,13 +12,13 @@
       padding: 15px 0;
     }
   }
-  .outreaches,
+  .interventions,
   .somethings {
     display: flex;
     flex-flow: row wrap;
   }
   .something-widget,
-  .outreach-widget {
+  .intervention-widget {
     display: flex;
     flex-direction: column;
     border-right: 1px lightgrey solid;
@@ -179,7 +179,7 @@
       }
     }
   }
-  .outreach-widget {
+  .intervention-widget {
     .title {
       position: relative;
       .dropdown {

@@ -3,7 +3,7 @@
 var _ = require('lodash');
 var AbsenceRecord = require('../absence-record/absence-record.model');
 var Something = require('../something/something.model');
-var Outreach = require('../outreach/outreach.model');
+var Intervention = require('../intervention/intervention.model');
 var Student = require('./student.model');
 var auth = require('../../auth/auth.service');
 
@@ -50,14 +50,14 @@ exports.show = function(req, res) {
     })
     .then(function(somethings) {
       result.somethings = somethings;
-      return Outreach
+      return Intervention
         .find({student: req.params.id})
         .populate('notes.user')
         .sort({_id: -1})
         .exec();
     })
-    .then(function(outreaches) {
-      result.outreaches = outreaches;
+    .then(function(interventions) {
+      result.interventions = interventions;
       return AbsenceRecord.findOne({
           school: result.student.currentSchool.id,
           'entries.student': result.student.id

@@ -2,11 +2,11 @@
 
 var _ = require('lodash');
 var auth = require('../../auth/auth.service');
-var Outreach = require('./outreach.model');
+var Intervention = require('./intervention.model');
 var Student = require('../student/student.model');
 
 /**
- * Creates an outreach in the DB.
+ * Creates an intervention in the DB.
  * restriction: 'teacher'
  */
 exports.create = function(req, res) {
@@ -17,77 +17,77 @@ exports.create = function(req, res) {
         reason: auth.schoolMsg(req.user.assignment || 'None')
       });
     }
-    Outreach.create(req.body, function(err, outreach) {
+    Intervention.create(req.body, function(err, intervention) {
       if (err) return handleError(res, err);
-      return res.status(201).json(outreach);
+      return res.status(201).json(intervention);
     });
   });
 };
 
 /**
- * Add a note to an existing outreach.
+ * Add a note to an existing intervention.
  * restriction: 'teacher'
  */
 exports.createNote = function(req, res) {
-  Outreach
+  Intervention
     .findById(req.params.id)
     .populate('student')
-    .exec(function(err, outreach) {
+    .exec(function(err, intervention) {
       if (err) return handleError(res, err);
-      if (!outreach) return res.status(404).send('Not Found');
-      if (!auth.authorizeStudent(outreach.student, req)) {
+      if (!intervention) return res.status(404).send('Not Found');
+      if (!auth.authorizeStudent(intervention.student, req)) {
         return res.status(403).json({
           reason: auth.schoolMsg(req.user.assignment || 'None')
         });
       }
-      outreach.notes.push({
+      intervention.notes.push({
         user: req.user.id,
         note: req.body.note
       });
-      outreach.save(function(err) {
+      intervention.save(function(err) {
         if (err) return handleError(res, err);
-        Outreach.populate(outreach, {path: 'notes.user'},
-          function(err, outreach) {
+        Intervention.populate(intervention, {path: 'notes.user'},
+          function(err, intervention) {
             if (err) return handleError(res, err);
-            return res.status(200).json(outreach);
+            return res.status(200).json(intervention);
           });
       });
     });
 };
 
 exports.updateArchived = function(req, res) {
-  Outreach
+  Intervention
     .findById(req.params.id)
     .populate('student')
-    .exec(function(err, outreach) {
+    .exec(function(err, intervention) {
       if (err) return handleError(res, err);
-      if (!outreach) return res.send(404);
-      if (!auth.authorizeStudent(outreach.student, req)) {
+      if (!intervention) return res.send(404);
+      if (!auth.authorizeStudent(intervention.student, req)) {
         return res.status(403).json({
           reason: auth.schoolMsg(req.user.assignment || 'None')
         });
       }
-      outreach.archived = req.body.archived;
-      outreach.save(function(err) {
+      intervention.archived = req.body.archived;
+      intervention.save(function(err) {
         if (err) return handleError(res, err);
-        return res.status(200).json(outreach);
+        return res.status(200).json(intervention);
       });
     });
 };
 
 exports.delete = function(req, res) {
-  Outreach
+  Intervention
     .findById(req.params.id)
     .populate('student')
-    .exec(function(err, outreach) {
+    .exec(function(err, intervention) {
       if (err) return handleError(res, err);
-      if (!outreach) return res.send(404);
-      if (!auth.authorizeStudent(outreach.student, req)) {
+      if (!intervention) return res.send(404);
+      if (!auth.authorizeStudent(intervention.student, req)) {
         return res.status(403).json({
           reason: auth.schoolMsg(req.user.assignment || 'None')
         });
       }
-      outreach.remove(function(err) {
+      intervention.remove(function(err) {
         if (err) return handleError(res, err);
         return res.status(204).send('No Content');
       });

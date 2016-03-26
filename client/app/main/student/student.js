@@ -15,10 +15,10 @@ angular.module('app')
         templateUrl: 'app/main/student/partial/somethings.html',
         controller: 'StudentSomethingCtrl'
       })
-      .state('outreaches', {
-        url: '/outreaches',
+      .state('interventions', {
+        url: '/interventions',
         parent: 'student',
-        templateUrl: 'app/main/student/partial/outreaches.html',
-        controller: 'StudentOutreachesCtrl'
+        templateUrl: 'app/main/student/partial/interventions.html',
+        controller: 'StudentInterventionsCtrl'
       });
   });

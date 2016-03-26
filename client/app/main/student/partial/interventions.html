@@ -1,0 +1,47 @@
+<tab-heading tabs="tabs" menu-items="menuItems"></tab-heading>
+<div class="interventions">
+  <div ng-repeat="intervention in interventions"
+    class="intervention-widget"
+    ng-class="{archived: intervention.archived}"
+    ng-if="!intervention.archived || showArchived">
+    <div class="title bg-success">
+      <h4>{{intervention.type}}
+        <small>({{intervention.createdDate | date:'MM/dd/yy'}})</small>
+      </h4>
+      <div class="btn-group" uib-dropdown>
+        <i uib-dropdown-toggle class="fa fa-caret-right fa-lg"></i>
+        <ul uib-dropdown-menu role="menu">
+          <li role="menuitem" ng-click="toggleInterventionArchived(intervention)">
+            <a href=""> <i class="fa fa-archive text-info"></i> {{ intervention.archived ? 'Unarchive' : 'Archive'}} </a>
+          </li>
+          <li role="menuitem" ng-click="deleteIntervention(intervention)" ng-if="intervention.archived">
+            <a href=""> <i class="fa fa-trash text-danger"></i> Delete</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="body">
+      <div class="notes">
+        <div class="new-notes">
+          <div class="notes-label">Notes</div>
+          <div class="notes-input">
+            <input type="text" ng-model="intervention.newNote"/>
+          </div>
+          <button class="notes-button btn-success" ng-click="createInterventionNote(intervention)">
+            <i class="fa fa-plus"></i>
+          </button>
+        </div>
+        <div class="notes-list">
+          <ul class="list-group">
+            <li class="list-group-item" ng-repeat="note in intervention.notes | orderBy:$index:true">
+              <span class="badge bg-info" ng-click="viewNote(note, intervention.type)">
+                {{note.date | date:'MM/dd/yy'}}
+              </span>
+              {{note.note}}
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

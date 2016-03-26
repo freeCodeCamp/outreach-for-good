@@ -3,7 +3,7 @@
 var mongoose = require('mongoose'),
   Schema = mongoose.Schema;
 
-var OutreachSchema = new Schema({
+var InterventionSchema = new Schema({
   type: {type: String, required: true},
 
   archived: {type: Boolean, required: true, default: false},
@@ -20,4 +20,4 @@ var OutreachSchema = new Schema({
   }]
 });
 
-module.exports = mongoose.model('Outreach', OutreachSchema);
+module.exports = mongoose.model('Intervention', InterventionSchema);

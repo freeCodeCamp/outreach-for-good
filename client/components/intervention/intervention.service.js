@@ -2,8 +2,8 @@
 
 var app = angular.module('app');
 
-app.factory('Outreach', function($resource) {
-  return $resource('/api/outreaches/:id/:controller', {
+app.factory('Intervention', function($resource) {
+  return $resource('/api/interventions/:id/:controller', {
     id: '@_id'
   }, {
     createNote: {
