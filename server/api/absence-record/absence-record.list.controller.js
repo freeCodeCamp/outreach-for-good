@@ -2,10 +2,8 @@
 
 var _ = require('lodash');
 var mongoose = require('mongoose');
-var ObjectId = require('mongoose').Types.ObjectId;
 var AbsenceRecord = require('./absence-record.model');
-var Something = require('../something/something.model');
-var Student = require('../student/student.model');
+var Outreach = require('../outreach/outreach.model');
 
 function currentAbsenceRecordPipeline(user) {
   var pipeline = [];
@@ -53,7 +51,7 @@ exports.current = function(req, res) {
 };
 
 /**
- * Get entries from current absence records with something filter
+ * Get entries from current absence records with outreach filter
  * restriction: 'teacher'
  *
  * Returns an aggregation for entries based on the req user role:
@@ -68,7 +66,7 @@ exports.query = function(req, res) {
   if (req.query.tier) {
     options.tier = req.query.tier
   }
-  Something.find(options)
+  Outreach.find(options)
     .distinct('student')
     .exec(function(err, students) {
       if (err) return handleError(res, err);

@@ -11,7 +11,7 @@ var types = [
   'Court Referral'
 ];
 
-var SomethingSchema = new Schema({
+var OutreachSchema = new Schema({
   type: {type: String, required: true, enum: types},
   tier: {type: Number, required: true},
   absences: {type: Number, required: true},
@@ -31,4 +31,4 @@ var SomethingSchema = new Schema({
   }]
 });
 
-module.exports = mongoose.model('Something', SomethingSchema);
+module.exports = mongoose.model('Outreach', OutreachSchema);

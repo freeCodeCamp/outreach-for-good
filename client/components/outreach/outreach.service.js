@@ -2,8 +2,8 @@
 
 var app = angular.module('app');
 
-app.factory('Something', function($resource) {
-  return $resource('/api/somethings/:id/:controller', {
+app.factory('Outreach', function($resource) {
+  return $resource('/api/outreaches/:id/:controller', {
     id: '@_id'
   }, {
     updateAction: {

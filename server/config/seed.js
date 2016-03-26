@@ -6,14 +6,14 @@
 'use strict';
 
 var AbsenceRecord = require('../api/absence-record/absence-record.model');
-var Something = require('../api/something/something.model');
+var Outreach = require('../api/outreach/outreach.model');
 var Intervention = require('../api/intervention/intervention.model');
 var School = require('../api/school/school.model');
 var Student = require('../api/student/student.model');
 var User = require('../api/user/user.model');
 
 AbsenceRecord.remove().exec().then(function() {
-  return Something.remove().exec();
+  return Outreach.remove().exec();
 }).then(function() {
   return Intervention.remove().exec();
 }).then(function() {
