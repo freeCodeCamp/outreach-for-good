@@ -101,11 +101,6 @@
                 box-shadow: inset 1px 0 1px -1px, inset -1px 0 1px -1px,
                 inset 0 1px 1px -1px, inset 0 -1px 1px -1px;
               }
-              .badge {
-                float: none;
-                cursor: pointer;
-                background-color: darken(lightblue, 20%);
-              }
             }
           }
         }
@@ -231,6 +226,93 @@
       .title {
         background-color: darken($state-warning-bg, 10%);
       }
+    }
+  }
+  .student-notes {
+    padding: 0 10px;
+    .new-note {
+      display: flex;
+      flex-direction: row;
+      min-height: 54px;
+      align-items: center;
+      .notes-input {
+        flex: 1;
+        height: 27px;
+        input {
+          padding-left: 10px;
+          padding-right: 10px;
+          width: 100%;
+          height: 27px;
+          line-height: 27px;
+          border: none;
+          border-top-left-radius: 4px;
+          border-bottom-left-radius: 4px;
+          box-shadow: inset 0 0 0 1px darkgray;
+          vertical-align: top;
+        }
+      }
+      .notes-button {
+        height: 27px;
+        width: 27px;
+        text-align: center;
+        border-top-right-radius: 4px;
+        border-bottom-right-radius: 4px;
+        padding: 0;
+        border-width: 1px;
+      }
+    }
+    .notes-list {
+      flex: 1;
+      overflow-y: auto;
+      width: 100%;
+      box-shadow: inset 0 0 0 1px darkgray;
+      .list-group {
+        margin-bottom: 0;
+        .list-group-item {
+          overflow-wrap: break-word;
+          background: none;
+          line-height: 27px;
+          padding: 0 5px;
+          margin: 0;
+          border: none;
+          border-radius: 0;
+          box-shadow: inset 1px 0 1px -1px, inset -1px 0 1px -1px,
+          inset 0 1px 1px -1px;
+          &:last-child {
+            box-shadow: inset 1px 0 1px -1px, inset -1px 0 1px -1px,
+            inset 0 1px 1px -1px, inset 0 -1px 1px -1px;
+          }
+          &.archived {
+            background-color: darken(#f1f1f1, 10%);
+          }
+        }
+      }
+    }
+    ::-webkit-scrollbar {
+      width: 5px;
+      height: 0;
+    }
+    ::-webkit-scrollbar-track {
+      background-color: lightblue;
+    }
+    ::-webkit-scrollbar-thumb {
+      background-color: $cfa-background;
+    }
+  }
+  .badge {
+    float: none;
+    cursor: pointer;
+    &.blue {
+      background-color: $label-info-bg;
+    }
+    &.green {
+      background-color: $label-success-bg;
+    }
+    &.yellow {
+      background-color: $label-warning-bg;
+    }
+    &.red {
+      background-color: $label-danger-bg;
     }
   }
 }

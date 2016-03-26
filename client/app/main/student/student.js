@@ -20,5 +20,11 @@ angular.module('app')
         parent: 'student',
         templateUrl: 'app/main/student/partial/interventions.html',
         controller: 'StudentInterventionsCtrl'
+      })
+      .state('notes', {
+        url: '/notes',
+        parent: 'student',
+        templateUrl: 'app/main/student/partial/notes.html',
+        controller: 'StudentNotesCtrl'
       });
   });
