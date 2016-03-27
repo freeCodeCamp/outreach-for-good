@@ -102,6 +102,52 @@ function DashboardCtrl($scope, $timeout, Auth, AbsenceRecord, Outreach,
     width: 125
   }];
 
+  if (Auth.getCurrentUser().role !== 'teacher') {
+    $scope.studentGridOptions.columnDefs.push({
+      name: 'school.name',
+      displayName: 'School Name',
+      minWidth: 150,
+      grouping: {groupPriority: 0},
+      sort: {priority: 0, direction: 'asc'},
+      cellTemplate: '<div class="ui-grid-cell-contents" title="TOOLTIP">' +
+                    '{{COL_FIELD CUSTOM_FILTERS}} ' +
+                    '<span ng-if="row.treeLevel > -1">' +
+                    '<i class="fa fa-child"></i>' +
+                    '</span>' +
+                    '</div>'
+    });
+  } else {
+    $scope.assignment = Auth.getCurrentUser().assignment;
+  }
+
+  $scope.studentGridOptions.onRegisterApi = function(gridApi) {
+    $scope.studentGridApi = gridApi;
+    $scope.studentGridOptions.data = AbsenceRecord.listCurrent();
+    $scope.studentGridOptions.data.$promise.then(function(data) {
+      $scope.badge.text = data.length;
+    });
+    gridApi.edit.on.afterCellEdit($scope, function(rowEntity, colDef, n, o) {
+      if (n !== o) {
+        switch (colDef.name) {
+          case 'entries.student.iep':
+            $scope.updateIEP(rowEntity.entries.student);
+            break;
+          case 'entries.student.cfa':
+            $scope.updateCFA(rowEntity.entries.student);
+            break;
+        }
+      }
+    });
+
+    // NOTE: Hack to default to expanded rows on initial load.
+    // https://github.com/angular-ui/ui-grid/issues/3841
+    $scope.studentGridOptions.data.$promise.then(function() {
+      if ($scope.studentGridApi.treeBase.expandAllRows) {
+        $timeout($scope.studentGridApi.treeBase.expandAllRows);
+      }
+    });
+  };
+
   $scope.updateIEP = function(student) {
     if (student._id) {
       var oldVal = !student.iep;
@@ -134,49 +180,6 @@ function DashboardCtrl($scope, $timeout, Auth, AbsenceRecord, Outreach,
     }
   };
 
-  if (Auth.getCurrentUser().role !== 'teacher') {
-    $scope.studentGridOptions.columnDefs.push({
-      name: 'school.name',
-      displayName: 'School Name',
-      minWidth: 150,
-      grouping: {groupPriority: 0},
-      sort: {priority: 0, direction: 'asc'},
-      cellTemplate: '<div class="ui-grid-cell-contents" title="TOOLTIP">' +
-                    '{{COL_FIELD CUSTOM_FILTERS}} ' +
-                    '<span ng-if="row.treeLevel > -1">' +
-                    '<i class="fa fa-child"></i>' +
-                    '</span>' +
-                    '</div>'
-    });
-  } else {
-    $scope.assignment = Auth.getCurrentUser().assignment;
-  }
-
-  $scope.studentGridOptions.onRegisterApi = function(gridApi) {
-    $scope.studentGridApi = gridApi;
-    $scope.studentGridOptions.data = AbsenceRecord.listCurrent();
-    gridApi.edit.on.afterCellEdit($scope, function(rowEntity, colDef, n, o) {
-      if (n !== o) {
-        switch (colDef.name) {
-          case 'entries.student.iep':
-            $scope.updateIEP(rowEntity.entries.student);
-            break;
-          case 'entries.student.cfa':
-            $scope.updateCFA(rowEntity.entries.student);
-            break;
-        }
-      }
-    });
-
-    // NOTE: Hack to default to expanded rows on initial load.
-    // https://github.com/angular-ui/ui-grid/issues/3841
-    $scope.studentGridOptions.data.$promise.then(function() {
-      if ($scope.studentGridApi.treeBase.expandAllRows) {
-        $timeout($scope.studentGridApi.treeBase.expandAllRows);
-      }
-    });
-  };
-
   Outreach.current().$promise.then(function(res) {
     var counts = _.keyBy(res, '_id');
     $scope.calls = (counts['Phone Call'] || {}).count || 0;
@@ -198,6 +201,9 @@ function DashboardCtrl($scope, $timeout, Auth, AbsenceRecord, Outreach,
       }
       $scope.filter = filter;
       $scope.studentGridOptions.data = AbsenceRecord.listCurrent($scope.filter);
+      $scope.studentGridOptions.data.$promise.then(function(data) {
+        $scope.badge.text = data.length;
+      });
       $scope.menuItems.length = 0;
       if (_.includes(['Phone Call', 'Letter Sent', 'Home Visit'], type)) {
         [].push.apply($scope.menuItems, [{
@@ -222,6 +228,11 @@ function DashboardCtrl($scope, $timeout, Auth, AbsenceRecord, Outreach,
     return ($scope.assignment ? $scope.assignment.name : 'Students') +
            ($scope.filter.type ? ' (' + $scope.filter.type +
            ($scope.filter.tier ? ' #' + $scope.filter.tier : '') + ')' : '');
+  };
+
+  $scope.badge = {
+    icon: 'fa-child',
+    color: 'blue'
   };
 }
 

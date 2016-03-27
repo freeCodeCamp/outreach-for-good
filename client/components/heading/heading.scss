@@ -40,4 +40,18 @@
     margin-top: 5px;
     margin-bottom: 5px;
   }
+  .badge {
+    &.blue {
+      background-color: $label-info-bg;
+    }
+    &.green {
+      background-color: $label-success-bg;
+    }
+    &.yellow {
+      background-color: $label-warning-bg;
+    }
+    &.red {
+      background-color: $label-danger-bg;
+    }
+  }
 }
