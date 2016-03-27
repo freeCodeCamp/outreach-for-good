@@ -8,7 +8,10 @@
   border: none;
   border-radius: 0;
   li.active {
-    background-color: darken(lightblue, 20);
+    background-color: darken(lightblue, 15);
+  }
+  li:hover:not(.dropdown) {
+    background-color: darken(lightblue, 25);
   }
   h3 {
     display: inline-block;
@@ -47,6 +50,9 @@
   }
 
   @media (min-width: 768px) {
+    .navbar-nav > li:not(.dropdown) {
+      border-right: 1px lighten(lightblue, 15) solid;
+    }
     .navbar-collapse {
       padding: 0;
       margin: 0;
