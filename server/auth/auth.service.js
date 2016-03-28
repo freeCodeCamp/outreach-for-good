@@ -7,6 +7,7 @@ var jwt = require('jsonwebtoken');
 var expressJwt = require('express-jwt');
 var compose = require('composable-middleware');
 var User = require('../api/user/user.model');
+var School = require('../api/school/school.model');
 var Student = require('../api/student/student.model');
 var validateJwt = expressJwt({secret: config.secrets.session});
 
@@ -93,34 +94,28 @@ function hasRole(roleRequired) {
     });
 }
 
-function schoolMsg(schoolId) {
+function schoolMsg(assignmentId) {
   return 'Your current role of teacher and assignment to schoolId: ' +
-         schoolId + ' does not allow access to requested resource.';
+         assignmentId + ' does not allow access to requested resource.';
 }
 
-/**
- * Middleware that checks if user is at least manager or is assigned to school.
- *
- * @param type Indicates where to look for the school id for authorization.
- */
-function authorizeSchool(type) {
-  if (!schoolIdForType.hasOwnProperty(type)) {
-    throw new Error('Valid type needs to be set for authorizeSchool function.');
-  }
+function managerOrAssignedSchool(school, user) {
+  if (meetsRoleRequirements(user.role, 'manager')) return true;
+  return school.id === user.assignment.id;
+}
 
-  return compose()
-    .use(function(req, res, next) {
-      var assignment = req.user.assignment;
-      if (meetsRoleRequirements(req.user.role, 'manager') ||
-          assignment && schoolIdForType[type](req) &&
-          schoolIdForType[type](req) === assignment.toString()) {
-        next();
-      } else {
-        res.status(403).json({
-          reason: schoolMsg(assignment || 'None')
-        });
-      }
-    });
+function school(req, res, next) {
+  School.findById(req.params.schoolId, function(err, school) {
+    if (err) return handleError(res, err);
+    if (!school) return res.send(404);
+    if (!managerOrAssignedSchool(school, req.user)) {
+      return res.status(403).json({
+        reason: schoolMsg(req.user.assignment || 'None')
+      });
+    }
+    req.school = school;
+    next();
+  });
 }
 
 function studentMsg(student, req) {
@@ -129,7 +124,7 @@ function studentMsg(student, req) {
          ' does not allow access to student._id: ' + student._id + '.';
 }
 
-function managerOrAssigned(student, user) {
+function managerOrAssignedStudent(student, user) {
   if (meetsRoleRequirements(user.role, 'manager')) return true;
   var studentSchoolId = student.currentSchool._id || student.currentSchool;
   return studentSchoolId.toString() === user.assignment.toString();
@@ -139,7 +134,7 @@ function student(req, res, next) {
   Student.findById(req.params.studentId, function(err, student) {
     if (err) return handleError(res, err);
     if (!student) return res.send(404);
-    if (!managerOrAssigned(student, req.user)) {
+    if (!managerOrAssignedStudent(student, req.user)) {
       return res.status(403).json({
         reason: studentMsg(student, req)
       });
@@ -158,11 +153,5 @@ exports.signToken = signToken;
 exports.setTokenCookie = setTokenCookie;
 
 exports.hasRole = hasRole;
-exports.authorizeSchool = authorizeSchool;
-
+exports.school = school;
 exports.student = student;
-
-exports.meetsRoleRequirements = meetsRoleRequirements;
-
-exports.studentMsg = studentMsg;
-exports.schoolMsg = schoolMsg;

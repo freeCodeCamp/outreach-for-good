@@ -3,8 +3,8 @@
 var app = angular.module('app');
 
 app.factory('School', function($resource) {
-  return $resource('/api/schools/:id/:controller', {
-    id: '@_id'
+  return $resource('/api/schools/:schoolId/:controller', {
+    schoolId: '@_id'
   }, {
     students: {
       method: 'GET',
@@ -14,7 +14,7 @@ app.factory('School', function($resource) {
       }
     },
     archive: {
-      method: 'GET',
+      method: 'PUT',
       params: {
         controller: 'archive'
       }
