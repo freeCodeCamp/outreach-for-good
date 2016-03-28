@@ -3,7 +3,7 @@
 var _ = require('lodash');
 var mongoose = require('mongoose');
 var AbsenceRecord = require('./absence-record.model');
-var Outreach = require('../outreach/outreach.model');
+var Outreach = require('../student/outreach/outreach.model');
 
 function currentAbsenceRecordPipeline(user) {
   var pipeline = [];

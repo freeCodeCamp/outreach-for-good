@@ -3,31 +3,23 @@
 var app = angular.module('app');
 
 function StudentCtrl($scope, $state, $stateParams, Student, toastr, Modal) {
-  Student.get({id: $stateParams.id}, function(result) {
+  Student.get({studentId: $stateParams.studentId}, function(result) {
     var entry = _.first(result.currentRecord.entries);
-    _.forEach(result.outreaches, function(outreach) {
-      // Replaces actionDates with Date objects expected by uib-datepicker.
-      outreach.triggerDate = new Date(outreach.triggerDate);
-      if (outreach.actionDate) {
-        outreach.actionDate = new Date(outreach.actionDate);
-      }
-    });
     $scope.student = result.student;
-    $scope.outreaches = result.outreaches;
-    $scope.interventions = result.interventions;
-    $scope.percentage = ( entry.present / entry.enrolled * 100).toFixed(2);
+    $scope.percentage = (entry.present / entry.enrolled * 100);
   });
 
   $scope.updateIEP = function() {
     var oldValue = !$scope.student.iep;
     Student.updateIEP({
-      id: $scope.student._id
+      studentId: $stateParams.studentId
     }, {
       iep: $scope.student.iep
-    }, function() {
+    }, function(student) {
+      $scope.student = student;
       toastr.success(
-        'IEP updated to ' + $scope.student.iep,
-        $scope.student.firstName + ' ' + $scope.student.lastName);
+        'IEP updated to ' + student.iep,
+        student.firstName + ' ' + student.lastName);
     }, function(err) {
       $scope.student.iep = oldValue;
       toastr.error(err);
@@ -37,13 +29,14 @@ function StudentCtrl($scope, $state, $stateParams, Student, toastr, Modal) {
   $scope.updateCFA = function() {
     var oldValue = !$scope.student.cfa;
     Student.updateCFA({
-      id: $scope.student._id
+      studentId: $stateParams.studentId
     }, {
       cfa: $scope.student.cfa
-    }, function() {
+    }, function(student) {
+      $scope.student = student;
       toastr.success(
-        'CFA updated to ' + $scope.student.cfa,
-        $scope.student.firstName + ' ' + $scope.student.lastName);
+        'CFA updated to ' + student.cfa,
+        student.firstName + ' ' + student.lastName);
     }, function(err) {
       $scope.student.cfa = oldValue;
       toastr.error(err);
@@ -73,7 +66,18 @@ function StudentCtrl($scope, $state, $stateParams, Student, toastr, Modal) {
   };
 }
 
-function StudentOutreachesCtrl($scope, Outreach, toastr) {
+function StudentOutreachesCtrl($scope, $stateParams, Outreach, toastr) {
+  Outreach.query({studentId: $stateParams.studentId}, function(outreaches) {
+    _.forEach(outreaches, function(outreach) {
+      // Replaces dates with Date objects expected by uib-datepicker.
+      outreach.triggerDate = new Date(outreach.triggerDate);
+      if (outreach.actionDate) {
+        outreach.actionDate = new Date(outreach.actionDate);
+      }
+    });
+    $scope.outreaches = outreaches;
+  });
+
   $scope.datePopups = [];
   $scope.open = function(index) {
     $scope.datePopups[index] = true;
@@ -81,59 +85,76 @@ function StudentOutreachesCtrl($scope, Outreach, toastr) {
   $scope.maxDate = new Date();
 
   $scope.updateActionDate = function(outreach) {
-    Outreach.updateAction(
-      {id: outreach._id},
-      {actionDate: outreach.actionDate},
-      function(res) {
-        var student = res.student;
-        toastr.success(
-          'Action Taken successfully updated.',
-          [student.firstName, student.lastName, res.type, res.tier].join(' ')
-        );
-      });
+    Outreach.updateAction({
+      studentId: $stateParams.studentId,
+      outreachId: outreach._id
+    }, {
+      actionDate: outreach.actionDate
+    }, function(updatedOutreach) {
+      var student = $scope.student;
+      toastr.success(
+        'Action Taken successfully updated.',
+        [
+          student.firstName, student.lastName,
+          updatedOutreach.type, updatedOutreach.tier
+        ].join(' ')
+      );
+    });
   };
 
   $scope.addOutreachNote = function(outreach) {
     if (outreach.newNote) {
       var newNote = outreach.newNote;
       delete outreach.newNote;
-      outreach.addNote(
-        {id: outreach._id},
-        {note: newNote},
-        function(res) {
-          outreach.notes.push(res.notes[res.notes.length - 1]);
-          var student = res.student;
-          toastr.success(
-            'New outreach note added.',
-            [student.firstName, student.lastName, res.type, res.tier].join(' ')
-          );
-        });
+      Outreach.addNote({
+        studentId: $stateParams.studentId,
+        outreachId: outreach._id
+      }, {
+        note: newNote
+      }, function(res) {
+        outreach.notes.push(res.notes[res.notes.length - 1]);
+        var student = res.student;
+        toastr.success(
+          'New outreach note added.',
+          [student.firstName, student.lastName, res.type, res.tier].join(' ')
+        );
+      });
     }
   };
 }
 
-function StudentInterventionsCtrl($scope, Intervention, Modal, toastr) {
+function StudentInterventionsCtrl($scope, $stateParams, Intervention, Modal,
+  toastr) {
+  Intervention.query({
+    studentId: $stateParams.studentId
+  }, function(interventions) {
+    $scope.interventions = interventions;
+  });
+
   $scope.createInterventionNote = function(intervention) {
     if (intervention.newNote) {
       var newNote = intervention.newNote;
       delete intervention.newNote;
-      Intervention.createNote(
-        {id: intervention._id},
-        {note: newNote},
-        function(res) {
-          intervention.notes.push(res.notes[res.notes.length - 1]);
-          var student = res.student;
-          toastr.success(
-            'New intervention note created.',
-            [student.firstName, student.lastName, res.type, res.tier].join(' ')
-          );
-        });
+      Intervention.createNote({
+        studentId: $stateParams.studentId,
+        interventionId: intervention._id
+      }, {
+        note: newNote
+      }, function(res) {
+        intervention.notes.push(res.notes[res.notes.length - 1]);
+        var student = res.student;
+        toastr.success(
+          'New intervention note created.',
+          [student.firstName, student.lastName, res.type, res.tier].join(' ')
+        );
+      });
     }
   };
 
   $scope.toggleInterventionArchived = function(intervention) {
     Intervention.updateArchived({
-      id: intervention._id
+      studentId: $stateParams.studentId,
+      interventionId: intervention._id
     }, {
       archived: !intervention.archived
     }, function(toggledIntervention) {
@@ -150,7 +171,7 @@ function StudentInterventionsCtrl($scope, Intervention, Modal, toastr) {
   $scope.deleteIntervention = function(intervention) {
     var deleteFn = function(model) {
       return Intervention.remove({}, model, function() {
-        _.pull($scope.student.interventions, model);
+        _.pull($scope.interventions, model);
         toastr.warning(model.type + ' intervention has been deleted.');
       }, function(err) {
         console.log(err);
@@ -195,26 +216,24 @@ function StudentInterventionsCtrl($scope, Intervention, Modal, toastr) {
 }
 
 function StudentNotesCtrl($scope, $stateParams, Auth, StudentNote, toastr) {
-  var studentId = $stateParams.id;
-  $scope.notes = StudentNote.query({studentId: studentId});
+  StudentNote.query({studentId: $stateParams.studentId}, function(notes) {
+    $scope.notes = notes;
+  });
 
   $scope.createNote = function() {
     if ($scope.newNote) {
       var newNote = $scope.newNote;
       delete $scope.newNote;
-      StudentNote.save(
-        {studentId: studentId},
-        {
-          student: studentId,
-          user: Auth.getCurrentUser()._id,
-          note: newNote
-        },
-        function(res) {
-          $scope.notes.unshift(res);
-          toastr.success(
-            'Note has been created.',
-            $scope.student.firstName + ' ' + $scope.student.lastName);
-        });
+      StudentNote.save({}, {
+        student: $stateParams.studentId,
+        user: Auth.getCurrentUser()._id,
+        note: newNote
+      }, function(res) {
+        $scope.notes.unshift(res);
+        toastr.success(
+          'Note has been created.',
+          $scope.student.firstName + ' ' + $scope.student.lastName);
+      });
     }
   };
 
@@ -226,9 +245,7 @@ function StudentNotesCtrl($scope, $stateParams, Auth, StudentNote, toastr) {
   $scope.toggleNoteArchived = function(note) {
     delete $scope.openedActions;
     note.archived = !note.archived;
-    StudentNote.update({
-      studentId: studentId
-    }, note, function(updatedNote) {
+    StudentNote.update({}, note, function(updatedNote) {
       (updatedNote.archived ? toastr.warning : toastr.info)(
         'Note has been ' + (updatedNote.archived ? '' : 'un') + 'archived.',
         $scope.student.firstName + ' ' + $scope.student.lastName);
@@ -241,9 +258,7 @@ function StudentNotesCtrl($scope, $stateParams, Auth, StudentNote, toastr) {
 
   $scope.deleteNote = function(note) {
     delete $scope.openedActions;
-    StudentNote.remove({
-      studentId: studentId
-    }, note, function() {
+    StudentNote.remove({}, note, function() {
       _.pull($scope.notes, note);
       toastr.error(
         'Note has been deleted.',

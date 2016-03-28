@@ -4,7 +4,7 @@ var _ = require('lodash');
 var mongoose = require('mongoose');
 var ObjectId = require('mongoose').Types.ObjectId;
 var AbsenceRecord = require('./absence-record.model');
-var Outreach = require('../outreach/outreach.model');
+var Outreach = require('../student/outreach/outreach.model');
 var Student = require('../student/student.model');
 
 function newAbsenceRecord(record, res, createdStudents) {

@@ -6,10 +6,10 @@
 'use strict';
 
 var AbsenceRecord = require('../api/absence-record/absence-record.model');
-var Outreach = require('../api/outreach/outreach.model');
-var Intervention = require('../api/intervention/intervention.model');
 var School = require('../api/school/school.model');
 var Student = require('../api/student/student.model');
+var Outreach = require('../api/student/outreach/outreach.model');
+var Intervention = require('../api/student/intervention/intervention.model');
 var StudentNote = require('../api/student/note/note.model');
 var User = require('../api/user/user.model');
 

@@ -3,8 +3,8 @@
 var app = angular.module('app');
 
 app.factory('Student', function($resource) {
-  return $resource('/api/students/:id/:controller', {
-    id: '@_id'
+  return $resource('/api/students/:studentId/:controller', {
+    studentId: '@_id'
   }, {
     list: {
       method: 'GET',
@@ -21,6 +21,13 @@ app.factory('Student', function($resource) {
       params: {
         controller: 'cfa'
       }
+    },
+    outreachCounts: {
+      method: 'GET',
+      params: {
+        controller: 'outreach-counts'
+      },
+      isArray: true
     }
   });
 });

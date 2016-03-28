@@ -7,6 +7,7 @@ var jwt = require('jsonwebtoken');
 var expressJwt = require('express-jwt');
 var compose = require('composable-middleware');
 var User = require('../api/user/user.model');
+var Student = require('../api/student/student.model');
 var validateJwt = expressJwt({secret: config.secrets.session});
 
 var schoolIdForType = {
@@ -128,11 +129,28 @@ function studentMsg(student, req) {
          ' does not allow access to student._id: ' + student._id + '.';
 }
 
-function authorizeStudent(student, req) {
-  var user = req.user;
+function managerOrAssigned(student, user) {
+  if (meetsRoleRequirements(user.role, 'manager')) return true;
   var studentSchoolId = student.currentSchool._id || student.currentSchool;
-  return meetsRoleRequirements(user.role, 'manager') ||
-         studentSchoolId.toString() === user.assignment.toString();
+  return studentSchoolId.toString() === user.assignment.toString();
+}
+
+function student(req, res, next) {
+  Student.findById(req.params.studentId, function(err, student) {
+    if (err) return handleError(res, err);
+    if (!student) return res.send(404);
+    if (!managerOrAssigned(student, req.user)) {
+      return res.status(403).json({
+        reason: studentMsg(student, req)
+      });
+    }
+    req.student = student;
+    next();
+  });
+}
+
+function handleError(res, err) {
+  return res.send(500, err);
 }
 
 exports.isAuthenticated = isAuthenticated;
@@ -141,7 +159,8 @@ exports.setTokenCookie = setTokenCookie;
 
 exports.hasRole = hasRole;
 exports.authorizeSchool = authorizeSchool;
-exports.authorizeStudent = authorizeStudent;
+
+exports.student = student;
 
 exports.meetsRoleRequirements = meetsRoleRequirements;
 

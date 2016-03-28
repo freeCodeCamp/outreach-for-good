@@ -1,11 +1,14 @@
 'use strict';
 
-var _ = require('lodash');
 var AbsenceRecord = require('../absence-record/absence-record.model');
-var Intervention = require('../intervention/intervention.model');
-var Outreach = require('../outreach/outreach.model');
 var Student = require('./student.model');
+var Outreach = require('./outreach/outreach.model');
 var auth = require('../../auth/auth.service');
+
+var populateOptions = {
+  path: 'currentSchool',
+  select: 'name'
+};
 
 /**
  * Get list of all students
@@ -26,75 +29,35 @@ exports.index = function(req, res) {
  * restriction: 'teacher'
  */
 exports.show = function(req, res) {
-  var result = {};
-  Student
-    .findById(req.params.id)
-    .populate('currentSchool', 'name')
-    .exec(function(err, data) {
-      if (err) return handleError(res, err);
-      if (!data) return res.send(404);
-      if (!auth.authorizeStudent(data, req)) {
-        return res.status(403).json({
-          reason: auth.studentMsg(data, req)
-        });
-      }
-      return data;
-    })
-    .then(function(student) {
-      result.student = student;
-      return Outreach
-        .find({student: req.params.id})
-        .populate('notes.user')
-        .sort({_id: -1})
-        .exec();
-    })
-    .then(function(outreaches) {
-      result.outreaches = outreaches;
-      return Intervention
-        .find({student: req.params.id})
-        .populate('notes.user')
-        .sort({_id: -1})
-        .exec();
-    })
-    .then(function(interventions) {
-      result.interventions = interventions;
-      return AbsenceRecord.findOne({
-          school: result.student.currentSchool.id,
-          'entries.student': result.student.id
-        }, {
-          schoolYear: 1,
-          date: 1,
-          entries: {
-            $elemMatch: {student: result.student.id}
-          }
-        })
-        .sort('-date')
-        .exec();
-    })
-    .then(function(currentRecord) {
-      result.currentRecord = currentRecord;
-      return res.status(200).json(result);
-    });
-};
-
-// Creates a new student in the DB.
-exports.create = function(req, res) {
-  Student.create(req.body, function(err, student) {
+  Student.populate(req.student, populateOptions, function(err, student) {
     if (err) return handleError(res, err);
-    return res.json(201, student);
+    AbsenceRecord
+      .findOne({
+        school: student.currentSchool.id,
+        'entries.student': student.id
+      }, {
+        schoolYear: 1,
+        date: 1,
+        entries: {
+          $elemMatch: {student: student.id}
+        }
+      })
+      .sort('-date')
+      .exec(function(err, currentRecord) {
+        if (err) return handleError(res, err);
+        var result = {
+          student: req.student,
+          currentRecord: currentRecord
+        };
+        return res.status(200).json(result);
+      });
   });
 };
 
 // Updates an existing student's iep field.
 exports.updateIEP = function(req, res) {
-  Student.findById(req.params.id, function(err, student) {
+  Student.populate(req.student, populateOptions, function(err, student) {
     if (err) return handleError(res, err);
-    if (!student) return res.send(404);
-    if (!auth.authorizeStudent(student, req)) {
-      return res.status(403).json({
-        reason: auth.studentMsg(student, req)
-      });
-    }
     student.iep = req.body.iep;
     student.save(function(err) {
       if (err) return handleError(res, err);
@@ -105,14 +68,8 @@ exports.updateIEP = function(req, res) {
 
 // Updates an existing student's cfa field.
 exports.updateCFA = function(req, res) {
-  Student.findById(req.params.id, function(err, student) {
+  Student.populate(req.student, populateOptions, function(err, student) {
     if (err) return handleError(res, err);
-    if (!student) return res.send(404);
-    if (!auth.authorizeStudent(student, req)) {
-      return res.status(403).json({
-        reason: auth.studentMsg(student, req)
-      });
-    }
     student.cfa = req.body.cfa;
     student.save(function(err) {
       if (err) return handleError(res, err);
@@ -121,15 +78,29 @@ exports.updateCFA = function(req, res) {
   });
 };
 
-// Deletes a student from the DB.
-exports.destroy = function(req, res) {
-  Student.findById(req.params.id, function(err, student) {
+/**
+ * Get current outstanding outreach counts.
+ * restriction: 'teacher'
+ *
+ * Returns an aggregation for entries based on the req user role:
+ * - teachers will get outreach counts for assignment school
+ * - manager+ will get outreach counts for all schools
+ */
+exports.outreachCounts = function(req, res) {
+  var pipeline = [{
+    $match: {actionDate: null}
+  }, {
+    $group: {
+      _id: '$type',
+      count: {$sum: 1}
+    }
+  }];
+  if (req.user.role === 'teacher') {
+    pipeline[0].$match.school = req.user.assignment;
+  }
+  Outreach.aggregate(pipeline, function(err, results) {
     if (err) return handleError(res, err);
-    if (!student) return res.send(404);
-    student.remove(function(err) {
-      if (err) return handleError(res, err);
-      return res.send(204);
-    });
+    return res.status(200).json(results);
   });
 };
 

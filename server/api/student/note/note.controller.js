@@ -79,20 +79,6 @@ exports.destroy = function(req, res) {
   });
 };
 
-exports.auth = function(req, res, next) {
-  Student.findById(req.params.id, function(err, student) {
-    if (err) return handleError(res, err);
-    if (!student) return res.send(404);
-    if (!auth.authorizeStudent(student, req)) {
-      return res.status(403).json({
-        reason: auth.studentMsg(student, req)
-      });
-    }
-    req.student = student;
-    next();
-  });
-};
-
 function handleError(res, err) {
   return res.send(500, err);
 }

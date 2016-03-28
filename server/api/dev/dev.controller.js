@@ -1,10 +1,10 @@
 'use strict';
 
 var AbsenceRecord = require('../absence-record/absence-record.model');
-var Intervention = require('../intervention/intervention.model');
-var Outreach = require('../outreach/outreach.model');
 var School = require('../school/school.model');
 var Student = require('../student/student.model');
+var Intervention = require('../student/intervention/intervention.model');
+var Outreach = require('../student/outreach/outreach.model');
 var StudentNote = require('../student/note/note.model');
 
 /**
