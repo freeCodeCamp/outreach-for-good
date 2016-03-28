@@ -31,7 +31,7 @@
       <div class="col-xs-10">
         <input class="form-control"
           type="file"
-          ng-model="file"
+          ng-model="selected.file"
           ngf-pattern="'application/pdf'"
           ngf-select
           ng-disabled="parsedRecord"
@@ -64,7 +64,7 @@
     </div>
   </div>
 
-  <div class="parsing-progress col-xs-12" ng-if="file && !parsedRecord">
+  <div class="parsing-progress col-xs-12" ng-if="selected.file && !parsedRecord">
     <uib-progressbar value="progress" type="default"></uib-progressbar>
   </div>
 </section>
