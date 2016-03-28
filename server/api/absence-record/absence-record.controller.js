@@ -40,9 +40,10 @@ function dateOnly(dateStr) {
 }
 
 /**
- * Absence record creation validation requires the date selected to be
- * greater than the current newest record's date and the expected previous
- * record date to match.
+ * Absence record creation validation requires:
+ *  1. the date selected to be greater than the current newest record's date.
+ *  2. the expected previous record id to match current newest record's id.
+ *  3. the api request url's schoolId to match the request body's schoolId.
  */
 exports.validateCreate = function(req, res, next) {
   AbsenceRecord
@@ -60,6 +61,12 @@ exports.validateCreate = function(req, res, next) {
       if (dateOnly(req.body.date) <= dateOnly(record.date)) {
         return res.status(500).send({
           error: 'Date for upload must be more recent than current record date.'
+        });
+      }
+      // Validate schoolId in request url is the same as on the record.
+      if (req.school.id !== req.body.schoolId) {
+        return res.status(500).send({
+          error: 'API url schoolId does not match request body schoolId.'
         });
       }
       return next();
@@ -140,6 +147,42 @@ exports.current = function(req, res) {
         if (err) return handleError(res, err);
         return res.status(200).json(entries);
       });
+  });
+};
+
+exports.student = function(req, res) {
+  var pipeline = [{
+    $match: {
+      school: req.student.currentSchool,
+      'entries.student': req.student._id
+    }
+  }, {
+    $unwind: '$entries'
+  }, {
+    $match: {'entries.student': req.student._id}
+  }, {
+    $group: {
+      _id: '$schoolYear',
+      records: {$push: '$$ROOT'}
+    }
+  }, {
+    $sort: {_id: -1}
+  }, {
+    $limit: 1
+  }, {
+    $unwind: '$records'
+  }, {
+    $project: {
+      recordId: '$records._id',
+      entry: '$records.entries',
+      date: '$records.date'
+    }
+  }, {
+    $sort: {date: -1}
+  }];
+  AbsenceRecord.aggregate(pipeline, function(err, results) {
+    if (err) return handleError(res, err);
+    return res.status(200).json(results);
   });
 };
 

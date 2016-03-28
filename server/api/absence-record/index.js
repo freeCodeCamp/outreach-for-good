@@ -13,6 +13,11 @@ router.post('/school/:schoolId',
   controller.validateCreate,
   controller.create);
 
+router.get('/students/:studentId',
+  auth.hasRole('teacher'),
+  auth.student,
+  controller.student);
+
 router.get('/current',
   auth.hasRole('teacher'),
   controller.current);
