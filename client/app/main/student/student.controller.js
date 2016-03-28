@@ -4,6 +4,7 @@ var app = angular.module('app');
 
 function StudentCtrl($scope, $state, $stateParams, Student, toastr, Modal) {
   Student.get({id: $stateParams.id}, function(result) {
+    var entry = _.first(result.currentRecord.entries);
     _.forEach(result.outreaches, function(outreach) {
       // Replaces actionDates with Date objects expected by uib-datepicker.
       outreach.triggerDate = new Date(outreach.triggerDate);
@@ -14,6 +15,7 @@ function StudentCtrl($scope, $state, $stateParams, Student, toastr, Modal) {
     $scope.student = result.student;
     $scope.outreaches = result.outreaches;
     $scope.interventions = result.interventions;
+    $scope.percentage = ( entry.present / entry.enrolled * 100).toFixed(2);
   });
 
   $scope.updateIEP = function() {
