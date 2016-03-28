@@ -1,14 +1,14 @@
 <div class="student row">
-  <heading title="'Student Info'"></heading>
+  <heading title="student.firstName + ' ' + student.lastName"></heading>
   <div class="info">
     <div class="form-horizontal">
-      <label class="col-lg-2 control-label">Name</label>
-      <div class="col-lg-2">
-        <p class="form-control-static">{{student.firstName}} {{student.lastName}}</p>
-      </div>
       <label class="col-lg-2 control-label">Student Id</label>
       <div class="col-lg-2">
         <p class="form-control-static">{{student.studentId}}</p>
+      </div>
+      <label class="col-lg-2 control-label">Absence Percentage</label>
+      <div class="col-lg-2">
+        <p class="form-control-static">{{percentage | number: 2}}</p>
       </div>
       <label class="col-lg-2 control-label">School</label>
       <div class="col-lg-2">
