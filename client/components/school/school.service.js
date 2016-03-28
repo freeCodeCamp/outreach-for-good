@@ -13,6 +13,12 @@ app.factory('School', function($resource) {
         controller: 'students'
       }
     },
+    archive: {
+      method: 'GET',
+      params: {
+        controller: 'archive'
+      }
+    },
     updateTriggers: {
       method: 'PUT',
       params: {

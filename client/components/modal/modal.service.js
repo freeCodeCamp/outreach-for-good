@@ -80,6 +80,55 @@ app.factory('Modal', function($rootScope, $uibModal) {
       },
 
       /**
+       * Create a function to open a archive confirmation modal (ex.
+       * ng-click='myModalFn(name, arg1, arg2...)')
+       * @param  {Function} del - callback, ran when archive is confirmed
+       * @return {Function}     - the function to open the modal (ex.
+       *     myModalFn)
+       */
+      archive: function(del) {
+        del = del || angular.noop;
+
+        /**
+         * Open a archive confirmation modal
+         * @param  {String} name   - name or info to show on modal
+         * @param  {All}           - any additional args are passed straight
+         *     to del callback
+         */
+        return function() {
+          var args = Array.prototype.slice.call(arguments),
+            name = args.shift(),
+            archiveModal;
+
+          archiveModal = openModal({
+            modal: {
+              dismissable: true,
+              title: 'Confirm Delete',
+              html: '<p>Are you sure you want to archive <strong>' + name +
+                    '</strong> and all associated students?</p>',
+              buttons: [{
+                classes: 'btn-danger',
+                text: 'Archive',
+                click: function(e) {
+                  archiveModal.close(e);
+                }
+              }, {
+                classes: 'btn-default',
+                text: 'Cancel',
+                click: function(e) {
+                  archiveModal.dismiss(e);
+                }
+              }]
+            }
+          }, 'modal-danger');
+
+          archiveModal.result.then(function(event) {
+            del.apply(event, args);
+          });
+        };
+      },
+
+      /**
        * Create a function to open a update confirmation modal (ex.
        * ng-click='myModalFn(name, arg1, arg2...)')
        * @param  {Function} upd - callback, ran when update is confirmed

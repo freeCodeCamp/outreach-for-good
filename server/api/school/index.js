@@ -17,6 +17,8 @@ router.put('/:id', auth.hasRole('admin'), controller.update);
 router.patch('/:id', auth.hasRole('admin'), controller.update);
 router.delete('/:id', auth.hasRole('admin'), controller.destroy);
 
+router.get('/:id/archive', auth.hasRole('admin'), controller.archive);
+
 router.put('/:schoolId/update-triggers',
   auth.hasRole('teacher'),
   auth.authorizeSchool('params'),
