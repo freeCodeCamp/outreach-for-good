@@ -3,6 +3,7 @@
 var _ = require('lodash');
 var School = require('./school.model');
 var Student = require('../student/student.model');
+var ObjectId = require('mongoose').Types.ObjectId;
 
 /**
  * Get a list of schools
@@ -109,6 +110,41 @@ exports.destroy = function(req, res) {
     school.remove(function(err) {
       if (err) return handleError(res, err);
       return res.status(204).send('No Content');
+    });
+  });
+};
+
+function archiveStudents(id) {
+  return new Promise(function(resolve, reject) {
+    Student
+      .update({currentSchool: id}, 
+        {active: false},
+        {multi: true},
+        function(err, res) {
+          if (err) return handleError(res, err);
+          resolve(res.nModified);
+      });
+  });
+}
+
+/**
+ * Archives a school and it's students.
+ * restriction: 'admin'
+ */
+exports.archive = function(req,res) {
+  var result = {};
+  School.findById(req.params.id, function(err, school) {
+    if (err) return handleError(res, err);
+    if (!school) return res.status(404).send('Not Found');
+    result.school = school.name;
+    var updated = _.merge(school, {active: false});
+    updated.save(function(err) {
+      if(err) handleError(res, err);
+      archiveStudents(req.params.id)
+        .then(function(count) {
+          result.modified = count;
+          return res.status(200).json(result);
+        });
     });
   });
 };
