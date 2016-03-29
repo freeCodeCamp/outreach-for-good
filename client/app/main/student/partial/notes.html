@@ -1,0 +1,46 @@
+<tab-heading tabs="tabs" menu-items="menuItems"></tab-heading>
+<div class="student-notes">
+  <div class="new-note">
+    <div class="notes-input">
+      <input type="text" ng-model="newNote"/>
+    </div>
+    <button class="notes-button btn-success" ng-click="createNote()">
+      <i class="fa fa-plus"></i>
+    </button>
+  </div>
+  <div class="notes-list">
+    <ul class="list-group">
+      <li class="list-group-item"
+        ng-repeat="note in notes"
+        ng-if="showArchived || !note.archived"
+        ng-class="{archived: note.archived}">
+        <span class="badge blue" ng-click="toggleNoteActions(note)">
+          {{note.createdAt | date:'MM/dd/yy'}}
+        </span>
+        <span class="badge green"
+          ng-if="openedActions === note"
+          ng-click="viewStudentNote(note, student.firstName + ' ' + student.lastName)"
+          uib-tooltip="Details"
+          tooltip-append-to-body="true">
+          <i class="fa fa-eye"></i>
+        </span>
+        <span class="badge"
+          ng-class="note.archived ? 'blue' : 'yellow'"
+          ng-if="openedActions === note"
+          ng-click="toggleNoteArchived(note)"
+          uib-tooltip="{{note.archived ? 'Unarchive' : 'Archive'}}"
+          tooltip-append-to-body="true">
+          <i class="fa fa-archive"></i>
+        </span>
+        <span class="badge red"
+          ng-if="openedActions === note && note.archived"
+          ng-click="deleteNote(note)"
+          uib-tooltip="Delete"
+          tooltip-append-to-body="true">
+          <i class="fa fa-trash"></i>
+        </span>
+        {{note.note}}
+      </li>
+    </ul>
+  </div>
+</div>

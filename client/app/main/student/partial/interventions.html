@@ -34,7 +34,7 @@
         <div class="notes-list">
           <ul class="list-group">
             <li class="list-group-item" ng-repeat="note in intervention.notes | orderBy:$index:true">
-              <span class="badge bg-info" ng-click="viewNote(note, intervention.type)">
+              <span class="badge blue" ng-click="viewNote(note, intervention.type)">
                 {{note.date | date:'MM/dd/yy'}}
               </span>
               {{note.note}}

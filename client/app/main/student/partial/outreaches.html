@@ -43,7 +43,7 @@
         <div class="notes-list">
           <ul class="list-group">
             <li class="list-group-item" ng-repeat="note in outreach.notes | orderBy:$index:true">
-              <span class="badge bg-info" ng-click="viewNote(note, outreach.type + ' #' + outreach.tier)">
+              <span class="badge blue" ng-click="viewNote(note, outreach.type + ' #' + outreach.tier)">
                 {{note.date | date:'MM/dd/yy'}}
               </span>
               {{note.note}}

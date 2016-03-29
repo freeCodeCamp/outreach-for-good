@@ -10,6 +10,7 @@ var Outreach = require('../api/outreach/outreach.model');
 var Intervention = require('../api/intervention/intervention.model');
 var School = require('../api/school/school.model');
 var Student = require('../api/student/student.model');
+var StudentNote = require('../api/student/note/note.model');
 var User = require('../api/user/user.model');
 
 AbsenceRecord.remove().exec().then(function() {
@@ -20,6 +21,8 @@ AbsenceRecord.remove().exec().then(function() {
   return School.remove().exec();
 }).then(function() {
   return Student.remove().exec();
+}).then(function() {
+  return StudentNote.remove().exec();
 }).then(function() {
   return User.remove().exec();
 }).then(function() {

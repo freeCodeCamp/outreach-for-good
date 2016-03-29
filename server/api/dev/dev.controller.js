@@ -5,6 +5,7 @@ var Intervention = require('../intervention/intervention.model');
 var Outreach = require('../outreach/outreach.model');
 var School = require('../school/school.model');
 var Student = require('../student/student.model');
+var StudentNote = require('../student/note/note.model');
 
 /**
  * Deletes everything except for user models
@@ -19,6 +20,8 @@ exports.reset = function(req, res) {
     return School.remove().exec();
   }).then(function() {
     return Student.remove().exec();
+  }).then(function() {
+    return StudentNote.remove().exec();
   }).then(function() {
     res.sendStatus(200);
   });

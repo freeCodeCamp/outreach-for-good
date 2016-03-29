@@ -1,6 +1,5 @@
 'use strict';
 
-
 var express = require('express');
 var controller = require('./student.controller');
 var auth = require('../../auth/auth.service');
@@ -13,11 +12,6 @@ router.get('/', auth.hasRole('manager'), controller.index);
 router.get('/:id', auth.hasRole('teacher'), controller.show);
 router.put('/:id/iep', auth.hasRole('teacher'), controller.updateIEP);
 router.put('/:id/cfa', auth.hasRole('teacher'), controller.updateCFA);
-
-/**
- * TODO: LOCK DOWN ROUTES WITH AUTH ROLE CHECKS
- */
-router.post('/', controller.create);
-router.delete('/:id', controller.destroy);
+router.use('/:id/notes', require('./note'));
 
 module.exports = router;
