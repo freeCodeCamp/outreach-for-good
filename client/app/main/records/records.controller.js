@@ -2,13 +2,11 @@
 
 var app = angular.module('app');
 
-function RecordsCtrl($scope, $state) {
+function RecordsCtrl($scope) {
   $scope.tabs = [{
     title: 'Upload',
     state: 'records.upload'
   }];
-
-  $scope.tabs.selected = _.find($scope.tabs, {state: $state.$current.name});
 }
 
 app.controller('RecordsCtrl', RecordsCtrl);
