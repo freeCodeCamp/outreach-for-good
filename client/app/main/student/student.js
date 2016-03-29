@@ -16,12 +16,6 @@ angular.module('app')
         templateUrl: 'app/main/student/partial/outreaches.html',
         controller: 'StudentOutreachesCtrl'
       })
-      .state('student.interventions', {
-        url: '/interventions',
-        parent: 'student',
-        templateUrl: 'app/main/student/partial/interventions.html',
-        controller: 'StudentInterventionsCtrl'
-      })
       .state('student.notes', {
         url: '/notes',
         parent: 'student',

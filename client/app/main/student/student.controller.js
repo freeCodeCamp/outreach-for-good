@@ -59,9 +59,6 @@ function StudentCtrl($scope, $state, $stateParams, AbsenceRecord, Student,
     state: 'student.notes'
   }];
 
-  $scope.tabs.selected =
-    _.find($scope.tabs, {state: $state.$current.name}) || $scope.tabs[0];
-
   $scope.viewNote = function(note, type) {
     Modal.viewNote(
       type + ' Note',

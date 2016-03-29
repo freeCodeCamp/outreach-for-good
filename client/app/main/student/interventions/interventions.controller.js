@@ -59,7 +59,7 @@ function StudentInterventionsCtrl($scope, $stateParams, Intervention, Modal,
     };
     Modal.confirmDelete(
       'Delete Intervention',
-      'app/main/student/partial/modal.delete-intervention.html',
+      'app/main/student/interventions/modal.delete-intervention.html',
       intervention,
       deleteFn);
   };
@@ -78,7 +78,7 @@ function StudentInterventionsCtrl($scope, $stateParams, Intervention, Modal,
       };
       Modal.form(
         'Create New Intervention',
-        'app/main/student/partial/modal.create-intervention.html',
+        'app/main/student/interventions/modal.create-intervention.html',
         createInterventionFn);
     }
   }, {
