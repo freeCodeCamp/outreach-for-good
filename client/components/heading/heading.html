@@ -1,5 +1,10 @@
 <div class="heading navbar navbar-default">
-  <h3>{{ title }} <span class="badge" ng-if="badge || badge === 0">{{ badge }}</span></h3>
+  <h3>
+    {{ title }}
+    <span class="badge" ng-class="badge.color" ng-if="badge.text !== undefined">
+      {{ badge.text }} <span ng-if="badge.icon"><i class="fa" ng-class="badge.icon"></i></span>
+    </span>
+  </h3>
   <div class="btn-group menu-button-group" uib-dropdown is-open="isopen" ng-if="menuItems && menuItems.length">
     <button type="button" class="menu-button" uib-dropdown-toggle>
       <i class="fa fa-caret-right fa-lg" ng-class="{'fa-rotate-90': isopen}"></i>

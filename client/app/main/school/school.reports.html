@@ -1,5 +1,5 @@
 <div class="school-reports row">
-  <heading title="'At Risk for Chronic Absenteeism'" badge="atRiskCount"></heading>
+  <heading title="'At Risk for Chronic Absenteeism'" badge="{text: atRiskCount, color: 'blue', icon: 'fa-child'}"></heading>
   <div class="student-list">
     <div ui-grid="atRiskGridOptions"
       ui-grid-auto-resize
@@ -9,7 +9,7 @@
       ui-grid-exporter
       class="grid"></div>
   </div>
-  <heading title="'Chronically Absent'" badge="chronicCount"></heading>
+  <heading title="'Chronically Absent'" badge="{text: chronicCount, color: 'blue', icon: 'fa-child'}"></heading>
   <div class="student-list">
     <div ui-grid="chronicGridOptions"
       ui-grid-auto-resize
