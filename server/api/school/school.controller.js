@@ -3,7 +3,6 @@
 var _ = require('lodash');
 var School = require('./school.model');
 var Student = require('../student/student.model');
-var ObjectId = require('mongoose').Types.ObjectId;
 
 /**
  * Get a list of schools
@@ -29,29 +28,7 @@ exports.index = function(req, res) {
  * restriction: 'teacher'
  */
 exports.show = function(req, res) {
-  School.findById(req.params.id, function(err, school) {
-    if (err) return handleError(res, err);
-    if (!school) return res.status(404).send('Not Found');
-    return res.json(school);
-  });
-};
-
-/**
- * Get students for a school.
- * restriction: 'teacher'
- */
-exports.students = function(req, res) {
-  School.findById(req.params.id, function(err, school) {
-    if (err) return handleError(res, err);
-    if (!school) return res.status(404).send('Not Found');
-    Student
-      .find({currentSchool: school})
-      .populate('currentSchool', 'name')
-      .exec(function(err, students) {
-        if (err) return handleError(res, err);
-        return res.status(200).json(students);
-      });
-  });
+  return res.status(200).json(req.school);
 };
 
 /**
@@ -66,86 +43,36 @@ exports.create = function(req, res) {
 };
 
 /**
- * Updates an existing school in the DB.
- * restriction: 'admin'
- */
-exports.update = function(req, res) {
-  if (req.body._id) { delete req.body._id; }
-  School.findById(req.params.id, function(err, school) {
-    if (err) return handleError(res, err);
-    if (!school) return res.status(404).send('Not Found');
-    var updated = _.merge(school, req.body);
-    updated.save(function(err) {
-      if (err) return handleError(res, err);
-      return res.status(200).json(school);
-    });
-  });
-};
-
-/**
  * Updates an existing school's triggers in the DB.
  * restriction: 'teacher'
  */
 exports.updateTriggers = function(req, res) {
-  if (req.body._id) delete req.body._id;
-  School.findById(req.params.schoolId, function(err, school) {
+  req.school.triggers = req.body.triggers;
+  req.school.save(function(err) {
     if (err) return handleError(res, err);
-    if (!school) return res.status(404).send('Not Found');
-    school.triggers = req.body.triggers;
-    school.save(function(err) {
-      if (err) return handleError(res, err);
-      return res.status(200).json(school);
-    });
+    return res.status(200).json(req.school);
   });
 };
-
-/**
- * Deletes a school from the DB.
- * restriction: 'admin'
- */
-exports.destroy = function(req, res) {
-  School.findById(req.params.id, function(err, school) {
-    if (err) return handleError(res, err);
-    if (!school) return res.status(404).send('Not Found');
-    school.remove(function(err) {
-      if (err) return handleError(res, err);
-      return res.status(204).send('No Content');
-    });
-  });
-};
-
-function archiveStudents(id) {
-  return new Promise(function(resolve, reject) {
-    Student
-      .update({currentSchool: id}, 
-        {active: false},
-        {multi: true},
-        function(err, res) {
-          if (err) return handleError(res, err);
-          resolve(res.nModified);
-      });
-  });
-}
 
 /**
  * Archives a school and it's students.
  * restriction: 'admin'
  */
-exports.archive = function(req,res) {
-  var result = {};
-  School.findById(req.params.id, function(err, school) {
-    if (err) return handleError(res, err);
-    if (!school) return res.status(404).send('Not Found');
-    result.school = school.name;
-    var updated = _.merge(school, {active: false});
-    updated.save(function(err) {
-      if(err) handleError(res, err);
-      archiveStudents(req.params.id)
-        .then(function(count) {
-          result.modified = count;
-          return res.status(200).json(result);
+exports.archive = function(req, res) {
+  var school = req.school;
+  school.archived = true;
+  school.save(function(err) {
+    if (err) handleError(res, err);
+    Student.update({currentSchool: school.id},
+      {active: false},
+      {multi: true},
+      function(err, raw) {
+        if (err) return handleError(res, err);
+        return res.status(200).json({
+          name: school.name,
+          modified: raw.nModified
         });
-    });
+      });
   });
 };
 

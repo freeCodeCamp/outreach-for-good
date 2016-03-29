@@ -7,21 +7,18 @@ var auth = require('../../auth/auth.service');
 var router = express.Router();
 
 router.get('/', auth.hasRole('teacher'), controller.index);
-router.get('/students', auth.hasRole('manager'), controller.students);
-// TODO: Add "assignment" authorization check.
-router.get('/:id', auth.hasRole('teacher'), controller.show);
-router.get('/:id/students', auth.hasRole('teacher'), controller.students);
+router.get('/:schoolId', auth.hasRole('teacher'), auth.school, controller.show);
 
 router.post('/', auth.hasRole('admin'), controller.create);
-router.put('/:id', auth.hasRole('admin'), controller.update);
-router.patch('/:id', auth.hasRole('admin'), controller.update);
-router.delete('/:id', auth.hasRole('admin'), controller.destroy);
 
-router.get('/:id/archive', auth.hasRole('admin'), controller.archive);
+router.put('/:schoolId/archive',
+  auth.hasRole('admin'),
+  auth.school,
+  controller.archive);
 
 router.put('/:schoolId/update-triggers',
   auth.hasRole('teacher'),
-  auth.authorizeSchool('params'),
+  auth.school,
   controller.updateTriggers);
 
 module.exports = router;

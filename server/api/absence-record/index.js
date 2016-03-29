@@ -7,9 +7,9 @@ var auth = require('../../auth/auth.service');
 
 var router = express.Router();
 
-router.post('/',
+router.post('/school/:schoolId',
   auth.hasRole('teacher'),
-  auth.authorizeSchool('body'),
+  auth.school,
   controller.validateCreate,
   controller.create);
 

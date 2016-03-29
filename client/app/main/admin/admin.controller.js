@@ -160,7 +160,7 @@ function AdminCtrl($scope, $http, uiGridConstants, Auth, User, School,
 
   $scope.archiveSchool = function(school) {
     var archiveSchoolFn = function() {
-      School.archive({id: school._id}, function(res) {
+      School.archive(school, function(res) {
         _.pull($scope.schoolGridOptions.data, school);
         toastr.warning(
           res.modified + ' students archived',

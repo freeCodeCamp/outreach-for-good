@@ -2,7 +2,6 @@
 
 var _ = require('lodash');
 var mongoose = require('mongoose');
-var ObjectId = require('mongoose').Types.ObjectId;
 var AbsenceRecord = require('./absence-record.model');
 var Outreach = require('../student/outreach/outreach.model');
 var Student = require('../student/student.model');
@@ -47,7 +46,7 @@ function dateOnly(dateStr) {
  */
 exports.validateCreate = function(req, res, next) {
   AbsenceRecord
-    .findOne({school: new ObjectId(req.body.schoolId)})
+    .findOne({school: req.school.id})
     .sort({date: -1})
     .exec(function(err, record) {
       if (!record) return next();

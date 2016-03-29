@@ -45,7 +45,10 @@ function PDFUploadCtrl($scope, PDF, AbsenceRecord, Auth, School, toastr) {
   $scope.confirmUpload = function() {
     $scope.pending = true;
     $scope.parsedRecord.date = $scope.selected.date;
-    AbsenceRecord.save({}, $scope.parsedRecord, function(res) {
+    AbsenceRecord.save({
+      controller: 'school',
+      selector: $scope.parsedRecord.schoolId
+    }, $scope.parsedRecord, function(res) {
       resetState();
       var schoolName = res.record.school.name;
       if (res.students.length) {
