@@ -2,7 +2,6 @@
 
 var app = angular.module('app');
 
-
 function StudentCtrl($scope, $state, $stateParams, AbsenceRecord, Student,
   toastr, Modal) {
   Student.get({studentId: $stateParams.studentId}, function(student) {
