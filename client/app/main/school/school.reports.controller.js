@@ -272,9 +272,11 @@ function SchoolReportsCtrl($scope, $timeout, Auth, uiGridGroupingConstants, Stud
   $scope.updateIEP = function(student) {
     if (student._id) {
       var oldVal = !student.iep;
-      var promise =
-        Student.updateIEP({id: student._id}, {iep: student.iep}).$promise;
-      promise.then(function() {
+      Student.updateIEP({
+        studentId: student._id
+      }, {
+        iep: student.iep
+      }, function() {
         toastr.success(
           'IEP updated to ' + student.iep,
           student.firstName + ' ' + student.lastName);
@@ -288,9 +290,11 @@ function SchoolReportsCtrl($scope, $timeout, Auth, uiGridGroupingConstants, Stud
   $scope.updateCFA = function(student) {
     if (student._id) {
       var oldVal = !student.cfa;
-      var promise =
-        Student.updateCFA({id: student._id}, {cfa: student.cfa}).$promise;
-      promise.then(function() {
+      Student.updateCFA({
+        studentId: student._id
+      }, {
+        cfa: student.cfa
+      }, function() {
         toastr.success(
           'CFA updated to ' + student.cfa,
           student.firstName + ' ' + student.lastName);

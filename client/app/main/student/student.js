@@ -4,7 +4,7 @@ angular.module('app')
   .config(function($stateProvider) {
     $stateProvider
       .state('student', {
-        url: '/student/:id',
+        url: '/student/:studentId',
         parent: 'main',
         templateUrl: 'app/main/student/student.html',
         controller: 'StudentCtrl'

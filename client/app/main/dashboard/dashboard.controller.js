@@ -2,8 +2,8 @@
 
 var app = angular.module('app');
 
-function DashboardCtrl($scope, $timeout, Auth, AbsenceRecord, Outreach,
-  Student, uiGridGroupingConstants, toastr) {
+function DashboardCtrl($scope, $timeout, Auth, AbsenceRecord, Student,
+  uiGridGroupingConstants, toastr) {
   $scope.menuItems = [];
   $scope.filter = {};
 
@@ -151,9 +151,11 @@ function DashboardCtrl($scope, $timeout, Auth, AbsenceRecord, Outreach,
   $scope.updateIEP = function(student) {
     if (student._id) {
       var oldVal = !student.iep;
-      var promise =
-        Student.updateIEP({id: student._id}, {iep: student.iep}).$promise;
-      promise.then(function() {
+      Student.updateIEP({
+        studentId: student._id
+      }, {
+        iep: student.iep
+      }, function() {
         toastr.success(
           'IEP updated to ' + student.iep,
           student.firstName + ' ' + student.lastName);
@@ -167,9 +169,11 @@ function DashboardCtrl($scope, $timeout, Auth, AbsenceRecord, Outreach,
   $scope.updateCFA = function(student) {
     if (student._id) {
       var oldVal = !student.cfa;
-      var promise =
-        Student.updateCFA({id: student._id}, {cfa: student.cfa}).$promise;
-      promise.then(function() {
+      Student.updateCFA({
+        studentId: student._id
+      }, {
+        cfa: student.cfa
+      }, function() {
         toastr.success(
           'CFA updated to ' + student.cfa,
           student.firstName + ' ' + student.lastName);
@@ -180,7 +184,7 @@ function DashboardCtrl($scope, $timeout, Auth, AbsenceRecord, Outreach,
     }
   };
 
-  Outreach.current().$promise.then(function(res) {
+  Student.outreachCounts().$promise.then(function(res) {
     var counts = _.keyBy(res, '_id');
     $scope.calls = (counts['Phone Call'] || {}).count || 0;
     $scope.letters = (counts['Letter Sent'] || {}).count || 0;

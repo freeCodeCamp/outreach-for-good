@@ -1,17 +1,14 @@
 'use strict';
 
 var express = require('express');
-var controller = require('./note.controller');
+var controller = require('./outreach.controller');
 var auth = require('../../../auth/auth.service');
 
 var router = express.Router({mergeParams: true});
 var authorize = [auth.hasRole('teacher'), auth.student];
 
 router.get('/', authorize, controller.index);
-router.get('/:noteId', authorize, controller.show);
-router.post('/', authorize, controller.create);
-router.put('/:noteId', authorize, controller.update);
-router.delete('/:noteId', authorize, controller.destroy);
-
+router.post('/:outreachId/note', authorize, controller.addNote);
+router.put('/:outreachId/action', authorize, controller.updateAction);
 
 module.exports = router;
