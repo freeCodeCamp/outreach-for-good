@@ -135,6 +135,52 @@ exports.chronic = function(req, res) {
   });
 };
 
+/**
+ * Get list of absence records for the most recent schoolYear for the school.
+ * restriction: 'teacher'
+ */
+exports.school = function(req, res) {
+  var pipeline = [{
+    $match: {
+      school: req.school._id
+    }
+  }, {
+    $group: {
+      _id: '$schoolYear',
+      records: {$push: '$$ROOT'}
+    }
+  }, {
+    $sort: {_id: -1}
+  }, {
+    $limit: 1
+  }, {
+    $unwind: '$records'
+  }, {
+    $sort: {'records.date': -1}
+  }, {
+    $project: {
+      _id: false,
+      recordId: '$records._id',
+      schoolYear: '$_id',
+      createdStudents: '$records.createdStudents',
+      date: '$records.date',
+      entries: '$records.entries'
+    }
+  }];
+  AbsenceRecord.aggregate(pipeline, function(err, results) {
+    if (err) return handleError(res, err);
+    AbsenceRecord.populate(results, {
+        path: 'createdStudents',
+        model: 'Student',
+        select: 'firstName lastName studentId'
+      },
+      function(err, records) {
+        if (err) return handleError(res, err);
+        return res.status(200).json(records);
+      });
+  });
+};
+
 function handleError(res, err) {
   return res.status(500).send(err);
 }

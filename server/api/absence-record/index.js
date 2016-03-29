@@ -13,6 +13,11 @@ router.post('/school/:schoolId',
   controller.validateCreate,
   controller.create);
 
+router.get('/school/:schoolId/list',
+  auth.hasRole('teacher'),
+  auth.school,
+  listController.school);
+
 router.get('/students/:studentId',
   auth.hasRole('teacher'),
   auth.student,

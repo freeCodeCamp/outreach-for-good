@@ -6,6 +6,9 @@ function RecordsCtrl($scope) {
   $scope.tabs = [{
     title: 'Upload',
     state: 'records.upload'
+  }, {
+    title: 'Manage',
+    state: 'records.manage'
   }];
 }
 

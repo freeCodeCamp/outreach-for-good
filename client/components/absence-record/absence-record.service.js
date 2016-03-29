@@ -26,6 +26,14 @@ app.factory('AbsenceRecord', function($resource) {
         params: {
           controller: 'students'
         }
+      },
+      school: {
+        method: 'GET',
+        isArray: true,
+        params: {
+          controller: 'school',
+          filter: 'list'
+        }
       }
     });
 });
