@@ -51,21 +51,24 @@ function PDFUploadCtrl($scope, PDF, AbsenceRecord, Auth, School, toastr) {
     }, $scope.parsedRecord, function(res) {
       resetState();
       var schoolName = res.record.school.name;
-      if (res.students.length) {
-        toastr.success(
-          res.students.length + ' new students added.',
+      if (res.outreaches.length) {
+        toastr.info(
+          res.outreaches.length + ' outreaches triggered.',
           schoolName,
-          {timeOut: 10000}
+          {timeOut: 5000}
+        );
+      }
+      if (res.record.createdStudents.length) {
+        toastr.success(
+          res.record.createdStudents.length + ' new students added.',
+          schoolName,
+          {timeOut: 5000}
         );
       }
       toastr.success(
-        [
-          'Absence report with',
-          res.record.entries.length,
-          'entries added.'
-        ].join(' '),
+        'Absence record with ' + res.record.entries.length + ' entries added.',
         schoolName,
-        {timeOut: 10000}
+        {timeOut: 5000}
       );
     }, function(err) {
       resetState();

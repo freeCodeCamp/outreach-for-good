@@ -6,34 +6,6 @@ var AbsenceRecord = require('./absence-record.model');
 var Outreach = require('../student/outreach/outreach.model');
 var Student = require('../student/student.model');
 
-function newAbsenceRecord(record, res, createdStudents) {
-  return AbsenceRecord.create(record, function(err, createdRecord) {
-    if (err) return handleError(res, err);
-    var outreaches = [];
-    _.forEach(record.entries, function(entry) {
-      _.forEach(entry.outreaches, function(outreach) {
-        outreach.student = entry.student;
-        outreach.record = createdRecord.id;
-        outreach.triggerDate = record.date;
-        outreaches.push(outreach);
-      });
-    });
-    createdRecord.populate('school', function(err) {
-      if (err) return handleError(res, err);
-      Outreach.create(outreaches, function(err, createdOutreaches) {
-        if (err) return handleError(res, err);
-        return res
-          .status(200)
-          .json({
-            record: createdRecord,
-            outreaches: createdOutreaches,
-            students: createdStudents
-          });
-      });
-    });
-  });
-}
-
 function dateOnly(dateStr) {
   var date = new Date(dateStr);
   return new Date(date.getFullYear(), date.getMonth(), date.getDate());
@@ -73,38 +45,66 @@ exports.validateCreate = function(req, res, next) {
     });
 };
 
+function createStudents(newStudents) {
+  return new Promise(function(resolve, reject) {
+    if (!newStudents.length) return resolve([]);
+    Student.collection.insert(newStudents, {ordered: true}, function(err, ins) {
+      if (err) return reject(err);
+      return resolve(ins.ops);
+    });
+  });
+}
+
 /**
  * Creates a new absence record in the DB.
  * restriction: 'teacher'
  */
 exports.create = function(req, res) {
-  var school = req.body.schoolId;
+  var result = {};
   var existingEntries = _.map(req.body.updates || [], 'entry');
-  if (!req.body.creates) {
-    return newAbsenceRecord({
-      schoolYear: req.body.schoolYear,
-      school: school,
-      date: req.body.date,
-      entries: existingEntries
-    }, res, []);
-  }
   var newStudents = _.map(req.body.creates, 'student');
   var newEntries = _.map(req.body.creates, 'entry');
+  var outreaches = [];
+  // Assign students to be created to validated school.
   _.forEach(newStudents, function(student) {
-    student.currentSchool = school;
+    student.currentSchool = req.school.id;
   });
-  Student.collection.insert(newStudents, {ordered: true}, function(err, ins) {
-    var createdStudents = ins.ops;
-    if (err) return handleError(res, err);
+  var promise = createStudents(newStudents);
+  promise.then(function(createdStudents) {
+    // Fill in missing student for new entries.
     _.forEach(createdStudents, function(student, index) {
       newEntries[index].student = student._id;
     });
-    return newAbsenceRecord({
+    var combinedEntries = [].concat.apply(newEntries, existingEntries);
+    // Outreaches for entries are update with student and added to outreaches.
+    _.forEach(combinedEntries, function(entry) {
+      _.forEach(entry.outreaches, function(outreach) {
+        outreach.student = entry.student;
+        outreaches.push(outreach);
+      });
+    });
+    return AbsenceRecord.create({
       schoolYear: req.body.schoolYear,
-      school: school,
+      school: req.school.id,
       date: req.body.date,
-      entries: [].concat.apply(newEntries, existingEntries)
-    }, res, createdStudents);
+      entries: combinedEntries,
+      createdStudents: _.map(createdStudents, '_id')
+    });
+  }).then(function(createdRecord) {
+    return createdRecord.populate('school').execPopulate();
+  }).then(function(populatedRecord) {
+    result.record = populatedRecord;
+    // Outreaches updated with the record id and date.
+    _.forEach(outreaches, function(outreach) {
+      outreach.record = populatedRecord._id;
+      outreach.triggerDate = populatedRecord.date;
+    });
+    return Outreach.create(outreaches);
+  }).then(function(createdOutreaches) {
+    result.outreaches = createdOutreaches;
+    return res.status(200).json(result);
+  }).catch(function(err) {
+    return handleError(res, err);
   });
 };
 
@@ -185,7 +185,6 @@ exports.student = function(req, res) {
     return res.status(200).json(results);
   });
 };
-
 
 function handleError(res, err) {
   return res.status(500).send(err);
