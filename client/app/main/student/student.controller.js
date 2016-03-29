@@ -2,10 +2,15 @@
 
 var app = angular.module('app');
 
-function StudentCtrl($scope, $state, $stateParams, Student, toastr, Modal) {
-  Student.get({studentId: $stateParams.studentId}, function(result) {
-    var entry = _.first(result.currentRecord.entries);
-    $scope.student = result.student;
+
+function StudentCtrl($scope, $state, $stateParams, AbsenceRecord, Student,
+  toastr, Modal) {
+  Student.get({studentId: $stateParams.studentId}, function(student) {
+    $scope.student = student;
+  });
+  AbsenceRecord.students({selector: $stateParams.studentId}, function(records) {
+    var entry = (_.first(records) || {}).entry;
+    $scope.records = records;
     $scope.percentage = (entry.present / entry.enrolled * 100);
   });
 

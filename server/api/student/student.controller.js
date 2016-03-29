@@ -1,6 +1,5 @@
 'use strict';
 
-var AbsenceRecord = require('../absence-record/absence-record.model');
 var Student = require('./student.model');
 var Outreach = require('./outreach/outreach.model');
 var auth = require('../../auth/auth.service');
@@ -31,26 +30,7 @@ exports.index = function(req, res) {
 exports.show = function(req, res) {
   Student.populate(req.student, populateOptions, function(err, student) {
     if (err) return handleError(res, err);
-    AbsenceRecord
-      .findOne({
-        school: student.currentSchool.id,
-        'entries.student': student.id
-      }, {
-        schoolYear: 1,
-        date: 1,
-        entries: {
-          $elemMatch: {student: student.id}
-        }
-      })
-      .sort('-date')
-      .exec(function(err, currentRecord) {
-        if (err) return handleError(res, err);
-        var result = {
-          student: req.student,
-          currentRecord: currentRecord
-        };
-        return res.status(200).json(result);
-      });
+    return res.status(200).json(student);
   });
 };
 
