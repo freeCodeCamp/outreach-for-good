@@ -38,7 +38,8 @@ function DashboardCtrl($scope, $timeout, Auth, AbsenceRecord, Student,
     displayName: 'Student Id',
     minWidth: 150,
     cellTemplate: '<div class="ui-grid-cell-contents">' +
-                  '<a href="/student/{{row.entity.entries.student._id}}">' +
+                  '<a ui-sref=' +
+                  '"student({studentId: row.entity.entries.student._id})">' +
                   '{{row.entity.entries.student.studentId}}</a>' +
                   '</div>'
   }, {
