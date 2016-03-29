@@ -13,10 +13,10 @@ angular.module('app').controller('SidebarCtrl',
       displayName: 'Data Visualization',
       icon: 'fa-area-chart'
     }, {
-      name: 'pdf-upload',
-      url: 'pdf-upload',
-      displayName: 'Upload',
-      icon: 'fa-upload'
+      name: 'records',
+      url: 'records',
+      displayName: 'Records',
+      icon: 'fa-file'
     }, {
       name: 'school-reports',
       url: 'school-reports',

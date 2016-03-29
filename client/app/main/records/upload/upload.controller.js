@@ -7,7 +7,7 @@ function dateOnly(dateStr) {
   return new Date(date.getFullYear(), date.getMonth(), date.getDate());
 }
 
-function PDFUploadCtrl($scope, PDF, AbsenceRecord, Auth, School, toastr) {
+function UploadCtrl($scope, PDF, AbsenceRecord, Auth, School, toastr) {
   function resetState() {
     delete $scope.pending;
     delete $scope.parsedRecord;
@@ -157,4 +157,4 @@ function PDFUploadCtrl($scope, PDF, AbsenceRecord, Auth, School, toastr) {
   });
 }
 
-app.controller('PDFUploadCtrl', PDFUploadCtrl);
+app.controller('UploadCtrl', UploadCtrl);
