@@ -41,6 +41,8 @@ AbsenceRecord.remove().exec().then(function() {
     name: 'School A'
   }, {
     name: 'School B'
+  }, {
+    name: 'School C'
   }, logCreateResults('school'));
 }).then(function(schoolA, schoolB) {
   // Fake names from http://homepage.net/name_generator/

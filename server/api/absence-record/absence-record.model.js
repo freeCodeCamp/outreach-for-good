@@ -15,7 +15,8 @@ var AbsenceRecordSchema = new Schema({
     tardiesDelta: {type: Number, required: true},
     present: {type: Number, required: true},
     enrolled: {type: Number, required: true}
-  }]
+  }],
+  createdStudents: [{type: Schema.Types.ObjectId, ref: 'Student'}]
 });
 
 module.exports = mongoose.model('AbsenceRecord', AbsenceRecordSchema);
