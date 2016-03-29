@@ -11,7 +11,6 @@ function PDFUploadCtrl($scope, PDF, AbsenceRecord, Auth, School, toastr) {
   function resetState() {
     delete $scope.pending;
     delete $scope.parsedRecord;
-    delete $scope.file;
     $scope.maxDate = dateOnly(Date.now());
     $scope.progress = 0;
     $scope.selected = {
@@ -133,7 +132,7 @@ function PDFUploadCtrl($scope, PDF, AbsenceRecord, Auth, School, toastr) {
     return record;
   }
 
-  $scope.$watch('file', function(n, o) {
+  $scope.$watch('selected.file', function(n, o) {
     if (n !== o) {
       delete $scope.parsedRecord;
       $scope.progress = 0;
