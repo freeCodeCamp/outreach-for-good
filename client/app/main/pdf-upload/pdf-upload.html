@@ -1,6 +1,6 @@
 <section class="pdf">
   <heading title="'Parse and Upload Absence Records'"></heading>
-  <div class="upload-inputs">
+  <div class="upload-inputs" ng-if="records">
     <div class="col-lg-4 upload-input-group">
       <div ng-class="selected.school && !hasCurrentRecord() ? 'has-success' : 'has-error'">
         <label class="control-label col-xs-2">School</label>
