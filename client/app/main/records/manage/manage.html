@@ -25,7 +25,47 @@
       <div class="delete-record" ng-if="$index === 0">
         <button class="btn btn-danger" ng-click="delete(record, $index)">Delete</button>
       </div>
-      <pre>{{ record | json }}</pre>
+      <div class="subheading">
+        <h4>Created Students ({{record.createdStudents.length}} <i class="fa fa-child"></i>)</h4>
+      </div>
+      <div class="created-list" ng-if="record.createdStudents.length">
+        <ul>
+          <li ng-repeat="student in record.createdStudents">
+            <a ui-sref="student.outreaches({studentId: student._id})" target="_blank">{{ student.firstName }} {{ student.lastName }}</a> ({{ student.studentId}})
+          </li>
+        </ul>
+      </div>
+      <div class="subheading">
+        <h4>Entries: {{ record.entries.length }}</h4>
+      </div>
+      <div class="entries-list" ng-if="record.entries.length">
+        <div class="entries-table">
+          <div class="table-responsive">
+            <table class="table table-condensed">
+              <thead class="cf">
+              <tr>
+                <th>_id</th>
+                <th>Absences</th>
+                <th>Δ Absences</th>
+                <th>Tardies</th>
+                <th>Δ Tardies</th>
+                <th>Present</th>
+                <th>Enrolled</th>
+              </tr>
+              </thead>
+              <tr ng-repeat="entry in record.entries">
+                <td data-title="_id">{{entry._id}}</td>
+                <td data-title="Absences">{{entry.absences}}</td>
+                <td data-title="Δ Absences">{{entry.absencesDelta}}</td>
+                <td data-title="Tardies">{{entry.tardies}}</td>
+                <td data-title="Δ Tardies">{{entry.tardiesDelta}}</td>
+                <td data-title="Present">{{entry.present}}</td>
+                <td data-title="Enrolled">{{entry.enrolled}}</td>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </div>
     </uib-accordion-group>
   </uib-accordion>
   <div class="no-records" ng-if="!records.length">
