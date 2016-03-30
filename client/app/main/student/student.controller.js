@@ -61,7 +61,7 @@ function StudentCtrl($scope, $state, $stateParams, AbsenceRecord, Student,
   $scope.viewNote = function(note, type) {
     Modal.viewNote(
       type + ' Note',
-      'app/main/student/partial/modal.view-note.html',
+      'app/main/student/modal.view-note.html',
       note);
   };
 }
