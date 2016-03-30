@@ -10,12 +10,6 @@ angular.module('app')
         templateUrl: 'app/main/student/student.html',
         controller: 'StudentCtrl'
       })
-      .state('student.outreaches', {
-        url: '/outreaches',
-        parent: 'student',
-        templateUrl: 'app/main/student/partial/outreaches.html',
-        controller: 'StudentOutreachesCtrl'
-      })
       .state('student.notes', {
         url: '/notes',
         parent: 'student',
