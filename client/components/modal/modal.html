@@ -13,5 +13,6 @@
     ng-click="button.click($event)"
     ng-bind="button.text"
     type="{{button.type||'button'}}"
+    ng-disabled="button.disabled && button.disabled(modal)"
     class="btn"></button>
 </div>

@@ -25,19 +25,19 @@ exports.validateCreate = function(req, res, next) {
       if (!record) return next();
       // Validate data is not stale by matching previousRecordId.
       if (record.id !== req.body.previousRecordId) {
-        return res.status(500).send({
+        return handleError(res, {
           error: 'Submitted previous record id does not match.'
         });
       }
       // Validate date selected is more recent than previous record.
       if (dateOnly(req.body.date) <= dateOnly(record.date)) {
-        return res.status(500).send({
+        return handleError(res, {
           error: 'Date for upload must be more recent than current record date.'
         });
       }
       // Validate schoolId in request url is the same as on the record.
       if (req.school.id !== req.body.schoolId) {
-        return res.status(500).send({
+        return handleError(res, {
           error: 'API url schoolId does not match request body schoolId.'
         });
       }
@@ -183,6 +183,28 @@ exports.student = function(req, res) {
   AbsenceRecord.aggregate(pipeline, function(err, results) {
     if (err) return handleError(res, err);
     return res.status(200).json(results);
+  });
+};
+
+exports.validateDelete = function(req, res, next) {
+  AbsenceRecord
+    .findOne({school: req.record.school})
+    .sort({date: -1})
+    .exec(function(err, latest) {
+      if (err) return handleError(res, err);
+      if (latest.id !== req.record.id) {
+        return handleError(res, {
+          error: 'Submitted record for delete is not current record.'
+        });
+      }
+      return next();
+    })
+};
+
+exports.delete = function(req, res) {
+  req.record.remove(function(err) {
+    if (err) return handleError(res, err);
+    return res.status(204).send('No Content');
   });
 };
 

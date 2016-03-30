@@ -289,6 +289,38 @@ app.factory('Modal', function($rootScope, $uibModal) {
       }, 'modal-danger', 'components/modal/form-modal.html');
     },
 
+    confirmDeleteGuarded: function(title, templateUrl, model, cb) {
+      var confirmDelete = openModal({
+        modal: {
+          dismissable: true,
+          title: title,
+          templateUrl: templateUrl,
+          buttons: [{
+            classes: 'btn-danger',
+            text: 'Delete',
+            click: function() {
+              cb(model).$promise.then(function() {
+                confirmDelete.close();
+              }, function(err) {
+                console.log(err);
+                // TODO: Handle error from deleting.
+              });
+            },
+            disabled: function(modal) {
+              return modal.confirm !== 'DELETE';
+            }
+          }, {
+            classes: 'btn-default',
+            text: 'Cancel',
+            click: function(e) {
+              confirmDelete.dismiss(e);
+            }
+          }]
+        },
+        model: model
+      }, 'modal-danger', 'components/modal/modal.html');
+    },
+
     viewNote: function(title, templateUrl, note) {
       var viewNote = openModal({
         modal: {
