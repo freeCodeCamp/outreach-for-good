@@ -269,6 +269,8 @@ function SchoolReportsCtrl($scope, $timeout, Auth, uiGridGroupingConstants, Stud
     });
   }
 
+  console.log(Student.interventionSummary());
+
   $scope.updateIEP = function(student) {
     if (student._id) {
       var oldVal = !student.iep;
