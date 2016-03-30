@@ -16,6 +16,7 @@ var app = angular.module('app', [
   'ui.grid.pinning',
   'ui.grid.selection',
   'ui.router',
+  'ui.router.default',
   'ui.select',
   'matchmedia-ng',
   'toastr',

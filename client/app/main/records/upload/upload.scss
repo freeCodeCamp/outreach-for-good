@@ -1,5 +1,5 @@
-.pdf {
-  @extend .row;
+.upload {
+  min-height: 54px;
   .confirm-buttons {
     text-align: center;
   }
@@ -10,7 +10,7 @@
     padding-right: 0;
   }
   .parsing-progress {
-    height: 54px;
+    min-height: 54px;
     padding: 17px 10px;
   }
   .upload-input-group {
@@ -37,7 +37,6 @@
 }
 
 .confirm {
-  @extend .row;
   .confirm-buttons {
     min-height: 54px;
     padding: 10px;
