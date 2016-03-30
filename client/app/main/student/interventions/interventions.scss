@@ -1,0 +1,54 @@
+.student .intervention-widget {
+  .title {
+    position: relative;
+    .dropdown {
+      position: absolute;
+      width: 27px;
+      height: 27px;
+      right: 0;
+      top: 0;
+      .dropdown-toggle {
+        cursor: pointer;
+      }
+      .dropdown-menu {
+        left: inherit;
+        right: 0;
+      }
+      &.btn-group {
+        text-align: center;
+        vertical-align: middle;
+        line-height: 27px;
+        i {
+          width: 14px;
+          transition: transform 0.5s ease;
+        }
+        &.open .dropdown-toggle {
+          box-shadow: none;
+          @extend .fa-rotate-90;
+        }
+      }
+    }
+  }
+  .body {
+    flex-direction: row;
+    align-items: center;
+    .notes {
+      width: 100%;
+      @media(min-width: 1200px) {
+        flex: 1;
+        height: 108px;
+      }
+      @media(max-width: 1200px) {
+        height: 216px;
+      }
+    }
+  }
+  &.archived {
+    .body {
+      background-color: darken(#f1f1f1, 10%);
+    }
+    .title {
+      background-color: darken($state-warning-bg, 10%);
+    }
+  }
+}
