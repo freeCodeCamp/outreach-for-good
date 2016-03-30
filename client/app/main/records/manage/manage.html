@@ -1,0 +1,34 @@
+<tab-heading tabs="tabs"></tab-heading>
+<section class="manage" ng-if="schools">
+  <div class="manage-inputs">
+    <div class="col-lg-4 col-lg-offset-4 manage-input-group">
+      <div ng-class="selected.school ? 'has-success' : 'has-error'">
+        <label class="control-label col-xs-2">School</label>
+        <ui-select class="col-xs-10" theme="bootstrap" ng-model="selected.school" required>
+          <ui-select-match class="ui-select-match" placeholder="Select a school">{{$select.selected.name}}
+          </ui-select-match>
+          <ui-select-choices class="ui-select-choices" repeat="school in schools | filter: $select.search">
+            <div ng-bind-html="school.name | highlight: $select.search"></div>
+          </ui-select-choices>
+        </ui-select>
+      </div>
+    </div>
+  </div>
+</section>
+<section class="records-list" ng-if="selected.school && records">
+  <heading title="selected.school.name"></heading>
+  <uib-accordion>
+    <uib-accordion-group
+      ng-repeat="record in records"
+      heading="Record for {{ record.date | date : 'MM/dd/yy' }}"
+      template-url="app/main/records/manage/manage.accordion-group.html">
+      <div class="delete-record" ng-if="$index === 0">
+        <button class="btn btn-danger">Delete</button>
+      </div>
+      <pre>{{ record | json }}</pre>
+    </uib-accordion-group>
+  </uib-accordion>
+  <div class="no-records" ng-if="!records.length">
+    <div class="alert-warning">No records found for {{ selected.school.name }}.</div>
+  </div>
+</section>
