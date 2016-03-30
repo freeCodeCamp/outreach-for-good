@@ -13,6 +13,12 @@ router.post('/school/:schoolId',
   controller.validateCreate,
   controller.create);
 
+router.delete('/:recordId',
+  auth.hasRole('teacher'),
+  auth.record,
+  controller.validateDelete,
+  controller.delete);
+
 router.get('/school/:schoolId/list',
   auth.hasRole('teacher'),
   auth.school,

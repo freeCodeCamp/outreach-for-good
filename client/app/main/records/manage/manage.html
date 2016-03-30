@@ -23,7 +23,7 @@
       heading="Record for {{ record.date | date : 'MM/dd/yy' }}"
       template-url="app/main/records/manage/manage.accordion-group.html">
       <div class="delete-record" ng-if="$index === 0">
-        <button class="btn btn-danger">Delete</button>
+        <button class="btn btn-danger" ng-click="delete(record, $index)">Delete</button>
       </div>
       <pre>{{ record | json }}</pre>
     </uib-accordion-group>

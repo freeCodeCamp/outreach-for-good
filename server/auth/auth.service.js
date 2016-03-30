@@ -6,6 +6,7 @@ var config = require('../config/environment');
 var jwt = require('jsonwebtoken');
 var expressJwt = require('express-jwt');
 var compose = require('composable-middleware');
+var AbsenceRecord = require('../api/absence-record/absence-record.model');
 var User = require('../api/user/user.model');
 var School = require('../api/school/school.model');
 var Student = require('../api/student/student.model');
@@ -124,22 +125,36 @@ function studentMsg(student, req) {
          ' does not allow access to student._id: ' + student._id + '.';
 }
 
-function managerOrAssignedStudent(student, user) {
-  if (meetsRoleRequirements(user.role, 'manager')) return true;
-  var studentSchoolId = student.currentSchool._id || student.currentSchool;
-  return studentSchoolId.toString() === user.assignment.toString();
-}
-
 function student(req, res, next) {
   Student.findById(req.params.studentId, function(err, student) {
     if (err) return handleError(res, err);
     if (!student) return res.send(404);
-    if (!managerOrAssignedStudent(student, req.user)) {
+    if (!managerOrAssignedSchool(student.currentSchool, req.user)) {
       return res.status(403).json({
         reason: studentMsg(student, req)
       });
     }
     req.student = student;
+    next();
+  });
+}
+
+function recordMsg(record, req) {
+  return 'Your current role of teacher and assignment to schoolId: ' +
+         req.user.assignment.toString() +
+         ' does not allow access to record._id: ' + record._id + '.';
+}
+
+function record(req, res, next) {
+  AbsenceRecord.findById(req.params.recordId, function(err, record) {
+    if (err) return handleError(res, err);
+    if (!record) return res.send(404);
+    if (!managerOrAssignedSchool(record.school, req.user)) {
+      return res.status(403).json({
+        reason: recordMsg(record, req)
+      });
+    }
+    req.record = record;
     next();
   });
 }
@@ -155,3 +170,4 @@ exports.setTokenCookie = setTokenCookie;
 exports.hasRole = hasRole;
 exports.school = school;
 exports.student = student;
+exports.record = record;

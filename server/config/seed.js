@@ -101,7 +101,8 @@ AbsenceRecord.remove().exec().then(function() {
       tardiesDelta: 0.0,
       present: 21.0,
       enrolled: 22.0
-    }]
+    }],
+    createdStudents: [studentA._id, studentB._id, studentC._id]
   }, {
     schoolYear: '2015-2016',
     school: studentD.currentSchool,
@@ -122,7 +123,8 @@ AbsenceRecord.remove().exec().then(function() {
       tardiesDelta: 0.0,
       present: 22.0,
       enrolled: 22.0
-    }]
+    }],
+    createdStudents: [studentD._id, studentE._id]
   }, logCreateResults('AbsenceRecords'));
 }).then(function() {
   return Student.find().populate('currentSchool').exec(function(err, students) {
