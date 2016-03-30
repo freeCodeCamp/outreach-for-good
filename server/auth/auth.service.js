@@ -100,16 +100,16 @@ function schoolMsg(assignmentId) {
          assignmentId + ' does not allow access to requested resource.';
 }
 
-function managerOrAssignedSchool(school, user) {
+function managerOrAssignedSchool(schoolIdStr, user) {
   if (meetsRoleRequirements(user.role, 'manager')) return true;
-  return school.id === user.assignment.id;
+  return schoolIdStr === user.assignment.toString();
 }
 
 function school(req, res, next) {
   School.findById(req.params.schoolId, function(err, school) {
     if (err) return handleError(res, err);
     if (!school) return res.send(404);
-    if (!managerOrAssignedSchool(school, req.user)) {
+    if (!managerOrAssignedSchool(school.id, req.user)) {
       return res.status(403).json({
         reason: schoolMsg(req.user.assignment || 'None')
       });
@@ -129,7 +129,7 @@ function student(req, res, next) {
   Student.findById(req.params.studentId, function(err, student) {
     if (err) return handleError(res, err);
     if (!student) return res.send(404);
-    if (!managerOrAssignedSchool(student.currentSchool, req.user)) {
+    if (!managerOrAssignedSchool(student.currentSchool.toString(), req.user)) {
       return res.status(403).json({
         reason: studentMsg(student, req)
       });
@@ -149,7 +149,7 @@ function record(req, res, next) {
   AbsenceRecord.findById(req.params.recordId, function(err, record) {
     if (err) return handleError(res, err);
     if (!record) return res.send(404);
-    if (!managerOrAssignedSchool(record.school, req.user)) {
+    if (!managerOrAssignedSchool(record.school.toString(), req.user)) {
       return res.status(403).json({
         reason: recordMsg(record, req)
       });
