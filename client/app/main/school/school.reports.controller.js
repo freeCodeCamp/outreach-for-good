@@ -270,6 +270,7 @@ function SchoolReportsCtrl($scope, $timeout, Auth, uiGridGroupingConstants, Stud
   }
 
   console.log(Student.interventionSummary());
+  console.log(Student.outreachSummary());
 
   $scope.updateIEP = function(student) {
     if (student._id) {

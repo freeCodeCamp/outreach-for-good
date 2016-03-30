@@ -109,6 +109,39 @@ exports.interventionSummary = function(req, res) {
   });
 }
 
+exports.outreachSummary = function(req, res) {
+  var pipeline = [{
+    $group: {
+      _id: {student: '$student', school: '$school' },
+      records: { $push: '$$ROOT' }
+    } 
+  }, {
+    $group: {
+      _id: '$_id.school',
+      records: {
+        $addToSet: {
+          student: '$_id.student',
+          outreaches: '$records'
+        }
+      }
+    }
+  }, {
+    $project: {
+      'records.student': 1,
+      'records.outreaches._id': 1,     
+      'records.outreaches.type': 1,     
+      'records.outreaches.tier': 1,     
+      'records.outreaches.absences': 1,     
+      'records.outreaches.triggerDate': 1,     
+      'records.outreaches.actionDate': 1     
+    }
+  }];
+  Outreach.aggregate(pipeline, function(err, results) {
+    if (err) handleError(res, err);
+    return res.status(200).json(results);
+  });
+}
+
 function handleError(res, err) {
   return res.send(500, err);
 }

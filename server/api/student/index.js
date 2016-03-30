@@ -15,6 +15,9 @@ router.get('/', auth.hasRole('manager'), controller.index);
 router.get('/intervention-summary', 
 	auth.hasRole('admin'), 
 	controller.interventionSummary);
+router.get('/outreach-summary', 
+	auth.hasRole('admin'), 
+	controller.outreachSummary);
 
 // CurrentSchool authorization in controller
 router.get('/:studentId', authorize, controller.show);

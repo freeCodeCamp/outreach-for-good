@@ -35,6 +35,13 @@ app.factory('Student', function($resource) {
         controller: 'intervention-summary'
       },
       isArray: true
+    },
+    outreachSummary: {
+      method: 'GET',
+      params: {
+        controller: 'outreach-summary'
+      },
+      isArray: true
     }
   });
 });
