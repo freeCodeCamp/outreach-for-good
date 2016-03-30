@@ -6,22 +6,23 @@ angular.module('app')
       .state('student', {
         url: '/student/:studentId',
         parent: 'main',
+        abstract: '.outreaches',
         templateUrl: 'app/main/student/student.html',
         controller: 'StudentCtrl'
       })
-      .state('outreaches', {
+      .state('student.outreaches', {
         url: '/outreaches',
         parent: 'student',
         templateUrl: 'app/main/student/partial/outreaches.html',
         controller: 'StudentOutreachesCtrl'
       })
-      .state('interventions', {
+      .state('student.interventions', {
         url: '/interventions',
         parent: 'student',
         templateUrl: 'app/main/student/partial/interventions.html',
         controller: 'StudentInterventionsCtrl'
       })
-      .state('notes', {
+      .state('student.notes', {
         url: '/notes',
         parent: 'student',
         templateUrl: 'app/main/student/partial/notes.html',
