@@ -15,7 +15,7 @@ var Student = require('../student/student.model');
 exports.index = function(req, res) {
   var options = {};
   if (req.user.role === 'teacher') {
-    options._id = req.user.assignment._id;
+    options._id = req.user.assignment;
   }
   School.find(options).exec(function(err, schools) {
     if (err) return handleError(res, err);
