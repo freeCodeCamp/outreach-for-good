@@ -1,26 +1,64 @@
 <div class="student row">
   <heading title="student.firstName + ' ' + student.lastName"></heading>
   <div class="info">
-    <div class="form-horizontal">
-      <label class="col-lg-2 control-label">Student Id</label>
-      <div class="col-lg-2">
-        <p class="form-control-static">{{student.studentId}}</p>
+    <div class="info-widget">
+      <div class="subheading">
+        <h4>Student Info</h4>
       </div>
-      <label class="col-lg-2 control-label">Attendance Percentage</label>
-      <div class="col-lg-2">
-        <p class="form-control-static">{{percentage | number: 2}}%</p>
+      <div class="info-widget-item">
+        <div class="info-label">Student Id</div>
+        <div class="info-value">{{ student.studentId }}</div>
       </div>
-      <label class="col-lg-2 control-label">School</label>
-      <div class="col-lg-2">
-        <p class="form-control-static">{{student.currentSchool.name}}</p>
+      <div class="info-widget-item">
+        <div class="info-label">School</div>
+        <div class="info-value">{{ student.currentSchool.name }}</div>
       </div>
-      <label class="col-lg-2 control-label">IEP</label>
-      <div class="col-lg-6">
-        <input type="checkbox" ng-model="student.iep" ng-change="updateIEP()">
+      <div class="info-widget-item">
+        <div class="info-label">IEP</div>
+        <div class="info-value">
+          <input type="checkbox" ng-model="student.iep" ng-change="updateIEP()">
+        </div>
       </div>
-      <label class="col-lg-2 control-label">CFA</label>
-      <div class="col-lg-2">
-        <input type="checkbox" ng-model="student.cfa" ng-change="updateCFA()">
+      <div class="info-widget-item">
+        <div class="info-label">CFA</div>
+        <div class="info-value">
+          <input type="checkbox" ng-model="student.cfa" ng-change="updateCFA()">
+        </div>
+      </div>
+    </div>
+    <div class="attendance-widget">
+      <div class="subheading">
+        <h4>Attendance Data
+          <small ng-if="records.length">({{ records[0]._id }})</small>
+        </h4>
+      </div>
+      <div class="attendance-table-header">
+        <div class="header-item date">Date</div>
+        <div class="header-item">A</div>
+        <div class="header-item">AD</div>
+        <div class="header-item">T</div>
+        <div class="header-item">TD</div>
+        <div class="header-item">P</div>
+        <div class="header-item">E</div>
+        <div class="header-item">P/E%</div>
+      </div>
+      <div class="attendance-table-body">
+        <div class="attendance-table-row" ng-repeat="record in records">
+          <div class="row-item date">{{ record.date | date: 'MM/dd/yy' }}</div>
+          <div class="row-item"
+            ng-class="record.entry.absences >= 20 ? 'bg-danger' : ''">
+            {{ record.entry.absences }}
+          </div>
+          <div class="row-item">{{ record.entry.absencesDelta }}</div>
+          <div class="row-item">{{ record.entry.tardies }}</div>
+          <div class="row-item">{{ record.entry.tardiesDelta }}</div>
+          <div class="row-item">{{ record.entry.present }}</div>
+          <div class="row-item">{{ record.entry.enrolled }}</div>
+          <div class="row-item"
+            ng-class="record.entry.present / record.entry.enrolled <= 0.9 ? 'bg-warning' : 'bg-success'">
+            {{ record.entry.present / record.entry.enrolled * 100 | number: 1 }}
+          </div>
+        </div>
       </div>
     </div>
   </div>
