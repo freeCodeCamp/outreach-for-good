@@ -13,6 +13,16 @@
   li:hover:not(.dropdown) {
     background-color: darken(lightblue, 25);
   }
+  ul.dropdown-menu li {
+    background: none;
+    color: black;
+    &:hover {
+      background: none;
+    }
+  }
+  ul.navbar-right {
+    background-color: aliceblue;
+  }
   h3 {
     display: inline-block;
     margin: 0;
@@ -34,7 +44,7 @@
   .menu-button-group {
     margin: 8px;
     .menu-button {
-      background-color: lightblue;
+      background-color: transparent;
       color: #3a8fa6;
       border: 1px solid #3a8fa6;
       border-radius: 4px;
