@@ -228,7 +228,7 @@ function SchoolReportsCtrl($scope, $timeout, Auth, uiGridGroupingConstants, Stud
     $scope.chronicGridApi = gridApi;
     $scope.chronicGridOptions.data =
       AbsenceRecord.listCurrent({filter: 'chronic'});
-
+    console.log('chronicGrid', $scope.chronicGridOptions.data);
     gridApi.edit.on.afterCellEdit($scope, function(rowEntity, colDef, n, o) {
       if (n !== o) {
         switch (colDef.name) {
@@ -270,7 +270,70 @@ function SchoolReportsCtrl($scope, $timeout, Auth, uiGridGroupingConstants, Stud
   }
 
   console.log(Student.interventionSummary());
-  console.log(Student.outreachSummary());
+
+  $scope.outreachesGridOptions = {
+    rowHeight: 27,
+    enableSorting: true,
+    enableGridMenu: true,
+    enableFiltering: true,
+    treeRowHeaderAlwaysVisible: false,
+    exporterPdfDefaultStyle: {fontSize: 9},
+    exporterPdfTableHeaderStyle: {fontSize: 10, bold: true, color: 'grey'},
+    exporterPdfHeader: {
+      text: 'Chronically Absent Students',
+      style: 'headerStyle'
+    },
+    exporterPdfOrientation: 'landscape',
+    exporterPdfPageSize: 'LETTER',
+    exporterPdfMaxGridWidth: 500,
+    exporterPdfFooter: function(currentPage, pageCount) {
+      return {
+        text: currentPage.toString() + ' of ' + pageCount.toString(),
+        style: 'footerStyle'
+      };
+    },
+    exporterPdfCustomFormatter: function(docDefinition) {
+      docDefinition.styles.headerStyle =
+      {fontSize: 22, bold: true, color: '#265E6D'};
+      docDefinition.styles.footerStyle = {fontSize: 10, bold: true};
+      return docDefinition;
+    }
+  };
+
+  $scope.outreachesGridOptions.columnDefs = [{
+    name: 'school.records.student.studentId',
+    displayName: 'Student Id',
+    minWidth: 150
+    // cellTemplate: '<div class="ui-grid-cell-contents">' +
+    //               '<a href="/student/{{row.entity.entries.student._id}}">' +
+    //               '{{row.entity.entries.student.studentId}}</a>' +
+    //               '</div>'
+    }, {
+      name: 'school.records.student.firstName',
+      displayName: 'First Name',
+      minWidth: 150
+    }, {
+      name: 'school.records.student.lastName',
+      displayName: 'Last Name',
+      minWidth: 150
+  }];
+
+  $scope.outreachesGridOptions.onRegisterApi = function(gridApi) {
+    $scope.outreachesGridApi = gridApi;
+    $scope.outreachesGridOptions.data =
+      Student.outreachSummary();
+    console.log($scope.outreachesGridOptions.data);
+
+    $scope.outreachesGridOptions.data.$promise.then(function(data) {
+      // NOTE: Hack to default to expanded rows on initial load.
+      // https://github.com/angular-ui/ui-grid/issues/3841
+      if (gridApi.treeBase.expandAllRows) {
+        $timeout(gridApi.treeBase.expandAllRows);
+      }
+      $scope.outreachesCount = data.length;
+    });
+  };
+
 
   $scope.updateIEP = function(student) {
     if (student._id) {
