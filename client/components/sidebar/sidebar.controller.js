@@ -41,7 +41,7 @@ angular.module('app').controller('SidebarCtrl',
     $scope.userIs = Auth.userIs;
     $scope.navigateTo = function(state) {
       if (state) {
-        if (matchmedia.isPhone()) {
+        if (matchmedia.is('(max-width: 1200px)')) {
           $scope.sidebar.toggle();
         }
         $state.go(state);
