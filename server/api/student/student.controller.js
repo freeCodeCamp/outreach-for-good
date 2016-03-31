@@ -1,6 +1,7 @@
 'use strict';
 
 var Student = require('./student.model');
+var School = require('../school/school.model');
 var Outreach = require('./outreach/outreach.model');
 var Intervention = require('./intervention/intervention.model');
 var auth = require('../../auth/auth.service');
@@ -86,6 +87,54 @@ exports.outreachCounts = function(req, res) {
   });
 };
 
+function createAddNamesPromises(results) {
+  // Returns an array of school outreach/intervention
+  // summary records with school and student names
+  return _.map(results, function(school) {
+    return new Promise(function(resolve, reject) {
+      // Promise returns a school name 
+      var getSchool = new Promise(function(resolve,reject) {
+        School.findById(school._id, function(err, res) {
+          if (err) reject(err);
+          resolve(res.name);
+        });
+      });
+      // Promise returns student name to record object
+      var getNames = new Promise(function(resolve, reject) {
+        var getNamesPromise = _.map(school.records, 
+          function(record) { 
+            return new Promise(function(resolve, reject) {
+              Student.findById(record.student, function(err, res) {
+                if (err) reject(err);
+                record.student = {
+                  firstName: res.firstName,
+                  lastName: res.lastName,
+                  studentId: res.studentId,
+                  _id: res._id
+                }
+                resolve(record);
+              });
+            });
+          });
+        Promise.all(getNamesPromise)
+          .then(function(newRecords) {
+            resolve(newRecords);
+          });      
+      });
+      // Promise below brings everything together,
+      //  executing getSchool, and getNames, then
+      //  setting resolved values to attribute in
+      //  school intervention summary record.
+      Promise.all([getSchool, getNames])
+        .then(function(val) {
+          school.schoolName = val[0];
+          school.records = val[1];
+          resolve(school);
+        });
+    });
+  });
+}
+
 exports.interventionSummary = function(req, res) {
   var pipeline = [{
     $group: {
@@ -105,9 +154,13 @@ exports.interventionSummary = function(req, res) {
   }];
   Intervention.aggregate(pipeline, function(err, results) {
     if (err) handleError(res, err);
-    return res.status(200).json(results);
+    var addNamesPromises = createAddNamesPromises(results);
+    Promise.all(addNamesPromises).then(
+      function(updated) {
+        return res.status(200).json(updated);
+      });
   });
-}
+};
 
 exports.outreachSummary = function(req, res) {
   var pipeline = [{
@@ -138,9 +191,13 @@ exports.outreachSummary = function(req, res) {
   }];
   Outreach.aggregate(pipeline, function(err, results) {
     if (err) handleError(res, err);
-    return res.status(200).json(results);
+    var addNamesPromises = createAddNamesPromises(results);
+    Promise.all(addNamesPromises).then(
+      function(updated) {
+        return res.status(200).json(updated);
+      });
   });
-}
+};
 
 function handleError(res, err) {
   return res.send(500, err);
