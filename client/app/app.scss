@@ -49,6 +49,7 @@ body,
 @import 'main/student/notes/notes.scss';
 @import 'main/student/outreaches/outreaches.scss';
 @import 'main/student/student.scss';
+@import 'main/student/summary/summary.scss';
 @import 'main/visualization/visualization.scss';
 @import 'heading/heading.scss';
 @import 'modal/modal.scss';
@@ -72,4 +73,11 @@ body,
 // Makes the outline on focus less intrusive.
 :focus {
   outline: thin dotted !important;
+}
+
+@media print {
+  * {
+    -webkit-transition: none !important;
+    transition: none !important
+  }
 }

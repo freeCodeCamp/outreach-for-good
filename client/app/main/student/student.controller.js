@@ -56,6 +56,9 @@ function StudentCtrl($scope, $state, $stateParams, AbsenceRecord, Student,
   }, {
     title: 'Notes',
     state: 'student.notes'
+  }, {
+    title: 'Summary',
+    state: 'student.summary'
   }];
 
   $scope.viewNote = function(note, type) {
