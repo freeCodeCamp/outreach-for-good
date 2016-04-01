@@ -1,19 +1,21 @@
-.admin {
+.admin-view {
   display: flex;
   flex-direction: column;
-  height: 100%;
-  .user, .school {
+  flex: 1;
+  min-height: 594px;
+  overflow: hidden;
+  .user,
+  .school {
     display: flex;
     flex-direction: column;
-    flex: 1 0 0;
-    min-height: 250px;
+    flex: 1;
+    min-height: 216px;
+    overflow-y: hidden;
   }
   .grid {
-    display: flex;
-    flex: 1 0 0;
-    vertical-align: middle;
-    border-right: 0 solid #fff;
-    border-left: 0 solid #fff;
+    flex: 1;
+    border: none;
+    overflow-y: scroll;
     .action-col {
       padding: 0;
       text-align: center;
@@ -50,28 +52,31 @@
       box-shadow: none;
     }
   }
-  #user-grid {
-    .role-dropdown {
-      width: 100%;
-      padding: 0 5px;
-    }
-    .assignment-dropdown {
-      width: 100%;
-      padding: 0 5px;
-      button {
-        padding-left: 8px;
-        text-align: left;
-      }
-    }
-  }
   .dev {
-    .heading {
+    .heading.navbar {
+      height: 54px;
+      min-height: 54px;
       line-height: 54px;
       background-color: orange;
       button {
-        position: absolute;
-        top: 12px;
+        margin: 10px;
+        vertical-align: top;
       }
+    }
+  }
+}
+
+#user-grid {
+  .role-dropdown {
+    width: 100%;
+    padding: 0 5px;
+  }
+  .assignment-dropdown {
+    width: 100%;
+    padding: 0 5px;
+    button {
+      padding-left: 8px;
+      text-align: left;
     }
   }
 }

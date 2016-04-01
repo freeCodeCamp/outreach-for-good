@@ -1,5 +1,5 @@
-.student {
-  height: 100%;
+.student-view {
+  flex: 1;
   .info {
     .info-widget,
     .attendance-widget {
@@ -46,7 +46,6 @@
       .attendance-table-row,
       .attendance-table-header {
         display: flex;
-        flex-direction: row;
         height: 27px;
         line-height: 27px;
         .row-item,
@@ -66,19 +65,10 @@
         height: 81px;
         min-height: 81px;
         overflow-y: scroll;
+        @include cfa-scrollbar(3px, 0, lightgrey);
       }
       .attendance-table-row {
         box-shadow: inset 0 -1px 1px -1px darkgrey;
-      }
-      ::-webkit-scrollbar {
-        width: 3px;
-        height: 0;
-      }
-      ::-webkit-scrollbar-track {
-        background-color: lightgrey;
-      }
-      ::-webkit-scrollbar-thumb {
-        background-color: $cfa-background;
       }
     }
     @media(min-width: 1200px) {
@@ -120,7 +110,6 @@
         flex-direction: column;
         .new-notes {
           display: flex;
-          flex-direction: row;
           min-height: 27px;
           .notes-label {
             height: 27px;
@@ -177,16 +166,7 @@
               }
             }
           }
-        }
-        ::-webkit-scrollbar {
-          width: 5px;
-          height: 0;
-        }
-        ::-webkit-scrollbar-track {
-          background-color: lightblue;
-        }
-        ::-webkit-scrollbar-thumb {
-          background-color: $cfa-background;
+          @include cfa-scrollbar(5px);
         }
       }
     }

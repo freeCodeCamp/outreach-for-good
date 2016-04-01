@@ -2,3 +2,16 @@
 // --------------------------------------------------
 
 $cfa-background: #265E6D;
+
+@mixin cfa-scrollbar($width:2px, $height:0px, $track-color: lightblue, $thumb-color: $cfa-background) {
+  &::-webkit-scrollbar {
+    width: $width;
+    height: $height;
+  }
+  &::-webkit-scrollbar-track {
+    background-color: $track-color;
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: $thumb-color;
+  }
+}

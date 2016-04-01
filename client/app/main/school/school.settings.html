@@ -1,34 +1,32 @@
-<div class="school-settings row">
-  <heading title="'School Settings'"></heading>
-  <div class="settings">
-    <div class="form-horizontal">
-      <div class="form-group">
-        <label class="col-sm-6 control-label">School</label>
-        <div ng-if="userIs('manager')" class="col-sm-6 col-md-4">
-          <ui-select ng-model="selectedSchool"
-            theme="bootstrap"
-            append-to-body="true"
-            autofocus="true"
-            on-select="selectSchool($select.selected)">
-            <ui-select-match placeholder="Choose School...">{{selectedSchool.name}}</ui-select-match>
-            <ui-select-choices repeat="item in schools | filter: $select.search">
-              <span>{{ item.name }}</span>
-            </ui-select-choices>
-          </ui-select>
-        </div>
-        <div ng-if="currentUser.role === 'teacher'" class="col-sm-6 col-md-4">
-          <p class="form-control-static">{{selectedSchool.name}}</p>
-        </div>
+<heading title="'School Settings'"></heading>
+<div class="school-settings">
+  <div class="form-horizontal">
+    <div class="form-group">
+      <label class="col-sm-6 control-label">School</label>
+      <div ng-if="userIs('manager')" class="col-sm-6 col-md-4">
+        <ui-select ng-model="selectedSchool"
+          theme="bootstrap"
+          append-to-body="true"
+          autofocus="true"
+          on-select="selectSchool($select.selected)">
+          <ui-select-match placeholder="Choose School...">{{selectedSchool.name}}</ui-select-match>
+          <ui-select-choices repeat="item in schools | filter: $select.search">
+            <span>{{ item.name }}</span>
+          </ui-select-choices>
+        </ui-select>
       </div>
-      <div ng-if="selectedSchool" class="form-group" ng-repeat="trigger in selectedSchool.triggers">
-        <label class="col-sm-6 control-label">{{trigger.type}} {{trigger.tier}}</label>
-        <div class="col-sm-6 col-md-4">
-          <select class="form-control"
-            ng-model="trigger.absences"
-            ng-options="n for n in triggerOptions"
-            ng-change="updateTriggers(trigger)">
-          </select>
-        </div>
+      <div ng-if="currentUser.role === 'teacher'" class="col-sm-6 col-md-4">
+        <p class="form-control-static">{{selectedSchool.name}}</p>
+      </div>
+    </div>
+    <div ng-if="selectedSchool" class="form-group" ng-repeat="trigger in selectedSchool.triggers">
+      <label class="col-sm-6 control-label">{{trigger.type}} {{trigger.tier}}</label>
+      <div class="col-sm-6 col-md-4">
+        <select class="form-control"
+          ng-model="trigger.absences"
+          ng-options="n for n in triggerOptions"
+          ng-change="updateTriggers(trigger)">
+        </select>
       </div>
     </div>
   </div>

@@ -20,9 +20,14 @@ $fa-font-path: "../bower_components/font-awesome/fonts";
 
 html,
 body,
-.fill {
+.viewport {
   height: 100%;
   width: 100%;
+}
+
+.viewport {
+  display: flex;
+  flex-direction: column;
 }
 
 // https://angular-ui.github.io/bootstrap/#/getting_started

@@ -1,24 +1,19 @@
 .school-settings {
-  .settings {
-    padding: 15px;
-  }
+  flex: 1;
+  padding: 15px;
 }
 
-.school-reports {
+.at-risk-table,
+.chronically-absent-table,
+.outreach-summary-table {
   display: flex;
   flex-direction: column;
-  height: 100%;
-  .student-list {
-    display: flex;
-    flex-direction: column;
-    flex: 1 0 0;
-    min-height: 250px;
-    .grid {
-      height: 100%;
-      display: flex;
-      flex: 1 0 0;
-      vertical-align: middle;
-      border: 0 solid #fff;
-    }
+  flex: 1;
+  min-height: 216px;
+  overflow-y: hidden;
+  .grid {
+    flex: 1;
+    border: none;
+    overflow-y: scroll;
   }
 }

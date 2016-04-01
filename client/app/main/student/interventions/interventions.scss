@@ -1,4 +1,4 @@
-.student .intervention-widget {
+.student-view .intervention-widget {
   .title {
     position: relative;
     .dropdown {
@@ -30,7 +30,7 @@
     }
   }
   .body {
-    flex-direction: row;
+    display: flex;
     align-items: center;
     .notes {
       width: 100%;

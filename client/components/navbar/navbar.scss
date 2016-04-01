@@ -8,6 +8,8 @@ $navbar-height: 54px;
 .cfa.navbar {
   background-color: $bgDefault;
   border: none;
+  border-radius: 0;
+  margin: 0;
   .navbar-brand {
     height: $navbar-height;
     line-height: $navbar-height;
