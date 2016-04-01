@@ -87,54 +87,94 @@ exports.outreachCounts = function(req, res) {
   });
 };
 
-function createAddNamesPromises(results) {
-  // Returns an array of school outreach/intervention
-  // summary records with school and student names
-  return _.map(results, function(school) {
-    return new Promise(function(resolve, reject) {
-      // Promise returns a school name 
-      var getSchool = new Promise(function(resolve,reject) {
-        School.findById(school._id, function(err, res) {
-          if (err) reject(err);
-          resolve(res.name);
-        });
-      });
-      // Promise returns student name to record object
-      var getNames = new Promise(function(resolve, reject) {
-        var getNamesPromise = _.map(school.records, 
-          function(record) { 
-            return new Promise(function(resolve, reject) {
-              Student.findById(record.student, function(err, res) {
-                if (err) reject(err);
-                record.student = {
-                  firstName: res.firstName,
-                  lastName: res.lastName,
-                  studentId: res.studentId,
-                  _id: res._id
-                }
-                resolve(record);
-              });
+function createNameAndSchoolPromise(results) {
+  return new Promise(function(resolve, reject) {
+    var promises = _.map(results, function(result) {
+      return new Promise(function(resolve, reject) {
+        function getTotals() {
+          var records = this.records;
+          var typeArr = _.map(records, 
+              function(rec) { return rec.type 
             });
+          return _.countBy(typeArr, _.identity);
+        }
+        School.findById(result.school, 
+          function(err, school) {
+            if (err) reject(err);
+            result.school = school;
+          })
+          .then(function() {
+            Student.findById(result.student, 
+              function(err, student) {
+              if (err) reject(err);
+              result.student = student;
+            })
+          .then(function() {
+            result.totals = getTotals.call(result);
+            resolve(result);
           });
-        Promise.all(getNamesPromise)
-          .then(function(newRecords) {
-            resolve(newRecords);
-          });      
-      });
-      // Promise below brings everything together,
-      //  executing getSchool, and getNames, then
-      //  setting resolved values to attribute in
-      //  school intervention summary record.
-      Promise.all([getSchool, getNames])
-        .then(function(val) {
-          school.schoolName = val[0];
-          school.records = val[1];
-          resolve(school);
         });
+      });
+    });
+    Promise.all(promises).then(
+      function(val) { 
+        resolve(val);
     });
   });
 }
 
+/**
+ * Get summary of outreaches.
+ * restriction: 'teacher'
+ *
+ * Returns an aggregation for records based on the req user role:
+ * - teachers will get outreach summary for assignment school
+ * - manager+ will get outreach summary for all schools
+ */
+exports.outreachSummary = function(req, res) {
+  var pipeline = [{
+    $group: {
+      _id: {student: '$student', school: '$school'},
+      records: { $addToSet: '$$ROOT' }
+    } 
+  }, {
+    $project: {
+      _id: 0,
+      school: '$_id.school',
+      student: '$_id.student',
+      records: {
+        type: 1,
+        tier: 1,
+        absences: 1,
+        record: 1,
+        schoolYear: 1,
+        triggerDate: 1,
+        actionDate: 1
+      }
+    }
+  }];
+  if(req.user.role === 'teacher') {
+    pipeline.push({ 
+      $match: { school: req.user.assignment } 
+    });
+  }
+  Outreach.aggregate(pipeline, function(err, results) {
+    if (err) handleError(res, err);
+    var updated = createNameAndSchoolPromise(results);
+    updated.then(function(result) {
+      return res.status(200).json(result);
+    });
+  });
+};
+
+/**
+ * Get summary of interventions.
+ * restriction: 'teacher'
+ *
+ * Returns an aggregation for records based on the req user role:
+ * - teachers will get intervention summary for assignment school
+ * - manager+ will get intervention summary for all schools
+ */
 exports.interventionSummary = function(req, res) {
   var pipeline = [{
     $group: {
@@ -142,60 +182,25 @@ exports.interventionSummary = function(req, res) {
       records: { $push: '$$ROOT' }
     } 
   }, {
-    $group: {
-      _id: '$_id.school',
-      records: {
-        $addToSet: {
-          student: '$_id.student',
-          interventions: '$records._id'
-        }
-      }
+    $project: {
+      _id: 0,
+      student: '$_id.student',
+      school: '$_id.school',
+      // Might need some fine tuning if implemented
+      records: 1
     }
   }];
+  if(req.user.role === 'teacher') {
+    pipeline.push({ 
+      $match: { school: req.user.assignment } 
+    });
+  }
   Intervention.aggregate(pipeline, function(err, results) {
     if (err) handleError(res, err);
-    var addNamesPromises = createAddNamesPromises(results);
-    Promise.all(addNamesPromises).then(
-      function(updated) {
-        return res.status(200).json(updated);
-      });
-  });
-};
-
-exports.outreachSummary = function(req, res) {
-  var pipeline = [{
-    $group: {
-      _id: {student: '$student', school: '$school' },
-      records: { $push: '$$ROOT' }
-    } 
-  }, {
-    $group: {
-      _id: '$_id.school',
-      records: {
-        $addToSet: {
-          student: '$_id.student',
-          outreaches: '$records'
-        }
-      }
-    }
-  }, {
-    $project: {
-      'records.student': 1,
-      'records.outreaches._id': 1,     
-      'records.outreaches.type': 1,     
-      'records.outreaches.tier': 1,     
-      'records.outreaches.absences': 1,     
-      'records.outreaches.triggerDate': 1,     
-      'records.outreaches.actionDate': 1     
-    }
-  }];
-  Outreach.aggregate(pipeline, function(err, results) {
-    if (err) handleError(res, err);
-    var addNamesPromises = createAddNamesPromises(results);
-    Promise.all(addNamesPromises).then(
-      function(updated) {
-        return res.status(200).json(updated);
-      });
+    var updated = createNameAndSchoolPromise(results);
+    updated.then(function(updated) {
+      return res.status(200).json(updated);
+    });
   });
 };
 

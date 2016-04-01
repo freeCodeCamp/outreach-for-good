@@ -228,7 +228,7 @@ function SchoolReportsCtrl($scope, $timeout, Auth, uiGridGroupingConstants, Stud
     $scope.chronicGridApi = gridApi;
     $scope.chronicGridOptions.data =
       AbsenceRecord.listCurrent({filter: 'chronic'});
-    console.log('chronicGrid', $scope.chronicGridOptions.data);
+    
     gridApi.edit.on.afterCellEdit($scope, function(rowEntity, colDef, n, o) {
       if (n !== o) {
         switch (colDef.name) {
@@ -251,25 +251,6 @@ function SchoolReportsCtrl($scope, $timeout, Auth, uiGridGroupingConstants, Stud
       $scope.chronicCount = data.length;
     });
   };
-
-  if (Auth.getCurrentUser().role !== 'teacher') {
-    $scope.atRiskGridOptions.columnDefs.push({
-      name: 'school.name',
-      displayName: 'School Name',
-      minWidth: 150,
-      grouping: {groupPriority: 0},
-      sort: {priority: 0, direction: 'asc'}
-    });
-    $scope.chronicGridOptions.columnDefs.push({
-      name: 'school.name',
-      displayName: 'School Name',
-      minWidth: 150,
-      grouping: {groupPriority: 0},
-      sort: {priority: 0, direction: 'asc'}
-    });
-  }
-
-  console.log(Student.interventionSummary());
 
   $scope.outreachesGridOptions = {
     rowHeight: 27,
@@ -301,28 +282,51 @@ function SchoolReportsCtrl($scope, $timeout, Auth, uiGridGroupingConstants, Stud
   };
 
   $scope.outreachesGridOptions.columnDefs = [{
-    name: 'school.records.student.studentId',
+    name: 'student.studentId',
     displayName: 'Student Id',
-    minWidth: 150
-    // cellTemplate: '<div class="ui-grid-cell-contents">' +
-    //               '<a href="/student/{{row.entity.entries.student._id}}">' +
-    //               '{{row.entity.entries.student.studentId}}</a>' +
-    //               '</div>'
+    minWidth: 150,
+    cellTemplate: '<div class="ui-grid-cell-contents">' +
+                  '<a href="/student/{{row.entity.student._id}}">' +
+                  '{{row.entity.student.studentId}}</a>' +
+                  '</div>'
     }, {
-      name: 'school.records.student.firstName',
+      name: 'student.firstName',
       displayName: 'First Name',
       minWidth: 150
     }, {
-      name: 'school.records.student.lastName',
+      name: 'student.lastName',
       displayName: 'Last Name',
       minWidth: 150
+  }, {
+      name: 'records.length',
+      displayName: 'Total',
+      minWidth: 80
+  }, {
+      name: 'totals["Phone Call"] || 0',
+      displayName: 'Calls',
+      minWidth: 80
+  }, {
+      name: 'totals["Letter Sent"] || 0',
+      displayName: 'Letters',
+      minWidth: 80
+  }, {
+      name: 'totals["Home Visit"] || 0',
+      displayName: 'Visits',
+      minWidth: 80
+  }, {
+      name: 'totals["SST Referral"] || 0',
+      displayName: 'SST',
+      minWidth: 80
+  }, {
+      name: 'totals["Court Referral"] || 0',
+      displayName: 'Court',
+      minWidth: 80
   }];
 
   $scope.outreachesGridOptions.onRegisterApi = function(gridApi) {
     $scope.outreachesGridApi = gridApi;
-    $scope.outreachesGridOptions.data =
+    $scope.outreachesGridOptions.data = 
       Student.outreachSummary();
-    console.log($scope.outreachesGridOptions.data);
 
     $scope.outreachesGridOptions.data.$promise.then(function(data) {
       // NOTE: Hack to default to expanded rows on initial load.
@@ -334,6 +338,29 @@ function SchoolReportsCtrl($scope, $timeout, Auth, uiGridGroupingConstants, Stud
     });
   };
 
+  if (Auth.getCurrentUser().role !== 'teacher') {
+    $scope.atRiskGridOptions.columnDefs.push({
+      name: 'school.name',
+      displayName: 'School Name',
+      minWidth: 150,
+      grouping: {groupPriority: 0},
+      sort: {priority: 0, direction: 'asc'}
+    });
+    $scope.chronicGridOptions.columnDefs.push({
+      name: 'school.name',
+      displayName: 'School Name',
+      minWidth: 150,
+      grouping: {groupPriority: 0},
+      sort: {priority: 0, direction: 'asc'}
+    });
+    $scope.outreachesGridOptions.columnDefs.push({
+      name: 'school.name',
+      displayName: 'School Name',
+      minWidth: 150,
+      grouping: {groupPriority: 0},
+      sort: {priority: 0, direction: 'asc'}
+    });
+  }
 
   $scope.updateIEP = function(student) {
     if (student._id) {
