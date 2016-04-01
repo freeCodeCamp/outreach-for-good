@@ -1,19 +1,30 @@
-.school-settings {
+.school-settings-view {
   flex: 1;
-  padding: 15px;
+  overflow-y: auto;
+  @include cfa-scrollbar();
+  .form-horizontal {
+    padding: 15px;
+  }
 }
 
-.at-risk-table,
-.chronically-absent-table,
-.outreach-summary-table {
+.school-reports-view {
   display: flex;
   flex-direction: column;
   flex: 1;
-  min-height: 216px;
-  overflow-y: hidden;
-  .grid {
+  overflow-y: auto;
+  @include cfa-scrollbar();
+  .at-risk-table,
+  .chronically-absent-table,
+  .outreach-summary-table {
+    display: flex;
+    flex-direction: column;
     flex: 1;
-    border: none;
-    overflow-y: scroll;
+    min-height: 216px;
+    overflow-y: hidden;
+    .grid {
+      flex: 1;
+      border: none;
+      overflow-y: scroll;
+    }
   }
 }

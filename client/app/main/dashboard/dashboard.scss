@@ -24,14 +24,13 @@
       color: #333333
     }
   }
-  .student-list {
+  .student-table {
+    position: relative;
     display: flex;
-    flex-direction: column;
-    flex: 1 0 0;
+    flex: 1;
     min-height: 250px;
     .grid {
-      display: flex;
-      flex: 1;
+      @include abs-fill-parent;
       border: none;
     }
   }
