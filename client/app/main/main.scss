@@ -6,13 +6,12 @@
     flex-direction: column;
     flex: 1;
     transition: all 0.5s ease;
-    overflow-y: auto;
+    overflow: hidden;
     .main-ui-view {
       flex: 1;
       display: flex;
       flex-direction: column;
     }
-    @include cfa-scrollbar();
   }
 }
 
@@ -39,9 +38,6 @@
   }
   .ui-grid-header-viewport {
     box-shadow: inset 0 -1px 0 0 darkgray;
-  }
-  .ui-grid-canvas {
-    padding: 0;
   }
   .ui-grid-header-viewport {
     .ui-grid-header-canvas {

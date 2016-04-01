@@ -201,18 +201,6 @@ function AdminCtrl($scope, $http, uiGridConstants, Auth, User, School,
         addSchoolFn);
     }
   }];
-
-  $scope.getUserTableHeight = function() {
-    return {
-      height: ($scope.userGridOptions.data.length * 54 + 54) + 'px'
-    };
-  };
-
-  $scope.getSchoolTableHeight = function() {
-    return {
-      height: ($scope.schoolGridOptions.data.length * 54 + 54) + 'px'
-    };
-  };
 }
 
 app.controller('AdminCtrl', AdminCtrl);

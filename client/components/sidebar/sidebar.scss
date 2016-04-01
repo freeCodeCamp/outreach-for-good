@@ -77,3 +77,9 @@ sidebar {
 .nav-stacked > li + li {
   margin: 0;
 }
+
+@media print {
+  sidebar {
+    display: none !important;
+  }
+}
