@@ -12,11 +12,11 @@ router.get('/outreach-counts',
   controller.outreachCounts);
 router.get('/', auth.hasRole('manager'), controller.index);
 
-// router.get('/intervention-summary', 
-// 	auth.hasRole('admin'), 
-// 	controller.interventionSummary);
+router.get('/intervention-summary', 
+	auth.hasRole('teacher'), 
+	controller.interventionSummary);
 router.get('/outreach-summary', 
-	auth.hasRole('admin'), 
+	auth.hasRole('teacher'), 
 	controller.outreachSummary);
 
 // CurrentSchool authorization in controller

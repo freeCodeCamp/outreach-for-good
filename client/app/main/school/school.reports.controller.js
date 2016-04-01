@@ -298,29 +298,34 @@ function SchoolReportsCtrl($scope, $timeout, Auth, uiGridGroupingConstants, Stud
       displayName: 'Last Name',
       minWidth: 150
   }, {
-      name: 'records.length',
+      name: 'totals.all',
       displayName: 'Total',
       minWidth: 80
   }, {
       name: 'totals["Phone Call"] || 0',
       displayName: 'Calls',
-      minWidth: 80
+      minWidth: 100,
+      treeAggregationType: uiGridGroupingConstants.aggregation.SUM
   }, {
       name: 'totals["Letter Sent"] || 0',
       displayName: 'Letters',
-      minWidth: 80
+      minWidth: 100,
+      treeAggregationType: uiGridGroupingConstants.aggregation.SUM
   }, {
       name: 'totals["Home Visit"] || 0',
       displayName: 'Visits',
-      minWidth: 80
+      minWidth: 100,
+      treeAggregationType: uiGridGroupingConstants.aggregation.SUM
   }, {
       name: 'totals["SST Referral"] || 0',
       displayName: 'SST',
-      minWidth: 80
+      minWidth: 100,
+      treeAggregationType: uiGridGroupingConstants.aggregation.SUM
   }, {
       name: 'totals["Court Referral"] || 0',
       displayName: 'Court',
-      minWidth: 80
+      minWidth: 100,
+      treeAggregationType: uiGridGroupingConstants.aggregation.SUM
   }];
 
   $scope.outreachesGridOptions.onRegisterApi = function(gridApi) {
@@ -329,6 +334,12 @@ function SchoolReportsCtrl($scope, $timeout, Auth, uiGridGroupingConstants, Stud
       Student.outreachSummary();
 
     $scope.outreachesGridOptions.data.$promise.then(function(data) {
+      // Convert counts array to object, generate total intervention property
+      _.forEach(data, function(student) {
+        student.totals = _(student.counts)
+          .keyBy('type').mapValues('count').value();
+        student.totals.all = _.sumBy(student.counts, 'count');
+      });
       // NOTE: Hack to default to expanded rows on initial load.
       // https://github.com/angular-ui/ui-grid/issues/3841
       if (gridApi.treeBase.expandAllRows) {
@@ -354,7 +365,7 @@ function SchoolReportsCtrl($scope, $timeout, Auth, uiGridGroupingConstants, Stud
       sort: {priority: 0, direction: 'asc'}
     });
     $scope.outreachesGridOptions.columnDefs.push({
-      name: 'school.name',
+      name: 'student.currentSchool.name',
       displayName: 'School Name',
       minWidth: 150,
       grouping: {groupPriority: 0},

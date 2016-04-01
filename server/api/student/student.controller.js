@@ -87,42 +87,6 @@ exports.outreachCounts = function(req, res) {
   });
 };
 
-function createNameAndSchoolPromise(results) {
-  return new Promise(function(resolve, reject) {
-    var promises = _.map(results, function(result) {
-      return new Promise(function(resolve, reject) {
-        function getTotals() {
-          var records = this.records;
-          var typeArr = _.map(records, 
-              function(rec) { return rec.type 
-            });
-          return _.countBy(typeArr, _.identity);
-        }
-        School.findById(result.school, 
-          function(err, school) {
-            if (err) reject(err);
-            result.school = school;
-          })
-          .then(function() {
-            Student.findById(result.student, 
-              function(err, student) {
-              if (err) reject(err);
-              result.student = student;
-            })
-          .then(function() {
-            result.totals = getTotals.call(result);
-            resolve(result);
-          });
-        });
-      });
-    });
-    Promise.all(promises).then(
-      function(val) { 
-        resolve(val);
-    });
-  });
-}
-
 /**
  * Get summary of outreaches.
  * restriction: 'teacher'
@@ -133,38 +97,43 @@ function createNameAndSchoolPromise(results) {
  */
 exports.outreachSummary = function(req, res) {
   var pipeline = [{
-    $group: {
-      _id: {student: '$student', school: '$school'},
-      records: { $addToSet: '$$ROOT' }
-    } 
+   $group: {
+     _id: {student: '$student', type: '$type'},
+     count: {$sum: 1}
+   }
+  }, {
+   $group: {
+     _id: '$_id.student',
+     counts: {$push: {type: '$_id.type', count: '$count'}}
+   }
   }, {
     $project: {
       _id: 0,
-      school: '$_id.school',
-      student: '$_id.student',
-      records: {
-        type: 1,
-        tier: 1,
-        absences: 1,
-        record: 1,
-        schoolYear: 1,
-        triggerDate: 1,
-        actionDate: 1
-      }
+      student: '$_id',
+      counts: 1
     }
   }];
-  if(req.user.role === 'teacher') {
-    pipeline.push({ 
-      $match: { school: req.user.assignment } 
+  if (req.user.role === 'teacher') {
+    pipeline.unshift({
+       $match: {school: req.user.assignment}
     });
   }
   Outreach.aggregate(pipeline, function(err, results) {
-    if (err) handleError(res, err);
-    var updated = createNameAndSchoolPromise(results);
-    updated.then(function(result) {
-      return res.status(200).json(result);
+      if (err) handleError(res, err);
+      Outreach.populate(results, {
+        path: 'student',
+        model: 'Student',
+        select: 'firstName lastName studentId currentSchool',
+        populate: {
+          path: 'currentSchool',
+          model: 'School',
+          select: 'name'
+        }
+      }, function(err, final) {
+        if (err) return handleError(res, err);
+        return res.status(200).json(final);
+      });
     });
-  });
 };
 
 /**
@@ -186,21 +155,25 @@ exports.interventionSummary = function(req, res) {
       _id: 0,
       student: '$_id.student',
       school: '$_id.school',
-      // Might need some fine tuning if implemented
+      // Might need to exclude fields if implemented
       records: 1
     }
   }];
   if(req.user.role === 'teacher') {
-    pipeline.push({ 
+    pipeline.unshift({ 
       $match: { school: req.user.assignment } 
     });
   }
   Intervention.aggregate(pipeline, function(err, results) {
     if (err) handleError(res, err);
-    var updated = createNameAndSchoolPromise(results);
-    updated.then(function(updated) {
-      return res.status(200).json(updated);
-    });
+    Student.populate(results, {path: 'student'})
+      .then(function(withStudent) {
+        School.populate(withStudent, 
+          {path: 'school'})
+            .then(function(final) {
+              return res.status(200).json(final);
+            });
+      });
   });
 };
 
