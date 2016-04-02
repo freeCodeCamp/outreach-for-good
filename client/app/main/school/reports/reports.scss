@@ -1,12 +1,3 @@
-.school-settings-view {
-  flex: 1;
-  overflow-y: auto;
-  @include cfa-scrollbar();
-  .form-horizontal {
-    padding: 15px;
-  }
-}
-
 .school-reports-view {
   display: flex;
   flex-direction: column;
