@@ -12,6 +12,13 @@ router.get('/outreach-counts',
   controller.outreachCounts);
 router.get('/', auth.hasRole('manager'), controller.index);
 
+router.get('/intervention-summary', 
+	auth.hasRole('teacher'), 
+	controller.interventionSummary);
+router.get('/outreach-summary', 
+	auth.hasRole('teacher'), 
+	controller.outreachSummary);
+
 // CurrentSchool authorization in controller
 router.get('/:studentId', authorize, controller.show);
 router.put('/:studentId/iep', authorize, controller.updateIEP);

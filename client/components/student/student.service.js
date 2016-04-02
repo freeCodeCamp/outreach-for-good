@@ -28,6 +28,20 @@ app.factory('Student', function($resource) {
         controller: 'outreach-counts'
       },
       isArray: true
+    },
+    interventionSummary: {
+      method: 'GET',
+      params: {
+        controller: 'intervention-summary'
+      },
+      isArray: true
+    },
+    outreachSummary: {
+      method: 'GET',
+      params: {
+        controller: 'outreach-summary'
+      },
+      isArray: true
     }
   });
 });
