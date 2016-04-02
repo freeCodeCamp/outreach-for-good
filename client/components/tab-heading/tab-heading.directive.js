@@ -9,7 +9,11 @@ angular.module('app').directive('tabHeading', function($state) {
     },
     restrict: 'E',
     controller: function($scope) {
-      $scope.selected = _.find($scope.tabs, {state: $state.$current.name});
+      $scope.$watch(function() {
+        return $state.$current.name;
+      }, function(stateName) {
+        $scope.selected = _.find($scope.tabs, {state: stateName});
+      });
     },
     link: function(scope) {
       scope.isCollapsed = true;

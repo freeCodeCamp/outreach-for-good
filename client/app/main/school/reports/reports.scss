@@ -4,9 +4,10 @@
   flex: 1;
   overflow-y: auto;
   @include cfa-scrollbar();
-  .at-risk-table,
-  .chronically-absent-table,
-  .outreach-summary-table {
+  .report-heading .heading {
+    background-color: darken(lightblue, 35%);
+  }
+  .report-table {
     display: flex;
     flex-direction: column;
     flex: 1;
