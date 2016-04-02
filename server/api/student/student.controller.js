@@ -97,48 +97,44 @@ exports.outreachCounts = function(req, res) {
  */
 exports.outreachSummary = function(req, res) {
   var pipeline = [{
-   $group: {
-     _id: {student: '$student', type: '$type'},
-     count: {$sum: 1}
-   }
-  }, {
-   $group: {
-     _id: '$_id.student',
-     counts: {$push: {type: '$_id.type', count: '$count'}}
-   }
-  }, {
-    $project: {
-      _id: 0,
-      student: '$_id',
-      counts: 1
+    $group: {
+      _id: {student: '$student', type: '$type'},
+      count: {$sum: 1}
     }
+  }, {
+    $group: {
+      _id: '$_id.student',
+      counts: {$push: {type: '$_id.type', count: '$count'}}
+    }
+  }, {
+    $project: {_id: 0, student: '$_id', counts: 1}
   }];
   if (req.user.role === 'teacher') {
-    pipeline.unshift({
-       $match: {school: req.user.assignment}
-    });
+    pipeline.unshift({$match: {school: req.user.assignment}});
   }
   Outreach.aggregate(pipeline, function(err, results) {
-      if (err) handleError(res, err);
-      Outreach.populate(results, {
-        path: 'student',
-        model: 'Student',
-        select: 'firstName lastName studentId currentSchool',
-        populate: {
-          path: 'currentSchool',
-          model: 'School',
-          select: 'name'
-        }
-      }, function(err, final) {
-        if (err) return handleError(res, err);
-        return res.status(200).json(final);
-      });
+    if (err) handleError(res, err);
+    Outreach.populate(results, {
+      path: 'student',
+      model: 'Student',
+      select: 'firstName lastName studentId currentSchool',
+      populate: {
+        path: 'currentSchool',
+        model: 'School',
+        select: 'name'
+      }
+    }, function(err, final) {
+      if (err) return handleError(res, err);
+      return res.status(200).json(final);
     });
+  });
 };
 
 /**
  * Get summary of interventions.
  * restriction: 'teacher'
+ *
+ * TODO: This pipeline should probably group by intervention.type also.
  *
  * Returns an aggregation for records based on the req user role:
  * - teachers will get intervention summary for assignment school
@@ -147,33 +143,37 @@ exports.outreachSummary = function(req, res) {
 exports.interventionSummary = function(req, res) {
   var pipeline = [{
     $group: {
-      _id: {student: '$student', school: '$school' },
-      records: { $push: '$$ROOT' }
-    } 
+      _id: {student: '$student'},
+      records: {$push: '$$ROOT'}
+    }
   }, {
     $project: {
       _id: 0,
       student: '$_id.student',
-      school: '$_id.school',
       // Might need to exclude fields if implemented
       records: 1
     }
   }];
-  if(req.user.role === 'teacher') {
-    pipeline.unshift({ 
-      $match: { school: req.user.assignment } 
+  if (req.user.role === 'teacher') {
+    pipeline.unshift({
+      $match: {school: req.user.assignment}
     });
   }
   Intervention.aggregate(pipeline, function(err, results) {
     if (err) handleError(res, err);
-    Student.populate(results, {path: 'student'})
-      .then(function(withStudent) {
-        School.populate(withStudent, 
-          {path: 'school'})
-            .then(function(final) {
-              return res.status(200).json(final);
-            });
-      });
+    Intervention.populate(results, {
+      path: 'student',
+      model: 'Student',
+      select: 'firstName lastName studentId currentSchool',
+      populate: {
+        path: 'currentSchool',
+        model: 'School',
+        select: 'name'
+      }
+    }, function(err, final) {
+      if (err) return handleError(res, err);
+      return res.status(200).json(final);
+    });
   });
 };
 

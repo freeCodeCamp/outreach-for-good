@@ -10,16 +10,15 @@ var authorize = [auth.hasRole('teacher'), auth.student];
 router.get('/outreach-counts',
   auth.hasRole('teacher'),
   controller.outreachCounts);
+router.get('/intervention-summary',
+  auth.hasRole('teacher'),
+  controller.interventionSummary);
+router.get('/outreach-summary',
+  auth.hasRole('teacher'),
+  controller.outreachSummary);
+
 router.get('/', auth.hasRole('manager'), controller.index);
 
-router.get('/intervention-summary', 
-	auth.hasRole('teacher'), 
-	controller.interventionSummary);
-router.get('/outreach-summary', 
-	auth.hasRole('teacher'), 
-	controller.outreachSummary);
-
-// CurrentSchool authorization in controller
 router.get('/:studentId', authorize, controller.show);
 router.put('/:studentId/iep', authorize, controller.updateIEP);
 router.put('/:studentId/cfa', authorize, controller.updateCFA);
