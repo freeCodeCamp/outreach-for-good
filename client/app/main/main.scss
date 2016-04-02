@@ -1,16 +1,18 @@
-#main-view {
-  position: absolute;
-  top: 54px;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  overflow-y: auto;
-  transition: all 0.5s ease;
-  @media(min-width: 1200px) {
-    left: 250px;
-    &.isCollapsed {
-      left: 54px;
+.main-body {
+  display: flex;
+  flex: 1;
+  #main-view {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    transition: all 0.5s ease;
+    overflow-y: auto;
+    .main-ui-view {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
     }
+    @include cfa-scrollbar();
   }
 }
 
@@ -31,6 +33,15 @@
         margin: 1px;
       }
     }
+  }
+  .ui-grid-header {
+    border: none;
+  }
+  .ui-grid-header-viewport {
+    box-shadow: inset 0 -1px 0 0 darkgray;
+  }
+  .ui-grid-canvas {
+    padding: 0;
   }
   .ui-grid-header-viewport {
     .ui-grid-header-canvas {
@@ -54,16 +65,6 @@
       max-height: 234px;
       border: 1px solid #d4d4d4;
     }
-    ::-webkit-scrollbar {
-      width: 5px;
-      height: 0;
-    }
-    ::-webkit-scrollbar-track {
-      background-color: lightblue;
-    }
-    ::-webkit-scrollbar-thumb {
-      background-color: $cfa-background;
-    }
     .ui-grid-menu-inner {
       border: none;
       ul li button {
@@ -71,6 +72,12 @@
         border: none;
       }
     }
+    .ui-grid-menu-mid {
+      @include cfa-scrollbar(5px);
+    }
+  }
+  .ui-grid-viewport {
+    @include cfa-scrollbar(5px, 0, lightgrey);
   }
   .ui-grid-menu-button .ui-grid-menu {
     // The menu button is inset by 1px use 53 instead of 54px

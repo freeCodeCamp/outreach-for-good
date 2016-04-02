@@ -15,17 +15,21 @@ function AdminCtrl($scope, $http, uiGridConstants, Auth, User, School,
     rowHeight: 54,
     exporterPdfDefaultStyle: {fontSize: 9},
     exporterPdfTableHeaderStyle: {fontSize: 10, bold: true, color: 'grey'},
-    exporterPdfHeader: { text: 'Admin Data', style: 'headerStyle' },
+    exporterPdfHeader: {text: 'Admin Data', style: 'headerStyle'},
     exporterPdfOrientation: 'landscape',
     exporterPdfPageSize: 'LETTER',
     exporterPdfMaxGridWidth: 500,
-    exporterSuppressColumns: [ 'google.image.url', 'Actions' ],
-    exporterPdfFooter: function ( currentPage, pageCount ) {
-      return { text: currentPage.toString() + ' of ' + pageCount.toString(), style: 'footerStyle' };
+    exporterSuppressColumns: ['google.image.url', 'Actions'],
+    exporterPdfFooter: function(currentPage, pageCount) {
+      return {
+        text: currentPage.toString() + ' of ' + pageCount.toString(),
+        style: 'footerStyle'
+      };
     },
-    exporterPdfCustomFormatter: function ( docDefinition ) {
-      docDefinition.styles.headerStyle = { fontSize: 22, bold: true, color: '#265E6D' };
-      docDefinition.styles.footerStyle = { fontSize: 10, bold: true };
+    exporterPdfCustomFormatter: function(docDefinition) {
+      docDefinition.styles.headerStyle =
+      {fontSize: 22, bold: true, color: '#265E6D'};
+      docDefinition.styles.footerStyle = {fontSize: 10, bold: true};
       return docDefinition;
     }
   };
@@ -197,6 +201,18 @@ function AdminCtrl($scope, $http, uiGridConstants, Auth, User, School,
         addSchoolFn);
     }
   }];
+
+  $scope.getUserTableHeight = function() {
+    return {
+      height: ($scope.userGridOptions.data.length * 54 + 54) + 'px'
+    };
+  };
+
+  $scope.getSchoolTableHeight = function() {
+    return {
+      height: ($scope.schoolGridOptions.data.length * 54 + 54) + 'px'
+    };
+  };
 }
 
 app.controller('AdminCtrl', AdminCtrl);

@@ -1,9 +1,9 @@
 <navbar></navbar>
 
-<sidebar></sidebar>
-
-<section id="main-view" ng-class="{isCollapsed: sidebar.isCollapsed}">
-  <div class="container-fluid" style="height: 100%">
-    <ui-view></ui-view>
-  </div>
+<section class="main-body">
+  <sidebar></sidebar>
+  <section id="main-view">
+    <ui-view class="main-ui-view"></ui-view>
+  </section>
 </section>
+

@@ -1,8 +1,7 @@
-.student .student-notes {
+.student-view .student-notes {
   padding: 0 10px;
   .new-note {
     display: flex;
-    flex-direction: row;
     min-height: 54px;
     align-items: center;
     .notes-input {
