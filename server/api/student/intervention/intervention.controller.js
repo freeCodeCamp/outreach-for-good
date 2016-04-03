@@ -10,10 +10,13 @@ var Student = require('../student.model');
  * restriction: 'teacher'
  */
 exports.index = function(req, res) {
-  Intervention.find({student: req.student.id}, function(err, interventions) {
-    if (err) return handleError(res, err);
-    return res.status(201).json(interventions);
-  });
+  Intervention
+    .find({student: req.student.id})
+    .sort({_id: -1})
+    .exec(function(err, interventions) {
+      if (err) return handleError(res, err);
+      return res.status(201).json(interventions);
+    });
 };
 
 /**
@@ -80,6 +83,5 @@ exports.delete = function(req, res) {
 };
 
 function handleError(res, err) {
-  console.log(err);
   return res.status(500).send(err);
 }
