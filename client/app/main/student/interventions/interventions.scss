@@ -3,8 +3,8 @@
     position: relative;
     .dropdown {
       position: absolute;
-      width: 27px;
-      height: 27px;
+      width: ($cfa-unit * 0.5);
+      height: ($cfa-unit * 0.5);
       right: 0;
       top: 0;
       .dropdown-toggle {
@@ -17,7 +17,7 @@
       &.btn-group {
         text-align: center;
         vertical-align: middle;
-        line-height: 27px;
+        line-height: ($cfa-unit * 0.5);
         i {
           width: 14px;
           transition: transform 0.5s ease;
@@ -36,10 +36,10 @@
       width: 100%;
       @media(min-width: 1200px) {
         flex: 1;
-        height: 108px;
+        height: ($cfa-unit * 2);
       }
       @media(max-width: 1200px) {
-        height: 216px;
+        height: ($cfa-unit * 4);
       }
     }
   }

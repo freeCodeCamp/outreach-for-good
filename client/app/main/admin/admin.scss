@@ -2,13 +2,12 @@
   display: flex;
   flex-direction: column;
   flex: 1;
-  overflow-y: auto;
   @include cfa-scrollbar();
   .user,
   .school {
     position: relative;
     flex: 1;
-    min-height: 216px;
+    min-height: $cfa-unit * 4;
   }
   .grid {
     @extend %abs-fill-parent;
@@ -19,7 +18,7 @@
     }
     .ui-grid-cell,
     .ui-grid-header-cell-label {
-      line-height: 54px;
+      line-height: $cfa-unit;
     }
     .ui-grid-cell-contents {
       padding: 0 5px;
@@ -31,7 +30,7 @@
       }
     }
     .ui-grid-header-cell {
-      height: 54px;
+      height: $cfa-unit;
     }
     .ui-grid-menu-button {
       height: 30px;
@@ -51,9 +50,9 @@
   }
   .dev {
     .heading.navbar {
-      height: 54px;
-      min-height: 54px;
-      line-height: 54px;
+      height: $cfa-unit;
+      min-height: $cfa-unit;
+      line-height: $cfa-unit;
       background-color: orange;
       button {
         margin: 10px;

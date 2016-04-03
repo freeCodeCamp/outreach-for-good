@@ -1,6 +1,5 @@
 .records-view {
   flex: 1;
-  overflow-y: auto;
   @include cfa-scrollbar();
   .records-heading .heading {
     background-color: darken(lightblue, 35%);

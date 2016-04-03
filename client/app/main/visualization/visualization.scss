@@ -2,7 +2,6 @@
   flex: 1;
   display: flex;
   flex-direction: column;
-  overflow-y: auto;
   @include cfa-scrollbar();
   .chart-visualization {
     display: flex;
@@ -19,7 +18,6 @@
     }
     .options {
       display: flex;
-      flex-direction: row;
       justify-content: space-around;
     }
   }

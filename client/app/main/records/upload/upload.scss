@@ -1,5 +1,5 @@
 .upload {
-  min-height: 54px;
+  min-height: $cfa-unit;
   .confirm-buttons {
     text-align: center;
   }
@@ -10,11 +10,11 @@
     padding-right: 0;
   }
   .parsing-progress {
-    min-height: 54px;
+    min-height: $cfa-unit;
     padding: 17px 10px;
   }
   .upload-input-group {
-    min-height: 54px;
+    min-height: $cfa-unit;
     padding: 10px;
   }
   .current-record-warning {
@@ -38,7 +38,7 @@
 
 .confirm {
   .confirm-buttons {
-    min-height: 54px;
+    min-height: $cfa-unit;
     padding: 10px;
     text-align: center;
   }

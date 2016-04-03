@@ -2,7 +2,6 @@
   display: flex;
   flex-direction: column;
   flex: 1;
-  overflow-y: auto;
   @include cfa-scrollbar();
   .report-heading .heading {
     background-color: darken(lightblue, 35%);
@@ -16,7 +15,7 @@
     display: flex;
     flex-direction: column;
     flex: 1;
-    min-height: 216px;
+    min-height: ($cfa-unit * 4);
     overflow-y: hidden;
     position: relative;
     .grid {

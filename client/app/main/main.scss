@@ -21,7 +21,7 @@
   }
   .ui-grid-column-menu {
     // Override the inline dynamic style from ui-grid
-    top: 54px !important;;
+    top: $cfa-unit !important;;
   }
   .ui-grid-menu-button {
     width: 26px;
@@ -42,7 +42,7 @@
   .ui-grid-header-viewport {
     .ui-grid-header-canvas {
       // Override the inline dynamic style from ui-grid
-      height: 53px !important;
+      height: $cfa-unit !important;
     }
   }
   .ui-grid-filter-container {

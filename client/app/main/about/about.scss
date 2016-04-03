@@ -1,10 +1,9 @@
 .about-view {
-  overflow-y: auto;
   @include cfa-scrollbar(5px);
   .developers,
   .bugs {
     .caption {
-      min-height: 54px;
+      min-height: $cfa-unit;
       display: flex;
       align-items: center;
       justify-content: center;
