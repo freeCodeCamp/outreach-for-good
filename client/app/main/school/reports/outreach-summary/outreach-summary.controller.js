@@ -4,6 +4,7 @@ var app = angular.module('app');
 
 function OutreachSummaryReportCtrl($scope, $timeout, uiGridGroupingConstants,
   Student) {
+  $scope.loading = true;
   $scope.gridOptions = {
     rowHeight: 27,
     enableSorting: true,
@@ -104,6 +105,7 @@ function OutreachSummaryReportCtrl($scope, $timeout, uiGridGroupingConstants,
         $timeout(gridApi.treeBase.expandAllRows);
       }
       $scope.outreachesCount = data.length;
+      $scope.loading = false;
     });
   };
 }

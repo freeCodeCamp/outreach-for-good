@@ -4,6 +4,7 @@ var app = angular.module('app');
 
 function AtRiskReportCtrl($scope, $timeout, uiGridGroupingConstants,
   AbsenceRecord) {
+  $scope.loading = true;
   $scope.gridOptions = {
     rowHeight: 27,
     enableSorting: true,
@@ -108,8 +109,7 @@ function AtRiskReportCtrl($scope, $timeout, uiGridGroupingConstants,
   }];
 
   $scope.gridOptions.onRegisterApi = function(gridApi) {
-    $scope.gridOptions.data =
-      AbsenceRecord.listCurrent({filter: 'at-risk'});
+    $scope.gridOptions.data = AbsenceRecord.listCurrent({filter: 'at-risk'});
 
     gridApi.edit.on.afterCellEdit($scope, function(rowEntity, colDef, n, o) {
       if (n !== o) {
@@ -131,6 +131,7 @@ function AtRiskReportCtrl($scope, $timeout, uiGridGroupingConstants,
         $timeout(gridApi.treeBase.expandAllRows);
       }
       $scope.atRiskCount = data.length;
+      $scope.loading = false;
     });
   };
 }

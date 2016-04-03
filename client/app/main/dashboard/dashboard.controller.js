@@ -6,6 +6,7 @@ function DashboardCtrl($scope, $timeout, Auth, AbsenceRecord, Student,
   uiGridGroupingConstants, toastr) {
   $scope.menuItems = [];
   $scope.filter = {};
+  $scope.loading = true;
 
   $scope.studentGridOptions = {
     rowHeight: 27,
@@ -146,6 +147,7 @@ function DashboardCtrl($scope, $timeout, Auth, AbsenceRecord, Student,
       if ($scope.studentGridApi.treeBase.expandAllRows) {
         $timeout($scope.studentGridApi.treeBase.expandAllRows);
       }
+      $scope.loading = false;
     });
   };
 
@@ -204,10 +206,12 @@ function DashboardCtrl($scope, $timeout, Auth, AbsenceRecord, Student,
           filter.tier = tier;
         }
       }
+      $scope.loading = true;
       $scope.filter = filter;
       $scope.studentGridOptions.data = AbsenceRecord.listCurrent($scope.filter);
       $scope.studentGridOptions.data.$promise.then(function(data) {
         $scope.badge.text = data.length;
+        $scope.loading = false;
       });
       $scope.menuItems.length = 0;
       if (_.includes(['Phone Call', 'Letter Sent', 'Home Visit'], type)) {

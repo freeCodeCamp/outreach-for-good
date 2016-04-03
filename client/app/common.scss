@@ -16,7 +16,7 @@ $cfa-background: #265E6D;
   }
 }
 
-@mixin abs-fill-parent {
+%abs-fill-parent {
   position: absolute;
   top: 0;
   right: 0;

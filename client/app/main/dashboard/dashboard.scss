@@ -30,7 +30,7 @@
     flex: 1;
     min-height: 250px;
     .grid {
-      @include abs-fill-parent;
+      @extend %abs-fill-parent;
       border: none;
     }
   }

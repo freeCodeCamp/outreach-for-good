@@ -41,7 +41,8 @@
   }
   .ui-grid-header-viewport {
     .ui-grid-header-canvas {
-      height: 54px;
+      // Override the inline dynamic style from ui-grid
+      height: 53px !important;
     }
   }
   .ui-grid-filter-container {
