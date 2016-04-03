@@ -45,7 +45,8 @@ function OutreachSummaryReportCtrl($scope, $timeout, uiGridGroupingConstants,
     displayName: 'Student Id',
     minWidth: 150,
     cellTemplate: '<div class="ui-grid-cell-contents">' +
-                  '<a href="/student/{{row.entity.student._id}}">' +
+                  '<a ui-sref="student.outreaches({studentId: ' +
+                  'row.entity.student._id})">' +
                   '{{row.entity.student.studentId}}</a>' +
                   '</div>'
   }, {
