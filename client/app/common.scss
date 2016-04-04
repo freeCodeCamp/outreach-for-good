@@ -4,6 +4,7 @@
 $cfa-background: #265E6D;
 
 @mixin cfa-scrollbar($width:2px, $height:0px, $track-color: lightblue, $thumb-color: $cfa-background) {
+  overflow-y: auto;
   &::-webkit-scrollbar {
     width: $width;
     height: $height;
@@ -23,3 +24,5 @@ $cfa-background: #265E6D;
   bottom: 0;
   left: 0;
 }
+
+$cfa-unit: 54px;

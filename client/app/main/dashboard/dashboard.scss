@@ -2,15 +2,16 @@
   flex: 1;
   display: flex;
   flex-direction: column;
+  @include cfa-scrollbar();
   .widgets {
     display: flex;
     padding: 0 15px;
-    height: 108px;
-    min-height: 108px;
+    height: ($cfa-unit * 2);
+    min-height: ($cfa-unit * 2);
     background-color: #CEE;
   }
   .widget {
-    padding: 27px 2px;
+    padding: ($cfa-unit * 0.5) 2px;
     flex: 1;
     text-align: center;
     min-width: 12.5%;
@@ -28,7 +29,7 @@
     position: relative;
     display: flex;
     flex: 1;
-    min-height: 250px;
+    min-height: ($cfa-unit * 5);
     .grid {
       @extend %abs-fill-parent;
       border: none;

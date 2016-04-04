@@ -2,7 +2,7 @@ $bgDefault: $cfa-background;
 $bgHighlight: lighten($cfa-background, 15%);
 $colDefault: #fff;
 $colHighlight: #c8f7c5;
-$navbar-height: 54px;
+$navbar-height: $cfa-unit;
 
 .cfa.navbar-default,
 .cfa.navbar {

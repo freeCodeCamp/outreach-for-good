@@ -1,6 +1,5 @@
 .student-view {
   flex: 1;
-  overflow-y: auto;
   @include cfa-scrollbar();
   .info {
     .info-widget,
@@ -9,14 +8,14 @@
       flex-direction: column;
       border-right: 1px lightgrey solid;
       border-bottom: 1px lightgrey solid;
-      min-height: 135px;
-      height: 135px;
+      min-height: ($cfa-unit * 2.5);
+      height: ($cfa-unit * 2.5);
       .subheading {
-        height: 27px;
+        height: ($cfa-unit * 0.5);
         padding: 0 10px;
         background-color: $state-info-bg;
         h4 {
-          line-height: 27px;
+          line-height: ($cfa-unit * 0.5);
           font-weight: 200;
           margin: 0;
         }
@@ -30,13 +29,13 @@
     }
     .info-widget {
       .info-widget-item {
-        height: 27px;
-        line-height: 27px;
+        height: ($cfa-unit * 0.5);
+        line-height: ($cfa-unit * 0.5);
         .info-label {
           padding: 0 10px;
           font-weight: bold;
-          height: 27px;
-          width: 108px;
+          height: ($cfa-unit * 0.5);
+          width: ($cfa-unit * 2);
           display: inline-block;
         }
         .info-value {
@@ -48,8 +47,8 @@
       .attendance-table-row,
       .attendance-table-header {
         display: flex;
-        height: 27px;
-        line-height: 27px;
+        height: ($cfa-unit * 0.5);
+        line-height: ($cfa-unit * 0.5);
         .row-item,
         .header-item {
           text-align: center;
@@ -64,17 +63,17 @@
         box-shadow: inset 0 -1px 1px -1px;
       }
       .attendance-table-body {
-        height: 81px;
-        min-height: 81px;
-        overflow-y: scroll;
+        height: ($cfa-unit * 1.5);
+        min-height: ($cfa-unit * 1.5);
         @include cfa-scrollbar(3px, 0, lightgrey);
+        overflow-y: scroll;
       }
       .attendance-table-row {
         box-shadow: inset 0 -1px 1px -1px darkgrey;
       }
     }
     @media(min-width: 1200px) {
-      min-height: 108px;
+      min-height: ($cfa-unit * 2);
     }
   }
   .info,
@@ -91,12 +90,12 @@
     border-bottom: 1px lightgrey solid;
     .title {
       padding-left: 15px;
-      height: 27px;
+      height: ($cfa-unit * 0.5);
       background-color: $state-success-bg;
       h4 {
         margin-top: 0;
         margin-bottom: 0;
-        line-height: 27px;
+        line-height: ($cfa-unit * 0.5);
         font-weight: 200;
       }
     }
@@ -105,23 +104,23 @@
       display: flex;
       padding-left: 15px;
       padding-right: 15px;
-      line-height: 27px;
+      line-height: ($cfa-unit * 0.5);
       background-color: #f1f1f1;
       .notes {
         display: flex;
         flex-direction: column;
         .new-notes {
           display: flex;
-          min-height: 27px;
+          min-height: ($cfa-unit * 0.5);
           .notes-label {
-            height: 27px;
+            height: ($cfa-unit * 0.5);
             font-weight: bold;
             padding-right: 15px;
           }
         }
         .notes-input {
           flex: 1;
-          height: 27px;
+          height: ($cfa-unit * 0.5);
           input {
             padding-left: 10px;
             padding-right: 10px;
@@ -149,14 +148,13 @@
           flex: 1;
           width: 100%;
           box-shadow: inset 0 0 0 1px darkgray;
-          overflow-y: auto;
           @include cfa-scrollbar(5px);
           .list-group {
             margin-bottom: 0;
             .list-group-item {
               overflow-wrap: break-word;
               background: none;
-              line-height: 27px;
+              line-height: ($cfa-unit * 0.5);
               padding: 0 5px;
               margin: 0;
               border: none;
@@ -174,7 +172,7 @@
     }
     @media(min-width: 1200px) {
       width: 50%;
-      height: 162px;
+      height: ($cfa-unit * 3);
     }
     @media(max-width: 1200px) {
       width: 100%;
