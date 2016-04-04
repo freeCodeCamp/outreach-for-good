@@ -10,8 +10,11 @@ function SchoolReportsCtrl($scope, Student) {
     title: 'Chronically Absent',
     state: 'school-reports.chronically-absent'
   }, {
-    title: 'Outreach Summary',
+    title: 'Outreaches',
     state: 'school-reports.outreach-summary'
+  }, {
+    title: 'Interventions',
+    state: 'school-reports.intervention-summary'
   }];
 
   $scope.updateIEP = Student.updateIEP;

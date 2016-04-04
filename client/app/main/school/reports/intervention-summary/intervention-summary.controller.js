@@ -2,7 +2,7 @@
 
 var app = angular.module('app');
 
-function OutreachSummaryCtrl($scope, $timeout, uiGridGroupingConstants,
+function InterventionSummaryCtrl($scope, $timeout, uiGridGroupingConstants,
   Student) {
   $scope.loading = true;
   $scope.gridOptions = {
@@ -14,7 +14,7 @@ function OutreachSummaryCtrl($scope, $timeout, uiGridGroupingConstants,
     exporterPdfDefaultStyle: {fontSize: 9},
     exporterPdfTableHeaderStyle: {fontSize: 10, bold: true, color: 'grey'},
     exporterPdfHeader: {
-      text: 'Outreach Summary',
+      text: 'Intervention Summary',
       style: 'headerStyle'
     },
     exporterPdfOrientation: 'landscape',
@@ -41,6 +41,12 @@ function OutreachSummaryCtrl($scope, $timeout, uiGridGroupingConstants,
     grouping: {groupPriority: 0},
     sort: {priority: 0, direction: 'asc'}
   }, {
+    name: 'type',
+    displayName: 'Type',
+    minWidth: 150,
+    grouping: {groupPriority: 1},
+    sort: {priority: 0, direction: 'asc'}
+  }, {
     name: 'student.studentId',
     displayName: 'Student Id',
     minWidth: 150,
@@ -57,36 +63,6 @@ function OutreachSummaryCtrl($scope, $timeout, uiGridGroupingConstants,
     name: 'student.lastName',
     displayName: 'Last Name',
     minWidth: 150
-  }, {
-    name: 'totals.all',
-    displayName: 'Total',
-    minWidth: 80,
-    treeAggregationType: uiGridGroupingConstants.aggregation.SUM
-  }, {
-    name: 'totals["Phone Call"] || 0',
-    displayName: 'Calls',
-    minWidth: 100,
-    treeAggregationType: uiGridGroupingConstants.aggregation.SUM
-  }, {
-    name: 'totals["Letter Sent"] || 0',
-    displayName: 'Letters',
-    minWidth: 100,
-    treeAggregationType: uiGridGroupingConstants.aggregation.SUM
-  }, {
-    name: 'totals["Home Visit"] || 0',
-    displayName: 'Visits',
-    minWidth: 100,
-    treeAggregationType: uiGridGroupingConstants.aggregation.SUM
-  }, {
-    name: 'totals["SST Referral"] || 0',
-    displayName: 'SST',
-    minWidth: 100,
-    treeAggregationType: uiGridGroupingConstants.aggregation.SUM
-  }, {
-    name: 'totals["Court Referral"] || 0',
-    displayName: 'Court',
-    minWidth: 100,
-    treeAggregationType: uiGridGroupingConstants.aggregation.SUM
   }, {
     name: 'student.withdrawn',
     displayName: 'Withdrawn',
@@ -107,7 +83,7 @@ function OutreachSummaryCtrl($scope, $timeout, uiGridGroupingConstants,
 
   $scope.gridOptions.onRegisterApi = function(gridApi) {
     $scope.gridApi = gridApi;
-    $scope.gridOptions.data = Student.outreachSummary();
+    $scope.gridOptions.data = Student.interventionSummary();
 
     gridApi.edit.on.afterCellEdit($scope, function(rowEntity, colDef, n, o) {
       if (n !== o) {
@@ -119,13 +95,7 @@ function OutreachSummaryCtrl($scope, $timeout, uiGridGroupingConstants,
       }
     });
 
-    $scope.gridOptions.data.$promise.then(function(data) {
-      // Convert counts array to object, generate total intervention property
-      _.forEach(data, function(student) {
-        student.totals = _(student.counts)
-          .keyBy('type').mapValues('count').value();
-        student.totals.all = _.sumBy(student.counts, 'count');
-      });
+    $scope.gridOptions.data.$promise.then(function() {
       // NOTE: Hack to default to expanded rows on initial load.
       // https://github.com/angular-ui/ui-grid/issues/3841
       $timeout(gridApi.treeBase.expandAllRows);
@@ -141,4 +111,4 @@ function OutreachSummaryCtrl($scope, $timeout, uiGridGroupingConstants,
   });
 }
 
-app.controller('OutreachSummaryCtrl', OutreachSummaryCtrl);
+app.controller('InterventionSummaryCtrl', InterventionSummaryCtrl);
