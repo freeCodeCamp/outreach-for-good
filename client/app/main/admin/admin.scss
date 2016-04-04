@@ -2,20 +2,17 @@
   display: flex;
   flex-direction: column;
   flex: 1;
-  min-height: 594px;
-  overflow: hidden;
+  overflow-y: auto;
+  @include cfa-scrollbar();
   .user,
   .school {
-    display: flex;
-    flex-direction: column;
+    position: relative;
     flex: 1;
     min-height: 216px;
-    overflow-y: hidden;
   }
   .grid {
-    flex: 1;
+    @include abs-fill-parent;
     border: none;
-    overflow-y: scroll;
     .action-col {
       padding: 0;
       text-align: center;

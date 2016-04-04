@@ -1,4 +1,6 @@
 .about-view {
+  overflow-y: auto;
+  @include cfa-scrollbar(5px);
   .developers,
   .bugs {
     .caption {

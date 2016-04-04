@@ -8,6 +8,9 @@
   margin: 0;
   border: none;
   border-radius: 0;
+  &:before, &:after {
+    content: none;
+  }
   h3 {
     display: inline-block;
     margin: 0;

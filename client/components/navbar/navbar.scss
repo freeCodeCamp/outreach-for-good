@@ -102,3 +102,9 @@ $navbar-height: 54px;
     transition: transform 0.5s ease;
   }
 }
+
+@media print {
+  .cfa.navbar {
+    display: none !important;
+  }
+}

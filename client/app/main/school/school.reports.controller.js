@@ -3,8 +3,7 @@
 var app = angular.module('app');
 
 function SchoolReportsCtrl($scope, $timeout, Auth, uiGridGroupingConstants,
-  Student,
-  AbsenceRecord, toastr) {
+  Student, AbsenceRecord, toastr) {
   $scope.atRiskGridOptions = {
     rowHeight: 27,
     enableSorting: true,

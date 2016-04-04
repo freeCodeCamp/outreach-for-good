@@ -7,8 +7,7 @@
       ui-grid-pinning
       ui-grid-exporter
       id="user-grid"
-      class="grid"
-      ng-style="getUserTableHeight()">
+      class="grid">
     </div>
   </div>
   <heading title="'Schools'" menu-items="schoolMenuItems"></heading>
@@ -16,8 +15,7 @@
     <div ui-grid="schoolGridOptions"
       ui-grid-auto-resize
       id="school-grid"
-      class="grid"
-      ng-style="getSchoolTableHeight()"></div>
+      class="grid"></div>
   </div>
   <div ng-if="auth.userIs('super')" class="dev">
     <div class="heading navbar">
