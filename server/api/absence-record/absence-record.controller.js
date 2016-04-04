@@ -109,16 +109,15 @@ exports.create = function(req, res) {
 };
 
 function currentAbsenceRecordPipeline(user) {
-  var pipeline = [];
+  var match = {};
   if (user.role === 'teacher') {
-    pipeline.push({
-      $match: {school: user.assignment}
-    });
+    match.school = user.assignment;
   }
-  pipeline.push({
+  return [{
+    $match: match
+  }, {
     $sort: {date: -1}
-  });
-  pipeline.push({
+  }, {
     $group: {
       _id: '$school',
       recordId: {$first: '$_id'},
@@ -126,8 +125,7 @@ function currentAbsenceRecordPipeline(user) {
       school: {$first: '$school'},
       entries: {$first: '$entries'}
     }
-  });
-  return pipeline;
+  }];
 }
 
 /**

@@ -49,6 +49,35 @@ function SchoolReportsCtrl($scope, Student, toastr) {
       });
     }
   };
+
+  $scope.updateWithdrawn = function(student) {
+    if (student._id) {
+      var oldValue = !student.withdrawn;
+      Student.updateWithdrawn({
+        studentId: student._id
+      }, {
+        withdrawn: student.withdrawn
+      }, function() {
+        toastr.success(
+          'Withdrawn updated to ' + student.withdrawn,
+          student.firstName + ' ' + student.lastName);
+      }, function(err) {
+        student.withdrawn = oldValue;
+        toastr.error(err);
+      });
+    }
+  };
+
+  $scope.menuItems = [{
+    text: ' Withdrawn Students',
+    action: function() {
+      $scope.showWithdrawn = !$scope.showWithdrawn;
+    },
+    iconFn: function() {
+      return $scope.showWithdrawn ?
+             'fa-check-square-o text-success' : 'fa-square-o';
+    }
+  }];
 }
 
 app.controller('SchoolReportsCtrl', SchoolReportsCtrl);

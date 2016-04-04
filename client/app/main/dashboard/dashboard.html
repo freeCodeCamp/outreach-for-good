@@ -9,31 +9,31 @@
       <a href="#" tooltip-placement="top" uib-tooltip="Phone Calls" ng-click="setFilter('Phone Call')">
         <i class="fa fa-phone fa-2x"></i>
       </a>
-      <div class="badge">{{calls}}</div>
+      <div class="badge">{{counts['Phone Call'] || 0}}</div>
     </div>
     <div class="widget">
       <a href="#" tooltip-placement="top" uib-tooltip="Letters Sent" ng-click="setFilter('Letter Sent')">
         <i class="fa fa-envelope fa-2x"></i>
       </a>
-      <div class="badge">{{letters}}</div>
+      <div class="badge">{{counts['Letter Sent'] || 0}}</div>
     </div>
     <div class="widget">
       <a href="#" tooltip-placement="top" uib-tooltip="Home Visits" ng-click="setFilter('Home Visit')">
         <i class="fa fa-home fa-2x"></i>
       </a>
-      <div class="badge">{{home}}</div>
+      <div class="badge">{{counts['Home Visit'] || 0}}</div>
     </div>
     <div class="widget">
       <a href="#" tooltip-placement="top" uib-tooltip="SST referrals" ng-click="setFilter('SST Referral')">
         <i class="fa fa-support fa-2x"></i>
       </a>
-      <div class="badge">{{sst}}</div>
+      <div class="badge">{{counts['SST Referral'] || 0}}</div>
     </div>
     <div class="widget">
       <a href="#" tooltip-placement="top" uib-tooltip="Court referrals" ng-click="setFilter('Court Referral')">
         <i class="fa fa-gavel fa-2x"></i>
       </a>
-      <div class="badge">{{court}}</div>
+      <div class="badge">{{counts['Court Referral'] || 0}}</div>
     </div>
     <div class="widget">
       <a ui-sref="visualization" tooltip-placement="top" uib-tooltip="Visualizations">
@@ -46,7 +46,7 @@
       </a>
     </div>
   </div>
-  <heading title="tableTitle()" badge="badge" menu-items="menuItems"></heading>
+  <heading title="tableTitle()" menu-items="menuItems"></heading>
   <div class="student-table">
     <grid-status loading="loading" grid-options="studentGridOptions"></grid-status>
     <div ui-grid="studentGridOptions"

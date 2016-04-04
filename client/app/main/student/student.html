@@ -6,12 +6,14 @@
         <h4>Student Info</h4>
       </div>
       <div class="info-widget-item">
-        <div class="info-label">Student Id</div>
-        <div class="info-value">{{ student.studentId }}</div>
-      </div>
-      <div class="info-widget-item">
-        <div class="info-label">School</div>
-        <div class="info-value">{{ student.currentSchool.name }}</div>
+        <div>
+          <div class="info-label">Student Id</div>
+          <div class="info-value">{{ student.studentId }}</div>
+        </div>
+        <div>
+          <div class="info-label">School</div>
+          <div class="info-value">{{ student.currentSchool.name }}</div>
+        </div>
       </div>
       <div class="info-widget-item">
         <div class="info-label">IEP</div>
@@ -23,6 +25,12 @@
         <div class="info-label">CFA</div>
         <div class="info-value">
           <input type="checkbox" ng-model="student.cfa" ng-change="updateCFA()">
+        </div>
+      </div>
+      <div class="info-widget-item">
+        <div class="info-label">Withdrawn</div>
+        <div class="info-value">
+          <input type="checkbox" ng-model="student.withdrawn" ng-change="updateWithdrawn()">
         </div>
       </div>
     </div>

@@ -22,6 +22,7 @@ router.get('/', auth.hasRole('manager'), controller.index);
 router.get('/:studentId', authorize, controller.show);
 router.put('/:studentId/iep', authorize, controller.updateIEP);
 router.put('/:studentId/cfa', authorize, controller.updateCFA);
+router.put('/:studentId/withdrawn', authorize, controller.updateWithdrawn);
 
 router.use('/:studentId/interventions', require('./intervention'));
 router.use('/:studentId/outreaches', require('./outreach'));

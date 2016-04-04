@@ -102,6 +102,22 @@ function ChronicallyAbsentReportCtrl($scope, $timeout, uiGridGroupingConstants,
     width: 100,
     treeAggregationType: uiGridGroupingConstants.aggregation.SUM
   }, {
+    name: 'entries.student.withdrawn',
+    displayName: 'Withdrawn',
+    enableCellEdit: true,
+    type: 'boolean',
+    width: 100,
+    filter: {
+      noTerm: true,
+      condition: function(searchTerm, cellValue) {
+        if ($scope.showWithdrawn) {
+          return true;
+        }
+        return cellValue === false;
+      }
+    },
+    visible: false
+  }, {
     name: 'date',
     displayName: 'Uploaded',
     cellFilter: 'date:\'MM/dd/yy\'',
@@ -109,7 +125,7 @@ function ChronicallyAbsentReportCtrl($scope, $timeout, uiGridGroupingConstants,
   }];
 
   $scope.gridOptions.onRegisterApi = function(gridApi) {
-    $scope.chronicGridApi = gridApi;
+    $scope.gridApi = gridApi;
     $scope.gridOptions.data = AbsenceRecord.listCurrent({filter: 'chronic'});
 
     gridApi.edit.on.afterCellEdit($scope, function(rowEntity, colDef, n, o) {
@@ -135,6 +151,13 @@ function ChronicallyAbsentReportCtrl($scope, $timeout, uiGridGroupingConstants,
       $scope.loading = false;
     });
   };
+
+  $scope.$watch('showWithdrawn', function(n, o) {
+    if (n !== o) {
+      $scope.gridApi.grid.refresh();
+      $timeout($scope.gridApi.treeBase.expandAllRows);
+    }
+  });
 }
 
 app.controller('ChronicallyAbsentReportCtrl', ChronicallyAbsentReportCtrl);

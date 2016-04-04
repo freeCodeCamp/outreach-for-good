@@ -87,6 +87,7 @@ function UploadCtrl($scope, PDF, AbsenceRecord, Auth, School, toastr) {
   }
 
   function createOutreaches(entry, prevEntry, school, schoolYear) {
+    console.log(prevEntry);
     if (!entry.absencesDelta) {
       return [];
     }
@@ -103,7 +104,8 @@ function UploadCtrl($scope, PDF, AbsenceRecord, Auth, School, toastr) {
           absences: trigger.absences,
           student: entry.student,
           school: school._id,
-          schoolYear: schoolYear
+          schoolYear: schoolYear,
+          withdrawn: !!(prevEntry.student || {}).withdrawn
         };
       })
       .value();
