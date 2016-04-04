@@ -1,0 +1,85 @@
+<section class="summary-view">
+  <tab-heading tabs="tabs"></tab-heading>
+  <div class="summary">
+    <div class="print-area">
+      <h2>{{ student.firstName }} {{ student.lastName }}</h2>
+      <div><b>School:</b> {{ student.currentSchool.name }}</div>
+      <div><b>Student id:</b> {{ student.studentId }}</div>
+      <div><b>IEP:</b> {{ student.iep ? 'yes' : 'no' }}</div>
+      <div><b>CFA:</b> {{ student.cfa ? 'yes' : 'no' }}</div>
+
+      <h3>Attendance Records</h3>
+      <table>
+        <thead>
+        <tr>
+          <th>Date</th>
+          <th>Absences</th>
+          <th>Δ Absences</th>
+          <th>Tardies</th>
+          <th>Δ Tardies</th>
+          <th>Present</th>
+          <th>Enrolled</th>
+          <th>P/E %</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="record in records">
+          <td>{{ record.date | date: 'MM/dd/yy' }}</td>
+          <td>{{ record.entry.absences }}</td>
+          <td>{{ record.entry.absencesDelta }}</td>
+          <td>{{ record.entry.tardies }}</td>
+          <td>{{ record.entry.tardiesDelta }}</td>
+          <td>{{ record.entry.present }}</td>
+          <td>{{ record.entry.enrolled }}</td>
+          <td>{{ record.entry.present / record.entry.enrolled * 100 | number: 1 }}</td>
+        </tr>
+        </tbody>
+      </table>
+
+      <h3>Outreaches</h3>
+      <div ng-if="!outreaches.length"><em>No outreaches.</em></div>
+      <div ng-repeat="outreach in outreaches">
+        <h4>{{ outreach.type }} #{{ outreach.tier }}</h4>
+        <div class="dates">
+          <div><b>Triggered:</b> {{ outreach.triggerDate | date: 'MM/dd/yy' }}</div>
+          <div><b>Resolved:</b> {{ outreach.actionDate | date: 'MM/dd/yy' }}</div>
+        </div>
+        <div ng-if="outreach.notes.length">
+          <b>Notes:</b><br/>
+          <ul>
+            <li ng-repeat="onote in outreach.notes">
+              {{ onote.date | date: 'MM/dd/yy' }} - {{ onote.note }}
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <h3>Interventions</h3>
+      <div ng-if="!interventions.length"><em>No interventions.</em></div>
+      <div ng-repeat="intervention in interventions">
+        <h4>{{ intervention.type }}</h4>
+        <div class="dates">
+          <div><b>Created:</b> {{ intervention.createdDate | date: 'MM/dd/yy' }}</div>
+          <div><b>By:</b> {{ intervention.user }}</div>
+        </div>
+        <div ng-if="intervention.notes.length">
+          <b>Notes:</b><br/>
+          <ul>
+            <li ng-repeat="inote in intervention.notes">
+              {{ inote.date | date: 'MM/dd/yy' }} - {{ inote.note }}
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <h3>Notes</h3>
+      <div ng-if="!notes.length"><em>No other notes.</em></div>
+      <ul>
+        <li ng-repeat="note in notes">
+          {{ note.createdAt | date : 'MM/dd/yy' }} - {{ note.note }}
+        </li>
+      </ul>
+    </div>
+  </div>
+
+</section>
