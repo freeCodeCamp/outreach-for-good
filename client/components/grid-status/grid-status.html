@@ -1,0 +1,10 @@
+<div class="grid-status" ng-if="loading || !gridOptions.data.length">
+  <div class="grid-status-message" ng-if="loading">
+    <uib-progressbar class="progress-striped active" animate="false" value="dynamic" type="info">
+      Loading...
+    </uib-progressbar>
+  </div>
+  <div class="grid-status-message" ng-if="!loading">
+    <em>No entries found.</em>
+  </div>
+</div>

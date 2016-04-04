@@ -4,6 +4,7 @@ var app = angular.module('app');
 
 function ChronicallyAbsentReportCtrl($scope, $timeout, uiGridGroupingConstants,
   AbsenceRecord) {
+  $scope.loading = true;
   $scope.gridOptions = {
     rowHeight: 27,
     enableSorting: true,
@@ -108,8 +109,7 @@ function ChronicallyAbsentReportCtrl($scope, $timeout, uiGridGroupingConstants,
 
   $scope.gridOptions.onRegisterApi = function(gridApi) {
     $scope.chronicGridApi = gridApi;
-    $scope.gridOptions.data =
-      AbsenceRecord.listCurrent({filter: 'chronic'});
+    $scope.gridOptions.data = AbsenceRecord.listCurrent({filter: 'chronic'});
 
     gridApi.edit.on.afterCellEdit($scope, function(rowEntity, colDef, n, o) {
       if (n !== o) {
@@ -131,6 +131,7 @@ function ChronicallyAbsentReportCtrl($scope, $timeout, uiGridGroupingConstants,
         $timeout(gridApi.treeBase.expandAllRows);
       }
       $scope.chronicCount = data.length;
+      $scope.loading = false;
     });
   };
 }

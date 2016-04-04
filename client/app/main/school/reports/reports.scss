@@ -7,12 +7,18 @@
   .report-heading .heading {
     background-color: darken(lightblue, 35%);
   }
+  ui-view {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+  }
   .report-table {
     display: flex;
     flex-direction: column;
     flex: 1;
     min-height: 216px;
     overflow-y: hidden;
+    position: relative;
     .grid {
       flex: 1;
       border: none;

@@ -11,7 +11,7 @@
     min-height: 216px;
   }
   .grid {
-    @include abs-fill-parent;
+    @extend %abs-fill-parent;
     border: none;
     .action-col {
       padding: 0;
