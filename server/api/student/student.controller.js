@@ -194,7 +194,7 @@ exports.interventionSummary = function(req, res) {
     Intervention.populate(results, {
       path: 'student',
       model: 'Student',
-      select: 'firstName lastName studentId currentSchool',
+      select: 'firstName lastName studentId currentSchool withdrawn',
       populate: {
         path: 'currentSchool',
         model: 'School',

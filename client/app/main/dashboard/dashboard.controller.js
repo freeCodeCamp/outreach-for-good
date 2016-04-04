@@ -3,7 +3,7 @@
 var app = angular.module('app');
 
 function DashboardCtrl($scope, $timeout, Auth, AbsenceRecord, Student,
-  uiGridGroupingConstants, toastr) {
+  uiGridGroupingConstants) {
   $scope.menuItems = [];
   $scope.filter = {};
   $scope.loading = true;
@@ -163,62 +163,12 @@ function DashboardCtrl($scope, $timeout, Auth, AbsenceRecord, Student,
     });
   };
 
-  $scope.updateIEP = function(student) {
-    if (student._id) {
-      var oldVal = !student.iep;
-      Student.updateIEP({
-        studentId: student._id
-      }, {
-        iep: student.iep
-      }, function() {
-        toastr.success(
-          'IEP updated to ' + student.iep,
-          student.firstName + ' ' + student.lastName);
-      }, function(err) {
-        student.iep = oldVal;
-        toastr.error(err);
-      });
-    }
-  };
+  $scope.updateIEP = Student.updateIEP;
+  $scope.updateCFA = Student.updateCFA;
+  $scope.updateWithdrawn = Student.updateWithdrawn;
 
-  $scope.updateCFA = function(student) {
-    if (student._id) {
-      var oldVal = !student.cfa;
-      Student.updateCFA({
-        studentId: student._id
-      }, {
-        cfa: student.cfa
-      }, function() {
-        toastr.success(
-          'CFA updated to ' + student.cfa,
-          student.firstName + ' ' + student.lastName);
-      }, function(err) {
-        student.cfa = oldVal;
-        toastr.error(err);
-      });
-    }
-  };
-
-  $scope.updateWithdrawn = function(student) {
-    if (student._id) {
-      var oldValue = !student.withdrawn;
-      Student.updateWithdrawn({
-        studentId: student._id
-      }, {
-        withdrawn: student.withdrawn
-      }, function() {
-        toastr.success(
-          'Withdrawn updated to ' + student.withdrawn,
-          student.firstName + ' ' + student.lastName);
-      }, function(err) {
-        student.withdrawn = oldValue;
-        toastr.error(err);
-      });
-    }
-  };
-
-  Student.outreachCounts().$promise.then(function(res) {
-    $scope.counts = _(res).keyBy('_id').mapValues('count').value();
+  Student.outreachCounts().then(function(counts) {
+    $scope.counts = counts;
   });
 
   $scope.setFilter = function(type, tier) {
@@ -278,8 +228,8 @@ function DashboardCtrl($scope, $timeout, Auth, AbsenceRecord, Student,
 
   $scope.$watch('showWithdrawn', function(n, o) {
     if (n !== o) {
-      Student.outreachCounts({withdrawn: n}).$promise.then(function(res) {
-        $scope.counts = _(res).keyBy('_id').mapValues('count').value();
+      Student.outreachCounts().then(function(counts) {
+        $scope.counts = counts;
       });
       $scope.studentGridApi.grid.refresh();
       $timeout($scope.studentGridApi.treeBase.expandAllRows);

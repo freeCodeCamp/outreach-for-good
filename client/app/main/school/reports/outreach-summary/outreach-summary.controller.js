@@ -109,6 +109,16 @@ function OutreachSummaryReportCtrl($scope, $timeout, uiGridGroupingConstants,
     $scope.gridApi = gridApi;
     $scope.gridOptions.data = Student.outreachSummary();
 
+    gridApi.edit.on.afterCellEdit($scope, function(rowEntity, colDef, n, o) {
+      if (n !== o) {
+        switch (colDef.name) {
+          case 'student.withdrawn':
+            $scope.updateWithdrawn(rowEntity.entries.student);
+            break;
+        }
+      }
+    });
+
     $scope.gridOptions.data.$promise.then(function(data) {
       // Convert counts array to object, generate total intervention property
       _.forEach(data, function(student) {
