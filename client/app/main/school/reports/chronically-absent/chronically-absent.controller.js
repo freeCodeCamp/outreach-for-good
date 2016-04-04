@@ -137,6 +137,9 @@ function ChronicallyAbsentReportCtrl($scope, $timeout, uiGridGroupingConstants,
           case 'entries.student.cfa':
             $scope.updateCFA(rowEntity.entries.student);
             break;
+          case 'entries.student.withdrawn':
+            $scope.updateWithdrawn(rowEntity.entries.student);
+            break;
         }
       }
     });
@@ -144,9 +147,7 @@ function ChronicallyAbsentReportCtrl($scope, $timeout, uiGridGroupingConstants,
     $scope.gridOptions.data.$promise.then(function(data) {
       // NOTE: Hack to default to expanded rows on initial load.
       // https://github.com/angular-ui/ui-grid/issues/3841
-      if (gridApi.treeBase.expandAllRows) {
-        $timeout(gridApi.treeBase.expandAllRows);
-      }
+      $timeout(gridApi.treeBase.expandAllRows);
       $scope.chronicCount = data.length;
       $scope.loading = false;
     });

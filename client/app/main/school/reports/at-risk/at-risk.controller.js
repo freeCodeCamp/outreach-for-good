@@ -138,11 +138,14 @@ function AtRiskReportCtrl($scope, $timeout, uiGridGroupingConstants,
           case 'entries.student.cfa':
             $scope.updateCFA(rowEntity.entries.student);
             break;
+          case 'entries.student.withdrawn':
+            $scope.updateWithdrawn(rowEntity.entries.student);
+            break;
         }
       }
     });
 
-    $scope.gridOptions.data.$promise.then(function(data) {
+    $scope.gridOptions.data.$promise.then(function() {
       // NOTE: Hack to default to expanded rows on initial load.
       // https://github.com/angular-ui/ui-grid/issues/3841
       $timeout(gridApi.treeBase.expandAllRows);

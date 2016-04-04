@@ -3,7 +3,7 @@
 var app = angular.module('app');
 
 function StudentCtrl($scope, $state, $stateParams, AbsenceRecord, Student,
-  toastr, Modal) {
+  Modal) {
   Student.get({studentId: $stateParams.studentId}, function(student) {
     $scope.student = student;
   });
@@ -13,56 +13,9 @@ function StudentCtrl($scope, $state, $stateParams, AbsenceRecord, Student,
     $scope.percentage = (entry.present / entry.enrolled * 100);
   });
 
-  $scope.updateIEP = function() {
-    var oldValue = !$scope.student.iep;
-    Student.updateIEP({
-      studentId: $stateParams.studentId
-    }, {
-      iep: $scope.student.iep
-    }, function(student) {
-      $scope.student = student;
-      toastr.success(
-        'IEP updated to ' + student.iep,
-        student.firstName + ' ' + student.lastName);
-    }, function(err) {
-      $scope.student.iep = oldValue;
-      toastr.error(err);
-    });
-  };
-
-  $scope.updateCFA = function() {
-    var oldValue = !$scope.student.cfa;
-    Student.updateCFA({
-      studentId: $stateParams.studentId
-    }, {
-      cfa: $scope.student.cfa
-    }, function(student) {
-      $scope.student = student;
-      toastr.success(
-        'CFA updated to ' + student.cfa,
-        student.firstName + ' ' + student.lastName);
-    }, function(err) {
-      $scope.student.cfa = oldValue;
-      toastr.error(err);
-    });
-  };
-
-  $scope.updateWithdrawn = function() {
-    var oldValue = !$scope.student.withdrawn;
-    Student.updateWithdrawn({
-      studentId: $stateParams.studentId
-    }, {
-      withdrawn: $scope.student.withdrawn
-    }, function(student) {
-      $scope.student = student;
-      toastr.success(
-        'Withdrawn updated to ' + student.withdrawn,
-        student.firstName + ' ' + student.lastName);
-    }, function(err) {
-      $scope.student.withdrawn = oldValue;
-      toastr.error(err);
-    });
-  };
+  $scope.updateIEP = Student.updateIEP;
+  $scope.updateCFA = Student.updateCFA;
+  $scope.updateWithdrawn = Student.updateWithdrawn;
 
   $scope.tabs = [{
     title: 'Outreaches',
