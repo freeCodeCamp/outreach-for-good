@@ -9,10 +9,13 @@ var Outreach = require('./outreach.model');
  * restriction: 'teacher'
  */
 exports.index = function(req, res) {
-  Outreach.find({student: req.student.id}, function(err, outreaches) {
-    if (err) return handleError(res, err);
-    return res.status(201).json(outreaches);
-  });
+  Outreach
+    .find({student: req.student.id})
+    .sort({_id: -1})
+    .exec(function(err, outreaches) {
+      if (err) return handleError(res, err);
+      return res.status(201).json(outreaches);
+    });
 };
 
 /**
