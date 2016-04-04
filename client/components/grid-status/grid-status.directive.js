@@ -5,8 +5,13 @@ angular.module('app').directive('gridStatus', function() {
     templateUrl: 'components/grid-status/grid-status.html',
     scope: {
       loading: '=',
-      gridOptions: '='
+      gridApi: '='
     },
-    restrict: 'E'
+    restrict: 'E',
+    controller: function($scope) {
+      $scope.noRows = function() {
+        return !$scope.gridApi.core.getVisibleRows($scope.gridApi.grid).length;
+      };
+    }
   };
 });

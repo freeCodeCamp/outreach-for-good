@@ -1,4 +1,4 @@
-<div class="grid-status" ng-if="loading || !gridOptions.data.length">
+<div class="grid-status" ng-if="loading || noRows()">
   <div class="grid-status-message" ng-if="loading">
     <uib-progressbar class="progress-striped active" animate="false" value="dynamic" type="info">
       Loading...
