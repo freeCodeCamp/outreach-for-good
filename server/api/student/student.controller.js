@@ -61,6 +61,18 @@ exports.updateCFA = function(req, res) {
   });
 };
 
+// Updates an existing student's withdrawn field.
+exports.updateWithdrawn = function(req, res) {
+  Student.populate(req.student, populateOptions, function(err, student) {
+    if (err) return handleError(res, err);
+    student.withdrawn = req.body.withdrawn;
+    student.save(function(err) {
+      if (err) return handleError(res, err);
+      return res.status(200).json(student);
+    });
+  });
+};
+
 /**
  * Get current outstanding outreach counts.
  * restriction: 'teacher'
@@ -70,17 +82,35 @@ exports.updateCFA = function(req, res) {
  * - manager+ will get outreach counts for all schools
  */
 exports.outreachCounts = function(req, res) {
+  var match = {actionDate: null};
+  if (req.user.role === 'teacher') {
+    match.school = req.user.assignment;
+  }
+  if (!req.query.withdrawn || req.query.withdrawn === 'false') {
+    match.withdrawn = false;
+  }
   var pipeline = [{
-    $match: {actionDate: null}
+    $match: match
   }, {
     $group: {
-      _id: '$type',
+      _id: {school: '$school', schoolYear: '$schoolYear'},
+      outreaches: {$push: '$$ROOT'}
+    }
+  }, {
+    $sort: {'_id.schoolYear': -1}
+  }, {
+    $group: {
+      _id: '$_id.school',
+      outreaches: {$first: '$outreaches'}
+    }
+  }, {
+    $unwind: '$outreaches'
+  }, {
+    $group: {
+      _id: '$outreaches.type',
       count: {$sum: 1}
     }
   }];
-  if (req.user.role === 'teacher') {
-    pipeline[0].$match.school = req.user.assignment;
-  }
   Outreach.aggregate(pipeline, function(err, results) {
     if (err) return handleError(res, err);
     return res.status(200).json(results);
@@ -178,5 +208,5 @@ exports.interventionSummary = function(req, res) {
 };
 
 function handleError(res, err) {
-  return res.send(500, err);
+  return res.status(500).send(err);
 }

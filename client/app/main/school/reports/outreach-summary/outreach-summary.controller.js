@@ -87,10 +87,26 @@ function OutreachSummaryReportCtrl($scope, $timeout, uiGridGroupingConstants,
     displayName: 'Court',
     minWidth: 100,
     treeAggregationType: uiGridGroupingConstants.aggregation.SUM
+  }, {
+    name: 'student.withdrawn',
+    displayName: 'Withdrawn',
+    enableCellEdit: true,
+    type: 'boolean',
+    width: 100,
+    filter: {
+      noTerm: true,
+      condition: function(searchTerm, cellValue) {
+        if ($scope.showWithdrawn) {
+          return true;
+        }
+        return cellValue === false;
+      }
+    },
+    visible: false
   }];
 
   $scope.gridOptions.onRegisterApi = function(gridApi) {
-    $scope.outreachesGridApi = gridApi;
+    $scope.gridApi = gridApi;
     $scope.gridOptions.data = Student.outreachSummary();
 
     $scope.gridOptions.data.$promise.then(function(data) {
@@ -102,13 +118,28 @@ function OutreachSummaryReportCtrl($scope, $timeout, uiGridGroupingConstants,
       });
       // NOTE: Hack to default to expanded rows on initial load.
       // https://github.com/angular-ui/ui-grid/issues/3841
-      if (gridApi.treeBase.expandAllRows) {
-        $timeout(gridApi.treeBase.expandAllRows);
-      }
-      $scope.outreachesCount = data.length;
+      $timeout(gridApi.treeBase.expandAllRows);
       $scope.loading = false;
     });
   };
+
+  $scope.menuItems = [{
+    text: ' Withdrawn Students',
+    action: function() {
+      $scope.showWithdrawn = !$scope.showWithdrawn;
+    },
+    iconFn: function() {
+      return $scope.showWithdrawn ?
+             'fa-check-square-o text-success' : 'fa-square-o';
+    }
+  }];
+
+  $scope.$watch('showWithdrawn', function(n, o) {
+    if (n !== o) {
+      $scope.gridApi.grid.refresh();
+      $timeout($scope.gridApi.treeBase.expandAllRows);
+    }
+  });
 }
 
 app.controller('OutreachSummaryReportCtrl', OutreachSummaryReportCtrl);

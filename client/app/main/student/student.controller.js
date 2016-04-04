@@ -47,6 +47,23 @@ function StudentCtrl($scope, $state, $stateParams, AbsenceRecord, Student,
     });
   };
 
+  $scope.updateWithdrawn = function() {
+    var oldValue = !$scope.student.withdrawn;
+    Student.updateWithdrawn({
+      studentId: $stateParams.studentId
+    }, {
+      withdrawn: $scope.student.withdrawn
+    }, function(student) {
+      $scope.student = student;
+      toastr.success(
+        'Withdrawn updated to ' + student.withdrawn,
+        student.firstName + ' ' + student.lastName);
+    }, function(err) {
+      $scope.student.withdrawn = oldValue;
+      toastr.error(err);
+    });
+  };
+
   $scope.tabs = [{
     title: 'Outreaches',
     state: 'student.outreaches'

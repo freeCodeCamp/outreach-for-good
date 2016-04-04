@@ -35,6 +35,18 @@ function DashboardCtrl($scope, $timeout, Auth, AbsenceRecord, Student,
   };
 
   $scope.studentGridOptions.columnDefs = [{
+    name: 'school.name',
+    displayName: 'School Name',
+    minWidth: 150,
+    grouping: {groupPriority: 0},
+    sort: {priority: 0, direction: 'asc'},
+    cellTemplate: '<div class="ui-grid-cell-contents" title="TOOLTIP">' +
+                  '{{COL_FIELD CUSTOM_FILTERS}} ' +
+                  '<span ng-if="row.treeLevel > -1">' +
+                  '<i class="fa fa-child"></i>' +
+                  '</span>' +
+                  '</div>'
+  }, {
     name: 'entries.student.studentId',
     displayName: 'Student Id',
     minWidth: 150,
@@ -98,36 +110,35 @@ function DashboardCtrl($scope, $timeout, Auth, AbsenceRecord, Student,
     width: 100,
     treeAggregationType: uiGridGroupingConstants.aggregation.SUM
   }, {
+    name: 'entries.student.withdrawn',
+    displayName: 'Withdrawn',
+    enableCellEdit: true,
+    type: 'boolean',
+    width: 100,
+    filter: {
+      noTerm: true,
+      condition: function(searchTerm, cellValue) {
+        if ($scope.showWithdrawn) {
+          return true;
+        }
+        return cellValue === false;
+      }
+    },
+    visible: false
+  }, {
     name: 'date',
     displayName: 'Uploaded',
     cellFilter: 'date:\'MM/dd/yy\'',
     width: 125
   }];
 
-  if (Auth.getCurrentUser().role !== 'teacher') {
-    $scope.studentGridOptions.columnDefs.push({
-      name: 'school.name',
-      displayName: 'School Name',
-      minWidth: 150,
-      grouping: {groupPriority: 0},
-      sort: {priority: 0, direction: 'asc'},
-      cellTemplate: '<div class="ui-grid-cell-contents" title="TOOLTIP">' +
-                    '{{COL_FIELD CUSTOM_FILTERS}} ' +
-                    '<span ng-if="row.treeLevel > -1">' +
-                    '<i class="fa fa-child"></i>' +
-                    '</span>' +
-                    '</div>'
-    });
-  } else {
+  if (Auth.getCurrentUser().role === 'teacher') {
     $scope.assignment = Auth.getCurrentUser().assignment;
   }
 
   $scope.studentGridOptions.onRegisterApi = function(gridApi) {
     $scope.studentGridApi = gridApi;
     $scope.studentGridOptions.data = AbsenceRecord.listCurrent();
-    $scope.studentGridOptions.data.$promise.then(function(data) {
-      $scope.badge.text = data.length;
-    });
     gridApi.edit.on.afterCellEdit($scope, function(rowEntity, colDef, n, o) {
       if (n !== o) {
         switch (colDef.name) {
@@ -137,6 +148,9 @@ function DashboardCtrl($scope, $timeout, Auth, AbsenceRecord, Student,
           case 'entries.student.cfa':
             $scope.updateCFA(rowEntity.entries.student);
             break;
+          case 'entries.student.withdrawn':
+            $scope.updateWithdrawn(rowEntity.entries.student);
+            break;
         }
       }
     });
@@ -144,9 +158,7 @@ function DashboardCtrl($scope, $timeout, Auth, AbsenceRecord, Student,
     // NOTE: Hack to default to expanded rows on initial load.
     // https://github.com/angular-ui/ui-grid/issues/3841
     $scope.studentGridOptions.data.$promise.then(function() {
-      if ($scope.studentGridApi.treeBase.expandAllRows) {
-        $timeout($scope.studentGridApi.treeBase.expandAllRows);
-      }
+      $timeout($scope.studentGridApi.treeBase.expandAllRows);
       $scope.loading = false;
     });
   };
@@ -187,13 +199,26 @@ function DashboardCtrl($scope, $timeout, Auth, AbsenceRecord, Student,
     }
   };
 
+  $scope.updateWithdrawn = function(student) {
+    if (student._id) {
+      var oldValue = !student.withdrawn;
+      Student.updateWithdrawn({
+        studentId: student._id
+      }, {
+        withdrawn: student.withdrawn
+      }, function() {
+        toastr.success(
+          'Withdrawn updated to ' + student.withdrawn,
+          student.firstName + ' ' + student.lastName);
+      }, function(err) {
+        student.withdrawn = oldValue;
+        toastr.error(err);
+      });
+    }
+  };
+
   Student.outreachCounts().$promise.then(function(res) {
-    var counts = _.keyBy(res, '_id');
-    $scope.calls = (counts['Phone Call'] || {}).count || 0;
-    $scope.letters = (counts['Letter Sent'] || {}).count || 0;
-    $scope.home = (counts['Home Visit'] || {}).count || 0;
-    $scope.sst = (counts['SST Referral'] || {}).count || 0;
-    $scope.court = (counts['Court Referral'] || {}).count || 0;
+    $scope.counts = _(res).keyBy('_id').mapValues('count').value();
   });
 
   $scope.setFilter = function(type, tier) {
@@ -209,13 +234,14 @@ function DashboardCtrl($scope, $timeout, Auth, AbsenceRecord, Student,
       $scope.loading = true;
       $scope.filter = filter;
       $scope.studentGridOptions.data = AbsenceRecord.listCurrent($scope.filter);
-      $scope.studentGridOptions.data.$promise.then(function(data) {
-        $scope.badge.text = data.length;
+      $scope.studentGridOptions.data.$promise.then(function() {
         $scope.loading = false;
+        $timeout($scope.studentGridApi.treeBase.expandAllRows);
       });
-      $scope.menuItems.length = 0;
+      $scope.menuItems.length = 1;
       if (_.includes(['Phone Call', 'Letter Sent', 'Home Visit'], type)) {
         [].push.apply($scope.menuItems, [{
+          separator: true,
           text: type + ' #1',
           action: function() {$scope.setFilter(type, 1);}
         }, {
@@ -239,10 +265,26 @@ function DashboardCtrl($scope, $timeout, Auth, AbsenceRecord, Student,
            ($scope.filter.tier ? ' #' + $scope.filter.tier : '') + ')' : '');
   };
 
-  $scope.badge = {
-    icon: 'fa-child',
-    color: 'blue'
-  };
+  $scope.menuItems = [{
+    text: ' Withdrawn Students',
+    action: function() {
+      $scope.showWithdrawn = !$scope.showWithdrawn;
+    },
+    iconFn: function() {
+      return $scope.showWithdrawn ?
+             'fa-check-square-o text-success' : 'fa-square-o';
+    }
+  }];
+
+  $scope.$watch('showWithdrawn', function(n, o) {
+    if (n !== o) {
+      Student.outreachCounts({withdrawn: n}).$promise.then(function(res) {
+        $scope.counts = _(res).keyBy('_id').mapValues('count').value();
+      });
+      $scope.studentGridApi.grid.refresh();
+      $timeout($scope.studentGridApi.treeBase.expandAllRows);
+    }
+  });
 }
 
 app.controller('DashboardCtrl', DashboardCtrl);

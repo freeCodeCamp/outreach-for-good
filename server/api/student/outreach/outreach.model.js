@@ -17,6 +17,7 @@ var OutreachSchema = new Schema({
   absences: {type: Number, required: true},
 
   student: {type: Schema.Types.ObjectId, ref: 'Student', required: true},
+  withdrawn: {type: Boolean, default: false},
   school: {type: Schema.Types.ObjectId, ref: 'School', required: true},
 
   record: {type: Schema.Types.ObjectId, ref: 'AbsenceRecord', required: true},

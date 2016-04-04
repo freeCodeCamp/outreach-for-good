@@ -9,6 +9,7 @@ var InterventionSchema = new Schema({
   archived: {type: Boolean, required: true, default: false},
 
   student: {type: Schema.Types.ObjectId, ref: 'Student', required: true},
+  withdrawn: {type: Boolean, default: false},
   school: {type: Schema.Types.ObjectId, ref: 'School', required: true},
 
   createdDate: {type: Date, required: true, default: Date.now},

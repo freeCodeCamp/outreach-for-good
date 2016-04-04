@@ -29,6 +29,10 @@
     }
     .info-widget {
       .info-widget-item {
+        display: flex;
+        div {
+          flex: 1;
+        }
         height: ($cfa-unit * 0.5);
         line-height: ($cfa-unit * 0.5);
         .info-label {

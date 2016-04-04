@@ -22,6 +22,12 @@ app.factory('Student', function($resource) {
         controller: 'cfa'
       }
     },
+    updateWithdrawn: {
+      method: 'PUT',
+      params: {
+        controller: 'withdrawn'
+      }
+    },
     outreachCounts: {
       method: 'GET',
       params: {

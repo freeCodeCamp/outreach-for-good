@@ -13,7 +13,36 @@ var StudentSchema = new Schema({
   currentSchool: {type: Schema.Types.ObjectId, ref: 'School'},
   iep: {type: Boolean, default: false},
   cfa: {type: Boolean, default: false},
+  withdrawn: {type: Boolean, default: false},
   active: {type: Boolean, default: true}
+});
+
+StudentSchema.pre('save', function(next) {
+  if (!this.isNew && this.isModified('withdrawn')) {
+    var promises = [
+      Outreach.update({
+        student: this._id
+      }, {
+        withdrawn: this.withdrawn
+      }, {
+        multi: true
+      }).exec(),
+      Intervention.update({
+        student: this._id
+      }, {
+        withdrawn: this.withdrawn
+      }, {
+        multi: true
+      }).exec()
+    ];
+    Promise.all(promises).then(function() {
+      return next();
+    }).catch(function(err) {
+      return next(new Error(err));
+    });
+  } else {
+    return next();
+  }
 });
 
 StudentSchema.pre('remove', function(next) {
