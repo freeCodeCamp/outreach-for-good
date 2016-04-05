@@ -16,9 +16,9 @@
         <button type="button" class="menu-button">
           <i class="fa fa-caret-right fa-lg" ng-class="{'fa-rotate-90': isopen}"></i>
         </button>
-        <span class="visible-xs-inline-block">{{ selected.title }} Menu</span>
+        <span class="visible-xs-inline-block toggle-menu-title">{{ selected.title }} Menu</span>
         <ul uib-dropdown-menu role="menu">
-          <li role="menuitem" ng-repeat="item in menuItems" ng-click="item.action()">
+          <li role="menuitem" class="dropdown-menu-item" ng-repeat="item in menuItems" ng-click="item.action()">
             <hr class="menu-separator" ng-if="item.separator"/>
             <a href>
               <i class="fa" ng-class="item.icon || item.iconFn()" ng-if="item.icon || item.iconFn"></i>

@@ -1,7 +1,7 @@
-$bgDefault: $cfa-background;
-$bgHighlight: lighten($cfa-background, 15%);
+$bgDefault: $cfa-blue;
+$bgHighlight: $cfa-blue-l05;
 $colDefault: #fff;
-$colHighlight: #c8f7c5;
+$colHighlight: $teal-l10;
 $navbar-height: $cfa-unit;
 
 .cfa.navbar-default,
@@ -14,7 +14,7 @@ $navbar-height: $cfa-unit;
     height: $navbar-height;
     line-height: $navbar-height;
     padding: 0;
-    margin-left: 15px;
+    margin-left: 10px;
     color: $colDefault;
     &:hover, &:focus {
       color: $colHighlight;
@@ -23,16 +23,16 @@ $navbar-height: $cfa-unit;
   .navbar-text {
     color: $colDefault;
     line-height: $navbar-height;
-    margin: 0 15px;
+    margin: 0 10px;
   }
   .navbar-nav {
     li {
       &:last-child {
-        margin-right: 15px;
+        margin-right: 10px;
       }
       a {
         line-height: $navbar-height;
-        padding: 0 15px;
+        padding: 0 10px;
         color: $colDefault;
         &:hover, &:focus {
           color: $colHighlight;
