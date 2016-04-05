@@ -54,6 +54,7 @@
       min-height: $cfa-unit;
       line-height: $cfa-unit;
       background-color: orange;
+      background: linear-gradient(to right, $orange-d05, $orange);
       button {
         margin: 10px;
         vertical-align: top;

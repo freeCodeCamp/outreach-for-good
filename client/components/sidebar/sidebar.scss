@@ -14,6 +14,7 @@ sidebar {
   flex-direction: column;
   flex: 1;
   background-color: $teal;
+  background: linear-gradient(to right, $teal-d05, $teal);
   width: 250px;
   margin: 0;
   padding: 0;
@@ -51,11 +52,13 @@ sidebar {
       min-height: 0;
     }
     &.active {
+      background-color: $orange;
+      background: linear-gradient(to right, $orange-d05, $orange);
       a, a:focus {
-        background-color: $orange;
+        background: none;
       }
       a:hover {
-        background-color: $orange-l05;
+        background-color: $orange-l10;
 
       }
     }
