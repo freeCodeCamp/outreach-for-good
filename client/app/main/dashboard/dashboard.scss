@@ -8,21 +8,24 @@
     padding: 0 15px;
     height: ($cfa-unit * 2);
     min-height: ($cfa-unit * 2);
-    background-color: #CEE;
+    background-color: $pale-turquoise;
   }
   .widget {
-    padding: ($cfa-unit * 0.5) 2px;
     flex: 1;
+    padding: ($cfa-unit * 0.5) 2px;
     text-align: center;
     min-width: 12.5%;
     .badge {
       display: block;
       max-width: 100px;
       margin: 5px auto;
-      background-color: #1ba39c;
+      background-color: $label-warning-bg;
+      &.ok {
+        background-color: $label-success-bg;
+      }
     }
     a {
-      color: #333333
+      color: $cfa-blue-d10;
     }
   }
   .student-table {

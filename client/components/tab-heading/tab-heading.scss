@@ -2,7 +2,7 @@
 .tab-heading.navbar-default {
   position: relative;
   width: 100%;
-  background-color: lightblue;
+  background-color: $light-sky-blue;
   padding: 0;
   margin: 0;
   border: none;
@@ -11,10 +11,10 @@
     content: none;
   }
   li.active {
-    background-color: darken(lightblue, 15);
+    background-color: $light-sky-blue-d10;
   }
   li:hover:not(.dropdown) {
-    background-color: darken(lightblue, 25);
+    background-color: $light-sky-blue-d15;
   }
   ul.dropdown-menu li {
     background: none;
@@ -22,9 +22,6 @@
     &:hover {
       background: none;
     }
-  }
-  ul.navbar-right {
-    background-color: aliceblue;
   }
   h3 {
     display: inline-block;
@@ -34,57 +31,91 @@
     font-weight: 200;
   }
   .navbar-collapse {
-    background-color: lightblue;
+    background-color: $light-sky-blue;
   }
   .navbar-toggle {
     margin-right: 8px;
-    background-color: lightblue;
-    color: #3a8fa6;
-    border: 1px solid #3a8fa6;
+    background-color: $light-sky-blue;
+    color: $cfa-blue-d10;
+    border: 1px solid $cfa-blue-d10;
     border-radius: 4px;
     padding: 8px 10px;
-  }
-  .menu-button-group {
-    margin: 8px;
-    .menu-button {
-      background-color: transparent;
-      color: #3a8fa6;
-      border: 1px solid #3a8fa6;
-      border-radius: 4px;
-      width: 28px;
-      height: 28px;
-      i {
-        transition: transform 0.5s ease;
-      }
+    &:hover {
+      background-color: $light-sky-blue-l10;
     }
   }
   .menu-separator {
     margin-top: 5px;
     margin-bottom: 5px;
   }
-
-  @media (min-width: 768px) {
-    .navbar-nav > li:not(.dropdown) {
-      border-right: 1px lighten(lightblue, 15) solid;
-    }
-    .navbar-collapse {
-      padding: 0;
-      margin: 0;
-    }
-    .menu-button-group {
-      display: block;
-      position: absolute;
-      top: 0;
-      right: 0;
-      .menu-button {
-        width: 38px;
-        height: 38px;
+  .navbar-nav > li:not(.dropdown) {
+    border-right: 1px $light-sky-blue-l10 solid;
+  }
+  .navbar-collapse {
+    padding: 0;
+    margin: 0;
+  }
+  .menu-button-group {
+    display: block;
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 8px;
+    .menu-button {
+      background-color: transparent;
+      border-radius: 4px;
+      color: $cfa-blue-d10;
+      border: 1px solid $cfa-blue-d10;
+      width: 38px;
+      height: 38px;
+      &:hover {
+        background-color: $light-sky-blue-l10;
       }
     }
+  }
+  @media (min-width: 768px) {
     .dropdown-menu {
       top: 48px;
       left: auto;
       right: 0;
+    }
+  }
+  @media (max-width: 768px) {
+    .navbar-nav {
+      margin: 0;
+    }
+    li.active {
+      background-color: $orange-l10;
+    }
+    .navbar-nav > li:not(.dropdown) {
+      border-right: none;
+      h3 {
+        font-size:18px;
+        line-height: 27px;
+      }
+    }
+    .menu-button-group {
+      position: relative;
+      margin: 12px 8px;
+      .toggle-menu-title {
+        vertical-align: middle;
+      }
+      .menu-button {
+        width: 28px;
+        height: 28px;
+        i {
+          transition: transform 0.5s ease;
+        }
+      }
+    }
+    ul.navbar-right {
+      background-color: $light-sky-blue-l15;
+      .dropdown-menu-item {
+        a {
+          padding: 3.5px 0;
+          color: $cfa-blue;
+        }
+      }
     }
   }
 }

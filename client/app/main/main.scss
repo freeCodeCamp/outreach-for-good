@@ -51,8 +51,8 @@
       text-align: center;
       font-weight: 200;
       border: none;
-      border-top: 1px solid $cfa-background;
-      border-bottom: 1px solid $cfa-background;
+      border-top: 1px solid $cfa-blue;
+      border-bottom: 1px solid $cfa-blue;
     }
   }
   .ui-grid-menu {
@@ -74,7 +74,7 @@
     }
   }
   .ui-grid-viewport {
-    @include cfa-scrollbar(5px, 0, lightgrey);
+    @include cfa-scrollbar(5px, 0, $pale-turquoise);
   }
   .ui-grid-menu-button .ui-grid-menu {
     // The menu button is inset by 1px use 53 instead of 54px

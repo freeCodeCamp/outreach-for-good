@@ -3,9 +3,6 @@
   flex-direction: column;
   flex: 1;
   @include cfa-scrollbar();
-  .report-heading .heading {
-    background-color: darken(lightblue, 35%);
-  }
   ui-view {
     display: flex;
     flex-direction: column;

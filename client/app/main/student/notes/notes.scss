@@ -55,16 +55,7 @@
           background-color: darken(#f1f1f1, 10%);
         }
       }
-    }
-    ::-webkit-scrollbar {
-      width: 5px;
-      height: 0;
-    }
-    ::-webkit-scrollbar-track {
-      background-color: lightblue;
-    }
-    ::-webkit-scrollbar-thumb {
-      background-color: $cfa-background;
+      @include cfa-scrollbar(5px);
     }
   }
 }

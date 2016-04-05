@@ -1,15 +1,9 @@
-// Colors
-// --------------------------------------------------
-
-$btnText: #FFF;
-$btnTextAlt: #000;
-
 $btnGooglePlusBackground: #DC4E41;
 $btnGooglePlusBackgroundHighlight: #C53727;
 
 .login-view {
   flex: 1;
-  background-color: $cfa-background;
+  background-color: $cfa-blue;
   .banner {
     text-align: center;
     color: white;
@@ -28,7 +22,7 @@ $btnGooglePlusBackgroundHighlight: #C53727;
       text-align: center;
       display: inline-block;
       white-space: nowrap;
-      color: $btnText;
+      color: white;
       font-family: 'Roboto', sans-serif;
       background-color: $btnGooglePlusBackground;
       border-radius: 5px;
