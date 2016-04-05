@@ -172,16 +172,12 @@ exports.outreachSummary = function(req, res) {
  */
 exports.interventionSummary = function(req, res) {
   var pipeline = [{
-    $group: {
-      _id: {student: '$student'},
-      records: {$push: '$$ROOT'}
-    }
+    $group: {_id: {student: '$student', type: '$type'}}
   }, {
     $project: {
       _id: 0,
       student: '$_id.student',
-      // Might need to exclude fields if implemented
-      records: 1
+      type: '$_id.type'
     }
   }];
   if (req.user.role === 'teacher') {
