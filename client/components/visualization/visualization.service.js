@@ -12,6 +12,12 @@ app.factory('Visualization', function($resource) {
       params: {
         controller: 'schools'
       }
+    },
+    arcaCa: {
+      method: 'GET',
+      params: {
+        controller: 'cfa-vs-notcfa'
+      }
     }
   });
 });
