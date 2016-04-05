@@ -119,16 +119,16 @@ function AtRiskReportCtrl($scope, $timeout, uiGridGroupingConstants,
     },
     visible: false
   }, {
-    name: 'date',
-    displayName: 'Uploaded',
+    name: 'updated',
+    field: 'updated()',
+    displayName: 'Updated',
+    type: 'date',
     cellFilter: 'date:\'MM/dd/yy\'',
     width: 125
   }];
 
   $scope.gridOptions.onRegisterApi = function(gridApi) {
     $scope.gridApi = gridApi;
-    $scope.gridOptions.data = AbsenceRecord.listCurrent({filter: 'at-risk'});
-
     gridApi.edit.on.afterCellEdit($scope, function(rowEntity, colDef, n, o) {
       if (n !== o) {
         switch (colDef.name) {
@@ -144,8 +144,13 @@ function AtRiskReportCtrl($scope, $timeout, uiGridGroupingConstants,
         }
       }
     });
-
-    $scope.gridOptions.data.$promise.then(function() {
+    $scope.gridOptions.data = AbsenceRecord.listCurrent({filter: 'at-risk'});
+    $scope.gridOptions.data.$promise.then(function(data) {
+      _.forEach(data, function(row) {
+        row.updated = function() {
+          return row.entries.date || row.date;
+        };
+      });
       // NOTE: Hack to default to expanded rows on initial load.
       // https://github.com/angular-ui/ui-grid/issues/3841
       $timeout(gridApi.treeBase.expandAllRows);

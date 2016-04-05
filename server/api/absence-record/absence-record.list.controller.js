@@ -6,28 +6,39 @@ var AbsenceRecord = require('./absence-record.model');
 var Outreach = require('../student/outreach/outreach.model');
 
 function currentAbsenceRecordPipeline(user) {
-  var pipeline = [];
+  var match = {};
   if (user.role === 'teacher') {
-    pipeline.push({
-      $match: {school: user.assignment}
-    });
+    match = {school: user.assignment};
   }
-  pipeline.push({
+  return [{
+    $match: match
+  }, {
     $sort: {date: -1}
-  });
-  pipeline.push({
+  }, {
     $group: {
       _id: '$school',
       recordId: {$first: '$_id'},
       date: {$first: '$date'},
       school: {$first: '$school'},
-      entries: {$first: '$entries'}
+      entries: {$first: '$entries'},
+      missingEntries: {$first: '$missingEntries'}
     }
-  });
-  pipeline.push({
+  }, {
+    $project: {
+      _id: false,
+      recordId: 1,
+      date: 1,
+      school: 1,
+      entries: {$setUnion: ['$entries', '$missingEntries']}
+    }
+  }, {
     $unwind: '$entries'
-  });
-  return pipeline;
+  }, {
+    $sort: {
+      school: 1,
+      'entries.date': -1
+    }
+  }];
 }
 
 /**
@@ -162,18 +173,23 @@ exports.school = function(req, res) {
       _id: false,
       recordId: '$records._id',
       schoolYear: '$_id',
-      createdStudents: '$records.createdStudents',
       date: '$records.date',
-      entries: '$records.entries'
+      entries: '$records.entries',
+      newMissingStudents: '$records.newMissingStudents',
+      createdStudents: '$records.createdStudents'
     }
   }];
   AbsenceRecord.aggregate(pipeline, function(err, results) {
     if (err) return handleError(res, err);
-    AbsenceRecord.populate(results, {
+    AbsenceRecord.populate(results, [{
         path: 'createdStudents',
         model: 'Student',
         select: 'firstName lastName studentId'
-      },
+      }, {
+        path: 'newMissingStudents',
+        model: 'Student',
+        select: 'firstName lastName studentId'
+      }],
       function(err, records) {
         if (err) return handleError(res, err);
         return res.status(200).json(records);
@@ -182,5 +198,6 @@ exports.school = function(req, res) {
 };
 
 function handleError(res, err) {
+  console.log(err);
   return res.status(500).send(err);
 }

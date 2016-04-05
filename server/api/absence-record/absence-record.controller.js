@@ -88,6 +88,8 @@ exports.create = function(req, res) {
       school: req.school.id,
       date: req.body.date,
       entries: combinedEntries,
+      missingEntries: req.body.missingEntries,
+      newMissingStudents: req.body.newMissingStudents,
       createdStudents: _.map(createdStudents, '_id')
     });
   }).then(function(createdRecord) {
@@ -123,7 +125,9 @@ function currentAbsenceRecordPipeline(user) {
       recordId: {$first: '$_id'},
       date: {$first: '$date'},
       school: {$first: '$school'},
-      entries: {$first: '$entries'}
+      schoolYear: {$first: '$schoolYear'},
+      entries: {$first: '$entries'},
+      missingEntries: {$first: '$missingEntries'}
     }
   }];
 }
@@ -140,10 +144,11 @@ exports.current = function(req, res) {
   var pipeline = currentAbsenceRecordPipeline(req.user);
   AbsenceRecord.aggregate(pipeline, function(err, results) {
     if (err) return handleError(res, err);
-    AbsenceRecord.populate(results, 'school entries.student',
-      function(err, entries) {
+    AbsenceRecord.populate(results,
+      'school entries.student missingEntries.student',
+      function(err, records) {
         if (err) return handleError(res, err);
-        return res.status(200).json(entries);
+        return res.status(200).json(records);
       });
   });
 };
@@ -207,5 +212,6 @@ exports.delete = function(req, res) {
 };
 
 function handleError(res, err) {
+  console.log(err);
   return res.status(500).send(err);
 }

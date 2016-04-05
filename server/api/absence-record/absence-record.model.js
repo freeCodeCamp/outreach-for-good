@@ -19,6 +19,17 @@ var AbsenceRecordSchema = new Schema({
     present: {type: Number, required: true},
     enrolled: {type: Number, required: true}
   }],
+  missingEntries: [{
+    student: {type: Schema.Types.ObjectId, ref: 'Student', required: true},
+    absences: {type: Number, required: true},
+    absencesDelta: {type: Number, required: true},
+    tardies: {type: Number, required: true},
+    tardiesDelta: {type: Number, required: true},
+    present: {type: Number, required: true},
+    enrolled: {type: Number, required: true},
+    date: {type: Date, required: true}
+  }],
+  newMissingStudents: [{type: Schema.Types.ObjectId, ref: 'Student'}],
   createdStudents: [{type: Schema.Types.ObjectId, ref: 'Student'}]
 });
 

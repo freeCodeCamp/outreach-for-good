@@ -73,10 +73,11 @@ AbsenceRecord.remove().exec().then(function() {
     currentSchool: schoolB._id
   }, logCreateResults('students'));
 }).then(function(studentA, studentB, studentC, studentD, studentE) {
+  var twoDaysAgo = Date.now() - 2 * 24 * 60 * 60 * 1000;
   return AbsenceRecord.create({
     schoolYear: '2015-2016',
     school: studentA.currentSchool,
-    date: Date.now(),
+    date: twoDaysAgo,
     entries: [{
       student: studentA._id,
       absences: 1.0,
@@ -106,7 +107,7 @@ AbsenceRecord.remove().exec().then(function() {
   }, {
     schoolYear: '2015-2016',
     school: studentD.currentSchool,
-    date: Date.now(),
+    date: twoDaysAgo,
     entries: [{
       student: studentD._id,
       absences: 0.0,

@@ -51,6 +51,13 @@ function UploadCtrl($scope, PDF, AbsenceRecord, Auth, School, toastr) {
     }, $scope.parsedRecord, function(res) {
       resetState();
       var schoolName = res.record.school.name;
+      if (res.record.newMissingStudents.length) {
+        toastr.error(
+          res.record.newMissingStudents.length + ' students missing.',
+          schoolName,
+          {timeOut: 5000}
+        );
+      }
       if (res.outreaches.length) {
         toastr.info(
           res.outreaches.length + ' outreaches triggered.',
@@ -80,14 +87,13 @@ function UploadCtrl($scope, PDF, AbsenceRecord, Auth, School, toastr) {
   // TODO: This controller is getting rather unwieldy. Some of this
   // logic should probably be moved to services to keep the controller thin.
 
-  function groupByType(students, idToPrev) {
+  function groupByType(students, idKeys) {
     return _.groupBy(students, function(student) {
-      return student.student.studentId in idToPrev ? 'updates' : 'creates';
+      return student.student.studentId in idKeys ? 'updates' : 'creates';
     });
   }
 
   function createOutreaches(entry, prevEntry, school, schoolYear) {
-    console.log(prevEntry);
     if (!entry.absencesDelta) {
       return [];
     }
@@ -111,30 +117,71 @@ function UploadCtrl($scope, PDF, AbsenceRecord, Auth, School, toastr) {
       .value();
   }
 
-  function completeRecord(partialRecord) {
-    var school = $scope.selected.school;
-    var previousRecord = $scope.records[school._id] || {};
-    var idToPrev = _.keyBy(previousRecord.entries, 'student.studentId');
-    var record = groupByType(partialRecord.students, idToPrev);
-    _.forEach(record.updates || [], function(student) {
-      var entry = student.entry;
-      var prevEntry = idToPrev[student.student.studentId];
+  function handleSameSchoolYear(prevRecord, partialRecord, school) {
+    var combinedEntries = _.concat(prevRecord.entries || [],
+      prevRecord.missingEntries || []);
+    var studentIdToPrevEntry = _.keyBy(combinedEntries, 'student.studentId');
+    var record = groupByType(partialRecord.students, studentIdToPrevEntry);
+    _.forEach(record.updates || [], function(update) {
+      var entry = update.entry;
+      var prevEntry = studentIdToPrevEntry[update.student.studentId];
       entry.student = prevEntry.student._id;
+      // Updates use previous entry to calculate deltas.
       entry.tardiesDelta = entry.tardies - prevEntry.tardies;
       entry.absencesDelta = entry.absences - prevEntry.absences;
       entry.outreaches =
-        createOutreaches(entry, prevEntry, school, partialRecord.schoolYear);
+        createOutreaches(entry, prevEntry, school, record.schoolYear);
     });
-    _.forEach(record.creates || [], function(student) {
-      var entry = student.entry;
+    record.missingEntries =
+      _.differenceBy(combinedEntries, partialRecord.students || [],
+        'student.studentId');
+    record.newMissingStudents = _(record.missingEntries || [])
+      .differenceBy(prevRecord.missingEntries || [], 'student.studentId')
+      .map('student._id')
+      .value();
+    _.forEach(record.missingEntries, function(missingEntry) {
+      if (!missingEntry.date) {
+        missingEntry.date = prevRecord.date;
+      }
+    });
+    return record;
+  }
+
+  function handleNewSchoolYear(prevRecord, partialRecord, school) {
+    var combinedEntries = _.concat(prevRecord.entries || [],
+      prevRecord.missingEntries || []);
+    var studentIdToId = _(combinedEntries)
+      .keyBy('student.studentId')
+      .mapValues('student._id')
+      .value();
+    var record = groupByType(partialRecord.students, studentIdToId);
+    _.forEach(record.updates || [], function(update) {
+      var entry = update.entry;
+      entry.student = studentIdToId[update.student.studentId];
+      // Updates deltas start over by setting to tardies and absences values.
+      entry.tardiesDelta = entry.tardies;
+      entry.absencesDelta = entry.absences;
+      entry.outreaches = createOutreaches(entry, {}, school, record.schoolYear);
+    });
+    record.missingEntries = [];
+    record.newMissingStudents = [];
+    return record;
+  }
+
+  function completeRecord(partialRecord) {
+    var school = $scope.selected.school;
+    var previousRecord = $scope.records[school._id] || {};
+    var record = (partialRecord.schoolYear === previousRecord.schoolYear) ?
+                 handleSameSchoolYear(previousRecord, partialRecord, school) :
+                 handleNewSchoolYear(previousRecord, partialRecord, school);
+    _.forEach(record.creates || [], function(create) {
+      var entry = create.entry;
       entry.tardiesDelta = entry.tardies;
       entry.absencesDelta = entry.absences;
       entry.outreaches =
         createOutreaches(entry, {}, school, partialRecord.schoolYear);
     });
-    record.missing = _.difference(_.keys(idToPrev),
-      _.map(partialRecord.students, 'student.studentId'));
-    record.schoolId = $scope.selected.school._id;
+    record.schoolId = school._id;
     record.schoolYear = partialRecord.schoolYear;
     record.previousRecordId = previousRecord.recordId;
     return record;
