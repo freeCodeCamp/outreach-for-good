@@ -9,7 +9,7 @@ function OutreachSummaryCtrl($scope, $timeout, GridDefaults,
   $scope.gridOptions = GridDefaults.options();
   $scope.gridOptions.columnDefs = [
     GridDefaults.colDefs.school(),
-    GridDefaults.colDefs.studentId('student'),
+    GridDefaults.colDefs.studentId(),
     GridDefaults.colDefs.firstName(),
     GridDefaults.colDefs.lastName(),
     {

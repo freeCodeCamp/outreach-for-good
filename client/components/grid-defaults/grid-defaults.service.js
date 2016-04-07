@@ -2,6 +2,58 @@
 
 function GridDefaults($timeout, uiGridGroupingConstants, Student,
   AbsenceRecord) {
+  var colDefs = {};
+  colDefs.school = function(name) {
+    return {
+      name: name || 'school.name',
+      displayName: 'School Name',
+      minWidth: 150,
+      grouping: {groupPriority: 0},
+      sort: {priority: 0, direction: 'asc'}
+    };
+  };
+  colDefs.studentId = function() {
+    return {
+      name: 'student.studentId',
+      displayName: 'Student Id',
+      minWidth: 150,
+      cellTemplate: 'components/grid-defaults/grid-defaults.student-id.html'
+    };
+  };
+  colDefs.firstName = function(name) {
+    return {
+      name: name || 'student.firstName',
+      displayName: 'First Name',
+      minWidth: 150
+    };
+  };
+  colDefs.lastName = function(name) {
+    return {
+      name: name || 'student.lastName',
+      displayName: 'Last Name',
+      minWidth: 150
+    };
+  };
+  colDefs.withdrawn = function(scope, name) {
+    return {
+      name: name || 'student.withdrawn',
+      displayName: 'Withdrawn',
+      enableCellEdit: true,
+      type: 'boolean',
+      width: 100,
+      filter: {
+        noTerm: true,
+        condition: function(searchTerm, cellValue) {
+          if (scope.showWithdrawn) {
+            return true;
+          }
+          return cellValue === false;
+        }
+      },
+      visible: false
+    };
+  };
+
   function options() {
     return {
       rowHeight: 27,
@@ -13,62 +65,6 @@ function GridDefaults($timeout, uiGridGroupingConstants, Student,
     };
   }
 
-  var colDefs = {
-    school: function(name) {
-      return {
-        name: name || 'school.name',
-        displayName: 'School Name',
-        minWidth: 150,
-        grouping: {groupPriority: 0},
-        sort: {priority: 0, direction: 'asc'}
-      };
-    },
-    studentId: function(studentPath) {
-      return {
-        name: studentPath + '.studentId',
-        displayName: 'Student Id',
-        minWidth: 150,
-        cellTemplate: '<div class="ui-grid-cell-contents">' +
-                      '<a ui-sref="student.outreaches({studentId: row.entity.' +
-                      studentPath + '._id})">{{row.entity.' + studentPath +
-                      '.studentId}}</a></div>'
-      };
-    },
-    firstName: function(name) {
-      return {
-        name: name || 'student.firstName',
-        displayName: 'First Name',
-        minWidth: 150
-      };
-    },
-    lastName: function(name) {
-      return {
-        name: name || 'student.lastName',
-        displayName: 'Last Name',
-        minWidth: 150
-      };
-    },
-    withdrawn: function(scope, name) {
-      return {
-        name: name || 'student.withdrawn',
-        displayName: 'Withdrawn',
-        enableCellEdit: true,
-        type: 'boolean',
-        width: 100,
-        filter: {
-          noTerm: true,
-          condition: function(searchTerm, cellValue) {
-            if (scope.showWithdrawn) {
-              return true;
-            }
-            return cellValue === false;
-          }
-        },
-        visible: false
-      };
-    }
-  };
-
   /**
    * NOTE: This grid options object is very tightly coupled to the scope of the
    * controller. It attempts to set properties of the scope object (loading,
@@ -78,7 +74,7 @@ function GridDefaults($timeout, uiGridGroupingConstants, Student,
     var gridOptions = _.merge(options(), {
       columnDefs: [
         colDefs.school(),
-        colDefs.studentId('student'),
+        colDefs.studentId(),
         colDefs.firstName(),
         colDefs.lastName(),
         {

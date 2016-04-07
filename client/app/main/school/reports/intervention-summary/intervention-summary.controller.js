@@ -15,7 +15,7 @@ function InterventionSummaryCtrl($scope, $timeout, GridDefaults, Student) {
       grouping: {groupPriority: 1},
       sort: {priority: 0, direction: 'asc'}
     },
-    GridDefaults.colDefs.studentId('student'),
+    GridDefaults.colDefs.studentId(),
     GridDefaults.colDefs.firstName(),
     GridDefaults.colDefs.lastName(),
     GridDefaults.colDefs.withdrawn($scope)
