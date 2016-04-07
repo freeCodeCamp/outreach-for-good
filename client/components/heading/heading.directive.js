@@ -6,7 +6,7 @@ angular.module('app').directive('heading', function() {
     scope: {
       badge: '=',
       menuItems: '=',
-      title: '='
+      text: '='
     },
     restrict: 'E'
   };

@@ -18,16 +18,16 @@ function StudentCtrl($scope, $state, $stateParams, AbsenceRecord, Student,
   $scope.updateWithdrawn = Student.updateWithdrawn;
 
   $scope.tabs = [{
-    title: 'Outreaches',
+    text: 'Outreaches',
     state: 'student.outreaches'
   }, {
-    title: 'Interventions',
+    text: 'Interventions',
     state: 'student.interventions'
   }, {
-    title: 'Notes',
+    text: 'Notes',
     state: 'student.notes'
   }, {
-    title: 'Summary',
+    text: 'Summary',
     state: 'student.summary'
   }];
 
