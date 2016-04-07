@@ -16,7 +16,7 @@ function GridDefaults($timeout, uiGridGroupingConstants, Student,
   var colDefs = {
     school: function(name) {
       return {
-        name: name,
+        name: name || 'school.name',
         displayName: 'School Name',
         minWidth: 150,
         grouping: {groupPriority: 0},
@@ -36,21 +36,21 @@ function GridDefaults($timeout, uiGridGroupingConstants, Student,
     },
     firstName: function(name) {
       return {
-        name: name,
+        name: name || 'student.firstName',
         displayName: 'First Name',
         minWidth: 150
       };
     },
     lastName: function(name) {
       return {
-        name: name,
+        name: name || 'student.lastName',
         displayName: 'Last Name',
         minWidth: 150
       };
     },
     withdrawn: function(scope, name) {
       return {
-        name: name,
+        name: name || 'student.withdrawn',
         displayName: 'Withdrawn',
         enableCellEdit: true,
         type: 'boolean',
@@ -77,50 +77,50 @@ function GridDefaults($timeout, uiGridGroupingConstants, Student,
   function recordOptions(scope, filter) {
     var gridOptions = _.merge(options(), {
       columnDefs: [
-        colDefs.school('school.name'),
-        colDefs.studentId('entries.student'),
-        colDefs.firstName('entries.student.firstName'),
-        colDefs.lastName('entries.student.lastName'),
+        colDefs.school(),
+        colDefs.studentId('student'),
+        colDefs.firstName(),
+        colDefs.lastName(),
         {
-          name: 'entries.absences',
+          name: 'entry.absences',
           displayName: 'Absences',
           type: 'number',
           minWidth: 100,
           treeAggregationType: uiGridGroupingConstants.aggregation.SUM
         },
         {
-          name: 'entries.absencesDelta',
+          name: 'entry.absencesDelta',
           displayName: 'Δ',
           type: 'number',
           width: 50
         },
         {
-          name: 'entries.tardies',
+          name: 'entry.tardies',
           displayName: 'Tardies',
           type: 'number',
           minWidth: 100,
           treeAggregationType: uiGridGroupingConstants.aggregation.SUM
         },
         {
-          name: 'entries.tardiesDelta',
+          name: 'entry.tardiesDelta',
           displayName: 'Δ',
           type: 'number',
           width: 50
         },
         {
-          name: 'entries.present',
+          name: 'entry.present',
           displayName: 'Present',
           type: 'number',
           minWidth: 100
         },
         {
-          name: 'entries.enrolled',
+          name: 'entry.enrolled',
           displayName: 'Enrolled',
           type: 'number',
           minWidth: 100
         },
         {
-          name: 'entries.student.iep',
+          name: 'student.iep',
           displayName: 'IEP',
           enableCellEdit: true,
           type: 'boolean',
@@ -128,14 +128,14 @@ function GridDefaults($timeout, uiGridGroupingConstants, Student,
           treeAggregationType: uiGridGroupingConstants.aggregation.SUM
         },
         {
-          name: 'entries.student.cfa',
+          name: 'student.cfa',
           displayName: 'CFA',
           enableCellEdit: true,
           type: 'boolean',
           width: 100,
           treeAggregationType: uiGridGroupingConstants.aggregation.SUM
         },
-        colDefs.withdrawn(scope, 'entries.student.withdrawn'),
+        colDefs.withdrawn(scope),
         {
           name: 'updated',
           field: 'updated()',
@@ -150,14 +150,14 @@ function GridDefaults($timeout, uiGridGroupingConstants, Student,
       gridApi.edit.on.afterCellEdit(scope, function(row, colDef, n, o) {
         if (n !== o) {
           switch (colDef.name) {
-            case 'entries.student.iep':
-              Student.updateIEP(row.entries.student);
+            case 'student.iep':
+              Student.updateIEP(row.student);
               break;
-            case 'entries.student.cfa':
-              Student.updateCFA(row.entries.student);
+            case 'student.cfa':
+              Student.updateCFA(row.student);
               break;
-            case 'entries.student.withdrawn':
-              Student.updateWithdrawn(row.entries.student);
+            case 'student.withdrawn':
+              Student.updateWithdrawn(row.student);
               break;
           }
         }
@@ -166,7 +166,7 @@ function GridDefaults($timeout, uiGridGroupingConstants, Student,
       gridOptions.data.$promise.then(function(data) {
         _.forEach(data, function(row) {
           row.updated = function() {
-            return row.entries.date || row.date;
+            return row.entry.date || row.date;
           };
         });
         // NOTE: Hack to default to expanded rows on initial load.

@@ -5,6 +5,16 @@ var mongoose = require('mongoose');
 var AbsenceRecord = require('./absence-record.model');
 var Outreach = require('../student/outreach/outreach.model');
 
+var populateOptions = [{
+  path: 'school',
+  model: 'School',
+  select: 'name'
+}, {
+  path: 'student',
+  model: 'Student',
+  select: 'firstName lastName studentId iep cfa withdrawn'
+}];
+
 function currentAbsenceRecordPipeline(user) {
   var match = {};
   if (user.role === 'teacher') {
@@ -38,11 +48,19 @@ function currentAbsenceRecordPipeline(user) {
       school: 1,
       'entries.date': -1
     }
+  }, {
+    $project: {
+      recordId: 1,
+      date: 1,
+      school: 1,
+      entry: '$entries',
+      student: '$entries.student'
+    }
   }];
 }
 
 /**
- * Get entries from current absence records
+ * Get entries from current absence records.
  * restriction: 'teacher'
  *
  * Returns an aggregation for entries based on the req user role:
@@ -53,16 +71,15 @@ exports.current = function(req, res) {
   var pipeline = currentAbsenceRecordPipeline(req.user);
   AbsenceRecord.aggregate(pipeline, function(err, results) {
     if (err) return handleError(res, err);
-    AbsenceRecord.populate(results, 'school entries.student',
-      function(err, entries) {
-        if (err) return handleError(res, err);
-        return res.status(200).json(entries);
-      });
+    AbsenceRecord.populate(results, populateOptions, function(err, docs) {
+      if (err) return handleError(res, err);
+      return res.status(200).json(docs);
+    });
   });
 };
 
 /**
- * Get entries from current absence records with outreach filter
+ * Get entries for students with outreaches specified by filter.
  * restriction: 'teacher'
  *
  * Returns an aggregation for entries based on the req user role:
@@ -83,22 +100,20 @@ exports.query = function(req, res) {
       if (err) return handleError(res, err);
       var pipeline = currentAbsenceRecordPipeline(req.user);
       pipeline.push({
-        $match: {'entries.student': {$in: students}}
+        $match: {'student': {$in: students}}
       });
       AbsenceRecord.aggregate(pipeline, function(err, results) {
         if (err) return handleError(res, err);
-        AbsenceRecord.populate(results, 'school entries.student',
-          function(err, entries) {
-            if (err) return handleError(res, err);
-            return res.status(200).json(entries);
-          });
+        AbsenceRecord.populate(results, populateOptions, function(err, docs) {
+          if (err) return handleError(res, err);
+          return res.status(200).json(docs);
+        });
       });
     });
 };
 
 /**
- * Get list of students at risk of becoming chronically absent from current
- * absence records.
+ * Get entries for students at risk of becoming chronically absent.
  * restriction: 'teacher'
  *
  * Returns an aggregation for entries based on the req user role:
@@ -108,23 +123,22 @@ exports.query = function(req, res) {
 exports.atRisk = function(req, res) {
   var pipeline = currentAbsenceRecordPipeline(req.user);
   pipeline.push({
-    $match: {'entries.absences': {$lte: 19}}
+    $match: {'entry.absences': {$lte: 19}}
   });
   AbsenceRecord.aggregate(pipeline, function(err, results) {
     if (err) return handleError(res, err);
-    AbsenceRecord.populate(results, 'school entries.student',
-      function(err, entries) {
-        if (err) return handleError(res, err);
-        entries = _.filter(entries, function(entry) {
-          return entry.entries.present / entry.entries.enrolled <= 0.9;
-        });
-        return res.status(200).json(entries);
+    AbsenceRecord.populate(results, populateOptions, function(err, docs) {
+      if (err) return handleError(res, err);
+      docs = _.filter(docs, function(doc) {
+        return doc.entry.present / doc.entry.enrolled <= 0.9;
       });
+      return res.status(200).json(docs);
+    });
   });
 };
 
 /**
- * Get list of chronically absent student from from current absence records.
+ * Get entries of chronically absent students.
  * restriction: 'teacher'
  *
  * Returns an aggregation for entries based on the req user role:
@@ -134,15 +148,14 @@ exports.atRisk = function(req, res) {
 exports.chronic = function(req, res) {
   var pipeline = currentAbsenceRecordPipeline(req.user);
   pipeline.push({
-    $match: {'entries.absences': {$gte: 20}}
+    $match: {'entry.absences': {$gte: 20}}
   });
   AbsenceRecord.aggregate(pipeline, function(err, results) {
     if (err) return handleError(res, err);
-    AbsenceRecord.populate(results, 'school entries.student',
-      function(err, entries) {
-        if (err) return handleError(res, err);
-        return res.status(200).json(entries);
-      });
+    AbsenceRecord.populate(results, populateOptions, function(err, docs) {
+      if (err) return handleError(res, err);
+      return res.status(200).json(docs);
+    });
   });
 };
 
@@ -182,18 +195,17 @@ exports.school = function(req, res) {
   AbsenceRecord.aggregate(pipeline, function(err, results) {
     if (err) return handleError(res, err);
     AbsenceRecord.populate(results, [{
-        path: 'createdStudents',
-        model: 'Student',
-        select: 'firstName lastName studentId'
-      }, {
-        path: 'newMissingStudents',
-        model: 'Student',
-        select: 'firstName lastName studentId'
-      }],
-      function(err, records) {
-        if (err) return handleError(res, err);
-        return res.status(200).json(records);
-      });
+      path: 'createdStudents',
+      model: 'Student',
+      select: 'firstName lastName studentId'
+    }, {
+      path: 'newMissingStudents',
+      model: 'Student',
+      select: 'firstName lastName studentId'
+    }], function(err, docs) {
+      if (err) return handleError(res, err);
+      return res.status(200).json(docs);
+    });
   });
 };
 

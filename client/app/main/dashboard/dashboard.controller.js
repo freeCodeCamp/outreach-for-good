@@ -28,7 +28,7 @@ function DashboardCtrl($scope, $timeout, AbsenceRecord, GridDefaults, Student) {
       $scope.gridOptions.data.$promise.then(function(data) {
         _.forEach(data, function(row) {
           row.updated = function() {
-            return row.entries.date || row.date;
+            return row.entry.date || row.date;
           };
         });
         $scope.loading = false;
