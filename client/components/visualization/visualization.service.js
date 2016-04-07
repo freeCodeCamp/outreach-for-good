@@ -6,15 +6,9 @@ app.factory('Visualization', function($resource) {
   return $resource('/api/visualizations/:controller/:id', {
     id: '@_id'
   }, {
-    schools: {
-      method: 'GET',
-      isArray: true,
-      params: {
-        controller: 'schools'
-      }
-    },
     arcaCa: {
       method: 'GET',
+      isArray: true,
       params: {
         controller: 'cfa-vs-notcfa'
       }

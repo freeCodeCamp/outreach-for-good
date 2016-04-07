@@ -2,89 +2,104 @@
 
 function VisualizationCtrl($scope, $timeout, Sidebar, Visualization) {
   $scope.sidebar = Sidebar;
-  Visualization.arcaCa(function(data) { console.log(data) });
-  // $scope.statType = 'Cumulative';
-  // $scope.truancyType = 'Absences';
-  // $scope.chartConfig = {
-  //   options: {
-  //     chart: {
-  //       zoomType: 'x',
-  //       type: 'line'
-  //     }
-  //   },
-  //   xAxis: {
-  //     type: 'datetime',
-  //     title: {
-  //       text: 'Date'
-  //     }
-  //   },
-  //   yAxis: {
-  //     title: {
-  //       text: $scope.truancyType
-  //     },
-  //     allowDecimals: $scope.truancyType === 'Average'
-  //   },
-  //   title: {
-  //     text: $scope.statType + ' ' + $scope.truancyType + ' ' + 'Trends'
-  //   },
-  //   loading: false,
-  //   func: function(chart) {
-  //     $scope.chartObj = chart;
-  //   }
-  // };
+  $scope.chartConfig = {
+    options: {
+      chart: {
+        plotBackgroundColor: null,
+        plotBorderWidth: null,
+        plotShadow: false,
+        type: 'pie'
+      },
+      title: {
+        text: 'ARCA and CA in CFA vs ARCA and CA not in CFA'
+      },
+      // tooltip: {
+      //   pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+      // }
+      plotOptions: {
+        pie: {
+          allowPointSelect: true,
+          cursor: 'pointer',
+          dataLabels: {
+              enabled: false
+          },
+          showInLegend: true
+        }
+      }
+    }
+  };
 
-  // Visualization.schools().$promise.then(function(results) {
-  //   $scope.Cumulative = {
-  //     Absences: [],
-  //     Tardies: []
-  //   };
-  //   $scope.Average = {
-  //     Absences: [],
-  //     Tardies: []
-  //   };
-  //   _.forEach(results, function(school) {
-  //     var cumulativeAbsencesData = [];
-  //     var averageAbsencesData = [];
-  //     var cumulativeTardiesData = [];
-  //     var averageTardiesData = [];
+  Visualization.arcaCa().$promise.then(function(results) {
+    var pctObj = { 
+      cfa: { arca: 0, ca: 0, other: 0 }, 
+      nonCfa: { arca: 0, ca: 0, other: 0 } 
+    };
+    function counter(rec, isCfa) {
+      var key = isCfa ? 'cfa' : 'nonCfa';
+      if(rec.arca) { 
+        pctObj[key].arca++; 
+      } else if(rec.ca) { 
+        pctObj[key].ca++; 
+      } else { 
+        pctObj[key].other++; 
+      }
+    }
+    function getPct(obj, isCfa) {
+      var k = (isCfa === 'cfa') ? 'cfa' : 'nonCfa';
+      var tot = pctObj[k].arca + pctObj[k].ca + pctObj[k].other;
+      if(tot) {
+        pctObj[k].arca = parseInt(((pctObj[k].arca / tot) * 100).toFixed(2), 10);
+        pctObj[k].ca = parseInt(((pctObj[k].ca / tot) * 100).toFixed(2), 10);
+        pctObj[k].other = parseInt(((pctObj[k].other / tot) * 100).toFixed(2), 10);
+      } else {
+        // If tot = 0 or is undefined
+        pctObj[k].arca = 0;
+        pctObj[k].ca = 0;
+        pctObj[k].other = 0;
+      }
+    }
+    _.forEach(results, function(record) {
+      if(record.student.cfa) { 
+        counter(record, true);
+      } else {
+        counter(record, false);
+      }
+    });
+    _.forEach(pctObj, function(val, key) {
+      getPct(val, key);
+    });
 
-  //     school.data = _.sortBy(school.data, function(record) {
-  //       return record.date;
-  //     });
+    console.log('pctObj::final', pctObj);
 
-  //     _.forEach(school.data, function(record) {
-  //       var dt = new Date(record.date);
-  //       var utcDt = Date.UTC(dt.getFullYear(), dt.getMonth(), dt.getDate());
-  //       cumulativeAbsencesData.push([utcDt, record.absences]);
-  //       averageAbsencesData.push([utcDt, record.absences / record.count]);
-  //       cumulativeTardiesData.push([utcDt, record.tardies]);
-  //       averageTardiesData.push([utcDt, record.tardies / record.count]);
-  //     });
 
-  //     $scope.Cumulative.Absences.push({
-  //       name: school._id.name,
-  //       data: cumulativeAbsencesData
-  //     });
-
-  //     $scope.Average.Absences.push({
-  //       name: school._id.name,
-  //       data: averageAbsencesData
-  //     });
-
-  //     $scope.Cumulative.Tardies.push({
-  //       name: school._id.name,
-  //       data: cumulativeTardiesData
-  //     });
-
-  //     $scope.Average.Tardies.push({
-  //       name: school._id.name,
-  //       data: averageTardiesData
-  //     });
-
-  //     $scope.chartConfig.series = $scope[$scope.statType][$scope.truancyType];
-  //   });
-  // });
-
+    $scope.chartConfig.series = [{
+      name: 'Non CFA Students',
+      colorByPoint: true,
+      data: [{
+        name: 'ARCA',
+        y: pctObj.nonCfa.arca
+      },{
+        name: 'CA',
+        y: pctObj.nonCfa.ca
+      }, {
+        name: 'Other',
+        y: pctObj.nonCfa.other
+      }]
+    }, {
+      name: 'CFA Students',
+      colorByPoint: true,
+      data: [{
+        name: 'ARCA',
+        y: pctObj.cfa.arca
+      }, {
+        name: 'CA',
+        y: pctObj.cfa.ca          
+      }, {
+        name: 'Other',
+        y: pctObj.cfa.other
+      }]
+    }];
+  });
   // $scope.$watchGroup(['statType', 'truancyType'], function(n, o) {
   //   if (n !== o) {
   //     $scope.chartConfig.series = $scope[$scope.statType][$scope.truancyType];
