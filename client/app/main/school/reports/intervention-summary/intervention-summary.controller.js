@@ -4,10 +4,13 @@ var app = angular.module('app');
 
 function InterventionSummaryCtrl($scope, $timeout, GridDefaults, Student) {
   $scope.loading = true;
-  $scope.gridOptions = GridDefaults.options();
 
+  $scope.gridOptions = GridDefaults.options();
   $scope.gridOptions.columnDefs = [
     GridDefaults.colDefs.school(),
+    GridDefaults.colDefs.studentId(),
+    GridDefaults.colDefs.firstName(),
+    GridDefaults.colDefs.lastName(),
     {
       name: 'type',
       displayName: 'Type',
@@ -15,9 +18,6 @@ function InterventionSummaryCtrl($scope, $timeout, GridDefaults, Student) {
       grouping: {groupPriority: 1},
       sort: {priority: 0, direction: 'asc'}
     },
-    GridDefaults.colDefs.studentId(),
-    GridDefaults.colDefs.firstName(),
-    GridDefaults.colDefs.lastName(),
     GridDefaults.colDefs.withdrawn($scope)
   ];
   $scope.gridOptions.onRegisterApi = function(gridApi) {
