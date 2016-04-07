@@ -2,7 +2,7 @@
 
 var app = angular.module('app');
 
-function SchoolReportsCtrl($scope, Student) {
+function SchoolReportsCtrl($scope) {
   $scope.tabs = [{
     title: 'At Risk',
     state: 'school-reports.at-risk'
@@ -16,10 +16,6 @@ function SchoolReportsCtrl($scope, Student) {
     title: 'Interventions',
     state: 'school-reports.intervention-summary'
   }];
-
-  $scope.updateIEP = Student.updateIEP;
-  $scope.updateCFA = Student.updateCFA;
-  $scope.updateWithdrawn = Student.updateWithdrawn;
 
   $scope.menuItems = [{
     text: ' Withdrawn Students',
