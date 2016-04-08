@@ -36,25 +36,6 @@ function GridDefaults($timeout, uiGridGroupingConstants, Student,
       minWidth: 150
     };
   };
-  colDefs.withdrawn = function(scope, name) {
-    return {
-      name: name || 'student.withdrawn',
-      displayName: 'Withdrawn',
-      enableCellEdit: true,
-      type: 'boolean',
-      width: 100,
-      filter: {
-        noTerm: true,
-        condition: function(searchTerm, cellValue) {
-          if (scope.showWithdrawn) {
-            return true;
-          }
-          return cellValue === false;
-        }
-      },
-      visible: false
-    };
-  };
   colDefs.iep = function(name) {
     return {
       name: name || 'student.iep',
@@ -75,6 +56,25 @@ function GridDefaults($timeout, uiGridGroupingConstants, Student,
       treeAggregationType: uiGridGroupingConstants.aggregation.SUM
     };
   };
+  colDefs.withdrawn = function(scope, name) {
+    return {
+      name: name || 'student.withdrawn',
+      displayName: 'Withdrawn',
+      enableCellEdit: true,
+      type: 'boolean',
+      width: 100,
+      filter: {
+        noTerm: true,
+        condition: function(searchTerm, cellValue) {
+          if (scope.showWithdrawn) {
+            return true;
+          }
+          return cellValue === false;
+        }
+      },
+      visible: false
+    };
+  };
   colDefs.updated = function() {
     return {
       name: 'updated',
@@ -92,6 +92,7 @@ function GridDefaults($timeout, uiGridGroupingConstants, Student,
       enableSorting: true,
       enableGridMenu: true,
       enableFiltering: true,
+      enableCellEdit: false,
       treeRowHeaderAlwaysVisible: false,
       exporterMenuPdf: false
     };
