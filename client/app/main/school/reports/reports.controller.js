@@ -4,16 +4,16 @@ var app = angular.module('app');
 
 function SchoolReportsCtrl($scope) {
   $scope.tabs = [{
-    title: 'At Risk',
+    text: 'At Risk',
     state: 'school-reports.at-risk'
   }, {
-    title: 'Chronically Absent',
+    text: 'Chronically Absent',
     state: 'school-reports.chronically-absent'
   }, {
-    title: 'Outreaches',
+    text: 'Outreaches',
     state: 'school-reports.outreach-summary'
   }, {
-    title: 'Interventions',
+    text: 'Interventions',
     state: 'school-reports.intervention-summary'
   }];
 

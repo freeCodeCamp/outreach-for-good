@@ -4,10 +4,10 @@ var app = angular.module('app');
 
 function RecordsCtrl($scope) {
   $scope.tabs = [{
-    title: 'Upload',
+    text: 'Upload',
     state: 'records.upload'
   }, {
-    title: 'Manage',
+    text: 'Manage',
     state: 'records.manage'
   }];
 }
