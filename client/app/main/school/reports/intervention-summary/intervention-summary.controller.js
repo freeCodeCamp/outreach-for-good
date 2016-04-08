@@ -39,6 +39,9 @@ function InterventionSummaryCtrl($scope, $timeout, GridDefaults, Student) {
       $scope.loading = false;
     });
   };
+  $scope.gridOptions.csvFileNameFn = function() {
+    return GridDefaults.datePrefix() + ' Intervention Summary.csv';
+  };
 
   $scope.$watch('showWithdrawn', function(n, o) {
     if (n !== o) {
