@@ -1,6 +1,6 @@
 'use strict';
 
-function GridDefaults($timeout, uiGridGroupingConstants, Student,
+function GridDefaults($filter, $timeout, uiGridGroupingConstants, Student,
   AbsenceRecord) {
   var colDefs = {};
   colDefs.school = function(name) {
@@ -105,6 +105,14 @@ function GridDefaults($timeout, uiGridGroupingConstants, Student,
    */
   function recordOptions(scope, filter) {
     var gridOptions = _.merge(options(), {
+      exporterFieldCallback: function(grid, row, col, value) {
+        switch (col.name) {
+          case 'updated':
+            value = $filter('date')(value, 'MM/dd/yy');
+            break;
+        }
+        return value;
+      },
       columnDefs: [
         colDefs.school(),
         colDefs.studentId(),
