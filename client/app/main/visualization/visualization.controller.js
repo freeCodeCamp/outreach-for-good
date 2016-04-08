@@ -2,6 +2,11 @@
 
 function VisualizationCtrl($scope, $timeout, Sidebar, Visualization) {
   $scope.sidebar = Sidebar;
+  $scope.studentType = 'nonCfa';
+  $scope.data = { 
+    cfa: { arca: 0, ca: 0, other: 0 }, 
+    nonCfa: { arca: 0, ca: 0, other: 0 } 
+  };
   $scope.chartConfig = {
     options: {
       chart: {
@@ -11,109 +16,106 @@ function VisualizationCtrl($scope, $timeout, Sidebar, Visualization) {
         type: 'pie'
       },
       title: {
-        text: 'ARCA and CA in CFA vs ARCA and CA not in CFA'
+        text: 'ARCA vs CA'
       },
-      // tooltip: {
-      //   pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
-      // }
+      tooltip: {
+        pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+      },
       plotOptions: {
         pie: {
           allowPointSelect: true,
           cursor: 'pointer',
           dataLabels: {
-              enabled: false
+            enabled: false,
+            format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+            style: {
+                color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+            }
           },
           showInLegend: true
         }
       }
+    },
+    func: function(chart) {
+      $scope.chartObj = chart;
     }
   };
 
   Visualization.arcaCa().$promise.then(function(results) {
-    var pctObj = { 
-      cfa: { arca: 0, ca: 0, other: 0 }, 
-      nonCfa: { arca: 0, ca: 0, other: 0 } 
-    };
     function counter(rec, isCfa) {
       var key = isCfa ? 'cfa' : 'nonCfa';
       if(rec.arca) { 
-        pctObj[key].arca++; 
+        $scope.data[key].arca++; 
       } else if(rec.ca) { 
-        pctObj[key].ca++; 
+        $scope.data[key].ca++; 
       } else { 
-        pctObj[key].other++; 
+        $scope.data[key].other++; 
       }
-    }
-    function getPct(obj, isCfa) {
-      var k = (isCfa === 'cfa') ? 'cfa' : 'nonCfa';
-      var tot = pctObj[k].arca + pctObj[k].ca + pctObj[k].other;
-      if(tot) {
-        pctObj[k].arca = parseInt(((pctObj[k].arca / tot) * 100).toFixed(2), 10);
-        pctObj[k].ca = parseInt(((pctObj[k].ca / tot) * 100).toFixed(2), 10);
-        pctObj[k].other = parseInt(((pctObj[k].other / tot) * 100).toFixed(2), 10);
-      } else {
-        // If tot = 0 or is undefined
-        pctObj[k].arca = 0;
-        pctObj[k].ca = 0;
-        pctObj[k].other = 0;
-      }
-    }
-    _.forEach(results, function(record) {
+    }    
+    _.forEach(results, function(record, key) {
       if(record.student.cfa) { 
         counter(record, true);
       } else {
         counter(record, false);
       }
     });
-    _.forEach(pctObj, function(val, key) {
-      getPct(val, key);
+    
+    function getTwoDecimals(n, t) {
+      return parseInt(((n / t) * 100).toFixed(2), 10);
+    }
+    _.forEach(['cfa', 'nonCfa'], function(k) {
+      var tot = $scope.data[k].arca + $scope.data[k].ca + $scope.data[k].other;
+      if(tot) {
+        _.forEach($scope.data[k],function(v, kB) {
+          $scope.data[k][kB] = getTwoDecimals($scope.data[k][kB], tot);
+        });
+      } else {
+        _.forEach($scope.data[k],function(v, kB) {
+          $scope.data[k][kB] = 0;
+        });
+      }
     });
-
-    console.log('pctObj::final', pctObj);
-
-
+    
     $scope.chartConfig.series = [{
-      name: 'Non CFA Students',
+      name: $scope.studentType === 'cfa' ? 
+        'A CFA student' : 'Not a CFA student',
       colorByPoint: true,
       data: [{
-        name: 'ARCA',
-        y: pctObj.nonCfa.arca
-      },{
-        name: 'CA',
-        y: pctObj.nonCfa.ca
-      }, {
-        name: 'Other',
-        y: pctObj.nonCfa.other
-      }]
-    }, {
-      name: 'CFA Students',
-      colorByPoint: true,
-      data: [{
-        name: 'ARCA',
-        y: pctObj.cfa.arca
-      }, {
-        name: 'CA',
-        y: pctObj.cfa.ca          
-      }, {
-        name: 'Other',
-        y: pctObj.cfa.other
+          name: 'ARCA',
+          y: $scope.data[$scope.studentType].arca
+        },{
+          name: 'CA',
+          y: $scope.data[$scope.studentType].ca
+        }, {
+          name: 'Other',
+          y: $scope.data[$scope.studentType].other
       }]
     }];
   });
-  // $scope.$watchGroup(['statType', 'truancyType'], function(n, o) {
-  //   if (n !== o) {
-  //     $scope.chartConfig.series = $scope[$scope.statType][$scope.truancyType];
-  //     $scope.chartConfig.title.text =
-  //       $scope.statType + ' ' + $scope.truancyType + ' ' + 'Trends';
-  //     $scope.chartConfig.yAxis.title.text = $scope.truancyType;
-  //   }
-  // });
 
+  $scope.$watch('studentType', function(n, o) {
+    if(n !== o) {
+      $scope.chartConfig.series = [{
+        name: n === 'cfa' ? 'A CFA student' : 'Not a CFA student',
+        colorByPoint: true,
+        data: [{
+            name: 'ARCA',
+            y: $scope.data[n].arca
+          },{
+            name: 'CA',
+            y: $scope.data[n].ca
+          }, {
+            name: 'Other',
+            y: $scope.data[n].other
+        }]
+      }];
+    }
+  });
   // Timeout used to redraw the chart after animation delay of resizing the
   // sidebar.
-  // $scope.$watch('sidebar.isCollapsed', function() {
-  //   $timeout(function() {$scope.chartObj.reflow();}, 510);
-  // });
+  $scope.$watch('sidebar.isCollapsed', function() {
+    $timeout(function() {$scope.chartObj.reflow();}, 510);
+  });
 }
 
 angular.module('app').controller('VisualizationCtrl', VisualizationCtrl);
