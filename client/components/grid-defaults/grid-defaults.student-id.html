@@ -1,0 +1,8 @@
+<div class="ui-grid-cell-contents" title="TOOLTIP">
+  <div ng-if="!row.groupHeader || !(col.grouping && col.grouping.groupPriority > -1)">
+    <a ui-sref="student.outreaches({studentId: row.entity.student._id})">{{ COL_FIELD }}</a>
+  </div>
+  <div ng-if="row.groupHeader && col.grouping && col.grouping.groupPriority > -1 && col.grouping.groupPriority === row.treeLevel">
+    {{ COL_FIELD }}
+  </div>
+</div>
