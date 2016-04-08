@@ -1,7 +1,7 @@
 'use strict';
 
-function GridDefaults($filter, $timeout, uiGridGroupingConstants, Student,
-  AbsenceRecord) {
+function GridDefaults($filter, $timeout, Student, AbsenceRecord,
+  uiGridGroupingConstants, uiGridExporterService) {
   var colDefs = {};
   colDefs.school = function(name) {
     return {
@@ -113,6 +113,7 @@ function GridDefaults($filter, $timeout, uiGridGroupingConstants, Student,
         }
         return value;
       },
+      csvFileNameFn: scope.csvFileNameFn,
       columnDefs: [
         colDefs.school(),
         colDefs.studentId(),
@@ -194,10 +195,36 @@ function GridDefaults($filter, $timeout, uiGridGroupingConstants, Student,
     return gridOptions;
   }
 
+  function datePrefix() {
+    return $filter('date')(new Date(), 'yyyy-MM-dd');
+  }
+
+  /**
+   * Override default csvExport function to look for a csvFileNameFn in
+   * the gridOptions. This allows for dynamic naming of the files for
+   * timestamping.
+   */
+  uiGridExporterService.csvExport = function(grid, rowTypes, colTypes) {
+    var fileName = grid.options.csvFileNameFn ? grid.options.csvFileNameFn() :
+                   grid.options.exporterCsvFilename;
+    var self = this;
+    this.loadAllDataIfNeeded(grid, rowTypes, colTypes).then(function() {
+      var exportColumnHeaders = grid.options.showHeader ?
+                                self.getColumnHeaders(grid, colTypes) : [];
+      var exportData = self.getData(grid, rowTypes, colTypes);
+      var csvContent = self.formatAsCsv(exportColumnHeaders, exportData,
+        grid.options.exporterCsvColumnSeparator);
+      self.downloadFile (fileName, csvContent,
+        grid.options.exporterCsvColumnSeparator,
+        grid.options.exporterOlderExcelCompatibility);
+    });
+  };
+
   return {
     options: options,
     colDefs: colDefs,
-    recordOptions: recordOptions
+    recordOptions: recordOptions,
+    datePrefix: datePrefix
   };
 }
 

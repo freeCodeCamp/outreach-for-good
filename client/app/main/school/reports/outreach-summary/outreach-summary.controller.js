@@ -69,6 +69,9 @@ function OutreachSummaryCtrl($scope, $timeout, GridDefaults,
       $scope.loading = false;
     });
   };
+  $scope.gridOptions.csvFileNameFn = function() {
+    return GridDefaults.datePrefix() + ' Outreach Summary.csv';
+  };
 
   $scope.$watch('showWithdrawn', function(n, o) {
     if (n !== o) {

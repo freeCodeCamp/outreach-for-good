@@ -5,6 +5,9 @@ var app = angular.module('app');
 function DashboardCtrl($scope, $timeout, AbsenceRecord, GridDefaults, Student) {
   $scope.filter = {};
   $scope.loading = true;
+  $scope.csvFileNameFn = function() {
+    return GridDefaults.datePrefix() + ' ' + $scope.tableTitle() + '.csv';
+  };
 
   $scope.gridOptions = GridDefaults.recordOptions($scope);
 
