@@ -60,7 +60,6 @@
         <h4>{{ intervention.type }}</h4>
         <div class="dates">
           <div><b>Created:</b> {{ intervention.createdDate | date: 'MM/dd/yy' }}</div>
-          <div><b>By:</b> {{ intervention.user }}</div>
         </div>
         <div ng-if="intervention.notes.length">
           <b>Notes:</b><br/>

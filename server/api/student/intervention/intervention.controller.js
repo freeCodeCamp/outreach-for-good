@@ -1,9 +1,6 @@
 'use strict';
 
-var _ = require('lodash');
-var auth = require('../../../auth/auth.service');
 var Intervention = require('./intervention.model');
-var Student = require('../student.model');
 
 /**
  * Get list of interventions for a student.
@@ -13,6 +10,7 @@ exports.index = function(req, res) {
   Intervention
     .find({student: req.student.id})
     .sort({_id: -1})
+    .populate('notes.user', 'name')
     .exec(function(err, interventions) {
       if (err) return handleError(res, err);
       return res.status(201).json(interventions);
