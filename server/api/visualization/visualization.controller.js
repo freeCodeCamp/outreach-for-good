@@ -1,52 +1,73 @@
 'use strict';
 
 var AbsenceRecord = require('../absence-record/absence-record.model');
-var School = require('../school/school.model');
 
-exports.schools = function(req, res) {
+function currentAbsenceRecordPipeline(user) {
   var pipeline = [];
-  if (req.user.role === 'teacher') {
+  if (user.role === 'teacher') {
     pipeline.push({
-      $match: {school: req.user.assignment}
+      $match: {school: user.assignment}
     });
   }
-
+  pipeline.push({
+    $sort: {date: -1}
+  });
+  pipeline.push({
+    $group: {
+      _id: '$school',
+      recordId: {$first: '$_id'},
+      date: {$first: '$date'},
+      school: {$first: '$school'},
+      entries: {$first: '$entries'}
+    }
+  });
   pipeline.push({
     $unwind: '$entries'
   });
+  return pipeline;
+}
 
+exports.cfaVsNotcfa = function(req, res) {
+  var pipeline = currentAbsenceRecordPipeline(req.user);
   pipeline.push({
-    $group: {
-      _id: {school: '$school', date: '$date', schoolYear: '$schoolYear'},
-      absences: {$sum: '$entries.absences'},
-      tardies: {$sum: '$entries.tardies'},
-      count: {$sum: 1}
+    $project: { 
+      _id: 0, 
+      student: '$entries.student', 
+      present: '$entries.present', 
+      enrolled: '$entries.enrolled',
+      absences: '$entries.absences' 
     }
-  });
-
-  pipeline.push({
-    $group: {
-      _id: '$_id.school',
-      data: {
-        $push: {
-          date: '$_id.date',
-          absences: '$absences',
-          tardies: '$tardies',
-          count: '$count'
-        }
+  }, {
+    $project: {
+      student: 1,
+      arca: {
+        $and: [
+          { $lte: [{ $divide: ['$present', '$enrolled'] }, 0.9] },
+          { $lte: ['$absences', 19] }
+        ]
+      },
+      ca: {
+        $gte: ['$absences', 20]
       }
     }
   });
-
   AbsenceRecord.aggregate(pipeline, function(err, results) {
     if (err) return handleError(res, err);
-    School.populate(results, {path: "_id", select: 'name'},
-      function(err, report) {
-        if (err) return handleError(res, err);
-        return res.status(200).json(report);
-      });
+    AbsenceRecord.populate(results, {
+      path: 'student',
+      model: 'Student',
+      select: '_id currentSchool cfa withdrawn active',
+      populate: {
+        path:'currentSchool',
+        model: 'School',
+        select: '-_id name'
+      }
+    }, function(err, result) {
+      if (err) return handleError(res, err);
+      return res.status(200).json(result);
+    });
   });
-};
+}
 
 function handleError(res, err) {
   console.log(err);
