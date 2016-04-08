@@ -41,7 +41,10 @@ exports.cfaVsNotcfa = function(req, res) {
     $project: {
       student: 1,
       arca: {
-        $lte: [{ $divide: ['$present', '$enrolled'] }, 0.9]
+        $and: [
+          { $lte: [{ $divide: ['$present', '$enrolled'] }, 0.9] },
+          { $lte: ['$absences', 19] }
+        ]
       },
       ca: {
         $gte: ['$absences', 20]

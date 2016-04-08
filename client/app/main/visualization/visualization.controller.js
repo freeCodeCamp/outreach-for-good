@@ -4,8 +4,28 @@ function VisualizationCtrl($scope, $timeout, Sidebar, Visualization) {
   $scope.sidebar = Sidebar;
   $scope.studentType = 'nonCfa';
   $scope.data = { 
-    cfa: { arca: 0, ca: 0, other: 0 }, 
-    nonCfa: { arca: 0, ca: 0, other: 0 } 
+    cfa: { 
+      arca: {
+        count: 0, pct: 0
+      }, 
+      ca: {
+        count: 0, pct: 0
+      }, 
+      other: {
+        count: 0, pct: 0
+      } 
+    }, 
+    nonCfa: { 
+      arca: {
+        count: 0, pct: 0
+      }, 
+      ca: {
+        count: 0, pct: 0
+      }, 
+      other: {
+        count: 0, pct: 0
+      } 
+    } 
   };
   $scope.chartConfig = {
     options: {
@@ -19,7 +39,7 @@ function VisualizationCtrl($scope, $timeout, Sidebar, Visualization) {
         text: 'ARCA vs CA'
       },
       tooltip: {
-        pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+        pointFormat: '{series.name}<br><b>{point.percentage:.1f}%</b><br><em>{point.count} tot.</em>'
       },
       plotOptions: {
         pie: {
@@ -28,9 +48,6 @@ function VisualizationCtrl($scope, $timeout, Sidebar, Visualization) {
           dataLabels: {
             enabled: false,
             format: '<b>{point.name}</b>: {point.percentage:.1f} %',
-            style: {
-                color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
-            }
           },
           showInLegend: true
         }
@@ -45,14 +62,14 @@ function VisualizationCtrl($scope, $timeout, Sidebar, Visualization) {
     function counter(rec, isCfa) {
       var key = isCfa ? 'cfa' : 'nonCfa';
       if(rec.arca) { 
-        $scope.data[key].arca++; 
+        $scope.data[key].arca.count++; 
       } else if(rec.ca) { 
-        $scope.data[key].ca++; 
+        $scope.data[key].ca.count++; 
       } else { 
-        $scope.data[key].other++; 
+        $scope.data[key].other.count++; 
       }
     }    
-    _.forEach(results, function(record, key) {
+    _.forEach(results, function(record) {
       if(record.student.cfa) { 
         counter(record, true);
       } else {
@@ -64,14 +81,14 @@ function VisualizationCtrl($scope, $timeout, Sidebar, Visualization) {
       return parseInt(((n / t) * 100).toFixed(2), 10);
     }
     _.forEach(['cfa', 'nonCfa'], function(k) {
-      var tot = $scope.data[k].arca + $scope.data[k].ca + $scope.data[k].other;
+      var tot = $scope.data[k].arca.count + $scope.data[k].ca.count + $scope.data[k].other.count;
       if(tot) {
         _.forEach($scope.data[k],function(v, kB) {
-          $scope.data[k][kB] = getTwoDecimals($scope.data[k][kB], tot);
+          $scope.data[k][kB].pct = getTwoDecimals($scope.data[k][kB].count, tot);
         });
       } else {
         _.forEach($scope.data[k],function(v, kB) {
-          $scope.data[k][kB] = 0;
+          $scope.data[k][kB].pct = 0;
         });
       }
     });
@@ -82,13 +99,16 @@ function VisualizationCtrl($scope, $timeout, Sidebar, Visualization) {
       colorByPoint: true,
       data: [{
           name: 'ARCA',
-          y: $scope.data[$scope.studentType].arca
+          y: $scope.data[$scope.studentType].arca.pct,
+          count: $scope.data[$scope.studentType].arca.count
         },{
           name: 'CA',
-          y: $scope.data[$scope.studentType].ca
+          y: $scope.data[$scope.studentType].ca.pct,
+          count: $scope.data[$scope.studentType].ca.count
         }, {
           name: 'Other',
-          y: $scope.data[$scope.studentType].other
+          y: $scope.data[$scope.studentType].other.pct,
+          count: $scope.data[$scope.studentType].other.count
       }]
     }];
   });
@@ -100,13 +120,16 @@ function VisualizationCtrl($scope, $timeout, Sidebar, Visualization) {
         colorByPoint: true,
         data: [{
             name: 'ARCA',
-            y: $scope.data[n].arca
+            y: $scope.data[n].arca.pct,
+            count: $scope.data[n].arca.count
           },{
             name: 'CA',
-            y: $scope.data[n].ca
+            y: $scope.data[n].ca.pct,
+            count: $scope.data[n].ca.count
           }, {
             name: 'Other',
-            y: $scope.data[n].other
+            y: $scope.data[n].other.pct,
+            count: $scope.data[n].other.count
         }]
       }];
     }
