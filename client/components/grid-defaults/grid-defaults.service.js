@@ -12,6 +12,8 @@ function GridDefaults($timeout, uiGridGroupingConstants, Student,
       sort: {priority: 0, direction: 'asc'}
     };
   };
+  // This specific colDef requires student to be populated at the root of the
+  // row entity. No name parameter.
   colDefs.studentId = function() {
     return {
       name: 'student.studentId',
@@ -51,6 +53,36 @@ function GridDefaults($timeout, uiGridGroupingConstants, Student,
         }
       },
       visible: false
+    };
+  };
+  colDefs.iep = function(name) {
+    return {
+      name: name || 'student.iep',
+      displayName: 'IEP',
+      enableCellEdit: true,
+      type: 'boolean',
+      width: 100,
+      treeAggregationType: uiGridGroupingConstants.aggregation.SUM
+    };
+  };
+  colDefs.cfa = function(name) {
+    return {
+      name: name || 'student.cfa',
+      displayName: 'CFA',
+      enableCellEdit: true,
+      type: 'boolean',
+      width: 100,
+      treeAggregationType: uiGridGroupingConstants.aggregation.SUM
+    };
+  };
+  colDefs.updated = function() {
+    return {
+      name: 'updated',
+      field: 'updated()',
+      displayName: 'Updated',
+      type: 'date',
+      cellFilter: 'date:\'MM/dd/yy\'',
+      width: 125
     };
   };
 
@@ -115,31 +147,10 @@ function GridDefaults($timeout, uiGridGroupingConstants, Student,
           type: 'number',
           minWidth: 100
         },
-        {
-          name: 'student.iep',
-          displayName: 'IEP',
-          enableCellEdit: true,
-          type: 'boolean',
-          width: 100,
-          treeAggregationType: uiGridGroupingConstants.aggregation.SUM
-        },
-        {
-          name: 'student.cfa',
-          displayName: 'CFA',
-          enableCellEdit: true,
-          type: 'boolean',
-          width: 100,
-          treeAggregationType: uiGridGroupingConstants.aggregation.SUM
-        },
+        colDefs.iep(),
+        colDefs.cfa(),
         colDefs.withdrawn(scope),
-        {
-          name: 'updated',
-          field: 'updated()',
-          displayName: 'Updated',
-          type: 'date',
-          cellFilter: 'date:\'MM/dd/yy\'',
-          width: 125
-        }]
+        colDefs.updated()]
     });
     gridOptions.onRegisterApi = function(gridApi) {
       scope.gridApi = gridApi;
