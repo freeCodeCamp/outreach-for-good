@@ -2,13 +2,9 @@
 
 var app = angular.module('app');
 
-function DashboardCtrl($scope, $timeout, Auth, AbsenceRecord, GridDefaults,
-  Student) {
+function DashboardCtrl($scope, $timeout, AbsenceRecord, GridDefaults, Student) {
   $scope.filter = {};
   $scope.loading = true;
-  if (Auth.getCurrentUser().role === 'teacher') {
-    $scope.assignment = Auth.getCurrentUser().assignment;
-  }
 
   $scope.gridOptions = GridDefaults.recordOptions($scope);
 
@@ -60,7 +56,7 @@ function DashboardCtrl($scope, $timeout, Auth, AbsenceRecord, GridDefaults,
   };
 
   $scope.tableTitle = function() {
-    return ($scope.assignment ? $scope.assignment.name : 'Students') +
+    return 'Students' +
            ($scope.filter.type ? ' (' + $scope.filter.type +
            ($scope.filter.tier ? ' #' + $scope.filter.tier : '') + ')' : '');
   };
