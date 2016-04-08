@@ -126,8 +126,10 @@ function DashboardCtrl($scope, $timeout, Auth, AbsenceRecord, Student,
     },
     visible: false
   }, {
-    name: 'date',
-    displayName: 'Uploaded',
+    name: 'updated',
+    field: 'updated()',
+    displayName: 'Updated',
+    type: 'date',
     cellFilter: 'date:\'MM/dd/yy\'',
     width: 125
   }];
@@ -138,7 +140,6 @@ function DashboardCtrl($scope, $timeout, Auth, AbsenceRecord, Student,
 
   $scope.studentGridOptions.onRegisterApi = function(gridApi) {
     $scope.studentGridApi = gridApi;
-    $scope.studentGridOptions.data = AbsenceRecord.listCurrent();
     gridApi.edit.on.afterCellEdit($scope, function(rowEntity, colDef, n, o) {
       if (n !== o) {
         switch (colDef.name) {
@@ -154,10 +155,15 @@ function DashboardCtrl($scope, $timeout, Auth, AbsenceRecord, Student,
         }
       }
     });
-
-    // NOTE: Hack to default to expanded rows on initial load.
-    // https://github.com/angular-ui/ui-grid/issues/3841
-    $scope.studentGridOptions.data.$promise.then(function() {
+    $scope.studentGridOptions.data = AbsenceRecord.listCurrent();
+    $scope.studentGridOptions.data.$promise.then(function(data) {
+      _.forEach(data, function(row) {
+        row.updated = function() {
+          return row.entries.date || row.date;
+        };
+      });
+      // NOTE: Hack to default to expanded rows on initial load.
+      // https://github.com/angular-ui/ui-grid/issues/3841
       $timeout($scope.studentGridApi.treeBase.expandAllRows);
       $scope.loading = false;
     });
@@ -184,7 +190,12 @@ function DashboardCtrl($scope, $timeout, Auth, AbsenceRecord, Student,
       $scope.loading = true;
       $scope.filter = filter;
       $scope.studentGridOptions.data = AbsenceRecord.listCurrent($scope.filter);
-      $scope.studentGridOptions.data.$promise.then(function() {
+      $scope.studentGridOptions.data.$promise.then(function(data) {
+        _.forEach(data, function(row) {
+          row.updated = function() {
+            return row.entries.date || row.date;
+          };
+        });
         $scope.loading = false;
         $timeout($scope.studentGridApi.treeBase.expandAllRows);
       });

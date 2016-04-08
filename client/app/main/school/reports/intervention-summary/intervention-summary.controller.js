@@ -83,8 +83,6 @@ function InterventionSummaryCtrl($scope, $timeout, uiGridGroupingConstants,
 
   $scope.gridOptions.onRegisterApi = function(gridApi) {
     $scope.gridApi = gridApi;
-    $scope.gridOptions.data = Student.interventionSummary();
-
     gridApi.edit.on.afterCellEdit($scope, function(rowEntity, colDef, n, o) {
       if (n !== o) {
         switch (colDef.name) {
@@ -94,7 +92,7 @@ function InterventionSummaryCtrl($scope, $timeout, uiGridGroupingConstants,
         }
       }
     });
-
+    $scope.gridOptions.data = Student.interventionSummary();
     $scope.gridOptions.data.$promise.then(function() {
       // NOTE: Hack to default to expanded rows on initial load.
       // https://github.com/angular-ui/ui-grid/issues/3841

@@ -107,8 +107,6 @@ function OutreachSummaryCtrl($scope, $timeout, uiGridGroupingConstants,
 
   $scope.gridOptions.onRegisterApi = function(gridApi) {
     $scope.gridApi = gridApi;
-    $scope.gridOptions.data = Student.outreachSummary();
-
     gridApi.edit.on.afterCellEdit($scope, function(rowEntity, colDef, n, o) {
       if (n !== o) {
         switch (colDef.name) {
@@ -118,13 +116,12 @@ function OutreachSummaryCtrl($scope, $timeout, uiGridGroupingConstants,
         }
       }
     });
-
+    $scope.gridOptions.data = Student.outreachSummary();
     $scope.gridOptions.data.$promise.then(function(data) {
       // Convert counts array to object, generate total intervention property
-      _.forEach(data, function(student) {
-        student.totals = _(student.counts)
-          .keyBy('type').mapValues('count').value();
-        student.totals.all = _.sumBy(student.counts, 'count');
+      _.forEach(data, function(row) {
+        row.totals = _(row.counts).keyBy('type').mapValues('count').value();
+        row.totals.all = _.sumBy(row.counts, 'count');
       });
       // NOTE: Hack to default to expanded rows on initial load.
       // https://github.com/angular-ui/ui-grid/issues/3841

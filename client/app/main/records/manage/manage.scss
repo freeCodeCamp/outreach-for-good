@@ -60,11 +60,21 @@
           font-weight: 200;
           line-height: ($cfa-unit * 0.5);
         }
+        &.created {
+          background-color: $state-success-bg;
+        }
+        &.missing {
+          background-color: $state-danger-bg;
+        }
+        &.entries {
+          background-color: $state-info-bg;
+        }
       }
+      .missing-list,
       .created-list,
       .entries-list {
-        min-height: ($cfa-unit * 4);
-        height: ($cfa-unit * 4);
+        min-height: ($cfa-unit * 3);
+        height: ($cfa-unit * 3);
         @include cfa-scrollbar(5px);
         ul {
           margin: 0;

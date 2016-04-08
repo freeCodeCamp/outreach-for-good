@@ -26,8 +26,8 @@
         <div class="delete-record" ng-if="$index === 0">
           <button class="btn btn-danger" ng-click="delete(record, $index)">Delete</button>
         </div>
-        <div class="subheading">
-          <h4>Created Students ({{record.createdStudents.length}} <i class="fa fa-child"></i>)</h4>
+        <div class="subheading created">
+          <h4>Created Students ({{record.createdStudents.length || 0}} <i class="fa fa-child"></i>)</h4>
         </div>
         <div class="created-list" ng-if="record.createdStudents.length">
           <ul>
@@ -36,7 +36,17 @@
             </li>
           </ul>
         </div>
-        <div class="subheading">
+        <div class="subheading missing">
+          <h4>New Missing Students ({{record.newMissingStudents.length || 0}} <i class="fa fa-child"></i>)</h4>
+        </div>
+        <div class="missing-list" ng-if="record.newMissingStudents.length">
+          <ul>
+            <li ng-repeat="student in record.newMissingStudents">
+              <a ui-sref="student.outreaches({studentId: student._id})" target="_blank">{{ student.firstName }} {{ student.lastName }}</a> ({{ student.studentId}})
+            </li>
+          </ul>
+        </div>
+        <div class="subheading entries">
           <h4>Entries: {{ record.entries.length }}</h4>
         </div>
         <div class="entries-list" ng-if="record.entries.length">
