@@ -14,24 +14,7 @@ function DashboardCtrl($scope, $timeout, Auth, AbsenceRecord, Student,
     enableGridMenu: true,
     enableFiltering: true,
     treeRowHeaderAlwaysVisible: false,
-    exporterPdfDefaultStyle: {fontSize: 9},
-    exporterPdfTableHeaderStyle: {fontSize: 10, bold: true, color: 'grey'},
-    exporterPdfHeader: {text: 'Student Data', style: 'headerStyle'},
-    exporterPdfOrientation: 'landscape',
-    exporterPdfPageSize: 'LETTER',
-    exporterPdfMaxGridWidth: 500,
-    exporterPdfFooter: function(currentPage, pageCount) {
-      return {
-        text: currentPage.toString() + ' of ' + pageCount.toString(),
-        style: 'footerStyle'
-      };
-    },
-    exporterPdfCustomFormatter: function(docDefinition) {
-      docDefinition.styles.headerStyle =
-      {fontSize: 22, bold: true, color: '#265E6D'};
-      docDefinition.styles.footerStyle = {fontSize: 10, bold: true};
-      return docDefinition;
-    }
+    exporterMenuPdf: false
   };
 
   $scope.studentGridOptions.columnDefs = [{
