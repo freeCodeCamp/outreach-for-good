@@ -8,10 +8,10 @@ function OutreachSummaryCtrl($scope, $timeout, GridDefaults,
 
   $scope.gridOptions = GridDefaults.options();
   $scope.gridOptions.columnDefs = [
-    GridDefaults.colDefs.school('student.currentSchool.name'),
+    GridDefaults.colDefs.school(),
     GridDefaults.colDefs.studentId('student'),
-    GridDefaults.colDefs.firstName('student.firstName'),
-    GridDefaults.colDefs.lastName('student.lastName'),
+    GridDefaults.colDefs.firstName(),
+    GridDefaults.colDefs.lastName(),
     {
       name: 'totals.all',
       displayName: 'Total',
@@ -43,7 +43,7 @@ function OutreachSummaryCtrl($scope, $timeout, GridDefaults,
       minWidth: 100,
       treeAggregationType: uiGridGroupingConstants.aggregation.SUM
     },
-    GridDefaults.colDefs.withdrawn($scope, 'student.withdrawn')
+    GridDefaults.colDefs.withdrawn($scope)
   ];
   $scope.gridOptions.onRegisterApi = function(gridApi) {
     $scope.gridApi = gridApi;
@@ -51,7 +51,7 @@ function OutreachSummaryCtrl($scope, $timeout, GridDefaults,
       if (n !== o) {
         switch (colDef.name) {
           case 'student.withdrawn':
-            Student.updateWithdrawn(rowEntity.entries.student);
+            Student.updateWithdrawn(rowEntity.student);
             break;
         }
       }
