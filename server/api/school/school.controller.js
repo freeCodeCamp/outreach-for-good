@@ -76,6 +76,23 @@ exports.archive = function(req, res) {
   });
 };
 
+/**
+ * Destructive delete of a school and all associated students.
+ *
+ * This delete calls student.remove and cascades deletes interventions,
+ * outreaches, and notes for those students.
+ *
+ * restriction: 'admin'
+ */
+exports.delete = function(req, res) {
+  var school = req.school;
+  school.remove(function(err) {
+    if (err) handleError(res, err);
+    return res.status(204).send('No Content');
+  });
+};
+
 function handleError(res, err) {
+  console.log(err);
   return res.status(500).send(err);
 }

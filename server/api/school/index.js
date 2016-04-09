@@ -16,6 +16,11 @@ router.put('/:schoolId/archive',
   auth.school,
   controller.archive);
 
+router.delete('/:schoolId',
+  auth.hasRole('admin'),
+  auth.school,
+  controller.delete);
+
 router.put('/:schoolId/update-triggers',
   auth.hasRole('teacher'),
   auth.school,
