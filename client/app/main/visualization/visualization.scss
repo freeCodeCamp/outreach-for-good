@@ -16,22 +16,24 @@
       padding-right: 0;
     }
   }
-  .chart-visualization {
+  .comparison {
     display: flex;
     flex-direction: column;
     flex: 1;
-    min-height: 540px;
-    .chart {
+    min-height: 400px;
+    .charts {
       display: flex;
+      flex-direction: column;
       flex: 1;
-      #chart1 {
-        display: flex;
-        flex: 1;
+      @media(min-width: 1200px) {
+        flex-direction: row;
       }
-    }
-    .options {
-      display: flex;
-      justify-content: space-around;
+      .chart {
+        flex: 1;
+        margin: 10px;
+        min-height: 400px;
+        overflow: hidden;
+      }
     }
   }
 }
