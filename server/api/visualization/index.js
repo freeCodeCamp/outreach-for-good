@@ -14,7 +14,4 @@ router.get('/cfa-comparison/:schoolId',
   auth.school,
   controller.cfaComparison);
 
-router.get('/cfa-vs-notcfa',
-	auth.hasRole('teacher'), controller.cfaVsNotcfa);
-
 module.exports = router;
