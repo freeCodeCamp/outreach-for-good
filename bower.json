@@ -32,5 +32,15 @@
   },
   "resolutions": {
     "angular": ">=1.5.0"
+  },
+  "overrides": {
+    "highcharts": {
+      "main": [
+        "highcharts.js",
+        "highcharts-more.js",
+        "modules/exporting.js",
+        "modules/no-data-to-display.js"
+      ]
+    }
   }
 }
