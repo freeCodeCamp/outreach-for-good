@@ -12,20 +12,11 @@ var School = require('../api/school/school.model');
 var Student = require('../api/student/student.model');
 var validateJwt = expressJwt({secret: config.secrets.session});
 
-var schoolIdForType = {
-  body: function(req) {
-    return req.body.schoolId;
-  },
-  params: function(req) {
-    return req.params.schoolId;
-  }
-};
-
 /**
  * Attaches the user object to the request if authenticated
  * Otherwise returns 403
  */
-function isAuthenticated() {
+exports.isAuthenticated = function() {
   var composed = compose();
   // Validate jwt
   composed.use(function(req, res, next) {
@@ -45,27 +36,27 @@ function isAuthenticated() {
     });
   });
   return composed;
-}
+};
 
 /**
  * Returns a jwt token signed by the app secret
  */
-function signToken(id) {
+exports.signToken = function(id) {
   return jwt.sign({_id: id}, config.secrets.session, {expiresIn: '5h'});
-}
+};
 
 /**
  * Set token cookie directly for oAuth strategies
  */
-function setTokenCookie(req, res) {
+exports.setTokenCookie = function(req, res) {
   if (!req.user) {
     return res.status(404)
       .json({message: 'Something went wrong, please try again.'});
   }
-  var token = signToken(req.user._id, req.user.role);
+  var token = exports.signToken(req.user._id, req.user.role);
   res.cookie('token', JSON.stringify(token));
   res.redirect('/');
-}
+};
 
 function meetsRoleRequirements(userRole, roleRequired) {
   var userRoles = config.userRoles;
@@ -81,11 +72,10 @@ function roleMsg(userRole, roleRequired) {
 /**
  * Checks if the user role meets the minimum requirements of the route
  */
-function hasRole(roleRequired) {
+exports.hasRole = function(roleRequired) {
   if (!roleRequired) throw new Error('Required role needs to be set');
-
   return compose()
-    .use(isAuthenticated())
+    .use(exports.isAuthenticated())
     .use(function(req, res, next) {
       if (meetsRoleRequirements(req.user.role, roleRequired)) {
         next();
@@ -93,7 +83,7 @@ function hasRole(roleRequired) {
         res.status(403).json({reason: roleMsg(req.user.role, roleRequired)});
       }
     });
-}
+};
 
 function schoolMsg(assignmentId) {
   return 'Your current role of teacher and assignment to schoolId: ' +
@@ -105,7 +95,7 @@ function managerOrAssignedSchool(schoolIdStr, user) {
   return schoolIdStr === user.assignment.toString();
 }
 
-function school(req, res, next) {
+exports.school = function(req, res, next) {
   School.findById(req.params.schoolId, function(err, school) {
     if (err) return handleError(res, err);
     if (!school) return res.send(404);
@@ -117,7 +107,7 @@ function school(req, res, next) {
     req.school = school;
     next();
   });
-}
+};
 
 function studentMsg(student, req) {
   return 'Your current role of teacher and assignment to schoolId: ' +
@@ -125,7 +115,7 @@ function studentMsg(student, req) {
          ' does not allow access to student._id: ' + student._id + '.';
 }
 
-function student(req, res, next) {
+exports.student = function(req, res, next) {
   Student.findById(req.params.studentId, function(err, student) {
     if (err) return handleError(res, err);
     if (!student) return res.send(404);
@@ -137,7 +127,7 @@ function student(req, res, next) {
     req.student = student;
     next();
   });
-}
+};
 
 function recordMsg(record, req) {
   return 'Your current role of teacher and assignment to schoolId: ' +
@@ -145,7 +135,7 @@ function recordMsg(record, req) {
          ' does not allow access to record._id: ' + record._id + '.';
 }
 
-function record(req, res, next) {
+exports.record = function(req, res, next) {
   AbsenceRecord.findById(req.params.recordId, function(err, record) {
     if (err) return handleError(res, err);
     if (!record) return res.send(404);
@@ -157,17 +147,8 @@ function record(req, res, next) {
     req.record = record;
     next();
   });
-}
+};
 
 function handleError(res, err) {
   return res.send(500, err);
 }
-
-exports.isAuthenticated = isAuthenticated;
-exports.signToken = signToken;
-exports.setTokenCookie = setTokenCookie;
-
-exports.hasRole = hasRole;
-exports.school = school;
-exports.student = student;
-exports.record = record;
