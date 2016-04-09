@@ -289,7 +289,7 @@ app.factory('Modal', function($rootScope, $uibModal) {
       }, 'modal-danger', 'components/modal/form-modal.html');
     },
 
-    confirmDeleteGuarded: function(title, templateUrl, model, cb) {
+    confirmDeleteGuarded: function(title, templateUrl, model, guard, cb) {
       var confirmDelete = openModal({
         modal: {
           dismissable: true,
@@ -298,22 +298,28 @@ app.factory('Modal', function($rootScope, $uibModal) {
           buttons: [{
             classes: 'btn-danger',
             text: 'Delete',
-            click: function() {
+            click: function(event, modal) {
+              modal.pending = true;
               cb(model).$promise.then(function() {
                 confirmDelete.close();
               }, function(err) {
+                modal.pending = false;
                 console.log(err);
                 // TODO: Handle error from deleting.
               });
             },
             disabled: function(modal) {
-              return modal.confirm !== 'DELETE';
+              return modal.pending || (modal.confirm || '').toLowerCase() !==
+                                      guard.toLowerCase();
             }
           }, {
             classes: 'btn-default',
             text: 'Cancel',
             click: function(e) {
               confirmDelete.dismiss(e);
+            },
+            disabled: function(modal) {
+              return modal.pending;
             }
           }]
         },
