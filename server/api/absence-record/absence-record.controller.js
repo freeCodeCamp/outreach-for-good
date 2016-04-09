@@ -55,6 +55,12 @@ function createStudents(newStudents) {
   });
 }
 
+var studentDefaults = {
+  cfa: false,
+  iep: false,
+  withdrawn: false
+};
+
 /**
  * Creates a new absence record in the DB.
  * restriction: 'teacher'
@@ -67,6 +73,7 @@ exports.create = function(req, res) {
   var outreaches = [];
   // Assign students to be created to validated school.
   _.forEach(newStudents, function(student) {
+    _.defaults(student, studentDefaults);
     student.currentSchool = req.school.id;
   });
   var promise = createStudents(newStudents);
