@@ -81,7 +81,7 @@ describe('User controller', function() {
     });
   });
 
-  describe('destroy', function() {
+  describe('delete', function() {
     var users;
 
     beforeEach(function(done) {
