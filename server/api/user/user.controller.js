@@ -22,7 +22,7 @@ exports.index = function(req, res) {
  * Get a single user
  */
 exports.show = function(req, res, next) {
-  var userId = req.params.id;
+  var userId = req.params.userId;
 
   User.findById(userId, function(err, user) {
     if (err) return next(err);
@@ -40,7 +40,7 @@ exports.show = function(req, res, next) {
  */
 exports.updateRole = function(req, res) {
   auth.hasRole(req.body.role)(req, res, function() {
-    User.findById(req.params.id, function(err, user) {
+    User.findById(req.params.userId, function(err, user) {
       if (err) return res.status(500).send(err);
       auth.hasRole(user.role)(req, res, function() {
         user.role = req.body.role;
@@ -59,7 +59,7 @@ exports.updateRole = function(req, res) {
  * restriction: 'admin'
  */
 exports.updateAssignment = function(req, res) {
-  User.findById(req.params.id, function(err, user) {
+  User.findById(req.params.userId, function(err, user) {
     if (err) return res.status(500).send(err);
     user.assignment = req.body.assignment;
     user.save(function(err) {
@@ -78,7 +78,7 @@ exports.updateAssignment = function(req, res) {
  * A user can only delete users with equal or lower roles.
  */
 exports.destroy = function(req, res) {
-  User.findById(req.params.id, function(err, user) {
+  User.findById(req.params.userId, function(err, user) {
     if (err) return res.status(500).send(err);
     auth.hasRole(user.role)(req, res, function() {
       user.remove(function(err) {
