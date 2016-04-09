@@ -95,10 +95,14 @@ function managerOrAssignedSchool(schoolIdStr, user) {
   return schoolIdStr === user.assignment.toString();
 }
 
+/**
+ * Attaches school object to request if user has is at least manager or
+ * has assignment to school.
+ */
 exports.school = function(req, res, next) {
   School.findById(req.params.schoolId, function(err, school) {
     if (err) return handleError(res, err);
-    if (!school) return res.send(404);
+    if (!school) return res.sendStatus(404);
     if (!managerOrAssignedSchool(school.id, req.user)) {
       return res.status(403).json({
         reason: schoolMsg(req.user.assignment || 'None')
@@ -115,10 +119,14 @@ function studentMsg(student, req) {
          ' does not allow access to student._id: ' + student._id + '.';
 }
 
+/**
+ * Attaches student object to request if user has is at least manager or
+ * has assignment to student's currentSchool.
+ */
 exports.student = function(req, res, next) {
   Student.findById(req.params.studentId, function(err, student) {
     if (err) return handleError(res, err);
-    if (!student) return res.send(404);
+    if (!student) return res.sendStatus(404);
     if (!managerOrAssignedSchool(student.currentSchool.toString(), req.user)) {
       return res.status(403).json({
         reason: studentMsg(student, req)
@@ -135,10 +143,14 @@ function recordMsg(record, req) {
          ' does not allow access to record._id: ' + record._id + '.';
 }
 
+/**
+ * Attaches absence record object to request if user has is at least manager or
+ * has assignment to absence record school.
+ */
 exports.record = function(req, res, next) {
   AbsenceRecord.findById(req.params.recordId, function(err, record) {
     if (err) return handleError(res, err);
-    if (!record) return res.send(404);
+    if (!record) return res.sendStatus(404);
     if (!managerOrAssignedSchool(record.school.toString(), req.user)) {
       return res.status(403).json({
         reason: recordMsg(record, req)
@@ -149,6 +161,29 @@ exports.record = function(req, res, next) {
   });
 };
 
+function userMsg(paramUser, req) {
+  return 'Your current role of ' + req.user.role +
+         ' does not allow access to modify user._id: ' + paramUser._id + '.';
+}
+
+/**
+ * Attaches user object from userId param to request if user has equal or
+ * higher role.
+ */
+exports.modifyUser = function(req, res, next) {
+  User.findById(req.params.userId, function(err, paramUser) {
+    if (err) return handleError(res, err);
+    if (!paramUser) return res.sendStatus(404);
+    if (!meetsRoleRequirements(req.user.role, paramUser.role)) {
+      return res.status(403).json({
+        reason: userMsg(paramUser, req)
+      });
+    }
+    req.paramUser = paramUser;
+    next();
+  });
+};
+
 function handleError(res, err) {
-  return res.send(500, err);
+  return res.status(500).send(err);
 }
