@@ -74,7 +74,7 @@ exports.create = function(req, res) {
   // Assign students to be created to validated school.
   _.forEach(newStudents, function(student) {
     _.defaults(student, studentDefaults);
-    student.currentSchool = req.school.id;
+    student.currentSchool = req.school._id;
   });
   var promise = createStudents(newStudents);
   promise.then(function(createdStudents) {
