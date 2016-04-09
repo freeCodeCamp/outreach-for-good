@@ -2,6 +2,7 @@
 
 function VisualizationCtrl($scope, $timeout, School, Sidebar, Visualization) {
   $scope.sidebar = Sidebar;
+  $scope.selected = {};
   School.query({controller: 'names'}, function(schools) {
     if (schools.length > 1) {
       schools.push({_id: 'combined', name: 'Combined'});
@@ -139,6 +140,13 @@ function VisualizationCtrl($scope, $timeout, School, Sidebar, Visualization) {
             count: $scope.data[n].other.count
         }]
       }];
+    }
+  });
+  $scope.$watch('selected.school', function(n, o) {
+    if (n !== o) {
+      Visualization.get({controller: 'cfa-comparison'}, n, function(res) {
+        console.log(res);
+      });
     }
   });
   // Timeout used to redraw the chart after animation delay of resizing the
