@@ -144,18 +144,27 @@ function AdminCtrl($scope, $http, uiGridConstants, Auth, User, School,
     $scope.schoolGridOptions.data = School.query();
   };
 
-  $scope.archiveSchool = function(school) {
-    var archiveSchoolFn = function() {
-      School.archive(school, function(res) {
-        _.pull($scope.schoolGridOptions.data, school);
-        toastr.warning(
-          res.modified + ' students archived',
-          res.school + ' archived',
+  $scope.deleteSchool = function(school) {
+    var deleteFn = function(model) {
+      return School.delete({}, model, function() {
+        _.pull($scope.schoolGridOptions.data, model);
+        $scope.userGridOptions.data = User.query();
+        toastr.error(
+          'All related records and students deleted.',
+          model.name + ' deleted',
           {timeOut: 10000}
         );
+      }, function(err) {
+        console.log(err);
+        toastr.error(err);
       });
     };
-    Modal.confirm.archive(archiveSchoolFn)(school.name);
+    Modal.confirmDeleteGuarded(
+      'Delete ' + school.name,
+      'app/main/admin/partial/modal.delete-school.html',
+      school,
+      school.name,
+      deleteFn);
   };
 
   // Development

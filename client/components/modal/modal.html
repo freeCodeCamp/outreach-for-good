@@ -10,7 +10,7 @@
 <div class="modal-footer">
   <button ng-repeat="button in modal.buttons"
     ng-class="button.classes"
-    ng-click="button.click($event)"
+    ng-click="button.click($event, modal)"
     ng-bind="button.text"
     type="{{button.type||'button'}}"
     ng-disabled="button.disabled && button.disabled(modal)"

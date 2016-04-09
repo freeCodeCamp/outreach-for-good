@@ -11,10 +11,10 @@ router.get('/:schoolId', auth.hasRole('teacher'), auth.school, controller.show);
 
 router.post('/', auth.hasRole('admin'), controller.create);
 
-router.put('/:schoolId/archive',
+router.delete('/:schoolId',
   auth.hasRole('admin'),
   auth.school,
-  controller.archive);
+  controller.delete);
 
 router.put('/:schoolId/update-triggers',
   auth.hasRole('teacher'),

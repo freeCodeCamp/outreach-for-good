@@ -24,6 +24,7 @@ function ManageCtrl($scope, $filter, AbsenceRecord, School, Modal, toastr) {
         'Delete Absence Record',
         'app/main/records/manage/modal.delete-record.html',
         record,
+        'delete',
         deleteFn);
     }
   };

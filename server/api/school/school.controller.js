@@ -1,8 +1,6 @@
 'use strict';
 
-var _ = require('lodash');
 var School = require('./school.model');
-var Student = require('../student/student.model');
 
 /**
  * Get a list of schools
@@ -55,27 +53,22 @@ exports.updateTriggers = function(req, res) {
 };
 
 /**
- * Archives a school and it's students.
+ * Destructive delete of a school and all related records and students.
+ *
+ * This delete calls student.remove and cascades deletes interventions,
+ * outreaches, and notes for those students.
+ *
  * restriction: 'admin'
  */
-exports.archive = function(req, res) {
+exports.delete = function(req, res) {
   var school = req.school;
-  school.archived = true;
-  school.save(function(err) {
+  school.remove(function(err) {
     if (err) handleError(res, err);
-    Student.update({currentSchool: school.id},
-      {active: false},
-      {multi: true},
-      function(err, raw) {
-        if (err) return handleError(res, err);
-        return res.status(200).json({
-          name: school.name,
-          modified: raw.nModified
-        });
-      });
+    return res.status(204).send('No Content');
   });
 };
 
 function handleError(res, err) {
+  console.log(err);
   return res.status(500).send(err);
 }

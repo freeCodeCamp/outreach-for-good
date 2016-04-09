@@ -1,7 +1,11 @@
 'use strict';
 
-var mongoose = require('mongoose'),
-  Schema = mongoose.Schema;
+var _ = require('lodash');
+var mongoose = require('mongoose');
+var Schema = mongoose.Schema;
+var AbsenceRecord = require('../absence-record/absence-record.model');
+var Student = require('../student/student.model');
+var User = require('../user/user.model');
 
 var defaults = [{
   type: 'Phone Call',
@@ -53,6 +57,26 @@ var SchoolSchema = new Schema({
   name: {type: String, required: true},
   triggers: {type: Array, default: defaults},
   active: {type: Boolean, default: true}
+});
+
+SchoolSchema.pre('remove', function(next) {
+  var self = this;
+  AbsenceRecord.remove({school: self._id}).exec().then(function() {
+    return Student.find({currentSchool: self._id}).exec();
+  }).then(function(students) {
+    return Promise.all(_.map(students, function(student) {
+      return student.remove();
+    }));
+  }).then(function() {
+    return User
+      .update({assignment: self._id}, {$unset: {assignment: 1}},
+        {multi: true})
+      .exec();
+  }).then(function() {
+    next();
+  }).catch(function(err) {
+    return next(new Error(err));
+  });
 });
 
 module.exports = mongoose.model('School', SchoolSchema);
