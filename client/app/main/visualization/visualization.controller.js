@@ -1,31 +1,38 @@
 'use strict';
 
-function VisualizationCtrl($scope, $timeout, Sidebar, Visualization) {
+function VisualizationCtrl($scope, $timeout, School, Sidebar, Visualization) {
   $scope.sidebar = Sidebar;
+  School.query({controller: 'names'}, function(schools) {
+    if (schools.length > 1) {
+      schools.push({_id: 'combined', name: 'Combined'});
+    }
+    $scope.schools = schools;
+  });
+
   $scope.studentType = 'nonCfa';
-  $scope.data = { 
-    cfa: { 
+  $scope.data = {
+    cfa: {
       arca: {
         count: 0, pct: 0
-      }, 
+      },
       ca: {
         count: 0, pct: 0
-      }, 
+      },
       other: {
         count: 0, pct: 0
-      } 
-    }, 
-    nonCfa: { 
+      }
+    },
+    nonCfa: {
       arca: {
         count: 0, pct: 0
-      }, 
+      },
       ca: {
         count: 0, pct: 0
-      }, 
+      },
       other: {
         count: 0, pct: 0
-      } 
-    } 
+      }
+    }
   };
   $scope.chartConfig = {
     options: {
@@ -61,22 +68,22 @@ function VisualizationCtrl($scope, $timeout, Sidebar, Visualization) {
   Visualization.arcaCa().$promise.then(function(results) {
     function counter(rec, isCfa) {
       var key = isCfa ? 'cfa' : 'nonCfa';
-      if(rec.arca) { 
-        $scope.data[key].arca.count++; 
-      } else if(rec.ca) { 
-        $scope.data[key].ca.count++; 
-      } else { 
-        $scope.data[key].other.count++; 
+      if(rec.arca) {
+        $scope.data[key].arca.count++;
+      } else if(rec.ca) {
+        $scope.data[key].ca.count++;
+      } else {
+        $scope.data[key].other.count++;
       }
-    }    
+    }
     _.forEach(results, function(record) {
-      if(record.student.cfa) { 
+      if(record.student.cfa) {
         counter(record, true);
       } else {
         counter(record, false);
       }
     });
-    
+
     function getTwoDecimals(n, t) {
       return parseInt(((n / t) * 100).toFixed(2), 10);
     }
@@ -92,9 +99,9 @@ function VisualizationCtrl($scope, $timeout, Sidebar, Visualization) {
         });
       }
     });
-    
+
     $scope.chartConfig.series = [{
-      name: $scope.studentType === 'cfa' ? 
+      name: $scope.studentType === 'cfa' ?
         'A CFA student' : 'Not a CFA student',
       colorByPoint: true,
       data: [{

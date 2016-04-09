@@ -3,6 +3,19 @@
   display: flex;
   flex-direction: column;
   @include cfa-scrollbar();
+  .school-select {
+    min-height: $cfa-unit;
+    .school-input-group {
+      min-height: $cfa-unit;
+      padding: 10px;
+    }
+    .control-label {
+      text-align: right;
+      line-height: 34px;
+      margin: 0;
+      padding-right: 0;
+    }
+  }
   .chart-visualization {
     display: flex;
     flex-direction: column;
