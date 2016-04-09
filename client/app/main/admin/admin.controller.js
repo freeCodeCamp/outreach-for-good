@@ -80,38 +80,54 @@ function AdminCtrl($scope, $http, uiGridConstants, Auth, User, School,
     if (user.role === role) {
       return;
     }
-    var updateFn = function() {
-      User.updateRole({id: user._id}, {role: role}).$promise
-        .then(function(updatedUser) {
-          user.role = updatedUser.role;
-          delete user.assignment;
-          $scope.userGridApi.core.notifyDataChange(
-            uiGridConstants.dataChange.EDIT);
-        });
+    var old = user.role;
+    var updateFn = function(model) {
+      model.role = role;
+      return User.updateRole({}, model).$promise.then(function(updated) {
+        delete model.assignment;
+        _.assign(model, updated);
+        $scope.userGridApi.core.notifyDataChange(
+          uiGridConstants.dataChange.EDIT);
+        toastr.success(
+          'Role successfully changed to: ' + model.role,
+          model.name
+        );
+      }, function(err) {
+        model.role = old;
+        toastr.error(err);
+      });
     };
-    Modal.confirm.update(updateFn)(user.name, 'Role', user.role, role);
+    Modal.confirm.update(user, 'Role', user.role, role, updateFn);
   };
 
   $scope.updateAssignment = function(assignment, user) {
-    if ((user.assignment || {})._id === (assignment || {})._id) {
+    if ((user.assignment || {})._id === assignment._id) {
       return;
     }
-    var updateFn = function() {
-      User.updateAssignment({id: user._id}, {assignment: assignment}).$promise
-        .then(function() {
-          user.assignment = assignment;
-          $scope.userGridApi.core.notifyDataChange(
-            uiGridConstants.dataChange.EDIT);
-        });
+    var old = user.assignment;
+    var updateFn = function(model) {
+      model.assignment = assignment;
+      return User.updateAssignment({}, model).$promise.then(function(updated) {
+        delete model.assignment;
+        _.assign(model, updated);
+        $scope.userGridApi.core.notifyDataChange(
+          uiGridConstants.dataChange.EDIT);
+        toastr.success(
+          'Assignment successfully changed to: ' + model.assignment.name,
+          model.name
+        );
+      }, function(err) {
+        model.assignment = old;
+        toastr.error(err);
+      });
     };
-    Modal.confirm.update(updateFn)(user.name, 'Assigned School',
-      (user.assignment || {}).name || 'None',
-      (assignment || {}).name || 'None');
+    Modal.confirm.update(user, 'Assigned School',
+      (user.assignment || {}).name || 'None', assignment.name, updateFn);
   };
 
   $scope.deleteUser = function(user) {
     var deleteUserFn = function() {
-      User.remove({id: user._id}).$promise.then(function() {
+      User.delete({}, user).$promise.then(function() {
         _.pull($scope.userGridOptions.data, user);
       });
     };

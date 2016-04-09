@@ -87,7 +87,10 @@ exports.updateAssignment = function(req, res) {
   paramUser.assignment = req.school._id;
   paramUser.save(function(err, user) {
     if (err) return handleError(res, err);
-    return res.status(200).json(user);
+    user.populate('assignment', 'name', function(err, user) {
+      if (err) return handleError(res, err);
+      return res.status(200).json(user);
+    });
   });
 };
 

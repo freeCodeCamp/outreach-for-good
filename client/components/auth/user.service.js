@@ -3,8 +3,8 @@
 var app = angular.module('app');
 
 app.factory('User', function($resource) {
-  return $resource('/api/users/:id/:controller', {
-    id: '@_id'
+  return $resource('/api/users/:userId/:controller', {
+    userId: '@_id'
   }, {
     updateRole: {
       method: 'PUT',
@@ -18,10 +18,10 @@ app.factory('User', function($resource) {
         controller: 'assignment'
       }
     },
-    get: {
+    me: {
       method: 'GET',
       params: {
-        id: 'me'
+        controller: 'me'
       }
     }
   });

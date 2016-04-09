@@ -5,7 +5,7 @@ angular.module('app')
   .factory('Auth', function Auth(User, ROLES, $cookieStore) {
     var currentUser = {};
     if ($cookieStore.get('token')) {
-      currentUser = User.get();
+      currentUser = User.me();
     }
 
     function hasRole(userRole, roleRequired) {

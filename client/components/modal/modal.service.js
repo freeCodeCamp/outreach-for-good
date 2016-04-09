@@ -80,60 +80,44 @@ app.factory('Modal', function($rootScope, $uibModal) {
       },
 
       /**
-       * Create a function to open a update confirmation modal (ex.
-       * ng-click='myModalFn(name, arg1, arg2...)')
-       * @param  {Function} upd - callback, ran when update is confirmed
-       * @return {Function}     - the function to open the modal (ex.
-       *     myModalFn)
+       * Create modal and open an update confirmation modal.
        */
-      update: function(upd) {
-        upd = upd || angular.noop;
-
-        /**
-         * Open a update confirmation modal
-         * @param  {String} name       - name or info to show on modal
-         * @param  {String} updateType - type of update
-         * @param  {String} fromValue  - value before update
-         * @param  {String} toValue    - value after update
-         * @param  {All}               - any additional args are passed
-         *     straight to update callback
-         */
-        return function() {
-          var args = Array.prototype.slice.call(arguments),
-            name = args.shift(),
-            updateType = args.shift(),
-            fromValue = args.shift(),
-            toValue = args.shift(),
-            updateModal;
-
-          updateModal = openModal({
-            modal: {
-              dismissable: true,
-              title: 'Confirm ' + updateType + ' Update',
-              html: '<p>Are you sure you want to update <em>' + updateType +
-                    '</em> from <strong>' + fromValue +
-                    '</strong> to <strong>' + toValue +
-                    '</strong> for <strong>' + name + '</strong>?</p>',
-              buttons: [{
-                classes: 'btn-warning',
-                text: 'Confirm',
-                click: function(e) {
-                  updateModal.close(e);
-                }
-              }, {
-                classes: 'btn-default',
-                text: 'Cancel',
-                click: function(e) {
-                  updateModal.dismiss(e);
-                }
-              }]
-            }
-          }, 'modal-warning');
-
-          updateModal.result.then(function(event) {
-            upd.apply(event, args);
-          });
-        };
+      update: function(model, updateType, fromValue, toValue, cb) {
+        var updateModal = openModal({
+          modal: {
+            dismissable: true,
+            title: 'Confirm ' + updateType + ' Update',
+            html: '<p>Are you sure you want to update <em>' + updateType +
+                  '</em> from <strong>' + fromValue +
+                  '</strong> to <strong>' + toValue +
+                  '</strong> for <strong>' + model.name + '</strong>?</p>',
+            buttons: [{
+              classes: 'btn-warning',
+              text: 'Confirm',
+              click: function(e, modal) {
+                modal.pending = true;
+                cb(model).then(function() {
+                  updateModal.close();
+                }, function(err) {
+                  console.log(err);
+                  modal.pending = false;
+                });
+              },
+              disabled: function(modal) {
+                return modal.pending;
+              }
+            }, {
+              classes: 'btn-default',
+              text: 'Cancel',
+              click: function(e) {
+                updateModal.dismiss(e);
+              },
+              disabled: function(modal) {
+                return modal.pending;
+              }
+            }]
+          }
+        }, 'modal-warning');
       },
 
       /**
