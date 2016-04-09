@@ -9,10 +9,13 @@ var auth = require('../../auth/auth.service');
  * restriction: 'admin'
  */
 exports.index = function(req, res) {
-  User.find().populate('assignment').exec(function(err, users) {
-    if (err) return res.status(500).send(err);
-    res.status(200).json(users);
-  });
+  User.find()
+    .populate('assignment', 'name')
+    .sort({name: 1})
+    .exec(function(err, users) {
+      if (err) return res.status(500).send(err);
+      res.status(200).json(users);
+    });
 };
 
 /**
