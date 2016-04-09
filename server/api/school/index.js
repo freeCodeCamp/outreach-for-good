@@ -11,11 +11,6 @@ router.get('/:schoolId', auth.hasRole('teacher'), auth.school, controller.show);
 
 router.post('/', auth.hasRole('admin'), controller.create);
 
-router.put('/:schoolId/archive',
-  auth.hasRole('admin'),
-  auth.school,
-  controller.archive);
-
 router.delete('/:schoolId',
   auth.hasRole('admin'),
   auth.school,
