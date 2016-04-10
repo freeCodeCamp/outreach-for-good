@@ -6,6 +6,7 @@ var auth = require('../../auth/auth.service');
 
 var router = express.Router();
 var authorize = [auth.hasRole('teacher'), auth.student];
+var authorizeBatch = [auth.hasRole('teacher'), auth.studentBatch];
 
 router.get('/outreach-counts',
   auth.hasRole('teacher'),
@@ -23,6 +24,11 @@ router.get('/:studentId', authorize, controller.show);
 router.put('/:studentId/iep', authorize, controller.updateIEP);
 router.put('/:studentId/cfa', authorize, controller.updateCFA);
 router.put('/:studentId/withdrawn', authorize, controller.updateWithdrawn);
+
+router.put('/:field',
+  authorizeBatch,
+  controller.validateBatchUpdate,
+  controller.batchUpdate);
 
 router.use('/:studentId/interventions', require('./intervention'));
 router.use('/:studentId/outreaches', require('./outreach'));

@@ -1,5 +1,6 @@
 'use strict';
 
+var _ = require('lodash');
 var mongoose = require('mongoose');
 var passport = require('passport');
 var config = require('../config/environment');
@@ -135,6 +136,27 @@ exports.student = function(req, res, next) {
     req.student = student;
     next();
   });
+};
+
+/**
+ * Check that user has role of manager or all students included in
+ * req.body.studentIds are assigned to user.
+ */
+exports.studentBatch = function(req, res, next) {
+  Student
+    .find({_id: {$in: req.body.studentIds}})
+    .exec(function(err, students) {
+      if (err) return handleError(res, err);
+      if (!meetsRoleRequirements(req.user.role, 'manager')) {
+        var schools = _(students).map('school').uniq().value();
+        if (schools.length > 1 || schools[0] !== req.user.assignment.id) {
+          return next(new Error('Attempting to update students without ' +
+                                'adequate role or assignment.'));
+        }
+      }
+      req.students = students;
+      return next();
+    });
 };
 
 function recordMsg(record, req) {
