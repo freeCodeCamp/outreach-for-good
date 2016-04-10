@@ -45,16 +45,6 @@ exports.validateCreate = function(req, res, next) {
     });
 };
 
-function createStudents(newStudents) {
-  return new Promise(function(resolve, reject) {
-    if (!newStudents.length) return resolve([]);
-    Student.collection.insert(newStudents, {ordered: true}, function(err, ins) {
-      if (err) return reject(err);
-      return resolve(ins.ops);
-    });
-  });
-}
-
 var studentDefaults = {
   cfa: false,
   iep: false,
@@ -76,8 +66,7 @@ exports.create = function(req, res) {
     _.defaults(student, studentDefaults);
     student.school = req.school._id;
   });
-  var promise = createStudents(newStudents);
-  promise.then(function(createdStudents) {
+  Student.insertMany(newStudents).then(function(createdStudents) {
     // Fill in missing student for new entries.
     _.forEach(createdStudents, function(student, index) {
       newEntries[index].student = student._id;
@@ -108,7 +97,7 @@ exports.create = function(req, res) {
       outreach.record = populatedRecord._id;
       outreach.triggerDate = populatedRecord.date;
     });
-    return Outreach.create(outreaches);
+    return Outreach.insertMany(outreaches);
   }).then(function(createdOutreaches) {
     result.outreaches = createdOutreaches;
     return res.status(200).json(result);
