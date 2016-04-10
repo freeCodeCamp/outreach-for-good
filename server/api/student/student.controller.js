@@ -8,7 +8,7 @@ var auth = require('../../auth/auth.service');
 var _ = require('lodash');
 
 var populateOptions = {
-  path: 'currentSchool',
+  path: 'school',
   select: 'name'
 };
 
@@ -19,7 +19,7 @@ var populateOptions = {
 exports.index = function(req, res) {
   Student
     .find()
-    .populate('currentSchool', 'name')
+    .populate('school', 'name')
     .exec(function(err, students) {
       if (err) return handleError(res, err);
       return res.status(200).json(students);

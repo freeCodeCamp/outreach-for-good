@@ -62,7 +62,7 @@ var SchoolSchema = new Schema({
 SchoolSchema.pre('remove', function(next) {
   var self = this;
   AbsenceRecord.remove({school: self._id}).exec().then(function() {
-    return Student.find({currentSchool: self._id}).exec();
+    return Student.find({school: self._id}).exec();
   }).then(function(students) {
     return Promise.all(_.map(students, function(student) {
       return student.remove();

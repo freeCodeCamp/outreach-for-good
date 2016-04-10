@@ -10,7 +10,7 @@ var StudentSchema = new Schema({
   studentId: {type: String, required: true, index: true},
   lastName: {type: String, required: true, trim: true},
   firstName: {type: String, required: true, trim: true},
-  currentSchool: {type: Schema.Types.ObjectId, ref: 'School'},
+  school: {type: Schema.Types.ObjectId, ref: 'School'},
   iep: {type: Boolean, required: true, default: false},
   cfa: {type: Boolean, required: true, default: false},
   withdrawn: {type: Boolean, required: true, default: false},
