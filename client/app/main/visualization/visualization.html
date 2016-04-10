@@ -1,14 +1,22 @@
 <section class="data-visualization-view">
   <heading text="'Data Visualization'"></heading>
-  <div class="chart-visualization">
-    <div class="chart" ng-show="chartConfig.series.length">
-      <highchart id="chart1" config="chartConfig" class="col-xs-12"></highchart>
+  <div class="school-select">
+    <div class="col-lg-4 col-lg-offset-4 school-input-group">
+      <label class="control-label col-xs-2">School</label>
+      <ui-select class="col-xs-10" theme="bootstrap" ng-model="selected.school" append-to-body="true" ng-disabled="!schools">
+        <ui-select-match class="ui-select-match" placeholder="Select a school">{{$select.selected.name}}
+        </ui-select-match>
+        <ui-select-choices class="ui-select-choices" repeat="school in schools | filter: $select.search">
+          <div ng-bind-html="school.name | highlight: $select.search"></div>
+        </ui-select-choices>
+      </ui-select>
     </div>
-    <div class="options">
-      <div class="btn-group">
-        <label class="btn btn-default" ng-model="studentType" uib-btn-radio="'cfa'">CFA</label>
-        <label class="btn btn-default" ng-model="studentType" uib-btn-radio="'nonCfa'">Non-CFA</label>
-      </div>
+  </div>
+  <div class="comparison" ng-show="loaded">
+    <heading text="'CFA Enrollment Comparison'"></heading>
+    <div class="charts">
+      <highchart config="cfaConfig" class="chart"></highchart>
+      <highchart config="nonConfig" class="chart"></highchart>
     </div>
   </div>
 </section>
