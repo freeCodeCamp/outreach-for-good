@@ -121,13 +121,13 @@ function studentMsg(student, req) {
 
 /**
  * Attaches student object to request if user has is at least manager or
- * has assignment to student's currentSchool.
+ * has assignment to student's school..
  */
 exports.student = function(req, res, next) {
   Student.findById(req.params.studentId, function(err, student) {
     if (err) return handleError(res, err);
     if (!student) return res.sendStatus(404);
-    if (!managerOrAssignedSchool(student.currentSchool.toString(), req.user)) {
+    if (!managerOrAssignedSchool(student.school.toString(), req.user)) {
       return res.status(403).json({
         reason: studentMsg(student, req)
       });

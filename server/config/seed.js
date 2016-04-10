@@ -50,33 +50,33 @@ AbsenceRecord.remove().exec().then(function() {
     studentId: 'sid001',
     lastName: 'Graham',
     firstName: 'Brandon',
-    currentSchool: schoolA._id
+    school: schoolA._id
   }, {
     studentId: 'sid002',
     lastName: 'Simpson',
     firstName: 'Dan',
-    currentSchool: schoolA._id
+    school: schoolA._id
   }, {
     studentId: 'sid003',
     lastName: 'Arnold',
     firstName: 'Gavin',
-    currentSchool: schoolA._id
+    school: schoolA._id
   }, {
     studentId: 'sid004',
     lastName: 'Hughes',
     firstName: 'Victor',
-    currentSchool: schoolB._id
+    school: schoolB._id
   }, {
     studentId: 'sid005',
     lastName: 'Thomson',
     firstName: 'Sue',
-    currentSchool: schoolB._id
+    school: schoolB._id
   }, logCreateResults('students'));
 }).then(function(studentA, studentB, studentC, studentD, studentE) {
   var twoDaysAgo = Date.now() - 2 * 24 * 60 * 60 * 1000;
   return AbsenceRecord.create({
     schoolYear: '2015-2016',
-    school: studentA.currentSchool,
+    school: studentA.school,
     date: twoDaysAgo,
     entries: [{
       student: studentA._id,
@@ -106,7 +106,7 @@ AbsenceRecord.remove().exec().then(function() {
     createdStudents: [studentA._id, studentB._id, studentC._id]
   }, {
     schoolYear: '2015-2016',
-    school: studentD.currentSchool,
+    school: studentD.school,
     date: twoDaysAgo,
     entries: [{
       student: studentD._id,
@@ -128,11 +128,11 @@ AbsenceRecord.remove().exec().then(function() {
     createdStudents: [studentD._id, studentE._id]
   }, logCreateResults('AbsenceRecords'));
 }).then(function() {
-  return Student.find().populate('currentSchool').exec(function(err, students) {
+  return Student.find().populate('school').exec(function(err, students) {
     console.log('\nSchools to Students');
     students.forEach(function(student) {
       console.log(
-        student.currentSchool.name, ':', student.firstName, student.lastName);
+        student.school.name, ':', student.firstName, student.lastName);
     });
   });
 });

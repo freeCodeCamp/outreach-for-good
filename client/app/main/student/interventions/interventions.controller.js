@@ -69,7 +69,7 @@ function StudentInterventionsCtrl($scope, $stateParams, Intervention, Modal,
     action: function() {
       var createInterventionFn = function(model) {
         model.student = $scope.student._id;
-        model.school = $scope.student.currentSchool._id;
+        model.school = $scope.student.school._id;
         return Intervention.save({}, model, function(res) {
           $scope.$evalAsync(function() {
             $scope.interventions.unshift(res);
