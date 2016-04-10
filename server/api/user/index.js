@@ -4,16 +4,27 @@ var express = require('express');
 var controller = require('./user.controller');
 var config = require('../../config/environment');
 var auth = require('../../auth/auth.service');
-
 var router = express.Router();
 
-router.get('/', auth.hasRole('admin'), controller.index);
-router.delete('/:id', auth.hasRole('admin'), controller.destroy);
-router.put('/:id/role', auth.hasRole('admin'), controller.updateRole);
-router.put('/:id/assignment', auth.hasRole('admin'),
-  controller.updateAssignment);
+var modifyUserAuth = [auth.hasRole('admin'), auth.modifyUser];
 
 router.get('/me', auth.isAuthenticated(), controller.me);
-router.get('/:id', auth.isAuthenticated(), controller.show);
+router.get('/:userId', auth.isAuthenticated(), controller.show);
+
+router.get('/', auth.hasRole('admin'), controller.index);
+
+router.put('/:userId/role',
+  modifyUserAuth,
+  controller.validateUpdateRole,
+  controller.updateRole);
+router.put('/:userId/assignment',
+  modifyUserAuth,
+  controller.validateUpdateAssignment,
+  controller.updateAssignment);
+
+router.delete('/:userId',
+  modifyUserAuth,
+  controller.validateDelete,
+  controller.delete);
 
 module.exports = router;
