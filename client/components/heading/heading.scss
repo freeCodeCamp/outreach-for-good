@@ -49,6 +49,14 @@
     top: 48px;
     left: auto;
     right: 0;
+    .dropdown-menu-item {
+      i {
+        margin-right: 5px;
+      }
+      &.disabled {
+        pointer-events: none;
+      }
+    }
   }
   .menu-separator {
     margin-top: 5px;

@@ -44,6 +44,10 @@ app.factory('Student', function($resource, toastr) {
         controller: 'outreach-summary'
       },
       isArray: true
+    },
+    batchUpdate: {
+      method: 'PUT',
+      isArray: true
     }
   });
 
@@ -106,6 +110,20 @@ app.factory('Student', function($resource, toastr) {
       });
     },
     interventionSummary: resource.interventionSummary,
-    outreachSummary: resource.outreachSummary
+    outreachSummary: resource.outreachSummary,
+    batchUpdate: function(studentIds, controller, value) {
+      return resource.batchUpdate({controller: controller}, {
+        studentIds: studentIds,
+        value: value
+      }, function(updatedStudents) {
+        toastr.success(
+          controller.toUpperCase() + ' set to: ' + value,
+          updatedStudents.length + ' students updated.');
+        return updatedStudents;
+      }, function(err) {
+        toastr.error(err);
+        return err;
+      });
+    }
   };
 });

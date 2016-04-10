@@ -30,6 +30,14 @@
     line-height: $cfa-unit;
     font-weight: 200;
   }
+  .dropdown-menu-item {
+    i {
+      margin-right: 5px;
+    }
+    &.disabled {
+      pointer-events: none;
+    }
+  }
   .navbar-collapse {
     background-color: $light-sky-blue;
   }
