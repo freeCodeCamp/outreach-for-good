@@ -1,6 +1,6 @@
 'use strict';
 
-function GridDefaults($filter, $timeout, Student, AbsenceRecord,
+function GridDefaults($filter, $timeout, gridUtil, Student, AbsenceRecord,
   uiGridGroupingConstants, uiGridExporterService) {
   var colDefs = {};
   colDefs.school = function(name) {
@@ -72,6 +72,7 @@ function GridDefaults($filter, $timeout, Student, AbsenceRecord,
           return cellValue === false;
         }
       },
+      treeAggregationType: uiGridGroupingConstants.aggregation.SUM,
       visible: false
     };
   };
@@ -114,6 +115,7 @@ function GridDefaults($filter, $timeout, Student, AbsenceRecord,
         return value;
       },
       csvFileNameFn: scope.csvFileNameFn,
+      rowTemplate: 'components/grid-defaults/grid-defaults.record.row.html',
       columnDefs: [
         colDefs.school(),
         colDefs.studentId(),

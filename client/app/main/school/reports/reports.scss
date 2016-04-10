@@ -19,6 +19,9 @@
       flex: 1;
       border: none;
       overflow-y: scroll;
+      .withdrawn {
+        color: darkgrey;
+      }
     }
   }
 }
