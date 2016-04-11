@@ -2,8 +2,14 @@
 
 var app = angular.module('app');
 
-function OutreachSummaryCtrl($scope, $timeout, GridDefaults,
-  uiGridGroupingConstants, Student) {
+function OutreachSummaryCtrl($scope, $timeout, GridDefaults, Student) {
+  var totalsDefault = {
+    Phone: {count: 0, resolved: 0, outstanding: 0},
+    Letter: {count: 0, resolved: 0, outstanding: 0},
+    Home: {count: 0, resolved: 0, outstanding: 0},
+    SST: {count: 0, resolved: 0, outstanding: 0},
+    Court: {count: 0, resolved: 0, outstanding: 0}
+  };
   $scope.loading = true;
 
   $scope.gridOptions = GridDefaults.options();
@@ -12,145 +18,24 @@ function OutreachSummaryCtrl($scope, $timeout, GridDefaults,
     GridDefaults.colDefs.studentId(),
     GridDefaults.colDefs.firstName(),
     GridDefaults.colDefs.lastName(),
-    {
-      name: 'Phone.count',
-      displayName: 'Phone',
-      minWidth: 80,
-      type: 'number',
-      headerTooltip: 'Phone Calls',
-      treeAggregationType: uiGridGroupingConstants.aggregation.SUM
-    }, {
-      name: 'Phone.resolved',
-      displayName: 'Resolved',
-      minWidth: 80,
-      type: 'number',
-      headerTooltip: 'Phone Resolved',
-      treeAggregationType: uiGridGroupingConstants.aggregation.SUM,
-      visible: false
-    }, {
-      name: 'Phone.outstanding',
-      displayName: 'Outstanding',
-      minWidth: 80,
-      type: 'number',
-      headerTooltip: 'Phone Outstanding',
-      treeAggregationType: uiGridGroupingConstants.aggregation.SUM,
-      visible: false
-    }, {
-      name: 'Letter.count',
-      displayName: 'Letter',
-      minWidth: 80,
-      type: 'number',
-      headerTooltip: 'Letters Sent',
-      treeAggregationType: uiGridGroupingConstants.aggregation.SUM
-    }, {
-      name: 'Letter.resolved',
-      displayName: 'Resolved',
-      minWidth: 80,
-      type: 'number',
-      headerTooltip: 'Letter Resolved',
-      treeAggregationType: uiGridGroupingConstants.aggregation.SUM,
-      visible: false
-    }, {
-      name: 'Letter.outstanding',
-      displayName: 'Outstanding',
-      minWidth: 80,
-      type: 'number',
-      headerTooltip: 'Letter Outstanding',
-      treeAggregationType: uiGridGroupingConstants.aggregation.SUM,
-      visible: false
-    }, {
-      name: 'Home.count',
-      displayName: 'Home',
-      minWidth: 80,
-      type: 'number',
-      headerTooltip: 'Home Visits',
-      treeAggregationType: uiGridGroupingConstants.aggregation.SUM
-    }, {
-      name: 'Home.resolved',
-      displayName: 'Resolved',
-      minWidth: 80,
-      type: 'number',
-      headerTooltip: 'Home Resolved',
-      treeAggregationType: uiGridGroupingConstants.aggregation.SUM,
-      visible: false
-    }, {
-      name: 'Home.outstanding',
-      displayName: 'Outstanding',
-      minWidth: 80,
-      type: 'number',
-      headerTooltip: 'Home Outstanding',
-      treeAggregationType: uiGridGroupingConstants.aggregation.SUM,
-      visible: false
-    }, {
-      name: 'SST.count',
-      displayName: 'SST',
-      minWidth: 80,
-      type: 'number',
-      headerTooltip: 'SST Referrals',
-      treeAggregationType: uiGridGroupingConstants.aggregation.SUM
-    }, {
-      name: 'SST.resolved',
-      displayName: 'Resolved',
-      minWidth: 80,
-      type: 'number',
-      headerTooltip: 'SST Resolved',
-      treeAggregationType: uiGridGroupingConstants.aggregation.SUM,
-      visible: false
-    }, {
-      name: 'SST.outstanding',
-      displayName: 'Outstanding',
-      minWidth: 80,
-      type: 'number',
-      headerTooltip: 'SST Outstanding',
-      treeAggregationType: uiGridGroupingConstants.aggregation.SUM,
-      visible: false
-    }, {
-      name: 'Court.count',
-      displayName: 'Court',
-      minWidth: 80,
-      type: 'number',
-      headerTooltip: 'Court Referrals',
-      treeAggregationType: uiGridGroupingConstants.aggregation.SUM
-    }, {
-      name: 'Court.resolved',
-      displayName: 'Resolved',
-      minWidth: 80,
-      type: 'number',
-      headerTooltip: 'Court Resolved',
-      treeAggregationType: uiGridGroupingConstants.aggregation.SUM,
-      visible: false
-    }, {
-      name: 'Court.outstanding',
-      displayName: 'Outstanding',
-      minWidth: 80,
-      type: 'number',
-      headerTooltip: 'Court Outstanding',
-      treeAggregationType: uiGridGroupingConstants.aggregation.SUM,
-      visible: false
-    }, {
-      name: 'count',
-      displayName: 'Total',
-      minWidth: 80,
-      type: 'number',
-      headerTooltip: 'Total Outreaches',
-      treeAggregationType: uiGridGroupingConstants.aggregation.SUM
-    }, {
-      name: 'resolved',
-      displayName: 'Resolved',
-      minWidth: 80,
-      type: 'number',
-      headerTooltip: 'Resolved Outreaches',
-      treeAggregationType: uiGridGroupingConstants.aggregation.SUM,
-      visible: false
-    }, {
-      name: 'outstanding',
-      displayName: 'Outstanding',
-      minWidth: 80,
-      type: 'number',
-      headerTooltip: 'Outstanding Outreaches',
-      treeAggregationType: uiGridGroupingConstants.aggregation.SUM,
-      visible: false
-    },
+    GridDefaults.colDefs.outreach('Phone Call', 'count', true),
+    GridDefaults.colDefs.outreach('Phone Call', 'resolved'),
+    GridDefaults.colDefs.outreach('Phone Call', 'outstanding'),
+    GridDefaults.colDefs.outreach('Letter Sent', 'count', true),
+    GridDefaults.colDefs.outreach('Letter Sent', 'resolved'),
+    GridDefaults.colDefs.outreach('Letter Sent', 'outstanding'),
+    GridDefaults.colDefs.outreach('Home Visit', 'count', true),
+    GridDefaults.colDefs.outreach('Home Visit', 'resolved'),
+    GridDefaults.colDefs.outreach('Home Visit', 'outstanding'),
+    GridDefaults.colDefs.outreach('SST Referral', 'count', true),
+    GridDefaults.colDefs.outreach('SST Referral', 'resolved'),
+    GridDefaults.colDefs.outreach('SST Referral', 'outstanding'),
+    GridDefaults.colDefs.outreach('Court Referral', 'count', true),
+    GridDefaults.colDefs.outreach('Court Referral', 'resolved'),
+    GridDefaults.colDefs.outreach('Court Referral', 'outstanding'),
+    GridDefaults.colDefs.outreach('Total', 'count', true),
+    GridDefaults.colDefs.outreach('Total', 'resolved'),
+    GridDefaults.colDefs.outreach('Total', 'outstanding'),
     GridDefaults.colDefs.cfa(),
     GridDefaults.colDefs.withdrawn($scope)
   ];
@@ -168,13 +53,6 @@ function OutreachSummaryCtrl($scope, $timeout, GridDefaults,
         }
       }
     });
-    var totalsDefault = {
-      Phone: {count: 0, resolved: 0, outstanding: 0},
-      Letter: {count: 0, resolved: 0, outstanding: 0},
-      Home: {count: 0, resolved: 0, outstanding: 0},
-      SST: {count: 0, resolved: 0, outstanding: 0},
-      Court: {count: 0, resolved: 0, outstanding: 0}
-    };
     $scope.gridOptions.data = Student.outreachSummary();
     $scope.gridOptions.data.$promise.then(function(data) {
       // Convert counts array to object, generate total intervention property.
@@ -186,9 +64,11 @@ function OutreachSummaryCtrl($scope, $timeout, GridDefaults,
           })
           .defaults(totalsDefault)
           .value();
-        totals.count = _.sumBy(row.counts, 'count');
-        totals.resolved = _.sumBy(row.counts, 'resolved');
-        totals.outstanding = _.sumBy(row.counts, 'outstanding');
+        totals.Total = {
+          count: _.sumBy(row.counts, 'count'),
+          resolved: _.sumBy(row.counts, 'resolved'),
+          outstanding: _.sumBy(row.counts, 'outstanding')
+        };
         _.assign(row, totals);
       });
       // NOTE: Hack to default to expanded rows on initial load.
