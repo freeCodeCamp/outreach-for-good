@@ -2,8 +2,14 @@
 
 var app = angular.module('app');
 
-function OutreachSummaryCtrl($scope, $timeout, GridDefaults,
-  uiGridGroupingConstants, Student) {
+function OutreachSummaryCtrl($scope, $timeout, GridDefaults, Student) {
+  var totalsDefault = {
+    Phone: {count: 0, resolved: 0, outstanding: 0},
+    Letter: {count: 0, resolved: 0, outstanding: 0},
+    Home: {count: 0, resolved: 0, outstanding: 0},
+    SST: {count: 0, resolved: 0, outstanding: 0},
+    Court: {count: 0, resolved: 0, outstanding: 0}
+  };
   $scope.loading = true;
 
   $scope.gridOptions = GridDefaults.options();
@@ -12,56 +18,58 @@ function OutreachSummaryCtrl($scope, $timeout, GridDefaults,
     GridDefaults.colDefs.studentId(),
     GridDefaults.colDefs.firstName(),
     GridDefaults.colDefs.lastName(),
-    {
-      name: 'totals.all',
-      displayName: 'Total',
-      minWidth: 80,
-      treeAggregationType: uiGridGroupingConstants.aggregation.SUM
-    }, {
-      name: 'totals["Phone Call"] || 0',
-      displayName: 'Calls',
-      minWidth: 100,
-      treeAggregationType: uiGridGroupingConstants.aggregation.SUM
-    }, {
-      name: 'totals["Letter Sent"] || 0',
-      displayName: 'Letters',
-      minWidth: 100,
-      treeAggregationType: uiGridGroupingConstants.aggregation.SUM
-    }, {
-      name: 'totals["Home Visit"] || 0',
-      displayName: 'Visits',
-      minWidth: 100,
-      treeAggregationType: uiGridGroupingConstants.aggregation.SUM
-    }, {
-      name: 'totals["SST Referral"] || 0',
-      displayName: 'SST',
-      minWidth: 100,
-      treeAggregationType: uiGridGroupingConstants.aggregation.SUM
-    }, {
-      name: 'totals["Court Referral"] || 0',
-      displayName: 'Court',
-      minWidth: 100,
-      treeAggregationType: uiGridGroupingConstants.aggregation.SUM
-    },
+    GridDefaults.colDefs.outreach('Phone Call', 'count', true),
+    GridDefaults.colDefs.outreach('Phone Call', 'resolved'),
+    GridDefaults.colDefs.outreach('Phone Call', 'outstanding'),
+    GridDefaults.colDefs.outreach('Letter Sent', 'count', true),
+    GridDefaults.colDefs.outreach('Letter Sent', 'resolved'),
+    GridDefaults.colDefs.outreach('Letter Sent', 'outstanding'),
+    GridDefaults.colDefs.outreach('Home Visit', 'count', true),
+    GridDefaults.colDefs.outreach('Home Visit', 'resolved'),
+    GridDefaults.colDefs.outreach('Home Visit', 'outstanding'),
+    GridDefaults.colDefs.outreach('SST Referral', 'count', true),
+    GridDefaults.colDefs.outreach('SST Referral', 'resolved'),
+    GridDefaults.colDefs.outreach('SST Referral', 'outstanding'),
+    GridDefaults.colDefs.outreach('Court Referral', 'count', true),
+    GridDefaults.colDefs.outreach('Court Referral', 'resolved'),
+    GridDefaults.colDefs.outreach('Court Referral', 'outstanding'),
+    GridDefaults.colDefs.outreach('Total', 'count', true),
+    GridDefaults.colDefs.outreach('Total', 'resolved'),
+    GridDefaults.colDefs.outreach('Total', 'outstanding'),
+    GridDefaults.colDefs.cfa(),
     GridDefaults.colDefs.withdrawn($scope)
   ];
   $scope.gridOptions.onRegisterApi = function(gridApi) {
     $scope.gridApi = gridApi;
-    gridApi.edit.on.afterCellEdit($scope, function(rowEntity, colDef, n, o) {
+    gridApi.edit.on.afterCellEdit($scope, function(row, colDef, n, o) {
       if (n !== o) {
         switch (colDef.name) {
+          case 'student.cfa':
+            Student.updateCFA(row.student);
+            break;
           case 'student.withdrawn':
-            Student.updateWithdrawn(rowEntity.student);
+            Student.updateWithdrawn(row.student);
             break;
         }
       }
     });
     $scope.gridOptions.data = Student.outreachSummary();
     $scope.gridOptions.data.$promise.then(function(data) {
-      // Convert counts array to object, generate total intervention property
+      // Convert counts array to object, generate total intervention property.
       _.forEach(data, function(row) {
-        row.totals = _(row.counts).keyBy('type').mapValues('count').value();
-        row.totals.all = _.sumBy(row.counts, 'count');
+        var totals = _(row.counts)
+          .keyBy('type')
+          .mapKeys(function(value, key) {
+            return key.split(' ')[0];
+          })
+          .defaults(totalsDefault)
+          .value();
+        totals.Total = {
+          count: _.sumBy(row.counts, 'count'),
+          resolved: _.sumBy(row.counts, 'resolved'),
+          outstanding: _.sumBy(row.counts, 'outstanding')
+        };
+        _.assign(row, totals);
       });
       // NOTE: Hack to default to expanded rows on initial load.
       // https://github.com/angular-ui/ui-grid/issues/3841

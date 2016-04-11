@@ -86,6 +86,18 @@ function GridDefaults($filter, $timeout, gridUtil, Student, AbsenceRecord,
       width: 125
     };
   };
+  colDefs.outreach = function(name, type, visible) {
+    var firstWord = name.split(' ')[0];
+    return {
+      name: firstWord + '.' + type,
+      displayName: type === 'count' ? firstWord : _.capitalize(type),
+      minWidth: 80,
+      type: 'number',
+      headerTooltip: name + ' ' + _.capitalize(type),
+      treeAggregationType: uiGridGroupingConstants.aggregation.SUM,
+      visible: !!visible
+    };
+  };
 
   function options() {
     return {
