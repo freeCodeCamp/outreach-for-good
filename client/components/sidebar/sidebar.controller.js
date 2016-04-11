@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('app').controller('SidebarCtrl',
-  function($scope, $state, $window, Auth, Sidebar, matchmedia) {
+  function($scope, $state, Auth, Sidebar, matchmedia) {
     $scope.states = [{
       name: 'dashboard',
       url: 'dashboard',

@@ -15,13 +15,13 @@ sidebar {
   flex: 1;
   background-color: $teal;
   background: linear-gradient(to right, $teal-d05, $teal);
-  width: 250px;
+  width: $cfa-unit;
   margin: 0;
   padding: 0;
   list-style: none;
   overflow-y: auto;
-  &.isCollapsed {
-    width: $cfa-unit;
+  &.expanded {
+    width: 250px;
   }
   li {
     overflow: hidden;
@@ -59,15 +59,12 @@ sidebar {
       }
       a:hover {
         background-color: $orange-l10;
-
       }
     }
   }
   transition: all 0.5s ease;
   @media(max-width: 1200px) {
-    &.isCollapsed {
-      width: 0;
-    }
+    width: 0;
   }
   @include cfa-scrollbar(1px, 0, $teal, $teal-d05);
 }

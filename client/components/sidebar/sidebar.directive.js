@@ -11,7 +11,7 @@ app.directive('sidebar', function(matchmedia) {
     link: function(scope) {
       function collapseSidebar(mediaQueryList) {
         if (mediaQueryList.matches) {
-          scope.sidebar.isCollapsed = true;
+          scope.sidebar.expanded = false;
         }
       }
       var maxCleanup = matchmedia.on('(max-width: 1200px)', collapseSidebar);
