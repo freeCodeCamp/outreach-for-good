@@ -18,7 +18,7 @@ function SchoolReportsCtrl($scope) {
   }];
 
   $scope.menuItems = [{
-    text: ' Withdrawn Students',
+    text: 'Withdrawn Students',
     action: function() {
       $scope.showWithdrawn = !$scope.showWithdrawn;
     },

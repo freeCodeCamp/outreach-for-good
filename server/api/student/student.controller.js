@@ -37,6 +37,8 @@ exports.show = function(req, res) {
   });
 };
 
+// NOTE: Partial updates aren't RESTful.
+
 // Updates an existing student's iep field.
 exports.updateIEP = function(req, res) {
   Student.populate(req.student, populateOptions, function(err, student) {
@@ -71,6 +73,38 @@ exports.updateWithdrawn = function(req, res) {
       return res.status(200).json(student);
     });
   });
+};
+
+// NOTE: Batch partial updates aren't RESTful.
+
+var validUpdateFields = {
+  iep: true,
+  cfa: true,
+  withdrawn: true
+};
+
+exports.validateBatchUpdate = function(req, res, next) {
+  if (!validUpdateFields[req.params.field]) {
+    return next(new Error('Attempting to update an invalid field.'));
+  }
+  req.field = req.params.field;
+  return next();
+};
+
+exports.batchUpdate = function(req, res) {
+  var updateValue = !!req.body.value;
+  var promises = _.map(req.students, function(student) {
+    student[req.field] = updateValue;
+    return student.save(function(err) {
+      if (err) return handleError(res, err);
+      return student;
+    });
+  });
+  Promise.all(promises).then(function(saved) {
+    return res.status(200).json(saved);
+  }).catch(function(err) {
+    return handleError(res, err);
+  })
 };
 
 /**
@@ -202,5 +236,6 @@ exports.interventionSummary = function(req, res) {
 };
 
 function handleError(res, err) {
+  console.log(err);
   return res.status(500).send(err);
 }

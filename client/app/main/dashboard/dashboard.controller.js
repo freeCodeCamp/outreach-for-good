@@ -3,6 +3,95 @@
 var app = angular.module('app');
 
 function DashboardCtrl($scope, $timeout, AbsenceRecord, GridDefaults, Student) {
+  function updateSelected(controller, value) {
+    var selectedRows = $scope.gridApi.selection.getSelectedRows();
+    var students = _.keyBy(selectedRows, 'student._id');
+    var studentIds = Object.keys(students);
+    return Student.batchUpdate(studentIds, controller, value).$promise.then(
+      function(updatedStudents) {
+        _.forEach(updatedStudents, function(student) {
+          students[student._id].student = student;
+        });
+        $scope.gridApi.core.refresh();
+        return updatedStudents;
+      });
+  }
+
+  function noSelectedItems() {
+    return !$scope.gridApi.selection.getSelectedRows().length;
+  }
+
+  var defaultMenuItems = [{
+    text: 'IEP selected',
+    action: function() {
+      updateSelected('iep', true);
+    },
+    icon: 'fa-plus-circle text-success',
+    disabledFn: noSelectedItems
+  }, {
+    text: 'IEP selected',
+    action: function() {
+      updateSelected('iep', false);
+    },
+    icon: 'fa-minus-circle text-danger',
+    disabledFn: noSelectedItems
+  }, {
+    separator: true,
+    text: 'CFA selected',
+    action: function() {
+      updateSelected('cfa', true);
+    },
+    icon: 'fa-plus-circle text-success',
+    disabledFn: noSelectedItems
+  }, {
+    text: 'CFA selected',
+    action: function() {
+      updateSelected('cfa', false);
+    },
+    icon: 'fa-minus-circle text-danger',
+    disabledFn: noSelectedItems
+  }, {
+    separator: true,
+    text: 'Withdraw selected',
+    action: function() {
+      updateSelected('withdrawn', true).then(function() {
+        // Clear selection if withdrawn students are not being shown. Hidden
+        // rows remain selected by default. Clear to avoid accidental updates.
+        if (!$scope.showWithdrawn) {
+          $scope.gridApi.selection.clearSelectedRows();
+        }
+      });
+    },
+    icon: 'fa-plus-circle text-success',
+    disabledFn: noSelectedItems
+  }, {
+    text: 'Withdraw selected',
+    action: function() {
+      updateSelected('withdrawn', false);
+    },
+    icon: 'fa-minus-circle text-danger',
+    disabledFn: function() {
+      return !$scope.showWithdrawn || noSelectedItems();
+    }
+  }, {
+    separator: true,
+    text: 'Withdrawn Students',
+    action: function() {
+      $scope.showWithdrawn = !$scope.showWithdrawn;
+      var defs = $scope.gridOptions.columnDefs;
+      _.find(defs, {displayName: 'Withdrawn'}).visible = $scope.showWithdrawn;
+      if (!$scope.showWithdrawn) {
+        $scope.gridApi.selection.clearSelectedRows();
+      }
+      $scope.gridApi.core.refresh();
+    },
+    iconFn: function() {
+      return $scope.showWithdrawn ?
+             'fa-check-square-o text-success' : 'fa-square-o';
+    }
+  }];
+  
+  $scope.menuItems = _.concat([], defaultMenuItems);
   $scope.filter = {};
   $scope.loading = true;
   $scope.csvFileNameFn = function() {
@@ -37,7 +126,8 @@ function DashboardCtrl($scope, $timeout, AbsenceRecord, GridDefaults, Student) {
         $scope.loading = false;
         $timeout($scope.gridApi.treeBase.expandAllRows);
       });
-      $scope.menuItems.length = 1;
+      $scope.menuItems.length = 0;
+      [].push.apply($scope.menuItems, defaultMenuItems);
       if (_.includes(['Phone Call', 'Letter Sent', 'Home Visit'], type)) {
         [].push.apply($scope.menuItems, [{
           separator: true,
@@ -63,17 +153,6 @@ function DashboardCtrl($scope, $timeout, AbsenceRecord, GridDefaults, Student) {
            ($scope.filter.type ? ' (' + $scope.filter.type +
            ($scope.filter.tier ? ' #' + $scope.filter.tier : '') + ')' : '');
   };
-
-  $scope.menuItems = [{
-    text: ' Withdrawn Students',
-    action: function() {
-      $scope.showWithdrawn = !$scope.showWithdrawn;
-    },
-    iconFn: function() {
-      return $scope.showWithdrawn ?
-             'fa-check-square-o text-success' : 'fa-square-o';
-    }
-  }];
 
   $scope.$watch('showWithdrawn', function(n, o) {
     if (n !== o) {
