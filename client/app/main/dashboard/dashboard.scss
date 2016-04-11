@@ -36,6 +36,9 @@
     .grid {
       @extend %abs-fill-parent;
       border: none;
+      .withdrawn {
+        color: darkgrey;
+      }
     }
   }
 }
