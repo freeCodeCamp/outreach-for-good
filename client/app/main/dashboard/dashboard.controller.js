@@ -3,6 +3,13 @@
 var app = angular.module('app');
 
 function DashboardCtrl($scope, $timeout, AbsenceRecord, GridDefaults, Student) {
+  function updateOutreachCounts() {
+    Student.outreachCounts($scope.showWithdrawn).then(function(counts) {
+      $scope.counts = counts;
+    });
+  }
+  updateOutreachCounts();
+
   function updateSelected(controller, value) {
     var selectedRows = $scope.gridApi.selection.getSelectedRows();
     var students = _.keyBy(selectedRows, 'student._id');
@@ -55,6 +62,7 @@ function DashboardCtrl($scope, $timeout, AbsenceRecord, GridDefaults, Student) {
     text: 'Withdraw selected',
     action: function() {
       updateSelected('withdrawn', true).then(function() {
+        $scope.$broadcast('withdrawn-updated');
         // Clear selection if withdrawn students are not being shown. Hidden
         // rows remain selected by default. Clear to avoid accidental updates.
         if (!$scope.showWithdrawn) {
@@ -67,7 +75,9 @@ function DashboardCtrl($scope, $timeout, AbsenceRecord, GridDefaults, Student) {
   }, {
     text: 'Withdraw selected',
     action: function() {
-      updateSelected('withdrawn', false);
+      updateSelected('withdrawn', false).then(function() {
+        $scope.$broadcast('withdrawn-updated');
+      });
     },
     icon: 'fa-minus-circle text-danger',
     disabledFn: function() {
@@ -90,7 +100,7 @@ function DashboardCtrl($scope, $timeout, AbsenceRecord, GridDefaults, Student) {
              'fa-check-square-o text-success' : 'fa-square-o';
     }
   }];
-  
+
   $scope.menuItems = _.concat([], defaultMenuItems);
   $scope.filter = {};
   $scope.loading = true;
@@ -99,10 +109,6 @@ function DashboardCtrl($scope, $timeout, AbsenceRecord, GridDefaults, Student) {
   };
 
   $scope.gridOptions = GridDefaults.recordOptions($scope);
-
-  Student.outreachCounts().then(function(counts) {
-    $scope.counts = counts;
-  });
 
   $scope.setFilter = function(type, tier) {
     if ($scope.filter.type !== type || $scope.filter.tier !== tier) {
@@ -154,11 +160,10 @@ function DashboardCtrl($scope, $timeout, AbsenceRecord, GridDefaults, Student) {
            ($scope.filter.tier ? ' #' + $scope.filter.tier : '') + ')' : '');
   };
 
+  $scope.$on('withdrawn-updated', updateOutreachCounts);
   $scope.$watch('showWithdrawn', function(n, o) {
     if (n !== o) {
-      Student.outreachCounts().then(function(counts) {
-        $scope.counts = counts;
-      });
+      updateOutreachCounts();
       $scope.gridApi.grid.refresh();
       $timeout($scope.gridApi.treeBase.expandAllRows);
     }

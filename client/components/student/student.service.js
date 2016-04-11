@@ -104,10 +104,11 @@ app.factory('Student', function($resource, toastr) {
         });
       }
     },
-    outreachCounts: function() {
-      return resource.outreachCounts().$promise.then(function(counts) {
-        return _(counts).keyBy('_id').mapValues('count').value();
-      });
+    outreachCounts: function(withdrawn) {
+      return resource.outreachCounts({withdrawn: !!withdrawn})
+        .$promise.then(function(counts) {
+          return _(counts).keyBy('_id').mapValues('count').value();
+        });
     },
     interventionSummary: resource.interventionSummary,
     outreachSummary: resource.outreachSummary,
