@@ -1,6 +1,6 @@
 'use strict';
 
-function GridDefaults($filter, $timeout, gridUtil, Student, AbsenceRecord,
+function GridDefaults($filter, $timeout, Student, AbsenceRecord,
   uiGridGroupingConstants, uiGridExporterService) {
   var colDefs = {};
   colDefs.school = function(name) {
@@ -111,6 +111,25 @@ function GridDefaults($filter, $timeout, gridUtil, Student, AbsenceRecord,
     };
   }
 
+  function afterCellEditFn(scope) {
+    return function(row, colDef, n, o) {
+      if (n !== o) {
+        switch (colDef.name) {
+          case 'student.iep':
+            Student.updateIEP(row.student);
+            break;
+          case 'student.cfa':
+            Student.updateCFA(row.student);
+            break;
+          case 'student.withdrawn':
+            Student.updateWithdrawn(row.student);
+            scope.$broadcast('withdrawn-updated');
+            break;
+        }
+      }
+    };
+  }
+
   /**
    * NOTE: This grid options object is very tightly coupled to the scope of the
    * controller. It attempts to set properties of the scope object (loading,
@@ -178,22 +197,7 @@ function GridDefaults($filter, $timeout, gridUtil, Student, AbsenceRecord,
     });
     gridOptions.onRegisterApi = function(gridApi) {
       scope.gridApi = gridApi;
-      gridApi.edit.on.afterCellEdit(scope, function(row, colDef, n, o) {
-        if (n !== o) {
-          switch (colDef.name) {
-            case 'student.iep':
-              Student.updateIEP(row.student);
-              break;
-            case 'student.cfa':
-              Student.updateCFA(row.student);
-              break;
-            case 'student.withdrawn':
-              Student.updateWithdrawn(row.student);
-              scope.$broadcast('withdrawn-updated');
-              break;
-          }
-        }
-      });
+      gridApi.edit.on.afterCellEdit(scope, afterCellEditFn(scope));
       gridOptions.data = AbsenceRecord.listCurrent(filter || {});
       gridOptions.data.$promise.then(function(data) {
         _.forEach(data, function(row) {
@@ -238,6 +242,7 @@ function GridDefaults($filter, $timeout, gridUtil, Student, AbsenceRecord,
   return {
     options: options,
     colDefs: colDefs,
+    afterCellEditFn: afterCellEditFn,
     recordOptions: recordOptions,
     datePrefix: datePrefix
   };
