@@ -177,6 +177,7 @@ function GridDefaults($filter, $timeout, gridUtil, Student, AbsenceRecord,
               break;
             case 'student.withdrawn':
               Student.updateWithdrawn(row.student);
+              scope.$broadcast('withdrawn-updated');
               break;
           }
         }
