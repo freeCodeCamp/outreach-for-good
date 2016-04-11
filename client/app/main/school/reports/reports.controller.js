@@ -2,7 +2,7 @@
 
 var app = angular.module('app');
 
-function SchoolReportsCtrl($scope) {
+function SchoolReportsCtrl($scope, SchoolReportsMenu) {
   $scope.tabs = [{
     text: 'At Risk',
     state: 'school-reports.at-risk'
@@ -16,17 +16,7 @@ function SchoolReportsCtrl($scope) {
     text: 'Interventions',
     state: 'school-reports.intervention-summary'
   }];
-
-  $scope.menuItems = [{
-    text: 'Withdrawn Students',
-    action: function() {
-      $scope.showWithdrawn = !$scope.showWithdrawn;
-    },
-    iconFn: function() {
-      return $scope.showWithdrawn ?
-             'fa-check-square-o text-success' : 'fa-square-o';
-    }
-  }];
+  $scope.menuItems = SchoolReportsMenu.menuItems;
 }
 
 app.controller('SchoolReportsCtrl', SchoolReportsCtrl);

@@ -61,6 +61,7 @@ function OutreachSummaryGrid($timeout, GridDefaults, Student) {
 
   this.options = function(scope) {
     var gridOptions = _.merge(GridDefaults.options(), {
+      rowTemplate: 'components/grid-defaults/grid-defaults.record.row.html',
       columnDefs: _.concat(columnDefs, [GridDefaults.colDefs.withdrawn(scope)]),
       csvFileNameFn: csvFileNameFn
     });
