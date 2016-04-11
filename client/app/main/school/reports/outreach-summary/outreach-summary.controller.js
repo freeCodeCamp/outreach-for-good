@@ -2,16 +2,10 @@
 
 var app = angular.module('app');
 
-function OutreachSummaryCtrl($scope, $timeout, OutreachSummaryGrid) {
+function OutreachSummaryCtrl($scope, OutreachSummaryGrid, SchoolReportsMenu) {
   $scope.loading = true;
   $scope.gridOptions = OutreachSummaryGrid.options($scope);
-
-  $scope.$watch('showWithdrawn', function(n, o) {
-    if (n !== o) {
-      $scope.gridApi.grid.refresh();
-      $timeout($scope.gridApi.treeBase.expandAllRows);
-    }
-  });
+  SchoolReportsMenu.outreachSummaryItems($scope);
 }
 
 app.controller('OutreachSummaryCtrl', OutreachSummaryCtrl);

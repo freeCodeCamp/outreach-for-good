@@ -2,7 +2,8 @@
 
 var app = angular.module('app');
 
-function InterventionSummaryCtrl($scope, $timeout, GridDefaults, Student) {
+function InterventionSummaryCtrl($scope, $timeout, GridDefaults,
+  SchoolReportsMenu, Student) {
   $scope.loading = true;
 
   $scope.gridOptions = GridDefaults.options();
@@ -42,13 +43,7 @@ function InterventionSummaryCtrl($scope, $timeout, GridDefaults, Student) {
   $scope.gridOptions.csvFileNameFn = function() {
     return GridDefaults.datePrefix() + ' Intervention Summary.csv';
   };
-
-  $scope.$watch('showWithdrawn', function(n, o) {
-    if (n !== o) {
-      $scope.gridApi.grid.refresh();
-      $timeout($scope.gridApi.treeBase.expandAllRows);
-    }
-  });
+  SchoolReportsMenu.defaultItems($scope);
 }
 
 app.controller('InterventionSummaryCtrl', InterventionSummaryCtrl);
