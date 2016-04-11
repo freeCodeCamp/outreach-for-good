@@ -1,4 +1,4 @@
-<ul class="sidebar-nav nav-pills nav-stacked" ng-class="{isCollapsed: sidebar.isCollapsed}">
+<ul class="sidebar-nav nav-pills nav-stacked" ng-class="{expanded: sidebar.expanded}">
   <li ng-repeat="state in states"
     ng-class="{active: active(state.name)}"
     ng-if="!state.requiredRole || userIs(state.requiredRole)">

@@ -1,13 +1,8 @@
 'use strict';
 
-angular.module('app').factory('Sidebar', function() {
-  function Sidebar() {
-    this.isCollapsed = true;
-  }
-
-  Sidebar.prototype.toggle = function() {
-    this.isCollapsed = !this.isCollapsed;
+angular.module('app').service('Sidebar', function() {
+  this.expanded = false;
+  this.toggle = function() {
+    this.expanded = !this.expanded;
   };
-
-  return new Sidebar();
 });

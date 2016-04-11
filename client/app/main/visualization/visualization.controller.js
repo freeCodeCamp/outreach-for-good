@@ -47,7 +47,7 @@ function VisualizationCtrl($scope, $timeout, School, Sidebar, Visualization) {
   });
   // Timeout used to redraw the chart after animation delay of resizing the
   // sidebar.
-  $scope.$watch('sidebar.isCollapsed', function() {
+  $scope.$watch('sidebar.expanded', function() {
     $timeout(function() {
       if ($scope.loaded) {
         $scope.cfaChartObj.reflow();
