@@ -1,7 +1,5 @@
 'use strict';
 
-var app = angular.module('app');
-
 function StudentSummaryCtrl($scope, $stateParams, Outreach, Intervention,
   StudentNote) {
   Intervention.query({
@@ -17,4 +15,4 @@ function StudentSummaryCtrl($scope, $stateParams, Outreach, Intervention,
   });
 }
 
-app.controller('StudentSummaryCtrl', StudentSummaryCtrl);
+angular.module('app').controller('StudentSummaryCtrl', StudentSummaryCtrl);

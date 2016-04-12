@@ -1,7 +1,5 @@
 'use strict';
 
-var app = angular.module('app');
-
 function dateOnly(dateStr) {
   var date = new Date(dateStr);
   return new Date(date.getFullYear(), date.getMonth(), date.getDate());
@@ -206,4 +204,4 @@ function UploadCtrl($scope, PDF, AbsenceRecord, Auth, School, toastr) {
   });
 }
 
-app.controller('UploadCtrl', UploadCtrl);
+angular.module('app').controller('UploadCtrl', UploadCtrl);

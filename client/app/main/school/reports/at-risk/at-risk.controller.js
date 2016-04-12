@@ -1,7 +1,5 @@
 'use strict';
 
-var app = angular.module('app');
-
 function AtRiskReportCtrl($scope, $timeout, GridDefaults, SchoolReportsMenu) {
   $scope.loading = true;
   $scope.gridOptions = GridDefaults.recordOptions($scope, {filter: 'at-risk'});
@@ -11,4 +9,4 @@ function AtRiskReportCtrl($scope, $timeout, GridDefaults, SchoolReportsMenu) {
   SchoolReportsMenu.defaultItems($scope);
 }
 
-app.controller('AtRiskReportCtrl', AtRiskReportCtrl);
+angular.module('app').controller('AtRiskReportCtrl', AtRiskReportCtrl);

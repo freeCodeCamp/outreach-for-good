@@ -1,7 +1,5 @@
 'use strict';
 
-var app = angular.module('app');
-
 function RecordsCtrl($scope) {
   $scope.tabs = [{
     text: 'Upload',
@@ -12,4 +10,4 @@ function RecordsCtrl($scope) {
   }];
 }
 
-app.controller('RecordsCtrl', RecordsCtrl);
+angular.module('app').controller('RecordsCtrl', RecordsCtrl);

@@ -1,7 +1,5 @@
 'use strict';
 
-var app = angular.module('app');
-
 function ManageCtrl($scope, $filter, AbsenceRecord, School, Modal, toastr) {
   $scope.selected = {};
   $scope.schools = School.query();
@@ -40,4 +38,4 @@ function ManageCtrl($scope, $filter, AbsenceRecord, School, Modal, toastr) {
   });
 }
 
-app.controller('ManageCtrl', ManageCtrl);
+angular.module('app').controller('ManageCtrl', ManageCtrl);

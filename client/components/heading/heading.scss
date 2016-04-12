@@ -19,12 +19,11 @@
     line-height: $cfa-unit;
     font-weight: 200;
     color: white;
-    text-shadow:
-      2px 2px 0 #000,
-      -1px -1px 0 #000,
-      1px -1px 0 #000,
-      -1px 1px 0 #000,
-      1px 1px 0 #000;
+    text-shadow: 2px 2px 0 #000,
+    -1px -1px 0 #000,
+    1px -1px 0 #000,
+    -1px 1px 0 #000,
+    1px 1px 0 #000;
   }
   .menu-button-group {
     display: block;

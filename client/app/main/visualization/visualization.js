@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('app').config(function ($stateProvider) {
+angular.module('app').config(function($stateProvider) {
   $stateProvider.state('visualization', {
     url: '/visualization',
     parent: 'main',

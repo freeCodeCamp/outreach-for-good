@@ -1,7 +1,5 @@
 'use strict';
 
-var app = angular.module('app');
-
 function StudentOutreachesCtrl($scope, $stateParams, Outreach, toastr) {
   Outreach.query({studentId: $stateParams.studentId}, function(outreaches) {
     _.forEach(outreaches, function(outreach) {
@@ -59,4 +57,5 @@ function StudentOutreachesCtrl($scope, $stateParams, Outreach, toastr) {
   };
 }
 
-app.controller('StudentOutreachesCtrl', StudentOutreachesCtrl);
+angular.module('app')
+  .controller('StudentOutreachesCtrl', StudentOutreachesCtrl);

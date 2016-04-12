@@ -1,8 +1,6 @@
 'use strict';
 
-var app = angular.module('app');
-
-app.factory('PDF', function($q, $resource) {
+function PDF($q, $resource) {
   PDFJS.workerSrc = 'bower_components/pdfjs-dist/build/pdf.worker.js';
 
   /**
@@ -72,4 +70,6 @@ app.factory('PDF', function($q, $resource) {
     save: $resource('/api/pdfs/').save,
     parse: parse
   };
-});
+}
+
+angular.module('app').factory('PDF', PDF);

@@ -1,8 +1,6 @@
 'use strict';
 
-var app = angular.module('app');
-
-app.factory('AbsenceRecord', function($resource) {
+angular.module('app').factory('AbsenceRecord', function($resource) {
   return $resource(
     '/api/absence-records/:recordId/:controller/:selector/:filter', {}, {
       current: {

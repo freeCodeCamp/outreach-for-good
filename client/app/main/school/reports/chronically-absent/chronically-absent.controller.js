@@ -1,7 +1,5 @@
 'use strict';
 
-var app = angular.module('app');
-
 function ChronicallyAbsentReportCtrl($scope, $timeout, GridDefaults,
   SchoolReportsMenu) {
   $scope.loading = true;
@@ -12,4 +10,5 @@ function ChronicallyAbsentReportCtrl($scope, $timeout, GridDefaults,
   SchoolReportsMenu.defaultItems($scope);
 }
 
-app.controller('ChronicallyAbsentReportCtrl', ChronicallyAbsentReportCtrl);
+angular.module('app')
+  .controller('ChronicallyAbsentReportCtrl', ChronicallyAbsentReportCtrl);

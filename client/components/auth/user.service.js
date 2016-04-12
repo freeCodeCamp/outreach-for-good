@@ -1,8 +1,6 @@
 'use strict';
 
-var app = angular.module('app');
-
-app.factory('User', function($resource) {
+angular.module('app').factory('User', function($resource) {
   return $resource('/api/users/:userId/:controller', {
     userId: '@_id'
   }, {

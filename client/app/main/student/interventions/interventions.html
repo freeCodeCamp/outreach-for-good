@@ -12,7 +12,9 @@
         <i uib-dropdown-toggle class="fa fa-caret-right fa-lg"></i>
         <ul uib-dropdown-menu role="menu">
           <li role="menuitem" ng-click="toggleInterventionArchived(intervention)">
-            <a href=""> <i class="fa fa-archive text-info"></i> {{ intervention.archived ? 'Unarchive' : 'Archive'}} </a>
+            <a href="">
+              <i class="fa fa-archive text-info"></i> {{ intervention.archived ? 'Unarchive' : 'Archive'}}
+            </a>
           </li>
           <li role="menuitem" ng-click="deleteIntervention(intervention)" ng-if="intervention.archived">
             <a href=""> <i class="fa fa-trash text-danger"></i> Delete</a>

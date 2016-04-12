@@ -16,12 +16,11 @@ $navbar-height: $cfa-unit;
     padding: 0;
     margin-left: 10px;
     color: $colDefault;
-    text-shadow:
-      2px 2px 0 #000,
-      -1px -1px 0 #000,
-      1px -1px 0 #000,
-      -1px 1px 0 #000,
-      1px 1px 0 #000;
+    text-shadow: 2px 2px 0 #000,
+    -1px -1px 0 #000,
+    1px -1px 0 #000,
+    -1px 1px 0 #000,
+    1px 1px 0 #000;
     &:hover, &:focus {
       color: $colHighlight;
     }
