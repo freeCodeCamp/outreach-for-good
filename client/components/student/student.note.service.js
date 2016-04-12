@@ -1,8 +1,6 @@
 'use strict';
 
-var app = angular.module('app');
-
-app.factory('StudentNote', function($resource) {
+function StudentNote($resource) {
   return $resource('/api/students/:studentId/notes/:noteId', {
     studentId: '@student',
     noteId: '@_id'
@@ -11,4 +9,6 @@ app.factory('StudentNote', function($resource) {
       method: 'PUT'
     }
   });
-});
+}
+
+angular.module('app').factory('StudentNote', StudentNote);

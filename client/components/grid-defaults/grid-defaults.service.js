@@ -235,7 +235,7 @@ function GridDefaults($filter, $timeout, Student, AbsenceRecord,
       var exportData = self.getData(grid, rowTypes, colTypes);
       var csvContent = self.formatAsCsv(exportColumnHeaders, exportData,
         grid.options.exporterCsvColumnSeparator);
-      self.downloadFile (fileName, csvContent,
+      self.downloadFile(fileName, csvContent,
         grid.options.exporterCsvColumnSeparator,
         grid.options.exporterOlderExcelCompatibility);
     });

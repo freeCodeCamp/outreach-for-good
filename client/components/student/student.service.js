@@ -1,8 +1,6 @@
 'use strict';
 
-var app = angular.module('app');
-
-app.factory('Student', function($resource, toastr) {
+function Student($resource, toastr) {
   var resource = $resource('/api/students/:studentId/:controller', {
     studentId: '@_id'
   }, {
@@ -127,4 +125,6 @@ app.factory('Student', function($resource, toastr) {
       });
     }
   };
-});
+}
+
+angular.module('app').factory('Student', Student);

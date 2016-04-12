@@ -1,8 +1,6 @@
 'use strict';
 
-var app = angular.module('app');
-
-app.factory('Intervention', function($resource) {
+function Intervention($resource) {
   return $resource(
     '/api/students/:studentId/interventions/:interventionId/:controller',
     {
@@ -22,4 +20,6 @@ app.factory('Intervention', function($resource) {
         }
       }
     });
-});
+}
+
+angular.module('app').factory('Intervention', Intervention);

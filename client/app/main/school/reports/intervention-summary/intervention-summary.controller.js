@@ -1,7 +1,5 @@
 'use strict';
 
-var app = angular.module('app');
-
 function InterventionSummaryCtrl($scope, InterventionSummaryGrid,
   SchoolReportsMenu) {
   $scope.loading = true;
@@ -9,4 +7,5 @@ function InterventionSummaryCtrl($scope, InterventionSummaryGrid,
   SchoolReportsMenu.defaultItems($scope);
 }
 
-app.controller('InterventionSummaryCtrl', InterventionSummaryCtrl);
+angular.module('app')
+  .controller('InterventionSummaryCtrl', InterventionSummaryCtrl);

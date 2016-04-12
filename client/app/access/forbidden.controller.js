@@ -1,6 +1,7 @@
 'use strict';
 
-angular.module('app')
-  .controller('ForbiddenCtrl', function($scope, $stateParams) {
-    $scope.reason = $stateParams.reason;
-  });
+function ForbiddenCtrl($scope, $stateParams) {
+  $scope.reason = $stateParams.reason;
+}
+
+angular.module('app').controller('ForbiddenCtrl', ForbiddenCtrl);

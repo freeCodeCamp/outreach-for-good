@@ -1,7 +1,5 @@
 'use strict';
 
-var app = angular.module('app');
-
 function StudentCtrl($scope, $state, $stateParams, AbsenceRecord, Student,
   Modal) {
   Student.get({studentId: $stateParams.studentId}, function(student) {
@@ -39,4 +37,4 @@ function StudentCtrl($scope, $state, $stateParams, AbsenceRecord, Student,
   };
 }
 
-app.controller('StudentCtrl', StudentCtrl);
+angular.module('app').controller('StudentCtrl', StudentCtrl);

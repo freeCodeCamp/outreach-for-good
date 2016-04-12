@@ -1,14 +1,11 @@
 'use strict';
 
-var app = angular.module('app');
-
 function DashboardCtrl($scope, $timeout, AbsenceRecord, GridDefaults, Student) {
   function updateOutreachCounts() {
     Student.outreachCounts($scope.showWithdrawn).then(function(counts) {
       $scope.counts = counts;
     });
   }
-  updateOutreachCounts();
 
   function updateSelected(controller, value) {
     var selectedRows = $scope.gridApi.selection.getSelectedRows();
@@ -100,16 +97,15 @@ function DashboardCtrl($scope, $timeout, AbsenceRecord, GridDefaults, Student) {
              'fa-check-square-o text-success' : 'fa-square-o';
     }
   }];
-
+  
+  updateOutreachCounts();
   $scope.menuItems = _.concat([], defaultMenuItems);
   $scope.filter = {};
   $scope.loading = true;
   $scope.csvFileNameFn = function() {
     return GridDefaults.datePrefix() + ' ' + $scope.tableTitle() + '.csv';
   };
-
   $scope.gridOptions = GridDefaults.recordOptions($scope);
-
   $scope.setFilter = function(type, tier) {
     if ($scope.filter.type !== type || $scope.filter.tier !== tier) {
       var filter = {};
@@ -153,13 +149,11 @@ function DashboardCtrl($scope, $timeout, AbsenceRecord, GridDefaults, Student) {
       }
     }
   };
-
   $scope.tableTitle = function() {
     return 'Students' +
            ($scope.filter.type ? ' (' + $scope.filter.type +
            ($scope.filter.tier ? ' #' + $scope.filter.tier : '') + ')' : '');
   };
-
   $scope.$on('withdrawn-updated', updateOutreachCounts);
   $scope.$watch('showWithdrawn', function(n, o) {
     if (n !== o) {
@@ -170,4 +164,4 @@ function DashboardCtrl($scope, $timeout, AbsenceRecord, GridDefaults, Student) {
   });
 }
 
-app.controller('DashboardCtrl', DashboardCtrl);
+angular.module('app').controller('DashboardCtrl', DashboardCtrl);

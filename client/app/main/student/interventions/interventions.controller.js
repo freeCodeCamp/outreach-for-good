@@ -1,7 +1,5 @@
 'use strict';
 
-var app = angular.module('app');
-
 function StudentInterventionsCtrl($scope, $stateParams, Intervention, Modal,
   toastr) {
   Intervention.query({
@@ -94,4 +92,5 @@ function StudentInterventionsCtrl($scope, $stateParams, Intervention, Modal,
   }];
 }
 
-app.controller('StudentInterventionsCtrl', StudentInterventionsCtrl);
+angular.module('app')
+  .controller('StudentInterventionsCtrl', StudentInterventionsCtrl);

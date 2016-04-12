@@ -1,7 +1,5 @@
 'use strict';
 
-var app = angular.module('app');
-
 function SchoolReportsCtrl($scope, SchoolReportsMenu) {
   $scope.tabs = [{
     text: 'At Risk',
@@ -19,4 +17,4 @@ function SchoolReportsCtrl($scope, SchoolReportsMenu) {
   $scope.menuItems = SchoolReportsMenu.menuItems;
 }
 
-app.controller('SchoolReportsCtrl', SchoolReportsCtrl);
+angular.module('app').controller('SchoolReportsCtrl', SchoolReportsCtrl);

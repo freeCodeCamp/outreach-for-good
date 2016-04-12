@@ -1,7 +1,5 @@
 'use strict';
 
-var app = angular.module('app');
-
 function StudentNotesCtrl($scope, $stateParams, Auth, StudentNote, toastr) {
   StudentNote.query({studentId: $stateParams.studentId}, function(notes) {
     $scope.notes = notes;
@@ -76,4 +74,4 @@ function StudentNotesCtrl($scope, $stateParams, Auth, StudentNote, toastr) {
   }];
 }
 
-app.controller('StudentNotesCtrl', StudentNotesCtrl);
+angular.module('app').controller('StudentNotesCtrl', StudentNotesCtrl);

@@ -32,7 +32,9 @@
         <div class="created-list" ng-if="record.createdStudents.length">
           <ul>
             <li ng-repeat="student in record.createdStudents">
-              <a ui-sref="student.outreaches({studentId: student._id})" target="_blank">{{ student.firstName }} {{ student.lastName }}</a> ({{ student.studentId}})
+              <a ui-sref="student.outreaches({studentId: student._id})" target="_blank">
+                {{ student.firstName }} {{student.lastName }}
+              </a> ({{ student.studentId}})
             </li>
           </ul>
         </div>
@@ -42,7 +44,9 @@
         <div class="missing-list" ng-if="record.newMissingStudents.length">
           <ul>
             <li ng-repeat="student in record.newMissingStudents">
-              <a ui-sref="student.outreaches({studentId: student._id})" target="_blank">{{ student.firstName }} {{ student.lastName }}</a> ({{ student.studentId}})
+              <a ui-sref="student.outreaches({studentId: student._id})" target="_blank">
+                {{ student.firstName }} {{ student.lastName }}
+              </a> ({{ student.studentId}})
             </li>
           </ul>
         </div>

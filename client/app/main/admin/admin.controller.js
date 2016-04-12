@@ -1,7 +1,5 @@
 'use strict';
 
-var app = angular.module('app');
-
 function AdminCtrl($scope, $http, uiGridConstants, Auth, User, School,
   Modal, ROLES, toastr) {
   $scope.roles = ROLES.slice(0, ROLES.indexOf(Auth.getCurrentUser().role) + 1);
@@ -210,4 +208,4 @@ function AdminCtrl($scope, $http, uiGridConstants, Auth, User, School,
   }];
 }
 
-app.controller('AdminCtrl', AdminCtrl);
+angular.module('app').controller('AdminCtrl', AdminCtrl);

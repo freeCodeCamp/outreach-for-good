@@ -1,8 +1,6 @@
 'use strict';
 
-var app = angular.module('app');
-
-app.factory('Modal', function($rootScope, $uibModal) {
+function Modal($rootScope, $uibModal) {
   /**
    * Opens a modal
    * @param  {Object} scope      - an object to be merged with modal's scope
@@ -280,4 +278,6 @@ app.factory('Modal', function($rootScope, $uibModal) {
       }, 'modal-info', 'components/modal/form-modal.html');
     }
   };
-});
+}
+
+angular.module('app').factory('Modal', Modal);

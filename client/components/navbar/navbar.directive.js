@@ -1,8 +1,6 @@
 'use strict';
 
-var app = angular.module('app');
-
-app.directive('navbar', function(matchmedia) {
+angular.module('app').directive('navbar', function(matchmedia) {
   return {
     templateUrl: 'components/navbar/navbar.html',
     controller: 'NavbarCtrl',

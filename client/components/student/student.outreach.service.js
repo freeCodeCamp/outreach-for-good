@@ -1,8 +1,6 @@
 'use strict';
 
-var app = angular.module('app');
-
-app.factory('Outreach', function($resource) {
+function Outreach($resource) {
   return $resource(
     '/api/students/:studentId/outreaches/:outreachId/:controller',
     {
@@ -29,4 +27,6 @@ app.factory('Outreach', function($resource) {
         }
       }
     });
-});
+}
+
+angular.module('app').factory('Outreach', Outreach);
