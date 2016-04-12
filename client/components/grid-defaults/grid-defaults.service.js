@@ -107,7 +107,9 @@ function GridDefaults($filter, $timeout, Student, AbsenceRecord,
       enableFiltering: true,
       enableCellEdit: false,
       treeRowHeaderAlwaysVisible: false,
-      exporterMenuPdf: false
+      exporterMenuPdf: false,
+      enableHorizontalScrollbar: 0,
+      enableVerticalScrollbar: 0
     };
   }
 

@@ -58,7 +58,6 @@
   .ui-grid-menu {
     padding: 0;
     .ui-grid-menu-mid {
-      overflow-y: scroll;
       max-height: 234px;
       border: 1px solid #d4d4d4;
     }
@@ -73,8 +72,31 @@
       @include cfa-scrollbar(5px);
     }
   }
-  .ui-grid-viewport {
-    @include cfa-scrollbar(5px, 0, $pale-turquoise);
+  .ui-grid-render-container-body .ui-grid-viewport {
+    overflow-x: auto !important;
+    overflow-y: auto !important;
+    &::-webkit-scrollbar {
+      width: 12px;
+      height: 12px;
+    }
+    &::-webkit-scrollbar-track {
+      border-radius: 10px;
+      -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.2);
+      &:hover {
+        -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.4);
+      }
+    }
+    &::-webkit-scrollbar-thumb {
+      border-radius: 10px;
+      -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+      &:hover {
+        -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.5);
+        background-color: rgba(0, 0, 0, 0.1);
+      }
+      &:active {
+        background-color: rgba(0, 0, 0, 0.2);
+      }
+    }
   }
   .ui-grid-menu-button .ui-grid-menu {
     // The menu button is inset by 1px use 53 instead of 54px
