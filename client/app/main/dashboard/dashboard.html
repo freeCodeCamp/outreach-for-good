@@ -1,4 +1,5 @@
 <section class="dashboard-view">
+  <heading text="'Dashboard'"></heading>
   <div class="widgets">
     <div class="widget">
       <a href="#" tooltip-placement="top" uib-tooltip="Students" ng-click="setFilter()">
@@ -24,26 +25,16 @@
       <div class="badge" ng-class="{ok: !counts['Home Visit']}">{{counts['Home Visit'] || 0}}</div>
     </div>
     <div class="widget">
-      <a href="#" tooltip-placement="top" uib-tooltip="SST referrals" ng-click="setFilter('SST Referral')">
+      <a href="#" tooltip-placement="top" uib-tooltip="SST Referrals" ng-click="setFilter('SST Referral')">
         <i class="fa fa-support fa-2x"></i>
       </a>
       <div class="badge" ng-class="{ok: !counts['SST Referral']}">{{counts['SST Referral'] || 0}}</div>
     </div>
     <div class="widget">
-      <a href="#" tooltip-placement="top" uib-tooltip="Court referrals" ng-click="setFilter('Court Referral')">
+      <a href="#" tooltip-placement="top" uib-tooltip="Court Referrals" ng-click="setFilter('Court Referral')">
         <i class="fa fa-gavel fa-2x"></i>
       </a>
       <div class="badge" ng-class="{ok: !counts['Court Referral']}">{{counts['Court Referral'] || 0}}</div>
-    </div>
-    <div class="widget">
-      <a ui-sref="visualization" tooltip-placement="top" uib-tooltip="Visualizations">
-        <i class="fa fa-area-chart fa-2x"></i>
-      </a>
-    </div>
-    <div class="widget">
-      <a ui-sref="records" tooltip-placement="top" uib-tooltip="Records">
-        <i class="fa fa-file fa-2x"></i>
-      </a>
     </div>
   </div>
   <heading text="tableTitle()" menu-items="menuItems"></heading>
