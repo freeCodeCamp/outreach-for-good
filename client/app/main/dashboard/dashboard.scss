@@ -5,20 +5,26 @@
   @include cfa-scrollbar();
   .widgets {
     display: flex;
-    padding: 0 15px;
-    height: ($cfa-unit * 2);
-    min-height: ($cfa-unit * 2);
+    height: $cfa-unit;
+    min-height: $cfa-unit;
     background-color: $pale-turquoise;
   }
   .widget {
+    display: flex;
+    flex-direction: column;
     flex: 1;
-    padding: ($cfa-unit * 0.5) 2px;
+    justify-content: space-around;
+    align-items: center;
     text-align: center;
-    min-width: 12.5%;
+    min-height: ($cfa-unit - 10px);
+    min-width: ($cfa-unit - 10px);
+    margin: 5px;
     .badge {
       display: block;
-      max-width: 100px;
-      margin: 5px auto;
+      min-width: $cfa-unit;
+      max-width: ($cfa-unit * 2);
+      margin: 0;
+      padding: 2px 7px;
       background-color: $label-warning-bg;
       &.ok {
         background-color: $label-success-bg;
