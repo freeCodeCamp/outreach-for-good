@@ -9,7 +9,8 @@ function InterventionSummaryGrid($timeout, GridDefaults, Student) {
     {
       name: 'type',
       displayName: 'Type',
-      minWidth: 150,
+      headerTooltip: 'Type',
+      minWidth: 54 * 3,
       grouping: {groupPriority: 1},
       sort: {priority: 0, direction: 'asc'}
     }

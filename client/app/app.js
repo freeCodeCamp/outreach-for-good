@@ -14,6 +14,7 @@ var app = angular.module('app', [
   'ui.grid.exporter',
   'ui.grid.grouping',
   'ui.grid.pinning',
+  'ui.grid.resizeColumns',
   'ui.grid.selection',
   'ui.router',
   'ui.router.default',

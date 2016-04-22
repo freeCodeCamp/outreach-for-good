@@ -7,7 +7,9 @@ function GridDefaults($filter, $timeout, Student, AbsenceRecord,
     return {
       name: name || 'school.name',
       displayName: 'School Name',
-      minWidth: 150,
+      headerTooltip: 'School Name',
+      minWidth: 54 * 4,
+      width: 54 * 6,
       grouping: {groupPriority: 0},
       sort: {priority: 0, direction: 'asc'}
     };
@@ -18,7 +20,8 @@ function GridDefaults($filter, $timeout, Student, AbsenceRecord,
     return {
       name: 'student.studentId',
       displayName: 'Student Id',
-      minWidth: 150,
+      headerTooltip: 'Student Id',
+      minWidth: 54 * 2,
       cellTemplate: 'components/grid-defaults/grid-defaults.student-id.html'
     };
   };
@@ -26,14 +29,16 @@ function GridDefaults($filter, $timeout, Student, AbsenceRecord,
     return {
       name: name || 'student.firstName',
       displayName: 'First Name',
-      minWidth: 150
+      headerTooltip: 'First Name',
+      minWidth: 54 * 3
     };
   };
   colDefs.lastName = function(name) {
     return {
       name: name || 'student.lastName',
       displayName: 'Last Name',
-      minWidth: 150
+      headerTooltip: 'Last Name',
+      minWidth: 54 * 3
     };
   };
   colDefs.iep = function(name) {
@@ -42,7 +47,8 @@ function GridDefaults($filter, $timeout, Student, AbsenceRecord,
       displayName: 'IEP',
       enableCellEdit: true,
       type: 'boolean',
-      width: 100,
+      headerTooltip: 'IEP',
+      minWidth: 54,
       treeAggregationType: uiGridGroupingConstants.aggregation.SUM
     };
   };
@@ -52,7 +58,8 @@ function GridDefaults($filter, $timeout, Student, AbsenceRecord,
       displayName: 'CFA',
       enableCellEdit: true,
       type: 'boolean',
-      width: 100,
+      headerTooltip: 'CFA',
+      minWidth: 54,
       treeAggregationType: uiGridGroupingConstants.aggregation.SUM
     };
   };
@@ -62,7 +69,8 @@ function GridDefaults($filter, $timeout, Student, AbsenceRecord,
       displayName: 'Withdrawn',
       enableCellEdit: true,
       type: 'boolean',
-      width: 100,
+      headerTooltip: 'Withdrawn',
+      minWidth: 54,
       filter: {
         noTerm: true,
         condition: function(searchTerm, cellValue) {
@@ -83,7 +91,8 @@ function GridDefaults($filter, $timeout, Student, AbsenceRecord,
       displayName: 'Updated',
       type: 'date',
       cellFilter: 'date:\'MM/dd/yy\'',
-      width: 125
+      headerTooltip: 'Updated',
+      minWidth: 54 * 2
     };
   };
   colDefs.outreach = function(name, type, visible) {
@@ -91,7 +100,7 @@ function GridDefaults($filter, $timeout, Student, AbsenceRecord,
     return {
       name: firstWord + '.' + type,
       displayName: type === 'count' ? firstWord : _.capitalize(type),
-      minWidth: 80,
+      minWidth: 54,
       type: 'number',
       headerTooltip: name + ' ' + _.capitalize(type),
       treeAggregationType: uiGridGroupingConstants.aggregation.SUM,
@@ -158,39 +167,45 @@ function GridDefaults($filter, $timeout, Student, AbsenceRecord,
           name: 'entry.absences',
           displayName: 'Absences',
           type: 'number',
-          minWidth: 100,
+          headerTooltip: 'Absences',
+          minWidth: 54,
           treeAggregationType: uiGridGroupingConstants.aggregation.SUM
         },
         {
           name: 'entry.absencesDelta',
           displayName: 'Δ',
           type: 'number',
-          width: 50
+          headerTooltip: 'Absences Δ',
+          width: 54
         },
         {
           name: 'entry.tardies',
           displayName: 'Tardies',
           type: 'number',
-          minWidth: 100,
+          headerTooltip: 'Tardies',
+          minWidth: 54,
           treeAggregationType: uiGridGroupingConstants.aggregation.SUM
         },
         {
           name: 'entry.tardiesDelta',
           displayName: 'Δ',
           type: 'number',
-          width: 50
+          headerTooltip: 'Tardies Δ',
+          width: 54
         },
         {
           name: 'entry.present',
           displayName: 'Present',
           type: 'number',
-          minWidth: 100
+          headerTooltip: 'Present',
+          minWidth: 54
         },
         {
           name: 'entry.enrolled',
           displayName: 'Enrolled',
           type: 'number',
-          minWidth: 100
+          headerTooltip: 'Enrolled',
+          minWidth: 54
         },
         colDefs.iep(),
         colDefs.cfa(),
