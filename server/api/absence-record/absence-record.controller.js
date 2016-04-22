@@ -51,13 +51,24 @@ var studentDefaults = {
   withdrawn: false
 };
 
+function createStudents(newStudents) {
+  return new Promise(function(resolve, reject) {
+    if (!newStudents.length) return resolve([]);
+    Student.insertMany(newStudents).then(function(createdStudents) {
+      return resolve(createdStudents);
+    }).catch(function(err) {
+      return reject(err);
+    });
+  });
+}
+
 /**
  * Creates a new absence record in the DB.
  * restriction: 'teacher'
  */
 exports.create = function(req, res) {
   var result = {};
-  var existingEntries = _.map(req.body.updates || [], 'entry');
+  var existingEntries = _.map(req.body.updates, 'entry');
   var newStudents = _.map(req.body.creates, 'student');
   var newEntries = _.map(req.body.creates, 'entry');
   var outreaches = [];
@@ -66,7 +77,7 @@ exports.create = function(req, res) {
     _.defaults(student, studentDefaults);
     student.school = req.school._id;
   });
-  Student.insertMany(newStudents).then(function(createdStudents) {
+  createStudents(newStudents).then(function(createdStudents) {
     // Fill in missing student for new entries.
     _.forEach(createdStudents, function(student, index) {
       newEntries[index].student = student._id;
