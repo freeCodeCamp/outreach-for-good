@@ -120,6 +120,7 @@ function UploadCtrl($scope, PDF, AbsenceRecord, Auth, School, toastr) {
       prevRecord.missingEntries || []);
     var studentIdToPrevEntry = _.keyBy(combinedEntries, 'student.studentId');
     var record = groupByType(partialRecord.students, studentIdToPrevEntry);
+    record.schoolYear = partialRecord.schoolYear;
     _.forEach(record.updates || [], function(update) {
       var entry = update.entry;
       var prevEntry = studentIdToPrevEntry[update.student.studentId];
@@ -153,6 +154,7 @@ function UploadCtrl($scope, PDF, AbsenceRecord, Auth, School, toastr) {
       .mapValues('student._id')
       .value();
     var record = groupByType(partialRecord.students, studentIdToId);
+    record.schoolYear = partialRecord.schoolYear;
     _.forEach(record.updates || [], function(update) {
       var entry = update.entry;
       entry.student = studentIdToId[update.student.studentId];
@@ -176,11 +178,9 @@ function UploadCtrl($scope, PDF, AbsenceRecord, Auth, School, toastr) {
       var entry = create.entry;
       entry.tardiesDelta = entry.tardies;
       entry.absencesDelta = entry.absences;
-      entry.outreaches =
-        createOutreaches(entry, {}, school, partialRecord.schoolYear);
+      entry.outreaches = createOutreaches(entry, {}, school, record.schoolYear);
     });
     record.schoolId = school._id;
-    record.schoolYear = partialRecord.schoolYear;
     record.previousRecordId = previousRecord.recordId;
     return record;
   }
