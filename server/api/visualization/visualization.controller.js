@@ -23,7 +23,15 @@ exports.cfaComparison = function(req, res) {
   var pipeline = [{
     $sort: {date: -1}
   }, {
-    $group: {_id: '$school', entries: {$first: '$entries'}}
+    $group: {
+      _id: '$school', 
+      entries: {$first: '$entries'} , 
+      missingEntries: {$first: '$missingEntries'}
+    }
+  }, {
+    $project: {
+      entries: {$setUnion: ['$entries', '$missingEntries']}
+    }
   }, {
     $unwind: '$entries'
   }, {
