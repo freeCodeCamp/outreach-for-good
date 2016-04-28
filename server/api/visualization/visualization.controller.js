@@ -24,8 +24,8 @@ exports.cfaComparison = function(req, res) {
     $sort: {date: -1}
   }, {
     $group: {
-      _id: '$school', 
-      entries: {$first: '$entries'} , 
+      _id: '$school',
+      entries: {$first: '$entries'},
       missingEntries: {$first: '$missingEntries'}
     }
   }, {
@@ -50,11 +50,11 @@ exports.cfaComparison = function(req, res) {
     AbsenceRecord.populate(results, {
       path: 'student',
       model: 'Student',
-      select: 'cfa withdrawn',
-      match: {withdrawn: false}
+      select: 'cfa withdrawn'
     }, function(err, docs) {
       if (err) return handleError(res, err);
       res.status(200).json(_(docs)
+        .filter(['student.withdrawn', false])
         .groupBy('student.cfa')
         .mapValues(function(students) {
           return _(students)
