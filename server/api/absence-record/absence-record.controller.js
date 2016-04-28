@@ -62,6 +62,17 @@ function createStudents(newStudents) {
   });
 }
 
+function createOutreaches(outreaches) {
+  return new Promise(function(resolve, reject) {
+    if (!outreaches.length) return resolve([]);
+    Outreach.insertMany(outreaches).then(function(createdOutreaches) {
+      return resolve(createdOutreaches);
+    }).catch(function(err) {
+      return reject(err);
+    });
+  });
+}
+
 /**
  * Creates a new absence record in the DB.
  * restriction: 'teacher'
@@ -108,7 +119,7 @@ exports.create = function(req, res) {
       outreach.record = populatedRecord._id;
       outreach.triggerDate = populatedRecord.date;
     });
-    return Outreach.insertMany(outreaches);
+    return createOutreaches(outreaches);
   }).then(function(createdOutreaches) {
     result.outreaches = createdOutreaches;
     return res.status(200).json(result);
