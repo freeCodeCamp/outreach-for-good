@@ -96,6 +96,28 @@ function DashboardCtrl($scope, $timeout, AbsenceRecord, GridDefaults, Student) {
       return $scope.showWithdrawn ?
              'fa-check-square-o text-success' : 'fa-square-o';
     }
+  }, {
+    separator: true,
+    text: 'All years',
+    action: function() {
+      $scope.gridOptions.data = AbsenceRecord.listCurrent($scope.filter);
+      $scope.gridApi.core.refresh();
+      $scope.tableTitle = $scope.makeTitle();
+    }
+  }, {
+    text: '2015-2016',
+    action: function() {
+      $scope.gridOptions.data = AbsenceRecord.list2015($scope.filter);
+      $scope.gridApi.core.refresh();
+      $scope.tableTitle = $scope.makeTitle('2015-2016');
+    }
+  }, {
+    text: '2016-2017',
+    action: function() {
+      $scope.gridOptions.data = AbsenceRecord.list2016($scope.filter);
+      $scope.gridApi.core.refresh();
+      $scope.tableTitle = $scope.makeTitle('2016-2017');
+    }
   }];
   
   updateOutreachCounts();
@@ -149,11 +171,13 @@ function DashboardCtrl($scope, $timeout, AbsenceRecord, GridDefaults, Student) {
       }
     }
   };
-  $scope.tableTitle = function() {
+  $scope.makeTitle = function(yearFilter) {
     return 'Students' +
            ($scope.filter.type ? ' (' + $scope.filter.type +
-           ($scope.filter.tier ? ' #' + $scope.filter.tier : '') + ')' : '');
+           ($scope.filter.tier ? ' #' + $scope.filter.tier : '') + ')' : '') +
+           (yearFilter ? ' - ' + yearFilter : ' - all years');
   };
+  $scope.tableTitle = $scope.makeTitle();
   $scope.$on('withdrawn-updated', updateOutreachCounts);
   $scope.$watch('showWithdrawn', function(n, o) {
     if (n !== o) {

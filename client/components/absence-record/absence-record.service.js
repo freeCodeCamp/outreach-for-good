@@ -2,7 +2,7 @@
 
 angular.module('app').factory('AbsenceRecord', function($resource) {
   return $resource(
-    '/api/absence-records/:recordId/:controller/:selector/:filter', {}, {
+    '/api/absence-records/:recordId/:controller/:selector/:year/:filter', {}, {
       current: {
         method: 'GET',
         isArray: true,
@@ -16,6 +16,24 @@ angular.module('app').factory('AbsenceRecord', function($resource) {
         params: {
           controller: 'list',
           selector: 'current'
+        }
+      },
+      list2015: {
+        method: 'GET',
+        isArray: true,
+        params: {
+          controller: 'list',
+          selector: 'year',
+          year: '2015-2016'
+        }
+      },
+      list2016: {
+        method: 'GET',
+        isArray: true,
+        params: {
+          controller: 'list',
+          selector: 'year',
+          year: '2016-2017'
         }
       },
       students: {

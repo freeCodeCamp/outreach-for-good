@@ -49,4 +49,8 @@ router.get('/list/current/chronic',
   auth.hasRole('teacher'),
   listController.chronic);
 
+router.get('/list/year/:year',
+  auth.hasRole('teacher'),
+  listController.year);
+
 module.exports = router;

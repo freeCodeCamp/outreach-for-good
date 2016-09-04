@@ -37,7 +37,7 @@
       <div class="badge" ng-class="{ok: !counts['Court Referral']}">{{counts['Court Referral'] || 0}}</div>
     </div>
   </div>
-  <heading text="tableTitle()" menu-items="menuItems"></heading>
+  <heading text="tableTitle" menu-items="menuItems"></heading>
   <div class="student-table">
     <grid-status loading="loading" grid-api="gridApi"></grid-status>
     <div ui-grid="gridOptions"

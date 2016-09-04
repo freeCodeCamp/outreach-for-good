@@ -15,11 +15,11 @@ var populateOptions = [{
   select: 'firstName lastName studentId iep cfa withdrawn'
 }];
 
-function currentAbsenceRecordPipeline(user) {
+function absenceRecordPipeline(user, year) {
   var match = {};
-  if (user.role === 'teacher') {
-    match = {school: user.assignment};
-  }
+  if (user.role === 'teacher') match['school'] = user.assignment;
+  if (year) match['schoolYear'] = year;
+
   return [{
     $match: match
   }, {
@@ -68,7 +68,26 @@ function currentAbsenceRecordPipeline(user) {
  * - manager+ will get entries for all schools
  */
 exports.current = function(req, res) {
-  var pipeline = currentAbsenceRecordPipeline(req.user);
+  var pipeline = absenceRecordPipeline(req.user);
+  AbsenceRecord.aggregate(pipeline, function(err, results) {
+    if (err) return handleError(res, err);
+    AbsenceRecord.populate(results, populateOptions, function(err, docs) {
+      if (err) return handleError(res, err);
+      return res.status(200).json(docs);
+    });
+  });
+};
+
+/**
+ * Get entries from specified absence record year.
+ * restriction: 'teacher'
+ *
+ * Returns an aggregation for entries based on the req user role:
+ * - teachers will get entries for assignment school
+ * - manager+ will get entries for all schools
+ */
+exports.year = function(req, res) {
+  var pipeline = absenceRecordPipeline(req.user, req.params.year);
   AbsenceRecord.aggregate(pipeline, function(err, results) {
     if (err) return handleError(res, err);
     AbsenceRecord.populate(results, populateOptions, function(err, docs) {
@@ -98,7 +117,7 @@ exports.query = function(req, res) {
     .distinct('student')
     .exec(function(err, students) {
       if (err) return handleError(res, err);
-      var pipeline = currentAbsenceRecordPipeline(req.user);
+      var pipeline = absenceRecordPipeline(req.user);
       pipeline.push({
         $match: {'student': {$in: students}}
       });
@@ -121,7 +140,7 @@ exports.query = function(req, res) {
  * - manager+ will get entries for all schools
  */
 exports.atRisk = function(req, res) {
-  var pipeline = currentAbsenceRecordPipeline(req.user);
+  var pipeline = absenceRecordPipeline(req.user);
   pipeline.push({
     $match: {'entry.absences': {$lte: 19}}
   });
@@ -146,7 +165,7 @@ exports.atRisk = function(req, res) {
  * - manager+ will get entries for all schools
  */
 exports.chronic = function(req, res) {
-  var pipeline = currentAbsenceRecordPipeline(req.user);
+  var pipeline = absenceRecordPipeline(req.user);
   pipeline.push({
     $match: {'entry.absences': {$gte: 20}}
   });
