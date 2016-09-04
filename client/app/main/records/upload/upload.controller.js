@@ -5,7 +5,10 @@ function dateOnly(dateStr) {
   return new Date(date.getFullYear(), date.getMonth(), date.getDate());
 }
 
-function UploadCtrl($scope, PDF, AbsenceRecord, Auth, School, toastr) {
+function UploadCtrl($scope, PDF, PDF2016, AbsenceRecord, Auth, School, toastr) {
+  // Formats of pdf based on school year
+  $scope.formats = ['2015-2016', '2016-2017'];
+
   function resetState() {
     delete $scope.pending;
     delete $scope.parsedRecord;
@@ -190,7 +193,9 @@ function UploadCtrl($scope, PDF, AbsenceRecord, Auth, School, toastr) {
       delete $scope.parsedRecord;
       $scope.progress = 0;
       if (n) {
-        var promise = PDF.parse(n);
+        var promise = $scope.selected.format === '2015-2016' ?
+          PDF.parse(n):
+          PDF2016.parse(n);
         promise.then(function(partialRecord) {
           $scope.parsedRecord = completeRecord(partialRecord);
         }, function(err) {

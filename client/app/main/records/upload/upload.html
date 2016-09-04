@@ -16,6 +16,21 @@
           </ui-select-choices>
         </ui-select>
       </div>
+      <div ng-class="selected.format ? 'has-success' : 'has-error'">
+        <label class="control-label col-xs-2">Format</label>
+        <ui-select class="col-xs-10"
+          theme="bootstrap"
+          ng-model="selected.format"
+          search-enabled="false"
+          ng-disabled="selected.file || parsedRecord"
+          required>
+          <ui-select-match class="ui-select-match" placeholder="Select record format">{{selected.format}}
+          </ui-select-match>
+          <ui-select-choices class="ui-select-choices" repeat="format in formats">
+            <div ng-bind-html="format | highlight: $select.search"></div>
+          </ui-select-choices>
+        </ui-select>
+      </div>
     </div>
 
     <div class="col-lg-8 upload-input-group" ng-if="selected.school && hasCurrentRecord()">
