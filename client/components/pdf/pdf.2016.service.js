@@ -13,27 +13,34 @@ function PDF2016($q, $resource) {
   function partialRecord(items) {
     var sidMatch = new RegExp("\\(#\\d*\\)$");
     var nameFieldCapture = new RegExp("^\\d{2,}\\s(.*), (.*) [A-Z] \\(#(\\d*)\\)$");
-    return {
-      students: items.map(function(item, idx) {
+    var students = [];
+
+    items.forEach(function(item, idx) {
       if (sidMatch.test(item)) {
         var nameField = nameFieldCapture.exec(item);
-        return {
-          student: {
-            lastName: nameField[1], 
-            firstName: nameField[2], 
-            studentId: nameField[3]
-          },
-          entry: {
-            enrolled: items[idx + 1],
-            absences: items[idx + 2],
-            present: items[idx + 3],
-            // ADM: items[idx + 4], uncomment if needed
-            // ADA: items[idx + 5], uncomment if needed
-            tardies: items[idx + 6]
-          }
-        };
+        if(nameField !== null) {
+          students.push({
+            student: {
+              lastName: nameField[1],
+              firstName: nameField[2],
+              studentId: nameField[3]
+            },
+            entry: {
+              enrolled: items[idx + 1], // Membership
+              absences: items[idx + 2], // Absent Days
+              present: items[idx + 3], // Present Days
+              // ADM: items[idx + 4], uncomment if needed
+              // ADA: items[idx + 5], uncomment if needed
+              tardies: items[idx + 6] // unexcused Days
+            }
+          });
+        }
       }
-    }), schoolYear: items[6].replace(/(\d{2,})-(\d{2,})/, '20$1-20$2')
+    });
+
+    return {
+      students: students, 
+      schoolYear: items[6].replace(/(\d{2,})-(\d{2,})/, '20$1-20$2')
     };
   }
 
