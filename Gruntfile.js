@@ -405,7 +405,7 @@ module.exports = function (grunt) {
       },
       heroku: {
         options: {
-          remote: 'heroku',
+          remote: 'https://git.heroku.com/childfirstauthority.git',
           branch: 'master'
         }
       },
