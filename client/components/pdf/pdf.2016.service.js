@@ -6,13 +6,13 @@ function PDF2016($q, $resource) {
   /**
    * Returns a partial record that needs to be sent to the server to get
    * deltas and be organized into existing and new students.
-   * 
+   *
    * Patch for new 2016-2017 pdf format
    *
    */
   function partialRecord(items) {
-    var sidMatch = new RegExp("\\(#\\d*\\)$");
-    var nameFieldCapture = new RegExp("^\\d{2,}\\s(.*), (.*) [A-Z] \\(#(\\d*)\\)$");
+    var sidMatch = new RegExp('\\(#\\d*\\)$');
+    var nameFieldCapture = new RegExp('^\\d{2,}\\s(.*), (.*) [A-Z] \\(#(\\d*)\\)$');
     var students = [];
 
     items.forEach(function(item, idx) {
@@ -39,7 +39,7 @@ function PDF2016($q, $resource) {
     });
 
     return {
-      students: students, 
+      students: students,
       schoolYear: items[6].replace(/(\d{2,})-(\d{2,})/, '20$1-20$2')
     };
   }

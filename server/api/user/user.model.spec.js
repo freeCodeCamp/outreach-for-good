@@ -31,13 +31,12 @@ describe('User Model', function() {
     });
   });
 
-  it('should fail when saving a duplicate user', function(done) {
-    user.save(function() {
-      var userDup = new User(user);
-      userDup.save(function(err) {
-        should.exist(err);
-        done();
-      });
+  it('should successfully save user', function(done) {
+    user.save(function(err, saved) {
+      saved.should.have.property('name', 'Fake User');
+      saved.should.have.property('email', 'test@test.com');
+      saved.should.have.property('_id');
+      done();
     });
   });
 });

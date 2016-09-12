@@ -17,8 +17,8 @@ var populateOptions = [{
 
 function absenceRecordPipeline(user, year) {
   var match = {};
-  if (user.role === 'teacher') match['school'] = user.assignment;
-  if (year) match['schoolYear'] = year;
+  if (user.role === 'teacher') match.school = user.assignment;
+  if (year) match.schoolYear = year;
 
   return [{
     $match: match
