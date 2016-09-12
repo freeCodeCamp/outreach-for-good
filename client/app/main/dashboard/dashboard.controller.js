@@ -119,13 +119,13 @@ function DashboardCtrl($scope, $timeout, AbsenceRecord, GridDefaults, Student) {
       $scope.tableTitle = $scope.makeTitle('2016-2017');
     }
   }];
-  
+
   updateOutreachCounts();
   $scope.menuItems = _.concat([], defaultMenuItems);
   $scope.filter = {};
   $scope.loading = true;
   $scope.csvFileNameFn = function() {
-    return GridDefaults.datePrefix() + ' ' + $scope.tableTitle() + '.csv';
+    return GridDefaults.datePrefix() + ' ' + $scope.tableTitle + '.csv';
   };
   $scope.gridOptions = GridDefaults.recordOptions($scope);
   $scope.setFilter = function(type, tier) {
