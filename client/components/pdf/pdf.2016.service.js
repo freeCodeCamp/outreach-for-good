@@ -11,30 +11,33 @@ function PDF2016($q, $resource) {
    *
    */
   function partialRecord(items) {
-    var sidMatch = new RegExp('\\(#\\d*\\)$');
-    var nameFieldCapture = new RegExp('^\\d{2,}\\s(.*), (.*) [A-Z] \\(#(\\d*)\\)$');
+    var sidRe = /\(#(\d+)\)$/;
+    var re = /^(\d{2,2})\s(.+),\s(.+)$/g;
     var students = [];
 
     items.forEach(function(item, idx) {
-      if (sidMatch.test(item)) {
-        var nameField = nameFieldCapture.exec(item);
-        if(nameField !== null) {
-          students.push({
-            student: {
-              lastName: nameField[1],
-              firstName: nameField[2],
-              studentId: nameField[3]
-            },
-            entry: {
-              enrolled: items[idx + 1], // Membership
-              absences: items[idx + 2], // Absent Days
-              present: items[idx + 3], // Present Days
-              // ADM: items[idx + 4], uncomment if needed
-              // ADA: items[idx + 5], uncomment if needed
-              tardies: items[idx + 6] // unexcused Days
-            }
-          });
-        }
+      var capture = re.exec(item);
+      if (capture) {
+        var grade = capture[1];
+        var lastName = capture[2];
+        var sid = sidRe.exec(capture[3]);
+        var firstName = sid ? capture[3].replace(sidRe, '').trim() : capture[3];
+        var studentId = sid ? sid[1] : sidRe.exec(items[idx + 1])[1];
+        students.push({
+          student: {
+            lastName: lastName,
+            firstName: firstName,
+            studentId: studentId
+          },
+          entry: {
+            enrolled: items[idx + 1 + !sid], // Membership
+            absences: items[idx + 2 + !sid], // Absent Days
+            present: items[idx + 3 + !sid], // Present Days
+            // ADM: items[idx + 4], uncomment if needed
+            // ADA: items[idx + 5], uncomment if needed
+            tardies: items[idx + 6 + !sid] // unexcused Days
+          }
+        });
       }
     });
 
