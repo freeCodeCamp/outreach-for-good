@@ -409,6 +409,12 @@ module.exports = function (grunt) {
           branch: 'master'
         }
       },
+      staging: {
+        options: {
+          remote: 'staging',
+          branch: 'master',
+        }
+      },
       openshift: {
         options: {
           remote: 'openshift',
