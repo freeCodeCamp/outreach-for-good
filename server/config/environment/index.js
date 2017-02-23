@@ -11,7 +11,6 @@ function requiredProcessEnv(name) {
 }
 
 requiredProcessEnv('APP_SECRET');
-requiredProcessEnv('SUPER_USER_EMAIL');
 
 // All configurations will extend these options
 // ============================================
@@ -22,7 +21,7 @@ var all = {
   root: path.normalize(__dirname + '/../../..'),
 
   // Server port
-  port: process.env.PORT || 9000,
+  port: process.env.PORT || 4500,
 
   // Server IP
   ip: process.env.IP || '0.0.0.0',
@@ -57,4 +56,5 @@ var all = {
 // ==============================================
 module.exports = _.merge(
   all,
-  require('./' + process.env.NODE_ENV + '.js') || {});
+  require('./' + process.env.NODE_ENV + '.js') || {},
+  require('../' + process.env.NODE_ENV + '.env.js') || {});
