@@ -162,4 +162,5 @@ public
 client/bower_components
 dist
 /server/config/local.env.js
+/server/config/development.env.js
 npm-debug.log
