@@ -1,0 +1,64 @@
+---
+
+#|  Install NVM Packages
+
+- name: setup - Add nvm.sh to profile
+  template:
+    src: nvm.sh.j2
+    dest: /etc/profile.d/nvm.sh
+    owner: root
+    group: root
+    mode: 0755
+
+- name: setup - Install node versions on system
+  shell: bash -lc 'nvm install {{ item }}'
+  register: output
+  changed_when: "'already installed.' not in output.stderr"
+  with_items: '{{ nvm_install_node_versions }}'
+  when: '{{ nvm_system_install }}'
+
+- name: setup - Install node versions on users
+  shell: bash -lc 'nvm install {{ item.1 }}'
+  become: true
+  become_user: '{{ item.0 }}'
+  with_nested:
+    - '{{ nvm_user_installs }}'
+    - '{{ nvm_install_node_versions }}'
+  register: output
+  changed_when: "'already installed.' not in output.stderr"
+
+- name: setup - Create alias directory for system
+  file: path='/usr/local/nvm/alias' state=directory
+  when: '{{ nvm_system_install }}'
+
+- name: setup - Set {{ nvm_default_node_version }} as default
+  copy: dest='/usr/local/nvm/alias/default' content='{{ nvm_default_node_version }}'
+  when: '{{ nvm_system_install }}'
+
+- name: setup - Create alias directory for users
+  file: path='~/.nvm/alias' state=directory
+  become: true
+  become_user: '{{ item }}'
+  with_items: '{{ nvm_user_installs }}'
+
+- name: setup - Set {{ nvm_default_node_version }} as default
+  copy: dest='~/.nvm/alias/default' content='{{ nvm_default_node_version }}'
+  become: true
+  become_user: '{{ item }}'
+  with_items: '{{ nvm_user_installs }}'
+
+- name: setup - Install node packages on system
+  shell: bash -lc 'nvm use {{ item.0 }} && npm install -g {{ item.1 }}'
+  when: '{{ nvm_system_install }}'
+  with_nested:
+    - '{{ nvm_install_node_versions }}'
+    - '{{ nvm_install_packages }}'
+
+- name: setup - Install node packages for users
+  shell: bash -lc 'nvm use {{ item.1 }} && npm install -g {{ item.2 }}'
+  become: true
+  become_user: '{{ item.0 }}'
+  with_nested:
+    - '{{ nvm_user_installs }}'
+    - '{{ nvm_install_node_versions }}'
+    - '{{ nvm_install_packages }}'

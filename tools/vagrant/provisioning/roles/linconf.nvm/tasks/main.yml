@@ -1,0 +1,13 @@
+---
+
+#|  Initialize Play
+
+- name: main - Install NVM
+  include: 'install.yml'
+  when: nvm_role_enabled | bool
+  tags: [ 'nvm' ]
+
+- name: main - Configure NVM
+  include: 'setup.yml'
+  when: nvm_role_enabled | bool
+  tags: [ 'nvm' ]

@@ -1,0 +1,17 @@
+#{{ ansible_managed_custom | default( ansible_managed ) }}
+
+{% if nvm_system_install %}
+
+export NVM_DIR="/usr/local/nvm"
+
+. /usr/local/nvm/nvm.sh
+
+{% else %}
+
+export NVM_DIR="~/.nvm"
+
+if [ -d "$HOME/.nvm" ]; then
+  . ~/.nvm/nvm.sh
+fi
+
+{% endif %}

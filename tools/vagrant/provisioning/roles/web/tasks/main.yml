@@ -1,19 +1,4 @@
 ---
-- name: Install packages
-  apt: pkg={{ item }}
-  sudo: yes
-  with_items:
-    - build-essential
-    - curl
-    - git
-    - ruby
-    - g++
-    - libkrb5-dev
-    - libpng-dev
-    - libfontconfig-dev
-    - libssl-dev
-    - python-pip
-  tags: packages
 
 - name: CSS | Install SASS
   sudo: yes
@@ -24,14 +9,6 @@
   sudo: no
   template: src=gconfig.j2 dest=/home/vagrant/.gitconfig force=no
   tags: git
-
-- name: Install nodejs, npm, and npm packages
-  include: node.yml
-  tags: nodejs
-
-- name: Register remote PATH File
-  shell: "echo $PATH"
-  register: nodejs_path_out
 
 - name: Install heroku-toolbelt
   include: 'heroku.yml'
