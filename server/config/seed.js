@@ -68,7 +68,6 @@ AbsenceRecord.remove().exec().then(function() {
     studentId: 'sid004',
     lastName: 'Hughes',
     firstName: 'Victor',
-    grade: 5,
     school: schoolB._id
   }, {
     studentId: 'sid005',
