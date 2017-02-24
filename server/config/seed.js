@@ -50,16 +50,19 @@ AbsenceRecord.remove().exec().then(function() {
     studentId: 'sid001',
     lastName: 'Graham',
     firstName: 'Brandon',
+    grade: 5,
     school: schoolA._id
   }, {
     studentId: 'sid002',
     lastName: 'Simpson',
     firstName: 'Dan',
+    grade: 5,
     school: schoolA._id
   }, {
     studentId: 'sid003',
     lastName: 'Arnold',
     firstName: 'Gavin',
+    grade: 3,
     school: schoolA._id
   }, {
     studentId: 'sid004',
@@ -70,6 +73,7 @@ AbsenceRecord.remove().exec().then(function() {
     studentId: 'sid005',
     lastName: 'Thomson',
     firstName: 'Sue',
+    grade: 6,
     school: schoolB._id
   }, logCreateResults('students'));
 }).then(function(studentA, studentB, studentC, studentD, studentE) {
