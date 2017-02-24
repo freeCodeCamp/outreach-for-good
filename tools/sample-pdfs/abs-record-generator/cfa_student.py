@@ -10,9 +10,10 @@ class Student():
     Iterations of record can be created by calling Student.itterate(inc).
     """
     # refactor to accept row of csv data
-    def __init__(self, name, sid, absences, tdy, present, enrolled, school_year):
+    def __init__(self, name, sid, grade, absences, tdy, present, enrolled, school_year):
         self.name = name
         self.sid = sid
+        self.grade = grade
         self.absences = int(absences)
         self.tdy = int(tdy)
         self.present = int(present)
@@ -21,7 +22,7 @@ class Student():
         self.week = 1
 
     def itterate(self, incremental, selected=False):
-        # Add statement if incremental == 0, 
+        # Add statement if incremental == 0,
         # only increment enrolled and week
         # also, incremental can't be between 0-4
         if incremental <= 4:
@@ -37,7 +38,7 @@ class Student():
                 """
                 self.absences += randint(0, int(incremental))
                 self.tdy += randint(0, int(incremental))
-                self.present = self.enrolled - self.absences 
+                self.present = self.enrolled - self.absences
 
 # Not utilized in script yet...
 #   could be more DRY?
@@ -55,10 +56,10 @@ class StudentsGroup():
     def createOne(self, verbose):
         filepath = self.__create_filepath()
         with open(filepath, 'a') as outcsv:
-            writer = csv.writer(outcsv, 
-                delimiter=',', 
-                quotechar='"', 
-                quoting=csv.QUOTE_MINIMAL, 
+            writer = csv.writer(outcsv,
+                delimiter=',',
+                quotechar='"',
+                quoting=csv.QUOTE_MINIMAL,
                 lineterminator='\n')
             for i in range(0, len(self.group)):
                 self.__write_a_record(writer, i)
@@ -76,17 +77,17 @@ class StudentsGroup():
                     print "%d records in..." % len(indexes)
 
             with open(filepath, 'a') as outcsv:
-                writer = csv.writer(outcsv, 
-                    delimiter=',', 
-                    quotechar='"', 
-                    quoting=csv.QUOTE_MINIMAL, 
+                writer = csv.writer(outcsv,
+                    delimiter=',',
+                    quotechar='"',
+                    quoting=csv.QUOTE_MINIMAL,
                     lineterminator='\n')
                 for i in range(0, len(self.group)):
                     if week == 0:
                     # if first week, write record to csv row w/o filtering
                         self.__write_a_record(writer, i)
                     else:
-                    # otherwise, write record to csv row w/ 
+                    # otherwise, write record to csv row w/
                     #   indexes filtering array
                         match = False
                         for idx in indexes:
@@ -102,14 +103,15 @@ class StudentsGroup():
                 if verbose == True:
                     print  self.__print_file_destination(filepath)
 
-    # 'PRIVATE' FUNCTIONS                        
+    # 'PRIVATE' FUNCTIONS
     def __write_a_record(self, w, idx):
         w.writerow([self.group[idx].name, self.group[idx].sid])
+        w.writerow([self.headers[2] + ':', int(self.group[idx].grade)])
         w.writerow([self.headers[3] + ':', int(self.group[idx].absences)])
-        w.writerow([self.headers[-2] + ':', int(self.group[idx].tdy)])
-        w.writerow([self.headers[-3] + ':', int(self.group[idx].present)])
-        w.writerow([self.headers[2] + ':', int(self.group[idx].enrolled)])
-        w.writerow([self.headers[-1] + ':', self.group[idx].school_year])
+        w.writerow([self.headers[4] + ':', int(self.group[idx].tdy)])
+        w.writerow([self.headers[5] + ':', int(self.group[idx].present)])
+        w.writerow([self.headers[6] + ':', int(self.group[idx].enrolled)])
+        w.writerow([self.headers[7] + ':', self.group[idx].school_year])
 
     def __print_file_destination(self, dest):
         return "\nNew file: %s\n" % dest
