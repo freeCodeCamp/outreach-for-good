@@ -1,0 +1,34 @@
+# Ubuntu upstart file at /etc/init/mongod.conf
+
+limit fsize unlimited unlimited
+limit cpu unlimited unlimited
+limit as unlimited unlimited
+limit nofile 64000 64000
+limit rss unlimited unlimited
+limit nproc 32000 32000
+
+kill timeout 300 # wait 300s between SIGTERM and SIGKILL.
+
+pre-start script
+  DAEMONUSER=${DAEMONUSER:-mongodb}
+  touch /var/run/mongodb.pid
+  chown $DAEMONUSER /var/run/mongodb.pid
+end script
+
+start on runlevel [2345]
+stop on runlevel [06]
+
+script
+  ENABLE_MONGOD="yes"
+  CONF=/etc/mongod.conf
+  DAEMON=/usr/bin/mongod
+  DAEMONUSER=${DAEMONUSER:-mongodb}
+  NUMACTL="$(which numactl) -- --interleave=all"
+  DAEMON_OPTS=${DAEMON_OPTS:-"--config $CONF"}
+
+  exec start-stop-daemon --start \
+      --chuid $DAEMONUSER \
+      --pidfile /var/run/mongodb.pid \
+      --make-pidfile \
+      --exec $NUMACTL $DAEMON $DAEMON_OPTS
+end script
