@@ -1,0 +1,24 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+Vagrant.configure(2) do |config|
+
+  config.vm.provider "libvirt" do |libvirt|
+    libvirt.username = 'root'
+    libvirt.connect_via_ssh = false
+    libvirt.storage_pool_name = "VagrantPool"
+  end
+
+  config.vm.define :cfa_dev do |cfa_dev|
+    cfa_dev.vm.box = "yk0/ubuntu-xenial"
+
+    cfa_dev.vm.provider :libvirt do |domain|
+      domain.memory = 2048
+      domain.cpus = 2
+    end
+  end
+
+  config.vm.provision "ansible" do |ansible|
+    # ansible.verbose = "vvvv"
+    ansible.playbook = "provisioning/main.yml"
+  end
+end
