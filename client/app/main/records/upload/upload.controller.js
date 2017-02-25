@@ -196,7 +196,7 @@ function UploadCtrl($scope, PDF, AbsenceRecord, Auth, School, toastr) {
       if (n) {
         var promise = PDF.parse(n, $scope.selected.format);
         promise.then(function(partialRecord) {
-          console.log(partialRecord)
+          //partialRecord is a giant array of the columns
           $scope.parsedRecord = completeRecord(partialRecord);
         }, function(err) {
           // TODO: handle errors.

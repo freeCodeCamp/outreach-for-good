@@ -107,8 +107,7 @@ AbsenceRecord.remove().exec().then(function() {
     },
     "role" : "admin",
     "__v" : 0
-  }
-,logCreateResults('users'));
+  }, logCreateResults('users'));
 }).then(function() {
   return School.create({
     name: 'School A'
