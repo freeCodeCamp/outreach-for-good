@@ -12,6 +12,8 @@ function UploadCtrl($scope, PDF, AbsenceRecord, Auth, School, toastr) {
   function resetState() {
     delete $scope.pending;
     delete $scope.parsedRecord;
+    delete $scope.error;
+
     $scope.maxDate = dateOnly(Date.now());
     $scope.progress = 0;
     $scope.selected = {
@@ -199,8 +201,8 @@ function UploadCtrl($scope, PDF, AbsenceRecord, Auth, School, toastr) {
           //partialRecord is a giant array of the columns
           $scope.parsedRecord = completeRecord(partialRecord);
         }, function(err) {
-          // TODO: handle errors.
-          console.log(err);
+          delete $scope.progress;
+          $scope.formatError = true;
         }, function(progress) {
           $scope.progress = progress;
         });
