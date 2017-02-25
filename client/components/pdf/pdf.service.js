@@ -10,6 +10,28 @@ function PDF($q, $resource) {
   function partialRecord(items, format) {
     switch(format) {
     case '2016-2017, with grade level':
+      console.log('2016-2017, with grade level');
+      return {
+        students: _(items).chunk(14).map(function(item) {
+          console.log(item);
+          var name = item[0].split(', ');
+          return {
+            student: {
+              lastName: name[0],
+              firstName: name[1],
+              studentId: item[1],
+              grade: +item[3]
+            },
+            entry: {
+              absences: +item[7],
+              tardies: +item[11],
+              present: +item[9],
+              enrolled: +item[5]
+            }
+          };
+        }).value(),
+        schoolYear: items[13].replace(/(\d{2,})-(\d{2,})/, '20$1-20$2')
+      };
     break;
     case '2016-2017':
       var sidRe = /\(#(\d+)\)$/;
@@ -57,18 +79,18 @@ function PDF($q, $resource) {
             student: {
               lastName: name[0],
               firstName: name[1],
-              studentId: item[1]
+              studentId: item[1],
+              grade: +item[3]
             },
             entry: {
-              grade: +item[3],
-              absences: +item[5],
-              tardies: +item[7],
+              absences: +item[7],
+              tardies: +item[11],
               present: +item[9],
-              enrolled: +item[11]
+              enrolled: +item[5]
             }
           };
         }).value(),
-        schoolYear: items[13].replace(/\s/g, '')
+        schoolYear: items[13].replace(/(\d{2,})-(\d{2,})/, '20$1-20$2')
       };
       break;
     default:

@@ -114,7 +114,7 @@
         <tr class="info" ng-if="parsedRecord.creates" ng-repeat="listing in parsedRecord.creates">
           <td data-title="Name">{{listing.student.lastName}}, {{listing.student.firstName}}</td>
           <td data-title="Student Id">{{listing.student.studentId}}</td>
-          <td data-title="Student Id">{{listing.entry.grade}}</td>
+          <td data-title="Grade">{{ listing.student.grade }}</td>
           <td data-title="Absences">{{listing.entry.absences}}</td>
           <td data-title="Δ Absences">{{listing.entry.absencesDelta}}</td>
           <td data-title="Tardies">{{listing.entry.tardies}}</td>
@@ -129,7 +129,7 @@
         <tr class="success" ng-if="parsedRecord.updates" ng-repeat="listing in parsedRecord.updates">
           <td data-title="Name">{{listing.student.lastName}}, {{listing.student.firstName}}</td>
           <td data-title="Student Id">{{listing.student.studentId}}</td>
-          <td data-title="Student Id">{{listing.entry.grade}}</td>
+          <td data-title="Grade">{{listing.student.grade}}</td>
           <td data-title="Absences">{{listing.entry.absences}}</td>
           <td data-title="Δ Absences">{{listing.entry.absencesDelta}}</td>
           <td data-title="Tardies">{{listing.entry.tardies}}</td>
