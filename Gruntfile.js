@@ -406,7 +406,7 @@ module.exports = function (grunt) {
       heroku: {
         options: {
           remote: 'heroku',
-          branch: 'master'
+          branch: 'v1.1.0'
         }
       },
       staging: {
