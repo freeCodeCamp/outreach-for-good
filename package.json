@@ -93,7 +93,7 @@
   "scripts": {
     "start": "node server/app.js",
     "test": "grunt test",
-    "heroku-prebuild": "gem install bundler; bundle install; npm install bower grunt; bower install",
+    "heroku-prebuild": "gem install bundler; bundle install; npm install -g bower grunt; bower install",
     "postinstall": "grunt build",
     "update-webdriver": "node node_modules/grunt-protractor-runner/node_modules/protractor/bin/webdriver-manager update"
   },
