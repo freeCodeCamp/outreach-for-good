@@ -82,6 +82,11 @@
   <div class="parsing-progress col-xs-12" ng-if="selected.file && !parsedRecord">
     <uib-progressbar value="progress" type="default"></uib-progressbar>
   </div>
+  <div class="col-xs-12" ng-show="formatError">
+    <div class="current-record-warning">
+      The format of your PDF is incorrect.
+    </div>
+  </div>
 </section>
 <section class="confirm" ng-if="parsedRecord">
   <heading text="selected.school.name"></heading>
