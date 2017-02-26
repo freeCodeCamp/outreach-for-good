@@ -1,10 +1,5 @@
 ---
 
-- name: CSS | Install SASS
-  sudo: yes
-  action: command gem install sass creates=/usr/local/bin/sass
-  tags: css
-
 - name: Create global .gitconfig with default user.name and user.email.
   sudo: no
   template: src=gconfig.j2 dest=/home/vagrant/.gitconfig force=no

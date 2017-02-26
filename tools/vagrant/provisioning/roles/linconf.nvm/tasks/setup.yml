@@ -14,15 +14,15 @@
   shell: bash -lc 'nvm install {{ item }}'
   register: output
   changed_when: "'already installed.' not in output.stderr"
-  with_items: '{{ nvm_install_node_versions }}'
   when: '{{ nvm_system_install }}'
+  with_items: '{{ nvm_install_node_versions }}'
 
 - name: setup - Install node versions on users
   shell: bash -lc 'nvm install {{ item.1 }}'
   become: true
-  become_user: '{{ item.0 }}'
+  become_user: '{{ item.0.item }}'
   with_nested:
-    - '{{ nvm_user_installs }}'
+    - '{{ _nvm_user.results }}'
     - '{{ nvm_install_node_versions }}'
   register: output
   changed_when: "'already installed.' not in output.stderr"
@@ -36,16 +36,16 @@
   when: '{{ nvm_system_install }}'
 
 - name: setup - Create alias directory for users
-  file: path='~/.nvm/alias' state=directory
+  file: path='{{item.stdout}}/.nvm/alias' state=directory
   become: true
-  become_user: '{{ item }}'
-  with_items: '{{ nvm_user_installs }}'
+  become_user: '{{ item.item }}'
+  with_items: '{{ _nvm_user.results }}'
 
 - name: setup - Set {{ nvm_default_node_version }} as default
-  copy: dest='~/.nvm/alias/default' content='{{ nvm_default_node_version }}'
+  copy: dest='{{item.stdout}}/.nvm/alias/default' content='{{ nvm_default_node_version }}'
   become: true
-  become_user: '{{ item }}'
-  with_items: '{{ nvm_user_installs }}'
+  become_user: '{{ item.item }}'
+  with_items: '{{ _nvm_user.results }}'
 
 - name: setup - Install node packages on system
   shell: bash -lc 'nvm use {{ item.0 }} && npm install -g {{ item.1 }}'
@@ -57,8 +57,8 @@
 - name: setup - Install node packages for users
   shell: bash -lc 'nvm use {{ item.1 }} && npm install -g {{ item.2 }}'
   become: true
-  become_user: '{{ item.0 }}'
+  become_user: '{{ item.0.item }}'
   with_nested:
-    - '{{ nvm_user_installs }}'
+    - '{{ _nvm_user.results }}'
     - '{{ nvm_install_node_versions }}'
     - '{{ nvm_install_packages }}'

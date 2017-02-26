@@ -13,11 +13,11 @@
 - name: install - Setup User NVM
   git:
     repo: '{{ nvm_repo }}'
-    dest: '~/.nvm'
+    dest: '{{item.stdout}}/.nvm'
     version: '{{ nvm_version }}'
     accept_hostkey: true
   become: true
-  become_user: '{{ item }}'
+  become_user: '{{ item.item }}'
   with_items:
-    - '{{ nvm_user_installs }}'
+    - '{{ _nvm_user.results }}'
 

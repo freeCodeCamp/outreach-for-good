@@ -2,6 +2,13 @@
 
 #|  Initialize Play
 
+- name: Register User Home Directories
+  shell: >
+    egrep "^{{ item }}:" /etc/passwd | awk -F: '{ print $6 }'
+  changed_when: false
+  register: _nvm_user
+  with_items: '{{ nvm_user_installs }}'
+
 - name: main - Install NVM
   include: 'install.yml'
   when: nvm_role_enabled | bool

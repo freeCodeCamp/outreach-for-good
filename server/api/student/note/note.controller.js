@@ -1,9 +1,6 @@
 'use strict';
 
-var _ = require('lodash');
-var Student = require('../student.model');
 var StudentNote = require('./note.model');
-var auth = require('../../../auth/auth.service');
 
 /**
  * Get list of all notes for a student.
@@ -15,7 +12,7 @@ exports.index = function(req, res) {
     .populate('user')
     .sort({createdAt: -1})
     .exec(function(err, notes) {
-      if (err) return handleError(res, err);
+      if(err) return handleError(res, err);
       return res.status(200).json(notes);
     });
 };
@@ -29,7 +26,7 @@ exports.show = function(req, res) {
     .findById(req.params.noteId)
     .populate('user')
     .exec(function(err, note) {
-      if (err) return handleError(res, err);
+      if(err) return handleError(res, err);
       return res.status(200).json(note);
     });
 };
@@ -38,12 +35,12 @@ exports.show = function(req, res) {
 exports.create = function(req, res) {
   // Ignore everything sent but the note for security reasons.
   var newNote = {
-    student: req.student.id,
-    user: req.user.id,
-    note: req.body.note
+    student : req.student.id,
+    user    : req.user.id,
+    note    : req.body.note
   };
   StudentNote.create(newNote, function(err, note) {
-    if (err) return handleError(res, err);
+    if(err) return handleError(res, err);
     return res.status(200).json(note);
   });
 };
@@ -54,13 +51,13 @@ exports.update = function(req, res) {
     .findById(req.params.noteId)
     .populate('user')
     .exec(function(err, note) {
-      if (err) return handleError(res, err);
-      if (!note) return res.send(404);
+      if(err) return handleError(res, err);
+      if(!note) return res.send(404);
       // NOTE: For now only allow update to archived.
-      if (note.archived !== req.body.archived) {
+      if(note.archived !== req.body.archived) {
         note.archived = req.body.archived;
         note.save(function(err) {
-          if (err) return handleError(res, err);
+          if(err) return handleError(res, err);
           return res.status(200).json(note);
         });
       }
@@ -70,10 +67,10 @@ exports.update = function(req, res) {
 // Deletes a note from the DB.
 exports.destroy = function(req, res) {
   StudentNote.findById(req.params.noteId, function(err, note) {
-    if (err) return handleError(res, err);
-    if (!note) return res.send(404);
+    if(err) return handleError(res, err);
+    if(!note) return res.send(404);
     note.remove(function(err) {
-      if (err) return handleError(res, err);
+      if(err) return handleError(res, err);
       return res.sendStatus(204);
     });
   });

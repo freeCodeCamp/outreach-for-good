@@ -12,17 +12,23 @@ var StudentNote = require('../student/note/note.model');
  * restriction: 'super'
  */
 exports.reset = function(req, res) {
-  AbsenceRecord.remove().exec().then(function() {
+  AbsenceRecord.remove().exec()
+  .then(function() {
     return Outreach.remove().exec();
-  }).then(function() {
+  })
+  .then(function() {
     return Intervention.remove().exec();
-  }).then(function() {
+  })
+  .then(function() {
     return School.remove().exec();
-  }).then(function() {
+  })
+  .then(function() {
     return Student.remove().exec();
-  }).then(function() {
+  })
+  .then(function() {
     return StudentNote.remove().exec();
-  }).then(function() {
+  })
+  .then(function() {
     res.sendStatus(200);
   });
 };

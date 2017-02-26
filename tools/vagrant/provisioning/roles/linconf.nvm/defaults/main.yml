@@ -9,13 +9,14 @@ nvm_role_enabled: True
 #| Settings
 #|
 
-nvm_version: v0.33.1
+#latest: v0.33.1
+nvm_version: 'HEAD'
 nvm_system_install: True
 nvm_user_installs: []
 
 nvm_install_node_versions:
-  - stable
-nvm_default_node_version: stable
+  - 'lts/boron'
+nvm_default_node_version: 'lts/boron'
 nvm_install_packages: []
 
-nvm_repo: "git://github.com/creationix/nvm.git"
+nvm_repo: 'git://github.com/creationix/nvm.git'
