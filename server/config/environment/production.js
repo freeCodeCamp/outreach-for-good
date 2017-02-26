@@ -1,4 +1,5 @@
 'use strict';
+/* eslint-disable no-process-env */
 
 // Production specific configuration
 // =================================

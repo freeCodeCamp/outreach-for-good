@@ -23,7 +23,7 @@ export default {
     new webpack.NoEmitOnErrorsPlugin(),
     new ExtractTextPlugin({
       filename : '[name].[contenthash].css',
-      disable  : process.env.NODE_ENV === 'development'
+      disable  : process.env.NODE_ENV === 'development' // eslint-disable-line no-process-env
     })
   ],
   module : {

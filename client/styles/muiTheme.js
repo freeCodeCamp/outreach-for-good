@@ -1,4 +1,6 @@
 'use strict';
+/* eslint-disable */
+
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import {fade} from 'material-ui/utils/colorManipulator';
 import spacing from 'material-ui/styles/spacing';

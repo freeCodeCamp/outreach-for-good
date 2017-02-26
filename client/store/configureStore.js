@@ -37,6 +37,7 @@ function configureStoreDev(initialState) {
   return store;
 }
 
+// eslint-disable-next-line no-process-env
 const configureStore = process.env.NODE_ENV === 'production' ? configureStoreProd : configureStoreDev;
 
 export default configureStore;
