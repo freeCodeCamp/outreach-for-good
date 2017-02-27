@@ -1,7 +1,7 @@
 "use strict";
 
 var FakeObjectDataListStore = require('../common/helpers/FakeObjectDataListStore');
-var FixedDataTable = require('fixed-data-table');
+var FixedDataTable = require('fixed-data-table-2');
 var React = require('react');
 import Dimensions from 'react-dimensions'
 
