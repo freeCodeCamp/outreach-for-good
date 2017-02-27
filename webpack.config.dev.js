@@ -5,7 +5,7 @@ import path from 'path';
 export default {
   devtool : 'inline-source-map',
   entry   : [
-    'eventsource-polyfill', // necessary for hot reloading with IE
+    './client/webpack-public-path',
     'webpack-hot-middleware/client?reload=true', //note that it reloads the page if hot module reloading fails.
     path.resolve(__dirname, 'client/index.js')
   ],
@@ -14,9 +14,6 @@ export default {
     path       : path.resolve(__dirname, 'dist'),
     publicPath : '/',
     filename   : 'bundle.js'
-  },
-  devServer : {
-    contentBase : path.resolve(__dirname, 'client')
   },
   plugins : [
     new webpack.HotModuleReplacementPlugin(),
