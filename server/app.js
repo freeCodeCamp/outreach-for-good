@@ -1,28 +1,39 @@
+'use strict';
 /**
  * Main application file
  */
 
-'use strict';
-
-// Set default node environment to development
-
 import express from 'express';
 import webpack from 'webpack';
-import config from '../webpack.config.dev';
 import env from './config/environment';
 
 // Connect to database
 require('./config/mongoose');
 
 const app = express();
-const compiler = webpack(config);
+if(env.env == 'development') {
+  console.log('dev: ', env.env);
+  const webpackDevConfig = require('../webpack.config.dev').default;
+  const compiler = webpack(webpackDevConfig);
 
-app.use(require('webpack-dev-middleware')(compiler, {
-  noInfo     : true,
-  publicPath : config.output.publicPath
-}));
+  app.use(require('connect-history-api-fallback')(compiler));
+  app.use(require('webpack-dev-middleware')(compiler, {
+    publicPath : webpackDevConfig.output.publicPath,
+    noInfo     : false,
+    quiet      : false,
+    stats      : {
+      assets       : false,
+      colors       : true,
+      version      : false,
+      hash         : false,
+      timings      : false,
+      chunks       : false,
+      chunkModules : false
+    }
+  }));
 
-app.use(require('webpack-hot-middleware')(compiler));
+  app.use(require('webpack-hot-middleware')(compiler));
+}
 
 var server = require('http').createServer(app);
 require('./config/express')(app);

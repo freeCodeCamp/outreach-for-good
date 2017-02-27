@@ -1,31 +1,41 @@
 import webpack from 'webpack';
+import ExtractTextPlugin from 'extract-text-webpack-plugin';
+import WebpackMd5Hash from 'webpack-md5-hash';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import path from 'path';
 
 export default {
-  devtool : 'inline-source-map',
-  entry   : [
-    './client/webpack-public-path',
-    'webpack-hot-middleware/client?reload=true', //note that it reloads the page if hot module reloading fails.
-    path.resolve(__dirname, 'client/index.js')
-  ],
-  target : 'web',
-  output : {
+  devtool : 'source-map',
+  entry   : path.resolve(__dirname, 'client/index'),
+  target  : 'web', // necessary per https://webpack.github.io/docs/testing.html#compile-and-test
+  output  : {
     path       : path.resolve(__dirname, 'dist'),
     publicPath : '/',
-    filename   : 'bundle.js'
+    filename   : '[name].[chunkhash].js'
   },
   plugins : [
-    new webpack.HotModuleReplacementPlugin(),
-    new webpack.NoEmitOnErrorsPlugin(),
+    // Hash the files using MD5 so that their names change when the content changes.
+    new WebpackMd5Hash(),
+    // Generate an external css file with a hash in the filename
+    new ExtractTextPlugin('[name].[contenthash].css'),
+    // Generate HTML file that contains references to generated bundles. See here for how this works: https://github.com/ampedandwired/html-webpack-plugin#basic-usage
     new HtmlWebpackPlugin({
       template : 'client/index.ejs',
       minify   : {
-        removeComments     : true,
-        collapseWhitespace : true
+        removeComments                : true,
+        collapseWhitespace            : true,
+        removeRedundantAttributes     : true,
+        useShortDoctype               : true,
+        removeEmptyAttributes         : true,
+        removeStyleLinkTypeAttributes : true,
+        keepClosingSlash              : true,
+        minifyJS                      : true,
+        minifyCSS                     : true,
+        minifyURLs                    : true
       },
       inject : true
-    })
+    }),
+    new webpack.optimize.UglifyJsPlugin()
   ],
   module : {
     loaders : [
