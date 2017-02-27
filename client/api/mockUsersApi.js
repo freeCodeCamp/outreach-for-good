@@ -30,6 +30,45 @@ function replaceAll(str, find, replace) {
 const generateId = user => replaceAll(user.title, ' ', '-');
 
 class UsersApi {
+/**
+ * Get my info
+ */
+static me(req, res) {
+  User.findById(req.user.id)
+    .populate('assignment')
+    .exec(function(err, user) {
+      if(err) return handleError(res, err);
+      if(!user) return res.status(401).send('Unauthorized');
+      return res.status(200).json(user);
+    });
+};
+
+/**
+ * Get a single user
+ */
+static show(req, res) {
+  User.findById(req.params.userId, function(err, user) {
+    if(err) return handleError(res, err);
+    if(!user) return res.status(401).send('Unauthorized');
+    return res.status(200).json(user.profile);
+  });
+};
+
+/**
+ * Get list of users
+ * restriction: 'admin'
+ */
+static index(req, res) {
+  User.find()
+    .populate('assignment', 'name')
+    .sort({name: 1})
+    .exec(function(err, users) {
+      if(err) return handleError(res, err);
+      return res.status(200).json(users);
+    });
+};
+
+
   static getAllUsers() {
     return new Promise(resolve => {
       setTimeout(() => {

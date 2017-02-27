@@ -5,7 +5,7 @@ class AdminPage extends React.Component {
     return (
             <div>
                 <h1>Dashboard</h1>
-                <p>This is a sample about page</p>
+                <p>This is a sample about page s</p>
 
             </div>
       );
