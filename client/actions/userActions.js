@@ -7,7 +7,7 @@ export function loadUsersSuccess(users) {
 
 export function loadUsers() {
   return function(dispatch) {
-    return userAPI.getAllUsers().then(users => {
+    return userAPI.index().then(users => {
       dispatch(loadUsersSuccess(users));
     })
     .catch(err => {

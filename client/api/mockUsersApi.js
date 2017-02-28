@@ -19,6 +19,24 @@ const users = [
     email    : 'test@test.com',
     role     : 'guest',
     __v      : 0
+  }, {
+    _id        : '589bb5ac5d4c3d03304f49bf',
+    provider   : 'local',
+    name       : 'Test Teacher',
+    email      : 'test@teacher.com',
+    role       : 'teacher',
+    __v        : 0,
+    assignment : {
+      name     : 'School 1',
+      active   : true,
+      triggers : [
+      {
+        'absences' : 15,
+        'tier'     : 1,
+        type       : 'Court Referral'
+      }
+    ],
+    }
   }
 ];
 
@@ -33,40 +51,36 @@ class UsersApi {
 /**
  * Get my info
  */
-static me(req, res) {
-  User.findById(req.user.id)
-    .populate('assignment')
-    .exec(function(err, user) {
-      if(err) return handleError(res, err);
-      if(!user) return res.status(401).send('Unauthorized');
-      return res.status(200).json(user);
+  static me() {
+    return new Promise(resolve => {
+      setTimeout(() => {
+        resolve(Object.assign([], users[2]));
+      }, delay);
     });
-};
+  }
 
 /**
  * Get a single user
  */
-static show(req, res) {
-  User.findById(req.params.userId, function(err, user) {
-    if(err) return handleError(res, err);
-    if(!user) return res.status(401).send('Unauthorized');
-    return res.status(200).json(user.profile);
-  });
-};
+  static show() {
+    return new Promise(resolve => {
+      setTimeout(() => {
+        resolve(Object.assign([], users[2]));
+      }, delay);
+    });
+  }
 
 /**
  * Get list of users
  * restriction: 'admin'
  */
-static index(req, res) {
-  User.find()
-    .populate('assignment', 'name')
-    .sort({name: 1})
-    .exec(function(err, users) {
-      if(err) return handleError(res, err);
-      return res.status(200).json(users);
+  static index() {
+    return new Promise(resolve => {
+      setTimeout(() => {
+        resolve(Object.assign([], users));
+      }, delay);
     });
-};
+  }
 
 
   static getAllUsers() {

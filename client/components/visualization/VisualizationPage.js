@@ -1,40 +1,39 @@
-"use strict";
-
 var FakeObjectDataListStore = require('../common/helpers/FakeObjectDataListStore');
 var FixedDataTable = require('fixed-data-table-2');
 var React = require('react');
-import Dimensions from 'react-dimensions'
+import Dimensions from 'react-dimensions';
 
 const {Table, Column, Cell} = FixedDataTable;
 
 function colorizeText(str, index) {
-  var val, n = 0;
-  return str.split('').map((letter) => {
+  var val,
+    n = 0;
+  return str.split('').map(letter => {
     val = index * 70 + n++;
-    var color = 'hsl(' + val + ', 100%, 50%)';
+    var color = `hsl(${val}, 100%, 50%)`;
     return <span style={{color}} key={val}>{letter}</span>;
   });
 }
 
 
-const TextCell = ({rowIndex, data, col, ...props}) => (
+const TextCell = ({rowIndex, data, col, ...props}) =>
   <Cell {...props}>
     {data.getObjectAt(rowIndex)[col]}
   </Cell>
-);
+;
 
-const ColoredTextCell = ({rowIndex, data, col, ...props}) => (
+const ColoredTextCell = ({rowIndex, data, col, ...props}) =>
   <Cell {...props}>
     {colorizeText(data.getObjectAt(rowIndex)[col], rowIndex)}
   </Cell>
-);
+;
 
 class VisualizationPage extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      dataList: new FakeObjectDataListStore(1000),
+      dataList : new FakeObjectDataListStore(1000),
     };
   }
 
@@ -51,7 +50,7 @@ class VisualizationPage extends React.Component {
         <Column
           header={<Cell>First Name</Cell>}
           cell={<TextCell data={dataList} col="firstName" />}
-          fixed={true}
+          fixed
           width={100}
         />
         <Column
