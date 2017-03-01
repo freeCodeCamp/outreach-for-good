@@ -58,7 +58,7 @@ class UsersApi {
       }, delay);
     });
   }
-
+  
 /**
  * Get a single user
  */
@@ -74,6 +74,7 @@ class UsersApi {
  * Get list of users
  * restriction: 'admin'
  */
+
   static index() {
     return new Promise(resolve => {
       setTimeout(() => {
@@ -81,6 +82,7 @@ class UsersApi {
       }, delay);
     });
   }
+
 
 
   static getAllUsers() {

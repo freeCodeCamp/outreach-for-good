@@ -1,3 +1,4 @@
+
 var FakeObjectDataListStore = require('../common/helpers/FakeObjectDataListStore');
 var FixedDataTable = require('fixed-data-table-2');
 var React = require('react');
@@ -14,7 +15,6 @@ function colorizeText(str, index) {
     return <span style={{color}} key={val}>{letter}</span>;
   });
 }
-
 
 const TextCell = ({rowIndex, data, col, ...props}) =>
   <Cell {...props}>
@@ -34,6 +34,7 @@ class VisualizationPage extends React.Component {
 
     this.state = {
       dataList : new FakeObjectDataListStore(1000),
+
     };
   }
 
@@ -50,7 +51,7 @@ class VisualizationPage extends React.Component {
         <Column
           header={<Cell>First Name</Cell>}
           cell={<TextCell data={dataList} col="firstName" />}
-          fixed
+          fixed={true}
           width={100}
         />
         <Column

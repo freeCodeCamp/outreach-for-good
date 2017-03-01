@@ -41,3 +41,4 @@ function mapDispatchToProps(dispatch) {
 //https://github.com/digidem/react-dimensions/issues/44
 export default connect(mapStateToProps, mapDispatchToProps)(
   Dimensions({elementResize: true})(AdminPage));
+
