@@ -8,33 +8,45 @@ function PDF($q, $resource) {
    * deltas and be organized into existing and new students.
    */
   function partialRecord(items, format) {
+
     switch(format) {
-    case '2016-2017, with grade level':
-      if(items[13].match(/20\d{2} - 20\d{2}/)) {
-        return {
-          students: _(items).chunk(14).map(function(item) {
-            var name = item[0].split(', ');
-            return {
-              student: {
-                lastName: name[0],
-                firstName: name[1],
-                studentId: item[1],
-                grade: +item[3]
-              },
-              entry: {
-                absences: +item[7],
-                tardies: +item[11],
-                present: +item[9],
-                enrolled: +item[5]
-              }
-            };
-          }).value(),
-          schoolYear: items[13].replace(/(\d{2,})-(\d{2,})/, '20$1-20$2')
-        };
-      } else {
-        throw new Error('Incorrect format.');
-      }
-    break;
+    case '2016-2017, with grade level': {
+      var sidRe = /\(#(\d+)\)$/;
+      var re = /^(\d{2,2})\s(.+),\s(.+)$/g;
+      var students = [];
+
+      items.forEach(function(item, idx) {
+        var capture = re.exec(item);
+        if (capture) {
+          var grade = capture[1];
+          var lastName = capture[2];
+          var sid = sidRe.exec(capture[3]);
+          var firstName = sid ? capture[3].replace(sidRe, '').trim() : capture[3];
+          var studentId = sid ? sid[1] : sidRe.exec(items[idx + 1])[1];
+          students.push({
+            student: {
+              lastName: lastName,
+              firstName: firstName,
+              studentId: studentId,
+              grade: grade
+            },
+            entry: {
+              enrolled: items[idx + 1 + !sid], // Membership
+              absences: items[idx + 2 + !sid], // Absent Days
+              present: items[idx + 3 + !sid], // Present Days
+              // ADM: items[idx + 4], uncomment if needed
+              // ADA: items[idx + 5], uncomment if needed
+              tardies: items[idx + 6 + !sid] // unexcused Days
+            }
+          });
+        }
+      });
+      return {
+        students: students,
+        schoolYear: items[6].replace(/(\d{2,})-(\d{2,})/, '20$1-20$2')
+      };
+      break;
+    }
     case '2016-2017':
       if(items[11].match(/20\d{2} - 20\d{2}/)) {
         return {
