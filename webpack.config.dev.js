@@ -1,13 +1,15 @@
 import webpack from 'webpack';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import path from 'path';
+import env from './server/config/environment';
 
 export default {
   devtool : 'inline-source-map',
   entry   : [
-    './client/webpack-public-path',
-    'webpack-hot-middleware/client?reload=true', //note that it reloads the page if hot module reloading fails.
-    path.resolve(__dirname, 'client/index.js')
+    'babel-polyfill',
+    './client/index.js',
+    'webpack/hot/dev-server',
+    `webpack-dev-server/client?http://localhost:${env.webpackPort}/`,
   ],
   target : 'web',
   output : {
@@ -23,8 +25,7 @@ export default {
       minify   : {
         removeComments     : true,
         collapseWhitespace : true
-      },
-      inject : true
+      }
     })
   ],
   module : {
@@ -65,5 +66,25 @@ export default {
         loader : 'url-loader?limit=10000&mimetype=image/svg+xml'
       }
     ]
+  },
+  devServer : {
+    contentBase        : path.join(__dirname, 'client'),
+    historyApiFallback : true,
+    hot                : true,
+    port               : env.webpackPort,
+    noInfo             : false,
+    quiet              : false,
+    stats              : {
+      assets       : false,
+      colors       : true,
+      version      : false,
+      hash         : false,
+      timings      : false,
+      chunks       : false,
+      chunkModules : false
+    },
+    proxy : {
+      '/auth' : `http://localhost:${env.expressPort}`
+    }
   }
 };
