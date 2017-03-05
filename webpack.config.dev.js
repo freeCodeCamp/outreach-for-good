@@ -1,9 +1,9 @@
-import webpack from 'webpack';
-import HtmlWebpackPlugin from 'html-webpack-plugin';
-import path from 'path';
-import env from './server/config/environment';
+var webpack = require('webpack');
+var HtmlWebpackPlugin = require('html-webpack-plugin');
+var path = require('path');
+var env = require('./server/config/environment');
 
-export default {
+module.exports = {
   devtool : 'inline-source-map',
   entry   : [
     'babel-polyfill',
@@ -84,7 +84,7 @@ export default {
       chunkModules : false
     },
     proxy : {
-      '/auth' : `http://localhost:${env.expressPort}`
+      '/auth' : `http://localhost:${env.port}`
     }
   }
 };
