@@ -18,7 +18,8 @@ function UploadCtrl($scope, PDF, AbsenceRecord, Auth, School, toastr) {
     $scope.progress = 0;
     $scope.selected = {
       school: $scope.defaultSchool,
-      date: new Date()
+      date: new Date(),
+      format: '2016-2017, with grade level'
     };
     AbsenceRecord.current().$promise.then(function(records) {
       _.forEach(records, function(record) {
@@ -194,6 +195,8 @@ function UploadCtrl($scope, PDF, AbsenceRecord, Auth, School, toastr) {
   $scope.$watch('selected.file', function(n, o) {
     if (n !== o) {
       delete $scope.parsedRecord;
+      delete $scope.error;
+
       $scope.progress = 0;
       if (n) {
         var promise = PDF.parse(n, $scope.selected.format);
@@ -201,8 +204,8 @@ function UploadCtrl($scope, PDF, AbsenceRecord, Auth, School, toastr) {
           //partialRecord is a giant array of the columns
           $scope.parsedRecord = completeRecord(partialRecord);
         }, function(err) {
-          delete $scope.progress;
-          $scope.formatError = true;
+          //TODO: Error handling
+          $scope.error = err;
         }, function(progress) {
           $scope.progress = progress;
         });
