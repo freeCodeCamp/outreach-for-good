@@ -1,6 +1,7 @@
 import webpack from 'webpack';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import path from 'path';
+import env from './server/config/environment';
 
 export default {
   devtool : 'inline-source-map',
@@ -8,7 +9,7 @@ export default {
     'babel-polyfill',
     './client/index.js',
     'webpack/hot/dev-server',
-    'webpack-dev-server/client?http://localhost:9000/',
+    `webpack-dev-server/client?http://localhost:${env.webpackPort}/`,
   ],
   target : 'web',
   output : {
@@ -70,7 +71,7 @@ export default {
     contentBase        : path.join(__dirname, 'client'),
     historyApiFallback : true,
     hot                : true,
-    port               : '9000',
+    port               : env.webpackPort,
     noInfo             : false,
     quiet              : false,
     stats              : {
@@ -83,7 +84,7 @@ export default {
       chunkModules : false
     },
     proxy : {
-      '/auth' : 'http://localhost:8080'
+      '/auth' : `http://localhost:${env.expressPort}`
     }
   }
 };

@@ -22,8 +22,13 @@ var all = {
   // Root path of server
   root : process.env.APP_ROOT || path.normalize(`${__dirname}/../../..`),
 
-  // Server port
-  port : process.env.PORT || 9000,
+  // Webpack Dev Server port
+  webpackPort : process.env.PORT || 9000,
+
+  // Express Server port
+  expressPort : process.env.PORT || 8080,
+
+  port : process.env.PORT || 8080,
 
   // Server IP
   ip : process.env.IP || '0.0.0.0',

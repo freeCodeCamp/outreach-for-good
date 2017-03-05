@@ -17,21 +17,22 @@ if(env.env == 'development') {
   const webpackDevConfig = require('../webpack.config.dev').default;
   const compiler = webpack(webpackDevConfig);
 
-  const server = new webpackDevServer(compiler, webpackDevConfig.devServer);
+  const wpServer = new webpackDevServer(compiler, webpackDevConfig.devServer);
 
-  server.listen(9000, 'localhost', function() {
-    console.log('Starting server on http://localhost:8080');
-  });
-} else {
-  var server = require('http').createServer(app);
-  require('./config/express')(app);
-  require('./routes')(app);
-
-  // Start server
-  server.listen(env.port, env.ip, function() {
-    console.log('Express server listening on %d, in %s mode', env.port, app.get('env'));
+  wpServer.listen(env.webpackPort, 'localhost', function() {
+    console.log('Webpack server listening on %d, in %s mode', env.webpackPort, app.get('env'));
   });
 }
+
+var server = require('http').createServer(app);
+require('./config/express')(app);
+require('./routes')(app);
+
+// Start server
+server.listen(env.expressPort, 'localhost', function() {
+  console.log('Express server listening on %d, in %s mode', env.expressPort, app.get('env'));
+});
+
 
 // Expose app
 exports = module.exports = app;
