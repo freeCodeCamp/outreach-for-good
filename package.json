@@ -5,7 +5,7 @@
   "scripts": {
     "start": "npm-run-all --parallel server:dev lint:watch",
     "server": "export NODE_ENV=production; node server",
-    "server:dev": "node --inspect server",
+    "server:dev": "node server",
     "lint": "esw client server webpack.config.*",
     "lint:watch": "npm run lint -- --watch",
     "test": "mocha --reporter progress test/testSetup.js \"client/**/*.test.js\"",

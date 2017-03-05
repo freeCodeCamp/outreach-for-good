@@ -84,7 +84,8 @@ module.exports = {
       chunkModules : false
     },
     proxy : {
-      '/auth' : `http://localhost:${env.port}`
+      '/auth' : `http://localhost:${env.port}`,
+      '/api'  : `http://localhost:${env.port}`
     }
   }
 };

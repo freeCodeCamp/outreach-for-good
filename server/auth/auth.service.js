@@ -10,14 +10,13 @@ var User = require('../api/user/user.model');
 var School = require('../api/school/school.model');
 var Student = require('../api/student/student.model');
 var validateJwt = expressJwt({secret: config.secrets.session});
-var debug = require('debug')('auth:service');
+var debug = require('debug')('route:auth:service');
 
 /**
  * Attaches the user object to the request if authenticated
  * Otherwise returns 403
  */
 exports.isAuthenticated = function() {
-  debug('isAuthenticated()');
   var composed = compose();
   // Validate jwt
   composed.use(function(req, res, next) {
@@ -31,7 +30,10 @@ exports.isAuthenticated = function() {
   composed.use(function(req, res, next) {
     User.findById(req.user._id, function(err, user) {
       if(err) return next(err);
-      if(!user) return res.status(401).send('Unauthorized');
+      if(!user) {
+        debug('401, unauthorized user');
+        return res.status(401).send('Unauthorized');
+      }
       req.user = user;
       debug('Valid, attaching user object');
       next();

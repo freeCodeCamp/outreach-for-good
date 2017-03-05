@@ -50,4 +50,5 @@ See [tools/sample-pdfs](https://github.com/freeCodeCamp/child-first-authority/tr
 
 This version is currently under development.
 
-* Bug: server doesn't handle direct navigation to routes other than root
+* Upgrade babel-loader, current version causes depreciation warning 
+  * https://github.com/babel/babel-loader/pull/391

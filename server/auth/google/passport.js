@@ -1,7 +1,7 @@
 var passport = require('passport');
 var GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
 var env = require('../../config/environment');
-var debug = require('debug')('auth:passport');
+var debug = require('debug')('route:auth:passport');
 
 exports.setup = function(User, config) {
   passport.use(new GoogleStrategy({
@@ -13,7 +13,7 @@ exports.setup = function(User, config) {
       User.findOne({
         'google.id' : profile.id
       }, function(err, user) {
-        debug('Passport Google Strategy');
+        debug('Google Strategy');
         if(!user) {
           user = new User({
             name     : profile.displayName,
@@ -26,6 +26,7 @@ exports.setup = function(User, config) {
           if(env.superUserEmail === user.email) {
             user.role = 'super';
           }
+          debug('Adding user: ', user);
           user.save(function(err) {
             if(err) return done(err);
             done(err, user);
@@ -37,6 +38,7 @@ exports.setup = function(User, config) {
             done(err, user);
           });
         } else {
+          debug('Finished processing: ', user);
           return done(err, user);
         }
       });
