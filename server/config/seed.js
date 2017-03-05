@@ -1,3 +1,4 @@
+/* eslint-disable */
 /**
  * Populate DB with sample data on server start
  * to disable, edit config/environment/index.js, and set `seedDB: false`
@@ -12,6 +13,7 @@ var Outreach = require('../api/student/outreach/outreach.model');
 var Intervention = require('../api/student/intervention/intervention.model');
 var StudentNote = require('../api/student/note/note.model');
 var User = require('../api/user/user.model');
+var debug = require('debug')('mongo:seed');
 
 AbsenceRecord.remove().exec().then(function() {
   return Outreach.remove().exec();
@@ -129,20 +131,21 @@ AbsenceRecord.remove().exec().then(function() {
   }, logCreateResults('AbsenceRecords'));
 }).then(function() {
   return Student.find().populate('school').exec(function(err, students) {
-    console.log('\nSchools to Students');
-    students.forEach(function(student) {
-      console.log(
-        student.school.name, ':', student.firstName, student.lastName);
-    });
+    debug('Schools and Students');
+    // students.forEach(function(student) {
+    //   consdebugg(
+    //     student.school.name, ':', student.firstName, student.lastName);
+    // });
   });
 });
 
 function logCreateResults(model) {
   return function(err) {
     if (err) throw new Error('Error populating ' + model + ': ' + err);
-    console.log('\nfinished populating ' + model);
-    for (var i = 1; i < arguments.length; i++) {
-      console.log(arguments[i]);
-    }
+    debug('\nfinished populating ' + model);
+    // Quiet debug output
+    // for (var i = 1; i < arguments.length; i++) {
+    //   debug(arguments[i]);
+    // }
   }
 }

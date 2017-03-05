@@ -1,7 +1,6 @@
 'use strict';
 
 var _ = require('lodash');
-var mongoose = require('mongoose');
 var AbsenceRecord = require('./absence-record.model');
 var Outreach = require('../student/outreach/outreach.model');
 var Student = require('../student/student.model');
@@ -22,23 +21,23 @@ exports.validateCreate = function(req, res, next) {
     .findOne({school: req.school.id})
     .sort({date: -1})
     .exec(function(err, record) {
-      if (!record) return next();
+      if(!record) return next();
       // Validate data is not stale by matching previousRecordId.
-      if (record.id !== req.body.previousRecordId) {
+      if(record.id !== req.body.previousRecordId) {
         return handleError(res, {
-          error: 'Submitted previous record id does not match.'
+          error : 'Submitted previous record id does not match.'
         });
       }
       // Validate date selected is more recent than previous record.
-      if (dateOnly(req.body.date) <= dateOnly(record.date)) {
+      if(dateOnly(req.body.date) <= dateOnly(record.date)) {
         return handleError(res, {
-          error: 'Date for upload must be more recent than current record date.'
+          error : 'Date for upload must be more recent than current record date.'
         });
       }
       // Validate schoolId in request url is the same as on the record.
-      if (req.school.id !== req.body.schoolId) {
+      if(req.school.id !== req.body.schoolId) {
         return handleError(res, {
-          error: 'API url schoolId does not match request body schoolId.'
+          error : 'API url schoolId does not match request body schoolId.'
         });
       }
       return next();
@@ -46,17 +45,18 @@ exports.validateCreate = function(req, res, next) {
 };
 
 var studentDefaults = {
-  cfa: false,
-  iep: false,
-  withdrawn: false
+  cfa       : false,
+  iep       : false,
+  withdrawn : false
 };
 
 function createStudents(newStudents) {
   return new Promise(function(resolve, reject) {
-    if (!newStudents.length) return resolve([]);
+    if(!newStudents.length) return resolve([]);
     Student.insertMany(newStudents).then(function(createdStudents) {
       return resolve(createdStudents);
-    }).catch(function(err) {
+    })
+    .catch(function(err) {
       return reject(err);
     });
   });
@@ -64,10 +64,11 @@ function createStudents(newStudents) {
 
 function createOutreaches(outreaches) {
   return new Promise(function(resolve, reject) {
-    if (!outreaches.length) return resolve([]);
+    if(!outreaches.length) return resolve([]);
     Outreach.insertMany(outreaches).then(function(createdOutreaches) {
       return resolve(createdOutreaches);
-    }).catch(function(err) {
+    })
+    .catch(function(err) {
       return reject(err);
     });
   });
@@ -102,17 +103,19 @@ exports.create = function(req, res) {
       });
     });
     return AbsenceRecord.create({
-      schoolYear: req.body.schoolYear,
-      school: req.school.id,
-      date: req.body.date,
-      entries: combinedEntries,
-      missingEntries: req.body.missingEntries,
-      newMissingStudents: req.body.newMissingStudents,
-      createdStudents: _.map(createdStudents, '_id')
+      schoolYear         : req.body.schoolYear,
+      school             : req.school.id,
+      date               : req.body.date,
+      entries            : combinedEntries,
+      missingEntries     : req.body.missingEntries,
+      newMissingStudents : req.body.newMissingStudents,
+      createdStudents    : _.map(createdStudents, '_id')
     });
-  }).then(function(createdRecord) {
+  })
+  .then(function(createdRecord) {
     return createdRecord.populate('school').execPopulate();
-  }).then(function(populatedRecord) {
+  })
+  .then(function(populatedRecord) {
     result.record = populatedRecord;
     // Outreaches updated with the record id and date.
     _.forEach(outreaches, function(outreach) {
@@ -120,32 +123,34 @@ exports.create = function(req, res) {
       outreach.triggerDate = populatedRecord.date;
     });
     return createOutreaches(outreaches);
-  }).then(function(createdOutreaches) {
+  })
+  .then(function(createdOutreaches) {
     result.outreaches = createdOutreaches;
     return res.status(200).json(result);
-  }).catch(function(err) {
+  })
+  .catch(function(err) {
     return handleError(res, err);
   });
 };
 
 function currentAbsenceRecordPipeline(user) {
   var match = {};
-  if (user.role === 'teacher') {
+  if(user.role === 'teacher') {
     match.school = user.assignment;
   }
   return [{
-    $match: match
+    $match : match
   }, {
-    $sort: {date: -1}
+    $sort : {date: -1}
   }, {
-    $group: {
-      _id: '$school',
-      recordId: {$first: '$_id'},
-      date: {$first: '$date'},
-      school: {$first: '$school'},
-      schoolYear: {$first: '$schoolYear'},
-      entries: {$first: '$entries'},
-      missingEntries: {$first: '$missingEntries'}
+    $group : {
+      _id            : '$school',
+      recordId       : {$first: '$_id'},
+      date           : {$first: '$date'},
+      school         : {$first: '$school'},
+      schoolYear     : {$first: '$schoolYear'},
+      entries        : {$first: '$entries'},
+      missingEntries : {$first: '$missingEntries'}
     }
   }];
 }
@@ -161,11 +166,11 @@ function currentAbsenceRecordPipeline(user) {
 exports.current = function(req, res) {
   var pipeline = currentAbsenceRecordPipeline(req.user);
   AbsenceRecord.aggregate(pipeline, function(err, results) {
-    if (err) return handleError(res, err);
+    if(err) return handleError(res, err);
     AbsenceRecord.populate(results,
       'school entries.student missingEntries.student',
       function(err, records) {
-        if (err) return handleError(res, err);
+        if(err) return handleError(res, err);
         return res.status(200).json(records);
       });
   });
@@ -173,36 +178,36 @@ exports.current = function(req, res) {
 
 exports.student = function(req, res) {
   var pipeline = [{
-    $match: {
-      school: req.student.school,
-      'entries.student': req.student._id
+    $match : {
+      school            : req.student.school,
+      'entries.student' : req.student._id
     }
   }, {
-    $unwind: '$entries'
+    $unwind : '$entries'
   }, {
-    $match: {'entries.student': req.student._id}
+    $match : {'entries.student': req.student._id}
   }, {
-    $group: {
-      _id: '$schoolYear',
-      records: {$push: '$$ROOT'}
+    $group : {
+      _id     : '$schoolYear',
+      records : {$push: '$$ROOT'}
     }
   }, {
-    $sort: {_id: -1}
+    $sort : {_id: -1}
   }, {
-    $limit: 1
+    $limit : 1
   }, {
-    $unwind: '$records'
+    $unwind : '$records'
   }, {
-    $project: {
-      recordId: '$records._id',
-      entry: '$records.entries',
-      date: '$records.date'
+    $project : {
+      recordId : '$records._id',
+      entry    : '$records.entries',
+      date     : '$records.date'
     }
   }, {
-    $sort: {date: -1}
+    $sort : {date: -1}
   }];
   AbsenceRecord.aggregate(pipeline, function(err, results) {
-    if (err) return handleError(res, err);
+    if(err) return handleError(res, err);
     return res.status(200).json(results);
   });
 };
@@ -212,19 +217,19 @@ exports.validateDelete = function(req, res, next) {
     .findOne({school: req.record.school})
     .sort({date: -1})
     .exec(function(err, latest) {
-      if (err) return handleError(res, err);
-      if (latest.id !== req.record.id) {
+      if(err) return handleError(res, err);
+      if(latest.id !== req.record.id) {
         return handleError(res, {
-          error: 'Submitted record for delete is not current record.'
+          error : 'Submitted record for delete is not current record.'
         });
       }
       return next();
-    })
+    });
 };
 
 exports.delete = function(req, res) {
   req.record.remove(function(err) {
-    if (err) return handleError(res, err);
+    if(err) return handleError(res, err);
     return res.status(204).send('No Content');
   });
 };

@@ -1,0 +1,107 @@
+// TYPOGRAPHY ================================================
+$base-font                : 'Roboto', sans-serif;
+$heading-font             : $base-font;
+$caption-font             : $base-font;
+$code-font                : 'source-code-pro', monospace;
+$alt-font                 : 'Roboto', serif;
+
+$doc-font-size            : 16;
+$doc-line-height          : 24;
+
+$border-radius            : 3px;
+
+
+// set-up the body font-size / line-height
+body {
+  margin-top: 0px + $doc-line-height;
+  font-size: 0px + $doc-font-size;
+}
+
+
+// COLORS =====================================================
+$body-color               : #fff;
+$text-color               : #222;
+$base-color               : #343434;
+$comp-color               : adjust-hue($base-color, 180);
+$border-color             : #ddd;
+$white                    : #fff;
+$black                    : #000;
+$accent-color             : $black;
+$link-color               : #222;
+
+$table-border-color       : $border-color;
+$table-border             : 1px solid $table-border-color;
+$table-background         : $body-color;
+$table-header-color       : lighten($table-background, 10);
+$table-hover-color        : darken($table-background, 2);
+$table-stripe-color       : darken($table-background, 4);
+$table-stripe-color-hover : darken($table-stripe-color, 5);
+
+
+// MEDIA QUERIES ==============================================
+$micro                    : "30em";
+$small                    : "37.5em";
+$medium                   : "48em";
+$large                    : "62em";
+$x-large                  : "86.375em";
+
+// Default menu collapse: $small (or 37.5em x 16 = 600px)
+
+// LEGACY ==============================================
+$cfa-blue: rgba(38, 94, 109, 1);
+$cfa-blue-l05: lighten($cfa-blue, 5%);
+$cfa-blue-l10: lighten($cfa-blue, 10%);
+$cfa-blue-d05: darken($cfa-blue, 5%);
+$cfa-blue-d10: darken($cfa-blue, 10%);
+
+$teal: rgba(0, 157, 157, 1);
+$teal-l05: lighten($teal, 5%);
+$teal-l10: lighten($teal, 10%);
+$teal-d05: darken($teal, 5%);
+$teal-d10: darken($teal, 10%);
+
+$deep-sky-blue: rgba(0, 154, 205, 1);
+$deep-sky-blue-l05: lighten($deep-sky-blue, 5%);
+$deep-sky-blue-l10: lighten($deep-sky-blue, 10%);
+$deep-sky-blue-d05: darken($deep-sky-blue, 5%);
+$deep-sky-blue-d10: darken($deep-sky-blue, 10%);
+
+$light-sky-blue: rgba(135, 206, 250, 1);
+$light-sky-blue-l05: lighten($light-sky-blue, 5%);
+$light-sky-blue-l10: lighten($light-sky-blue, 10%);
+$light-sky-blue-l15: lighten($light-sky-blue, 15%);
+$light-sky-blue-d05: darken($light-sky-blue, 5%);
+$light-sky-blue-d10: darken($light-sky-blue, 10%);
+$light-sky-blue-d15: darken($light-sky-blue, 15%);
+
+$pale-turquoise: rgba(175, 238, 238, 1);
+
+$orange: rgba(255, 165, 0, 1);
+$orange-l05: lighten($orange, 5%);
+$orange-l10: lighten($orange, 10%);
+$orange-d05: darken($orange, 5%);
+$orange-d10: darken($orange, 10%);
+
+@mixin cfa-scrollbar($width:2px, $height:0px, $track-color: $cfa-blue-l10, $thumb-color: $cfa-blue-d10) {
+  overflow-y: auto;
+  &::-webkit-scrollbar {
+    width: $width;
+    height: $height;
+  }
+  &::-webkit-scrollbar-track {
+    background-color: $track-color;
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: $thumb-color;
+  }
+}
+
+%abs-fill-parent {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+
+$cfa-unit: 54px;

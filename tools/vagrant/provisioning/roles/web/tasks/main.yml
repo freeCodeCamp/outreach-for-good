@@ -1,0 +1,20 @@
+---
+
+- name: Create global .gitconfig with default user.name and user.email.
+  sudo: no
+  template: src=gconfig.j2 dest=/home/vagrant/.gitconfig force=no
+  tags: git
+
+- name: Install heroku-toolbelt
+  include: 'heroku.yml'
+  sudo: yes
+  tags: heroku-toolbelt
+
+- name: Create app directory for app
+  sudo: no
+  file: path=/vagrant/app state=directory
+  tags: app
+
+- name: Start in /vagrant/app directory when ssh
+  lineinfile: dest=/home/vagrant/.bashrc regexp='^cd /vagrant/app$' line="cd /vagrant/app" state=present
+  tags: .bashrc

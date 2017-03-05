@@ -7,37 +7,39 @@ var Intervention = require('./intervention/intervention.model');
 var StudentNote = require('./note/note.model');
 
 var StudentSchema = new Schema({
-  studentId: {type: String, required: true, index: true},
-  lastName: {type: String, required: true, trim: true},
-  firstName: {type: String, required: true, trim: true},
-  school: {type: Schema.Types.ObjectId, ref: 'School'},
-  iep: {type: Boolean, required: true, default: false},
-  cfa: {type: Boolean, required: true, default: false},
-  withdrawn: {type: Boolean, required: true, default: false},
-  active: {type: Boolean, default: true}
+  studentId : {type: String, required: true, index: true},
+  lastName  : {type: String, required: true, trim: true},
+  firstName : {type: String, required: true, trim: true},
+  grade     : Number,
+  school    : {type: Schema.Types.ObjectId, ref: 'School'},
+  iep       : {type: Boolean, required: true, default: false},
+  cfa       : {type: Boolean, required: true, default: false},
+  withdrawn : {type: Boolean, required: true, default: false},
+  active    : {type: Boolean, default: true}
 });
 
 StudentSchema.pre('save', function(next) {
-  if (!this.isNew && this.isModified('withdrawn')) {
+  if(!this.isNew && this.isModified('withdrawn')) {
     var promises = [
       Outreach.update({
-        student: this._id
+        student : this._id
       }, {
-        withdrawn: this.withdrawn
+        withdrawn : this.withdrawn
       }, {
-        multi: true
+        multi : true
       }).exec(),
       Intervention.update({
-        student: this._id
+        student : this._id
       }, {
-        withdrawn: this.withdrawn
+        withdrawn : this.withdrawn
       }, {
-        multi: true
+        multi : true
       }).exec()
     ];
     Promise.all(promises).then(function() {
       return next();
-    }).catch(function(err) {
+    })
+    .catch(function(err) {
       return next(new Error(err));
     });
   } else {
@@ -47,13 +49,17 @@ StudentSchema.pre('save', function(next) {
 
 StudentSchema.pre('remove', function(next) {
   var promises = [
-    Outreach.find({student: this._id}).remove().exec(),
-    Intervention.find({student: this._id}).remove().exec(),
-    StudentNote.find({student: this._id}).remove().exec()
+    Outreach.find({student: this._id}).remove()
+    .exec(),
+    Intervention.find({student: this._id}).remove()
+    .exec(),
+    StudentNote.find({student: this._id}).remove()
+    .exec()
   ];
   Promise.all(promises).then(function() {
     return next();
-  }).catch(function(err) {
+  })
+  .catch(function(err) {
     return next(new Error(err));
   });
 });

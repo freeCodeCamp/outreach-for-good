@@ -4,9 +4,11 @@
 // ==================================
 module.exports = {
   // MongoDB connection options
-  mongo: {
-    uri: 'mongodb://localhost/app-dev'
+  mongo : {
+    uri : 'mongodb://localhost/app-dev'
   },
 
-  seedDB: true
+  seedDB : true,
+
+  debug : '*'
 };
