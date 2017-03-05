@@ -6,6 +6,7 @@
 
 var errors = require('./components/errors');
 var path = require('path');
+var debug = require('debug')('route:main');
 
 module.exports = function(app) {
   // models
@@ -28,7 +29,7 @@ module.exports = function(app) {
   // All other routes should redirect to the index.html
   app.route('/*')
     .get(function(req, res) {
-      console.log('global route')
+      debug('global route')
       res.sendFile(path.resolve(`${app.get('appPath')}/index.html`));
     });
 };

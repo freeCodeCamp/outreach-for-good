@@ -4,6 +4,7 @@ var _ = require('lodash');
 var AbsenceRecord = require('./absence-record.model');
 var Outreach = require('../student/outreach/outreach.model');
 var Student = require('../student/student.model');
+var debug = require('debug')('route:api:absence-record');
 
 function dateOnly(dateStr) {
   var date = new Date(dateStr);
@@ -235,6 +236,6 @@ exports.delete = function(req, res) {
 };
 
 function handleError(res, err) {
-  console.log(err);
+  debug(err);
   return res.status(500).send(err);
 }
