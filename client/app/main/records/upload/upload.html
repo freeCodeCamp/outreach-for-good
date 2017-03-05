@@ -16,7 +16,7 @@
           </ui-select-choices>
         </ui-select>
       </div>
-      <div ng-class="selected.format ? 'has-success' : 'has-error'">
+      <!-- <div ng-class="selected.format ? 'has-success' : 'has-error'">
         <label class="control-label col-xs-2">Format</label>
         <ui-select class="col-xs-10"
           theme="bootstrap"
@@ -30,7 +30,7 @@
             <div ng-bind-html="format | highlight: $select.search"></div>
           </ui-select-choices>
         </ui-select>
-      </div>
+      </div> -->
     </div>
 
     <div class="col-lg-8 upload-input-group" ng-if="selected.school && hasCurrentRecord()">
@@ -79,14 +79,14 @@
     </div>
   </div>
 
-  <div class="parsing-progress col-xs-12" ng-if="selected.file && !parsedRecord">
+  <div class="parsing-progress col-xs-12" ng-if="selected.file && !parsedRecord && !error">
     <uib-progressbar value="progress" type="default"></uib-progressbar>
   </div>
-  <div class="col-xs-12" ng-show="formatError">
-    <div class="current-record-warning">
-      The format of your PDF is incorrect.
-    </div>
+
+  <div class="col-xs-4 col-xs-offset-4" ng-if="error">
+    <div class="alert alert-danger" ng-bind-html="error"></div>
   </div>
+
 </section>
 <section class="confirm" ng-if="parsedRecord">
   <heading text="selected.school.name"></heading>

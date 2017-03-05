@@ -41,10 +41,14 @@ function PDF($q, $resource) {
           });
         }
       });
-      return {
-        students: students,
-        schoolYear: items[6].replace(/(\d{2,})-(\d{2,})/, '20$1-20$2')
-      };
+      if(students.length) {
+        return {
+          students: students,
+          schoolYear: items[6].replace(/(\d{2,})-(\d{2,})/, '20$1-20$2')
+        };
+      } else {
+        throw new Error('No students found in your PDF. Try a different file.');
+      }
       break;
     }
     case '2016-2017':
