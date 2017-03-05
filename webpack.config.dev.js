@@ -65,5 +65,25 @@ export default {
         loader : 'url-loader?limit=10000&mimetype=image/svg+xml'
       }
     ]
+  },
+  devServer : {
+    contentBase        : path.join(__dirname, 'client'),
+    historyApiFallback : true,
+    hot                : true,
+    port               : '9000',
+    noInfo             : false,
+    quiet              : false,
+    stats              : {
+      assets       : false,
+      colors       : true,
+      version      : false,
+      hash         : false,
+      timings      : false,
+      chunks       : false,
+      chunkModules : false
+    },
+    proxy : {
+      '/auth' : 'http://localhost:8080'
+    }
   }
 };

@@ -3,9 +3,9 @@
   "description": "Student absentee and outreach tracking and reporting app for Child First Authority",
   "version": "2.0.0",
   "scripts": {
-    "start": "npm-run-all --parallel server lint:watch",
-    "server": "babel-node server",
-    "server:prod": "export NODE_ENV=production; babel-node server",
+    "start": "npm-run-all --parallel server:dev lint:watch",
+    "server": "export NODE_ENV=production; babel-node server",
+    "server:dev": "babel-node server",
     "lint": "esw client server webpack.config.*",
     "lint:watch": "npm run lint -- --watch",
     "test": "mocha --reporter progress test/testSetup.js \"client/**/*.test.js\"",
@@ -97,6 +97,7 @@
     "url-loader": "^0.5.7",
     "webpack": "^2.2.1",
     "webpack-dev-middleware": "^1.10.0",
+    "webpack-dev-server": "^2.4.1",
     "webpack-hot-middleware": "^2.16.1",
     "webpack-md5-hash": "0.0.5"
   },
