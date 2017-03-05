@@ -5,9 +5,10 @@ import path from 'path';
 export default {
   devtool : 'inline-source-map',
   entry   : [
-    './client/webpack-public-path',
-    'webpack-hot-middleware/client?reload=true', //note that it reloads the page if hot module reloading fails.
-    path.resolve(__dirname, 'client/index.js')
+    'babel-polyfill',
+    './client/index.js',
+    'webpack/hot/dev-server',
+    'webpack-dev-server/client?http://localhost:9000/',
   ],
   target : 'web',
   output : {
@@ -23,8 +24,7 @@ export default {
       minify   : {
         removeComments     : true,
         collapseWhitespace : true
-      },
-      inject : true
+      }
     })
   ],
   module : {

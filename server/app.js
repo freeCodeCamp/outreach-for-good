@@ -19,11 +19,10 @@ if(env.env == 'development') {
 
   const server = new webpackDevServer(compiler, webpackDevConfig.devServer);
 
-  server.listen(9000, "localhost", function() {
-    console.log("Starting server on http://localhost:8080");
+  server.listen(9000, 'localhost', function() {
+    console.log('Starting server on http://localhost:8080');
   });
 } else {
-
   var server = require('http').createServer(app);
   require('./config/express')(app);
   require('./routes')(app);
@@ -32,7 +31,6 @@ if(env.env == 'development') {
   server.listen(env.port, env.ip, function() {
     console.log('Express server listening on %d, in %s mode', env.port, app.get('env'));
   });
-
 }
 
 // Expose app
