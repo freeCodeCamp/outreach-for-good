@@ -10,12 +10,14 @@ var User = require('../api/user/user.model');
 var School = require('../api/school/school.model');
 var Student = require('../api/student/student.model');
 var validateJwt = expressJwt({secret: config.secrets.session});
+var debug = require('debug')('auth:service');
 
 /**
  * Attaches the user object to the request if authenticated
  * Otherwise returns 403
  */
 exports.isAuthenticated = function() {
+  debug('isAuthenticated()');
   var composed = compose();
   // Validate jwt
   composed.use(function(req, res, next) {
@@ -31,6 +33,7 @@ exports.isAuthenticated = function() {
       if(err) return next(err);
       if(!user) return res.status(401).send('Unauthorized');
       req.user = user;
+      debug('Valid, attaching user object');
       next();
     });
   });

@@ -17,6 +17,8 @@ requiredProcessEnv('SUPER_USER_EMAIL');
 // All configurations will extend these options
 // ============================================
 var all = {
+  debug : process.env.DEBUG || '*',
+
   env : process.env.NODE_ENV,
 
   // Root path of server
@@ -26,9 +28,7 @@ var all = {
   webpackPort : process.env.PORT || 9000,
 
   // Express Server port
-  expressPort : process.env.PORT || 8080,
-
-  port : process.env.PORT || 8080,
+  port : process.env.PORT || 9002,
 
   // Server IP
   ip : process.env.IP || '0.0.0.0',
