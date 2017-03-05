@@ -1,14 +1,18 @@
 import * as types from './actionTypes';
-import userAPI from '../api/mockUsersApi';
+import authApi from '../api/AuthApi';
 
-export function loadUsersSuccess(users) {
-  return {type: types.LOAD_USERS_SUCCESS, users};
+export function loginSuccess() {
+  console.log('Login Success');
+  return {type: types.LOGIN_SUCCESS};
 }
 
-export function loadUsers() {
+export function login() {
+  console.log('arrived');
   return function(dispatch) {
-    return userAPI.getAllUsers().then(users => {
-      dispatch(loadUsersSuccess(users));
+    return authApi.login().then(res => {
+      console.log('in login action', res);
+      sessionStorage.setItem('jwt', res.jwt);
+      dispatch(loginSuccess());
     })
     .catch(err => {
       throw err;
