@@ -58,6 +58,7 @@ exports.setTokenCookie = function(req, res) {
       .json({message: 'Something went wrong, please try again.'});
   }
   var token = exports.signToken(req.user._id, req.user.role);
+  //debug(token);
   res.cookie('token', JSON.stringify(token));
   res.redirect('/');
 };

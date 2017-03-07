@@ -5,6 +5,7 @@
 
 var express = require('express');
 var webpack = require('webpack');
+var raven = require('raven');
 var env = require('./config/environment');
 const debug = require('debug')('app:main');
 
@@ -12,6 +13,16 @@ const debug = require('debug')('app:main');
 require('./config/mongoose');
 
 const app = express();
+
+// Add Sentry.io request and error handler middleware
+if(env.raven_dsn) {
+  debug('Sentry.io reporting enabled')
+  raven.config(env.raven_dsn).install();
+  app.use(raven.requestHandler());
+  app.use(raven.errorHandler());
+}
+
+// Use webpack-dev-server for HMR durring development
 if(env.env == 'development') {
   const webpackDevServer = require('webpack-dev-server');
   const webpackDevConfig = require('../webpack.config.dev');
@@ -20,7 +31,7 @@ if(env.env == 'development') {
   const wpServer = new webpackDevServer(compiler, webpackDevConfig.devServer);
 
   wpServer.listen(env.webpackPort, 'localhost', function() {
-    debug('Webpack server listening on %d, in %s mode', env.webpackPort, app.get('env'));
+    debug('  🌎  Webpack server listening on %d, in %s mode', env.webpackPort, app.get('env'));
   });
 }
 
@@ -30,9 +41,8 @@ require('./routes')(app);
 
 // Start server
 server.listen(env.port, 'localhost', function() {
-  debug('Express server listening on %d, in %s mode', env.port, app.get('env'));
+  debug('  🌎  Express server listening on %d, in %s mode', env.port, app.get('env'));
 });
-
 
 // Expose app
 exports = module.exports = app;
