@@ -2,6 +2,7 @@
 
 var _ = require('lodash');
 var AbsenceRecord = require('../absence-record/absence-record.model');
+var debug = require('debug')('route:api:visualization');
 
 var categoryDefaults = {
   Normal : 0,
@@ -72,6 +73,6 @@ exports.cfaComparison = function(req, res) {
 };
 
 function handleError(res, err) {
-  console.log(err);
+  debug(err);
   return res.status(500).send(err);
 }

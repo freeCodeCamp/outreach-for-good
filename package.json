@@ -5,7 +5,7 @@
   "scripts": {
     "start": "npm-run-all --parallel server:dev lint:watch",
     "server": "export NODE_ENV=production; node server",
-    "server:dev": "node --inspect server",
+    "server:dev": "node server",
     "lint": "esw client server webpack.config.*",
     "lint:watch": "npm run lint -- --watch",
     "test": "mocha --reporter progress test/testSetup.js \"client/**/*.test.js\"",
@@ -16,6 +16,7 @@
   },
   "main": "server",
   "dependencies": {
+    "axios": "^0.15.3",
     "babel-polyfill": "^6.22.0",
     "babel-preset-react": "^6.22.0",
     "body-parser": "~1.14.2",
@@ -36,6 +37,7 @@
     "morgan": "~1.6.1",
     "passport": "~0.3.2",
     "passport-google-oauth": "latest",
+    "raven": "^1.1.3",
     "react": "^15.4.2",
     "react-dimensions": "^2.0.0-alpha1",
     "react-dom": "^15.4.2",
