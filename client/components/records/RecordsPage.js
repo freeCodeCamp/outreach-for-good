@@ -1,31 +1,16 @@
-import React from 'react';
-import { Link } from 'react-router';
+import React, {Component} from 'react';
+import {Tabs, Tab} from 'material-ui/Tabs';
 
-class RecordsPage extends React.Component {
+import UploadTab from './UploadTab';
+import ManageTab from './ManageTab';
+
+class RecordsPage extends Component {
   render() {
     return (
-      <div>
-            <div className="jumbotron">
-                <h1>Stand-In Template</h1>
-                <p>This will be the app record page</p>
-                <Link to="about" className="btn btn-primary btn-lg">Learn more</Link>
-            </div>
-                <h1>Stand-In Template</h1>
-                <h1>Stand-In Template</h1>
-                <h1>Stand-In Template</h1>
-                <h1>Stand-In Template</h1>
-                <h1>Stand-In Template</h1>
-                <h1>Stand-In Template</h1>
-                <h1>Stand-In Template</h1>
-                <h1>Stand-In Template</h1>
-                <h1>Stand-In Template</h1>
-                <h1>Stand-In Template</h1>
-                <h1>Stand-In Template</h1>
-                <h1>Stand-In Template</h1>
-                <h1>Stand-In Template</h1>
-                <h1>Stand-In Template</h1>
-                <h1>Stand-In Template</h1>
-</div>
+      <Tabs>
+        <Tab label="Upload"><UploadTab /></Tab>
+        <Tab label="Manage"><ManageTab /></Tab>
+      </Tabs>
     );
   }
 }
