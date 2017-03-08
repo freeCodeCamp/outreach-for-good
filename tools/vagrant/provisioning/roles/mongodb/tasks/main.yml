@@ -1,0 +1,88 @@
+---
+- name: Import the public key used by the mongo package management system
+  apt_key: 
+    data: |
+      -----BEGIN PGP PUBLIC KEY BLOCK-----
+      Version: GnuPG v1.4.11 (GNU/Linux)
+
+      mQINBFaUNhsBEACkTlpL9xCrlirl77tahFzzd9ccTc5wP+M3oob18GIaMYKicjbR
+      h6J6ytCiXCkl65zYKvQdLkt8qlkBVc5DxGeJvD41IY3NzGPz+BZ9pFFBndAE+JEP
+      ng0ULLxzUDmWXIoukdHqf92BSizTFd2A8v+YGuwOkNBdPi/BHkwiViAaAKDZm/4k
+      9LZeOF0v7gZF89QD75NrSCKo5SGFRb8Cxi4KR4cS/jPuQVjd+B9fWkc74BUWE91t
+      3R87Uypd+1qnmoN6cOssLZ4s8n/cyOCkVphGmk1tDDhbEsI4knOqtPXaBHiC4lVI
+      ghpTHEDUuDfbQ7scySae8/YItTC/vVGngiJmZSfZU5AvVspe6rfkHQHqZs3gYMqj
+      XPl7acviEAZ7OiMp9diq6Kgp+xLRvRGL+jtUjLkP5O4gJlnxCm7YWrYfYA/vHULD
+      MyIGSBzuESGxL+Ygz+Dc0Aim9NPM5KhpV5FoAXNt50cn6n1adIwbUciRY0zBXKAI
+      Vj6D+j3e0ozsO+GGEpmQFAIo1h7CEn8VV61WaLz2F60LKR8d/DEMZ7SY8uznbzkm
+      TJCeCp/pTnPeGwkyJmJ78LAaKw2tSCeEAfRlnzPeQeanOnEX/wnAjHHAHewvGgQe
+      GW1QkEdy8zNmfODDf9wqknBShaFRHAOAQFEgBAkYHuT4SgHqW8TVDtF3CQARAQAB
+      tDdNb25nb0RCIDMuNCBSZWxlYXNlIFNpZ25pbmcgS2V5IDxwYWNrYWdpbmdAbW9u
+      Z29kYi5jb20+iQI+BBMBAgAoBQJWlDYbAhsDBQkDwmcABgsJCAcDAgYVCAIJCgsE
+      FgIDAQIeAQIXgAAKCRC8cR+boVcDxmtEEACSjnZcwcozGYS/8peH2P8yPxD2mXVQ
+      AJ8Pss+YBo8hpRaiA7BEY+FFthbSYEX8XRR/Bg9HjDk9CNXc221I0WcTRv3Sb718
+      QutRd4ppdGtusgTHjUdYNDzctExU90vtJRvwI2oiz2YA8dM7mtTzUFpR4IQGopB4
+      PmjEls6hkebTjjSaO9UmcLyip+S+rTZ9c8UQvBH7rNoe4QacmGi/l/uUo/q4J7nE
+      jtjpsemUK7LWY7YtB21F/hH3OrQkgQAoVv2q2xSaiLJeWsr33jgd4o4/d3QN1t/P
+      GkNIOEBdO/hM8uOj+hGD+tDphHzd9jGjALqV6lC2k9zNXyAFnTUwp0NL74hODv6z
+      daihKu4fTRU7S0eYSGc2sQDPiiQF5YkxAHqADnPmR2ZpBVVtbUNB31BDOYjTzRwq
+      tkLKRCgI29Kgut0Uhvq+/Hx+0485ndgzcqeaLhslUagZy1bXN3sDW4QYN2tPvP+P
+      2JDtGydsYGZCWA0FBRFdsSbruBSK/BkEpGhq97bE9vclfVchb989A47lgErusw5C
+      xtLxUGPmVc2dYmHJLUkgHszdcTLHwy8/arYMehG7RVzAEG55AueLsc9B0vSI0E6r
+      lvalHgoCttCynEzM4Ol1rcG9XtlCyKk4AeimYLE/cxlckDoIVVwrFXrRrhB41Asw
+      rP4l4xtk+nWHpg==
+      =F42J
+      -----END PGP PUBLIC KEY BLOCK-----
+
+  sudo: yes
+  tags: mongodb
+
+- name: Add mongo repositories to apt.
+  apt_repository: repo='deb http://repo.mongodb.org/apt/ubuntu xenial/mongodb-org/3.4 multiverse' update_cache=yes
+  sudo: yes
+  tags: mongodb
+
+- name: Create the mongodb group
+  group: name={{ mongodb_group }}
+  tags: mongodb
+
+- name: Create the mongodb user
+  user: name={{ mongodb_user }} group={{ mongodb_group }} comment="MongoD"
+  tags: mongodb
+
+- name: Install the packages
+  apt: pkg={{ item }} state=installed
+  sudo: yes
+  with_items:
+    - mongodb-org=3.4.2
+    - numactl
+    - python-pip
+  tags: mongodb
+
+- name: Install the latest pymongo package
+  pip: name=pymongo state=latest use_mirrors=no
+  tags: mongodb
+
+- name: Create the data directory for the namenode metadata
+  file: path=/data/ owner={{ mongodb_user }} group={{ mongodb_group }} state=directory
+  tags: mongodb
+
+- name: create data directory for mongodb
+  file: path=/var/log/mongodb state=directory owner={{ mongodb_user }} group={{ mongodb_group }} mode=0755
+  tags: mongodb
+
+- name: create data directory for mongodb
+  file: path={{ mongodb_path }} state=directory owner={{ mongodb_user }} group={{ mongodb_group }} mode=0755
+  tags: mongodb
+
+- name: Create the mongodb configuration file
+  template: src=mongod.conf.j2 dest=/etc/mongod.conf owner=root group=root mode=0644
+  tags: mongodb
+
+- name: Create the mongodb systemd file
+  template: src=mongodb.service.j2 dest=/etc/systemd/system/mongodb.service owner=root group=root mode=0644
+  tags: mongodb
+
+- name: MongoDB | Run mongo daemon
+  sudo: yes
+  service: name=mongodb state=restarted enabled=yes
+  tags: mongodb

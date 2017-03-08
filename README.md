@@ -1,7 +1,8 @@
 # Child First Authority
 **Student absenteeism and outreach tracking app**
 
-[![Build Status](https://travis-ci.org/child-first-authority-fcc-project/webapp.svg)](https://travis-ci.org/child-first-authority-fcc-project/webapp)
+<!--To be re-enabled when CI fully configured-->
+<!--[![Build Status](https://travis-ci.org/child-first-authority-fcc-project/webapp.svg)](https://travis-ci.org/child-first-authority-fcc-project/webapp)-->
 
 ## Purpose
 
@@ -24,16 +25,12 @@ The roles are:
 
 **Vagrant**
 
-The development environment for working with this application can be found in this [repository](https://github.com/child-first-authority-fcc-project/vagrantbox) 
+See [tools/vagrant](https://github.com/freeCodeCamp/child-first-authority/tree/master/tools/vagrant) for development environment setup instructions
 
 **Heroku**
 
-There is a grunt task to deploy this application to Heroku. This requires the [heroku-toolbelt](https://toolbelt.heroku.com/). If using the development environment, the toolbelt is installed by the provisioner.
+This app contains npm scripts for easy deployment to Heroku.
 
-After logging in to Heroku with Heroku toolbelt, deploying is accomplished by:
-
-    $ grunt buildcontrol:heroku
-    
 The env variables that need to be set:
 
 - APP_SECRET = *SECRET*
@@ -47,4 +44,11 @@ Google id and secret need to be obtained by creating an application on [Google D
 
 ## Sample PDFs
 
-https://github.com/child-first-authority-fcc-project/sample-pdfs
+See [tools/sample-pdfs](https://github.com/freeCodeCamp/child-first-authority/tree/master/tools/sample-pdfs) for example import documents.
+
+## To-Do
+
+This version is currently under development.
+
+* Upgrade babel-loader, current version causes depreciation warning 
+  * https://github.com/babel/babel-loader/pull/391

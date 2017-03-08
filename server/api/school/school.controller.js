@@ -1,6 +1,7 @@
 'use strict';
 
 var School = require('./school.model');
+var debug = require('debug')('route:api:school');
 
 /**
  * Get list of schools.
@@ -12,11 +13,11 @@ var School = require('./school.model');
  */
 exports.index = function(req, res) {
   var options = {};
-  if (req.user.role === 'teacher') {
+  if(req.user.role === 'teacher') {
     options._id = req.user.assignment;
   }
   School.find(options).exec(function(err, schools) {
-    if (err) return handleError(res, err);
+    if(err) return handleError(res, err);
     return res.status(200).json(schools);
   });
 };
@@ -31,11 +32,12 @@ exports.index = function(req, res) {
  */
 exports.names = function(req, res) {
   var options = {};
-  if (req.user.role === 'teacher') {
+  if(req.user.role === 'teacher') {
     options._id = req.user.assignment;
   }
-  School.find(options).select('name').exec(function(err, schools) {
-    if (err) return handleError(res, err);
+  School.find(options).select('name')
+  .exec(function(err, schools) {
+    if(err) return handleError(res, err);
     return res.status(200).json(schools);
   });
 };
@@ -55,7 +57,7 @@ exports.show = function(req, res) {
  */
 exports.create = function(req, res) {
   School.create(req.body, function(err, school) {
-    if (err) return handleError(res, err);
+    if(err) return handleError(res, err);
     return res.status(201).json(school);
   });
 };
@@ -67,7 +69,7 @@ exports.create = function(req, res) {
 exports.updateTriggers = function(req, res) {
   req.school.triggers = req.body.triggers;
   req.school.save(function(err) {
-    if (err) return handleError(res, err);
+    if(err) return handleError(res, err);
     return res.status(200).json(req.school);
   });
 };
@@ -83,12 +85,12 @@ exports.updateTriggers = function(req, res) {
 exports.delete = function(req, res) {
   var school = req.school;
   school.remove(function(err) {
-    if (err) handleError(res, err);
+    if(err) handleError(res, err);
     return res.status(204).send('No Content');
   });
 };
 
 function handleError(res, err) {
-  console.log(err);
+  debug(err);
   return res.status(500).send(err);
 }

@@ -1,0 +1,12 @@
+---
+git_username: 'user'
+git_email: 'user@example.com'
+
+nvm_version: HEAD
+nvm_system_install: False
+nvm_user_installs:
+  - 'vagrant'
+
+nvm_install_node_versions:
+  - 'boron/lts'
+nvm_default_node_version: 'boron/lts'
