@@ -56,5 +56,9 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
+<<<<<<< HEAD
 export default connect(mapStateToProps, mapDispatchToProps)(LoginPage);
 
+=======
+export default connect(null, mapDispatchToProps)(LoginPage);
+>>>>>>> 9bedce5c37164630dd0318d3cdec4f043a2dd666
