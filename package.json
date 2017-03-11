@@ -21,6 +21,7 @@
     "babel-preset-react": "^6.22.0",
     "body-parser": "~1.14.2",
     "bootstrap": "^3.3.7",
+    "browser-cookies": "^1.1.0",
     "composable-middleware": "^0.3.0",
     "compression": "~1.6.1",
     "cookie-parser": "~1.4.1",

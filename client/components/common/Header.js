@@ -56,6 +56,9 @@ class Header extends Component {
         title={<span style={{fontWeight: 400, fontSize: 20}}>Child First Authority</span>}
         iconElementRight={
           <AuthButton
+            label = {{
+              userName : this.props.session.me.name || 'Login'
+            }}
             openMenu = {this.openMenu}
             toggleMenu = {this.toggleMenu}
             handleMenuItem = {this.handleMenuItem}
@@ -77,12 +80,14 @@ class Header extends Component {
 Header.propTypes = { // Prop type validation
   viewActions    : PropTypes.object.isRequired,
   sessionActions : PropTypes.object.isRequired,
+  session        : PropTypes.object.isRequired,
   view           : PropTypes.object.isRequired
 };
 
 function mapStateToProps(state) {
   return {
-    view : state.view
+    session : state.session,
+    view    : state.view
   };
 }
 

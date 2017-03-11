@@ -1,16 +1,16 @@
-import React from 'react';
+import React, { PropTypes } from 'react';
 
 import IconMenu from 'material-ui/IconMenu';
 import MenuItem from 'material-ui/MenuItem';
 import FlatButton from 'material-ui/FlatButton';
 
 
-const AuthButton = ({openMenu, toggleMenu, handleMenuItem}) => (
+const AuthButton = ({label, openMenu, toggleMenu, handleMenuItem}) => 
     <IconMenu
       iconButtonElement={
         <FlatButton
           onTouchTap={openMenu}
-          label="Login"
+          label={label.userName}
           labelStyle={{
             color      : '#FFFFFF',
             fontWeight : '400'
@@ -34,6 +34,13 @@ const AuthButton = ({openMenu, toggleMenu, handleMenuItem}) => (
         primaryText="Sign out"
       />
     </IconMenu>
-  );
+  ;
+
+AuthButton.propTypes = { // Prop type validation
+  label          : PropTypes.object.isRequired,
+  openMenu       : PropTypes.func.isRequired,
+  toggleMenu     : PropTypes.func.isRequired,
+  handleMenuItem : PropTypes.func.isRequired
+};
 
 export default AuthButton;
