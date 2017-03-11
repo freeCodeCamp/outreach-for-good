@@ -20,23 +20,39 @@ const users = [
     role     : 'guest',
     __v      : 0
   }, {
-    _id        : '589bb5ac5d4c3d03304f49bf',
-    provider   : 'local',
-    name       : 'Test Teacher',
-    email      : 'test@teacher.com',
-    role       : 'teacher',
-    __v        : 0,
-    assignment : {
-      name     : 'School 1',
-      active   : true,
-      triggers : [
-      {
-        'absences' : 15,
-        'tier'     : 1,
-        type       : 'Court Referral'
+    _id      : '58bf5cc5563060d37fe5c840',
+    name     : 'Chad Sheets',
+    email    : 'cjsheets@gmail.com',
+    provider : 'google',
+    google   : {
+      displayName : 'Chad Sheets',
+      name        : {
+        familyName : 'Sheets',
+        givenName  : 'Chad'
+      },
+      url   : 'https://plus.google.com/+ChadSheets',
+      image : {
+        url       : 'https://lh5.googleusercontent.com/-uKvlbrkAhvI/AAAAAAAAAAI/AAAAAAAAAls/Qqp1pxNamj8/photo.jpg?sz=50',
+        isDefault : false
+      },
+      isPlusUser : true,
+      language   : 'en',
+      verified   : false,
+      cover      : {
+        layout     : 'banner',
+        coverPhoto : {
+          url    : 'https://lh3.googleusercontent.com/Hl1_RYBHDMy-W1Qrc6NmppJLZwLEkbFZp0ux2H2gPfsN2bih8t9V9r8cfi95dkufeXdYQYEa=s630',
+          height : 188,
+          width  : 940
+        },
+        coverInfo : {
+          topImageOffset  : -5,
+          leftImageOffset : 0
+        }
       }
-    ],
-    }
+    },
+    __v  : 0,
+    role : 'super'
   }
 ];
 
@@ -51,14 +67,14 @@ class UsersApi {
 /**
  * Get my info
  */
-  static me() {
+  static getMe() {
     return new Promise(resolve => {
       setTimeout(() => {
         resolve(Object.assign([], users[2]));
       }, delay);
     });
   }
-  
+
 /**
  * Get a single user
  */
@@ -82,7 +98,6 @@ class UsersApi {
       }, delay);
     });
   }
-
 
 
   static getAllUsers() {

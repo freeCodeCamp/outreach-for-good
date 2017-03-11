@@ -4,9 +4,9 @@
 
 'use strict';
 
-import mongoose from 'mongoose';
-import debug from 'debug';
-import env from './environment';
+var mongoose = require('mongoose');
+var debug = require('debug')('mongo:mongoose');
+var env = require('./environment');
 
 /* eslint-disable no-process-exit */
 

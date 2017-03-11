@@ -3,36 +3,36 @@
  * Main application file
  */
 
-import express from 'express';
-import webpack from 'webpack';
-import env from './config/environment';
+var express = require('express');
+var webpack = require('webpack');
+var raven = require('raven');
+var env = require('./config/environment');
+const debug = require('debug')('app:main');
 
 // Connect to database
 require('./config/mongoose');
 
 const app = express();
+
+// Add Sentry.io request and error handler middleware
+if(env.raven_dsn) {
+  debug('Sentry.io reporting enabled')
+  raven.config(env.raven_dsn).install();
+  app.use(raven.requestHandler());
+  app.use(raven.errorHandler());
+}
+
+// Use webpack-dev-server for HMR durring development
 if(env.env == 'development') {
-  console.log('dev: ', env.env);
-  const webpackDevConfig = require('../webpack.config.dev').default;
+  const webpackDevServer = require('webpack-dev-server');
+  const webpackDevConfig = require('../webpack.config.dev');
   const compiler = webpack(webpackDevConfig);
 
-  app.use(require('connect-history-api-fallback')(compiler));
-  app.use(require('webpack-dev-middleware')(compiler, {
-    publicPath : webpackDevConfig.output.publicPath,
-    noInfo     : false,
-    quiet      : false,
-    stats      : {
-      assets       : false,
-      colors       : true,
-      version      : false,
-      hash         : false,
-      timings      : false,
-      chunks       : false,
-      chunkModules : false
-    }
-  }));
+  const wpServer = new webpackDevServer(compiler, webpackDevConfig.devServer);
 
-  app.use(require('webpack-hot-middleware')(compiler));
+  wpServer.listen(env.webpackPort, 'localhost', function() {
+    debug('  🌎  Webpack server listening on %d, in %s mode', env.webpackPort, app.get('env'));
+  });
 }
 
 var server = require('http').createServer(app);
@@ -40,8 +40,8 @@ require('./config/express')(app);
 require('./routes')(app);
 
 // Start server
-server.listen(env.port, env.ip, function() {
-  console.log('Express server listening on %d, in %s mode', env.port, app.get('env'));
+server.listen(env.port, 'localhost', function() {
+  debug('  🌎  Express server listening on %d, in %s mode', env.port, app.get('env'));
 });
 
 // Expose app

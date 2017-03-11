@@ -3,7 +3,7 @@ import React from 'react';
 
 const Footer = () =>
     <footer className="main-view-footer">
-      Child First Authority &nbsp; | &nbsp; Acceess restricted to authorized users
+      Child First Authority &nbsp; | &nbsp; Access restricted to authorized users
     </footer>
   ;
 

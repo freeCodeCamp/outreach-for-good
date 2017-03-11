@@ -4,6 +4,7 @@ var Student = require('./student.model');
 var Outreach = require('./outreach/outreach.model');
 var Intervention = require('./intervention/intervention.model');
 var _ = require('lodash');
+var debug = require('debug')('route:api:student');
 
 var populateOptions = {
   path   : 'school',
@@ -261,6 +262,6 @@ exports.interventionSummary = function(req, res) {
 };
 
 function handleError(res, err) {
-  console.log(err);
+  debug(err);
   return res.status(500).send(err);
 }

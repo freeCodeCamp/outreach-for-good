@@ -55,7 +55,7 @@ Sidebar.propTypes = {
 };
 
 function mapStateToProps(state) {
-  console.log('sidebar: ', state);
+  //console.log('Sidebar: ', state);
   return {
     sidebar : state.view.sidebar
   };

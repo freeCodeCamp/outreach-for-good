@@ -17,13 +17,18 @@ requiredProcessEnv('SUPER_USER_EMAIL');
 // All configurations will extend these options
 // ============================================
 var all = {
+  debug : process.env.DEBUG || '*',
+
   env : process.env.NODE_ENV,
 
   // Root path of server
   root : process.env.APP_ROOT || path.normalize(`${__dirname}/../../..`),
 
-  // Server port
-  port : process.env.PORT || 9000,
+  // Webpack Dev Server port
+  webpackPort : process.env.PORT || 9000,
+
+  // Express Server port
+  port : process.env.PORT || 9002,
 
   // Server IP
   ip : process.env.IP || '0.0.0.0',
@@ -49,11 +54,15 @@ var all = {
     }
   },
 
+  // Google+ Authentication
   google : {
     clientID     : process.env.GOOGLE_ID || 'id',
     clientSecret : process.env.GOOGLE_SECRET || 'secret',
     callbackURL  : `${process.env.DOMAIN || ''}/auth/google/callback`
-  }
+  },
+
+  // Sentry.io Reporting
+  raven_dsn : process.env.RAVEN_DSN || ''
 };
 
 // Export the config object based on the NODE_ENV
