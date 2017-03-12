@@ -1,10 +1,10 @@
-import webpack from 'webpack';
-import ExtractTextPlugin from 'extract-text-webpack-plugin';
-import WebpackMd5Hash from 'webpack-md5-hash';
-import HtmlWebpackPlugin from 'html-webpack-plugin';
-import path from 'path';
+var webpack = require('webpack');
+var ExtractTextPlugin = require('extract-text-webpack-plugin');
+var WebpackMd5Hash = require('webpack-md5-hash');
+var HtmlWebpackPlugin = require('html-webpack-plugin');
+var path = require('path');
 
-export default {
+module.exports = {
   devtool : 'source-map',
   entry   : path.resolve(__dirname, 'client/index'),
   target  : 'web', // necessary per https://webpack.github.io/docs/testing.html#compile-and-test

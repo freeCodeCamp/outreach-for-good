@@ -1,6 +1,7 @@
 'use strict';
 
 var School = require('./school.model');
+var debug = require('debug')('route:api:school');
 
 /**
  * Get list of schools.
@@ -90,6 +91,6 @@ exports.delete = function(req, res) {
 };
 
 function handleError(res, err) {
-  console.log(err);
+  debug(err);
   return res.status(500).send(err);
 }

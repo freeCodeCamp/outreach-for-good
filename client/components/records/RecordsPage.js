@@ -1,33 +1,41 @@
-import React from 'react';
-import { Link } from 'react-router';
+import React, {Component, PropTypes} from 'react';
+import {bindActionCreators} from 'redux';
+import {connect} from 'react-redux';
+import * as recordsActions from '../../actions/recordsActions';
+import {Tabs, Tab} from 'material-ui/Tabs';
 
-class RecordsPage extends React.Component {
+import UploadTab from './components/UploadTab';
+import ManageTab from './components/ManageTab';
+
+class RecordsPage extends Component {
+  confirm(users) {
+    this.props.actions.confirmStudents(users);
+  }
+
   render() {
     return (
-      <div>
-            <div className="jumbotron">
-                <h1>Stand-In Template</h1>
-                <p>This will be the app record page</p>
-                <Link to="about" className="btn btn-primary btn-lg">Learn more</Link>
-            </div>
-                <h1>Stand-In Template</h1>
-                <h1>Stand-In Template</h1>
-                <h1>Stand-In Template</h1>
-                <h1>Stand-In Template</h1>
-                <h1>Stand-In Template</h1>
-                <h1>Stand-In Template</h1>
-                <h1>Stand-In Template</h1>
-                <h1>Stand-In Template</h1>
-                <h1>Stand-In Template</h1>
-                <h1>Stand-In Template</h1>
-                <h1>Stand-In Template</h1>
-                <h1>Stand-In Template</h1>
-                <h1>Stand-In Template</h1>
-                <h1>Stand-In Template</h1>
-                <h1>Stand-In Template</h1>
-</div>
+      <Tabs>
+        <Tab label="Upload"><UploadTab confirm={this.confirm.bind(this)}/></Tab>
+        <Tab label="Manage"><ManageTab /></Tab>
+      </Tabs>
     );
   }
 }
 
-export default RecordsPage;
+RecordsPage.propTypes = {
+  actions : PropTypes.object.isRequired
+};
+
+function mapStateToProps(state) {
+  return {
+    session : state.session
+  };
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+    actions : bindActionCreators(recordsActions, dispatch)
+  };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(RecordsPage);
