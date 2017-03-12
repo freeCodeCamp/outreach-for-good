@@ -4,8 +4,8 @@ import DataTableRow from './DataTableRow';
 
 const DataTable = ({table, column, data}) =>
   <Table
-    rowHeight={table.rowHeight || 40}
-    headerHeight={table.headerHeight || 40}
+    rowHeight={table.rowHeight || 30}
+    headerHeight={table.headerHeight || 30}
     rowsCount={data.length}
     width={table.table.width}
     height={table.table.height}
