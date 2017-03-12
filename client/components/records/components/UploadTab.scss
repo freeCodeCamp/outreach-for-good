@@ -1,18 +1,31 @@
 .upload-tab {
   padding: 10px;
+
   .dropzone-paper {
     padding: 20px;
-    &:hover {
-      background: #c9c9c9;
-    }
-    .dropzone {
-      margin: 0 auto;
-      width: 100%;
-      line-height: 50px;
-      border: 4px dashed #676767;
-      text-align: center;
+    .column {
+      width: 50%;
+      display: inline-block;
+      padding: 0;
+      margin: 0;
+      vertical-align: top;
+      .dropzone {
+        width: 90%;
+        height: 140px;
+        line-height: 140px;
+        text-align: center;
+        vertical-align: middle;
+        margin: 0 auto;
+        border: 2px dashed #adadad;
+        color: #adadad;
+      }
     }
   }
+
+  .hidden {
+    display: none;
+  }
+
   .display-paper {
     padding: 20px;
     .buttons {
