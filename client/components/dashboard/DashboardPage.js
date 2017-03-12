@@ -20,7 +20,7 @@ class DashboardPage extends React.Component {
       <Tabs
         style={{width: this.props.containerWidth}}
       >
-        <Tab label="SST">
+        <Tab label={<i className="fa fa-child fa-2x" />}>
           <StudentTab
             view = {{
               width  : this.props.containerWidth,
@@ -29,7 +29,7 @@ class DashboardPage extends React.Component {
             schools = {this.props.users}
           />
         </Tab>
-        <Tab label="SST">
+        <Tab label={<i className="fa fa-phone fa-2x" />}>
           <PhoneTab
             view = {{
               width  : this.props.containerWidth,
@@ -38,7 +38,7 @@ class DashboardPage extends React.Component {
             schools = {this.props.users}
           />
         </Tab>
-        <Tab label="SST">
+        <Tab label={<i className="fa fa-envelope fa-2x" />}>
           <LetterTab
             view = {{
               width  : this.props.containerWidth,
@@ -47,7 +47,7 @@ class DashboardPage extends React.Component {
             schools = {this.props.users}
           />
         </Tab>
-        <Tab label="SST">
+        <Tab label={<i className="fa fa-home fa-2x" />}>
           <HomeTab
             view = {{
               width  : this.props.containerWidth,
@@ -56,7 +56,7 @@ class DashboardPage extends React.Component {
             schools = {this.props.users}
           />
         </Tab>
-        <Tab label="SST">
+        <Tab label={<i className="fa fa-support fa-2x" />}>
           <SstTab
             view = {{
               width  : this.props.containerWidth,
@@ -65,7 +65,7 @@ class DashboardPage extends React.Component {
             schools = {this.props.users}
           />
         </Tab>
-        <Tab label="Court">
+        <Tab label={<i className="fa fa-gavel fa-2x" />}>
           <CourtTab
             view = {{
               width  : this.props.containerWidth,
