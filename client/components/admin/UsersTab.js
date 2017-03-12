@@ -1,5 +1,5 @@
 import React, {PropTypes} from 'react';
-import DataTable from './DataTable';
+import DataTable from '../common/data-table/DataTable';
 
 const UsersTab = ({view, users}) => {
   const columnDefs = [{
