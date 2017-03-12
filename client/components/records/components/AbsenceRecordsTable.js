@@ -1,18 +1,30 @@
 import React, {Component} from 'react';
 import Paper from 'material-ui/Paper';
+import {Card, CardHeader, CardText} from 'material-ui/Card';
 import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn} from 'material-ui/Table';
 import RaisedButton from 'material-ui/RaisedButton';
 
-class UploadTable extends Component {
+const styles = {
+  toggle : {
+    maxWidth : 250
+  },
+  card : {
+    paddingTop : 10
+  }
+};
 
-  render() {
-    return (
-      <Paper className="display-paper">
-        <div className="buttons">
-          <RaisedButton onClick={this.props.confirm} label="Confirm" primary />
-          <RaisedButton onClick={this.props.cancel} label="Cancel" secondary />
-        </div>
-        <Table>
+const StudentTable = props => {
+  let isExpandable = props.students.length ? true : false;
+  return (
+    <Card style={styles.card}>
+      <CardHeader
+        title={props.studentType}
+        subtitle={props.students.length + ' records'}
+        style={styles.toggle}
+        showExpandableButton={isExpandable}
+      />
+      <CardText expandable>
+        <Table height="400">
           <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
             <TableRow>
               <TableHeaderColumn>Name</TableHeaderColumn>
@@ -25,7 +37,7 @@ class UploadTable extends Component {
             </TableRow>
           </TableHeader>
           <TableBody displayRowCheckbox={false}>
-            {this.props.students.map((item, i) =>
+            {props.students.map((item, i) =>
               <TableRow key={i}>
                 <TableRowColumn>{item.student.lastName}, {item.student.firstName}</TableRowColumn>
                 <TableRowColumn>{item.student.studentId}</TableRowColumn>
@@ -38,8 +50,30 @@ class UploadTable extends Component {
             )}
           </TableBody>
         </Table>
+      </CardText>
+    </Card>
+  );
+}
+
+class AbsenceRecordsTable extends Component {
+  render() {
+    return (
+      <Paper className="display-paper">
+        <div className="buttons">
+          <RaisedButton onClick={this.props.confirm} label="Confirm" primary />
+          <RaisedButton onClick={this.props.cancel} label="Cancel" secondary />
+        </div>
+        <StudentTable
+          studentType="New Students"
+          students={this.props.record.creates} />
+        <StudentTable
+          studentType="New Missing Records"
+          students={this.props.record.newMissingStudents} />
+        <StudentTable
+          studentType="Missing Records"
+          students={this.props.record.missingEntries} />
       </Paper>
     );
   }
 }
-export default UploadTable;
+export default AbsenceRecordsTable;
