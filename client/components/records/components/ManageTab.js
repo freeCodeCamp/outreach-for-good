@@ -25,16 +25,15 @@ class ManageTab extends Component {
     this.setState({ school, absenceRecord });
   }
 
-  deleteDialog = () => {
+  deleteDialog() {
     this.setState({ openDelete: true });
   }
 
-  changeDeleteText = (e, deleteText) => {
-    console.log(deleteText);
+  changeDeleteText(e, deleteText) {
     this.setState({ deleteText });
   }
 
-  closeDeleteDialog = () => {
+  closeDeleteDialog() {
     this.setState({ openDelete: false });
   }
 

@@ -109,7 +109,7 @@ class UploadTab extends Component {
         {this.state.record ?
           <AbsenceRecordsTable
             confirm={this.confirm}
-            cancel={this.cancel.bind(this)}
+            cancel={this.cancel}
             record={this.state.record}
             uploadTab={true}
           /> : ''}
