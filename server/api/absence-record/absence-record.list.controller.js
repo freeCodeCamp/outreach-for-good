@@ -12,7 +12,7 @@ var populateOptions = [{
 }, {
   path: 'student',
   model: 'Student',
-  select: 'firstName lastName studentId iep cfa withdrawn'
+  select: 'firstName lastName grade studentId iep cfa withdrawn'
 }];
 
 function absenceRecordPipeline(user, year) {
