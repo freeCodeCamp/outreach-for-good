@@ -1,7 +1,7 @@
-.upload-tab {
+.upload-tab, .manage-tab {
   padding: 10px;
 
-  .dropzone-paper {
+  .dropzone-container {
     padding: 20px;
     .column {
       width: 50%;
@@ -26,7 +26,7 @@
     display: none;
   }
 
-  .display-paper {
+  .display-container {
     padding: 20px;
     .buttons {
       text-align: center;

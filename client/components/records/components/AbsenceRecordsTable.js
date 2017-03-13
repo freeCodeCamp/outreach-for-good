@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import Paper from 'material-ui/Paper';
 import {Card, CardHeader, CardText} from 'material-ui/Card';
 import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn} from 'material-ui/Table';
 import RaisedButton from 'material-ui/RaisedButton';
@@ -57,12 +56,36 @@ const StudentTable = props => {
 
 class AbsenceRecordsTable extends Component {
   render() {
-    return (
-      <Paper className="display-paper">
+    let buttons;
+    if(this.props.manageTab) {
+      buttons = (
         <div className="buttons">
-          <RaisedButton onClick={this.props.confirm} label="Confirm" primary />
-          <RaisedButton onClick={this.props.cancel} label="Cancel" secondary />
+          <RaisedButton
+            onClick={this.props.delete}
+            label="Delete Records"
+            primary
+          />;
         </div>
+      );
+    } else if (this.props.uploadTab) {
+      buttons = (
+        <div className="buttons">
+          <RaisedButton
+            onClick={this.props.confirm}
+            label="Confirm"
+            primary
+          />
+          <RaisedButton
+            onClick={this.props.cancel}
+            label="Cancel"
+            secondary
+          />
+        </div>
+      );
+    }
+    return (
+      <div className="display-container">
+        {buttons}
         <StudentTable
           studentType="New Students"
           students={this.props.record.creates} />
@@ -72,7 +95,7 @@ class AbsenceRecordsTable extends Component {
         <StudentTable
           studentType="Missing Records"
           students={this.props.record.missingEntries} />
-      </Paper>
+      </div>
     );
   }
 }

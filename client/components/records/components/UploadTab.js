@@ -1,11 +1,11 @@
 import React, {Component} from 'react';
 
 import LinearProgress from 'material-ui/LinearProgress';
-import Paper from 'material-ui/Paper';
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
 import DatePicker from 'material-ui/DatePicker';
 import AbsenceRecordsTable from './AbsenceRecordsTable';
+import Snackbar from 'material-ui/Snackbar';
 import Dropzone from 'react-dropzone';
 import ParsePDF from './UploadService';
 
@@ -14,10 +14,12 @@ class UploadTab extends Component {
     super();
 
     this.state = {
-      loadingState : 'determinate',
-      loadingValue : 0,
-      record       : null,
-      school       : 0
+      loadingState         : 'determinate',
+      loadingValue         : 0,
+      record               : null,
+      school               : 0,
+      recordResults        : false,
+      recordResultsMessage : ''
     };
 
     this.confirm = this.confirm.bind(this);
@@ -33,10 +35,14 @@ class UploadTab extends Component {
     if(accepted) {
       ParsePDF(this.props.schools[this.state.school], accepted[0])
       .then(record => {
+        let message = `New Records: ${record.creates.length}, Missing Records: ${record.missingEntries.length}, New Missing Students: ${record.newMissingStudents.length}`;
+
         this.setState({
           record,
-          loadingState : 'determinate',
-          loadingValue : 100
+          recordResults        : true,
+          recordResultsMessage : message,
+          loadingState         : 'determinate',
+          loadingValue         : 100
         });
       });
     }
@@ -52,10 +58,17 @@ class UploadTab extends Component {
     this.setState({ record: null, loadingValue: 0, loadingState: 'determinate' });
   }
 
+  closeSnackbar() {
+    this.setState({
+      recordResults        : false,
+      recordResultsMessage : ''
+    });
+  }
+
   render() {
     return (
       <div className="upload-tab">
-        <Paper className={this.state.record ? 'hidden' : 'dropzone-paper'} zDepth={1}>
+        <div className="dropzone-container">
           <div className="column">
             <SelectField
               floatingLabelText="Select a school..."
@@ -88,7 +101,7 @@ class UploadTab extends Component {
               <h2>Click here or drop a PDF into this field</h2>
             </Dropzone>
           </div>
-        </Paper>
+        </div>
         <LinearProgress
           mode={this.state.loadingState}
           value={this.state.loadingValue}
@@ -96,8 +109,16 @@ class UploadTab extends Component {
         {this.state.record ?
           <AbsenceRecordsTable
             confirm={this.confirm}
-            cancel={this.cancel.bind(this)}
-            record={this.state.record} /> : ''}
+            cancel={this.cancel}
+            record={this.state.record}
+            uploadTab={true}
+          /> : ''}
+        <Snackbar
+          open={this.state.recordResults}
+          message={this.state.recordResultsMessage}
+          autoHideDuration="3000"
+          onRequestClose={this.closeSnackbar.bind(this)}
+        />
       </div>
     );
   }

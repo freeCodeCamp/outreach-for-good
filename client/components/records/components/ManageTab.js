@@ -1,7 +1,9 @@
 import React, {Component} from 'react';
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
-
+import Dialog from 'material-ui/Dialog';
+import TextField from 'material-ui/TextField';
+import RaisedButton from 'material-ui/RaisedButton';
 import AbsenceRecordsTable from './AbsenceRecordsTable';
 
 class ManageTab extends Component {
@@ -9,8 +11,10 @@ class ManageTab extends Component {
     super();
 
     this.state = {
-      school : null,
-      absenceRecord : []
+      school        : null,
+      absenceRecord : [],
+      openDelete    : false,
+      deleteText    : ''
     };
   }
 
@@ -21,12 +25,16 @@ class ManageTab extends Component {
     this.setState({ school, absenceRecord });
   }
 
-  confirm() {
-    console.log('manage tab confirmed');
+  deleteDialog() {
+    this.setState({ openDelete: true });
   }
 
-  cancel() {
-    console.log('manage tab cancelled');
+  changeDeleteText(e, deleteText) {
+    this.setState({ deleteText });
+  }
+
+  closeDeleteDialog() {
+    this.setState({ openDelete: false });
   }
 
   render() {
@@ -39,15 +47,46 @@ class ManageTab extends Component {
           className="select-school"
         >
         {this.props.schools.map((school, i) =>
-          <MenuItem key={i} value={i} primaryText={school.name} />
+          <MenuItem
+            key={i}
+            value={i}
+            primaryText={school.name}
+          />
         )}
         </SelectField>
-        {this.state.absenceRecord.length ?
-          <AbsenceRecordsTable
-            confirm={this.confirm}
-            cancel={this.cancel.bind(this)}
-            record={this.state.absenceRecord[0]}
-          /> : ''}
+        <div className="display-container">
+          {this.state.absenceRecord.length ?
+            <AbsenceRecordsTable
+              delete={this.deleteDialog}
+              record={this.state.absenceRecord[0]}
+              manageTab={true}
+            /> : ''}
+        </div>
+        <Dialog
+          title="Dialog With Actions"
+          // actions={actions}
+          modal={false}
+          open={this.state.openDelete}
+          onRequestClose={this.closeDeleteDialog}
+        >
+          WARNING!
+          In addition to deleting the absence record, this operation will permanently delete:
+          Triggered outreaches
+          Students created, including associated:
+          Outreaches
+          Interventions
+          Notes
+          <TextField
+            hintText="Type DELETE to confirm "
+            value={this.state.deleteText}
+            onChange={this.changeDeleteText}
+          />
+          <RaisedButton
+            label="DELETE"
+            disabled={this.state.deleteText !== 'DELETE'}
+            primary
+          />
+        </Dialog>
       </div>
     );
   }
