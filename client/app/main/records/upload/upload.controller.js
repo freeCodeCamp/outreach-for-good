@@ -5,18 +5,21 @@ function dateOnly(dateStr) {
   return new Date(date.getFullYear(), date.getMonth(), date.getDate());
 }
 
-function UploadCtrl($scope, PDF, PDF2016, AbsenceRecord, Auth, School, toastr) {
+function UploadCtrl($scope, PDF, AbsenceRecord, Auth, School, toastr) {
   // Formats of pdf based on school year
-  $scope.formats = ['2015-2016', '2016-2017'];
+  $scope.formats = ['2015-2016', '2015-2016, with grade level', '2016-2017', '2016-2017, with grade level'];
 
   function resetState() {
     delete $scope.pending;
     delete $scope.parsedRecord;
+    delete $scope.error;
+
     $scope.maxDate = dateOnly(Date.now());
     $scope.progress = 0;
     $scope.selected = {
       school: $scope.defaultSchool,
-      date: new Date()
+      date: new Date(),
+      format: '2016-2017, with grade level'
     };
     AbsenceRecord.current().$promise.then(function(records) {
       _.forEach(records, function(record) {
@@ -185,22 +188,24 @@ function UploadCtrl($scope, PDF, PDF2016, AbsenceRecord, Auth, School, toastr) {
     });
     record.schoolId = school._id;
     record.previousRecordId = previousRecord.recordId;
+    console.log('record:', record)
     return record;
   }
 
   $scope.$watch('selected.file', function(n, o) {
     if (n !== o) {
       delete $scope.parsedRecord;
+      delete $scope.error;
+
       $scope.progress = 0;
       if (n) {
-        var promise = $scope.selected.format === '2015-2016' ?
-          PDF.parse(n):
-          PDF2016.parse(n);
+        var promise = PDF.parse(n, $scope.selected.format);
         promise.then(function(partialRecord) {
+          //partialRecord is a giant array of the columns
           $scope.parsedRecord = completeRecord(partialRecord);
         }, function(err) {
-          // TODO: handle errors.
-          console.log(err);
+          //TODO: Error handling
+          $scope.error = err;
         }, function(progress) {
           $scope.progress = progress;
         });

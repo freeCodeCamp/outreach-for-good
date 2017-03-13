@@ -4,7 +4,7 @@
 module.exports = function (grunt) {
   var localConfig;
   try {
-    localConfig = require('./server/config/local.env');
+    localConfig = require('./server/config/local.env.js');
   } catch(e) {
     localConfig = {};
   }
@@ -406,7 +406,7 @@ module.exports = function (grunt) {
       heroku: {
         options: {
           remote: 'heroku',
-          branch: 'master'
+          branch: 'v1.1.0'
         }
       },
       staging: {

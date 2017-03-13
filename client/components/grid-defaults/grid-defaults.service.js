@@ -164,6 +164,13 @@ function GridDefaults($filter, $timeout, Student, AbsenceRecord,
         colDefs.firstName(),
         colDefs.lastName(),
         {
+          name: 'student.grade',
+          displayName: 'Current Grade',
+          type: 'number',
+          headerTooltip: 'Current Grade',
+          minWidth: 64
+        },
+        {
           name: 'entry.absences',
           displayName: 'Absences',
           type: 'number',
