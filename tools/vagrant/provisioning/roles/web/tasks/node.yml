@@ -1,0 +1,17 @@
+---
+- name: Download n install script
+  get_url:
+    url=http://git.io/n-install
+    dest=/tmp/n-install
+    mode=0500
+  sudo: no
+  tags: n
+
+- stat: path=/home/vagrant/n
+  register: n_dir
+
+- name: Install n
+  shell: /bin/bash /tmp/n-install -y
+  sudo: no
+  when: n_dir.stat.exists == false
+  tags: n

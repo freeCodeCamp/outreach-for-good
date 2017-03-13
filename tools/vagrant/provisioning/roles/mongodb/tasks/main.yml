@@ -1,0 +1,56 @@
+---
+- name: Import the public key used by the mongo package management system
+  apt_key: keyserver=hkp://keyserver.ubuntu.com:80 id=7F0CEB10
+  sudo: yes
+  tags: mongodb
+
+- name: Add mongo repositories to apt.
+  apt_repository: repo='deb http://repo.mongodb.org/apt/ubuntu trusty/mongodb-org/3.0 multiverse' update_cache=yes
+  sudo: yes
+  tags: mongodb
+
+- name: Create the mongodb group
+  group: name={{ mongodb_group }}
+  tags: mongodb
+
+- name: Create the mongodb user
+  user: name={{ mongodb_user }} group={{ mongodb_group }} comment="MongoD"
+  tags: mongodb
+
+- name: Install the packages
+  apt: pkg={{ item }} state=installed
+  sudo: yes
+  with_items:
+    - mongodb-org=3.0.6
+    - numactl
+    - python-pip
+  tags: mongodb
+
+- name: Install the latest pymongo package
+  pip: name=pymongo state=latest use_mirrors=no
+  tags: mongodb
+
+- name: Create the data directory for the namenode metadata
+  file: path=/data/ owner={{ mongodb_user }} group={{ mongodb_group }} state=directory
+  tags: mongodb
+
+- name: create data directory for mongodb
+  file: path=/var/log/mongodb state=directory owner={{ mongodb_user }} group={{ mongodb_group }} mode=0755
+  tags: mongodb
+
+- name: create data directory for mongodb
+  file: path={{ mongodb_path }} state=directory owner={{ mongodb_user }} group={{ mongodb_group }} mode=0755
+  tags: mongodb
+
+- name: copy mongod upstart config
+  template: src=mongod.upstart.conf.j2  dest=/etc/init.d/mongod.conf owner=root group=root mode=0755
+  tags: mongodb
+
+- name: Create the mongodb configuration file
+  template: src=mongod.conf.j2 dest=/etc/mongod.conf owner=root group=root mode=0644
+  tags: mongodb
+
+- name: MongoDB | Run mongo daemon
+  sudo: yes
+  service: name=mongod state=restarted
+  tags: mongodb
