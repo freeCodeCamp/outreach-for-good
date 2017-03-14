@@ -1,10 +1,14 @@
 @import './variables.scss';
 @import './common.scss';
-@import './fixed-data-table.scss';
 
 @import '../components/App.scss';
+
 @import '../components/common/Sidebar.scss';
 @import '../components/common/Footer.scss';
+@import '../components/common/data-table/DataTable.scss';
+@import '../components/common/data-table/DataTableOverride.scss';
+
+@import '../components/admin/UsersTab.scss';
 
 @import '../components/records/components/UploadTab.scss';
 @import '../components/records/components/ManageTab.scss';

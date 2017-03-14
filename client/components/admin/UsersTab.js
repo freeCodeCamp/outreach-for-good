@@ -1,8 +1,15 @@
 import React, {PropTypes} from 'react';
 import DataTable from '../common/data-table/DataTable';
+import Paper from 'material-ui/Paper';
+import RaisedButton from 'material-ui/RaisedButton';
 
 const UsersTab = ({view, users}) => {
   const columnDefs = [{
+    title : '',
+    id    : 'selected',
+    width : 20,
+    fixed : true
+  }, {
     title : 'Name',
     id    : 'name',
     fixed : true
@@ -18,10 +25,6 @@ const UsersTab = ({view, users}) => {
     title    : 'Role',
     id       : 'role',
     flexGrow : 1
-  }, {
-    title    : 'Actions',
-    id       : 'action',
-    width : 100
   }];
 
   const tableProps = {
@@ -34,11 +37,22 @@ const UsersTab = ({view, users}) => {
   };
 
   return (
-    <DataTable
-      table={tableProps}
-      column={columnDefs}
-      data={users}
-    />
+    <div className="admin-page-tab">
+      <div className="admin-page-title">
+        <h3>Manage User Accounts</h3>
+        <div className="buttons">
+          <RaisedButton label="Edit" primary disabled />
+          <RaisedButton label="Remove" secondary disabled />
+        </div>
+      </div>
+      <Paper className="display-paper">
+        <DataTable
+          table={tableProps}
+          column={columnDefs}
+          data={users}
+        />
+      </Paper>
+    </div>
   );
 };
 

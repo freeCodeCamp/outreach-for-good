@@ -19,8 +19,8 @@ class AdminPage extends React.Component {
         <Tab label="Users">
           <UsersTab
             view = {{
-              width  : this.props.containerWidth,
-              height : this.props.containerHeight - 48
+              width  : this.props.containerWidth - 20,
+              height : this.props.containerHeight - 48 - 80
             }}
             users = {this.props.users}
           />
