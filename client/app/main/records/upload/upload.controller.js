@@ -5,9 +5,11 @@ function dateOnly(dateStr) {
   return new Date(date.getFullYear(), date.getMonth(), date.getDate());
 }
 
-function UploadCtrl($scope, PDF, AbsenceRecord, Auth, School, toastr) {
+function UploadCtrl($scope, PDF, AbsenceRecord, Auth, School, Student, toastr) {
+  var needGradeField = [];
+  var willUpdateGrade = {};
   // Formats of pdf based on school year
-  $scope.formats = ['2015-2016', '2015-2016, with grade level', '2016-2017', '2016-2017, with grade level'];
+  // $scope.formats = ['2015-2016', '2015-2016, with grade level', '2016-2017', '2016-2017, with grade level'];
 
   function resetState() {
     delete $scope.pending;
@@ -16,6 +18,7 @@ function UploadCtrl($scope, PDF, AbsenceRecord, Auth, School, toastr) {
 
     $scope.maxDate = dateOnly(Date.now());
     $scope.progress = 0;
+    $scope.studentGradeUpdates = [];
     $scope.selected = {
       school: $scope.defaultSchool,
       date: new Date(),
@@ -23,12 +26,16 @@ function UploadCtrl($scope, PDF, AbsenceRecord, Auth, School, toastr) {
     };
     AbsenceRecord.current().$promise.then(function(records) {
       _.forEach(records, function(record) {
+        needGradeField = record.entries.filter(function(entry) {
+            return !entry.student.grade;
+          });
         var minDate = dateOnly(record.date);
         minDate.setDate(minDate.getDate() + 1);
         record.minDate = minDate;
       });
       $scope.records = _.keyBy(records, '_id');
     });
+
   }
 
   if (Auth.getCurrentUser().role === 'teacher') {
@@ -49,6 +56,17 @@ function UploadCtrl($scope, PDF, AbsenceRecord, Auth, School, toastr) {
   $scope.confirmUpload = function() {
     $scope.pending = true;
     $scope.parsedRecord.date = $scope.selected.date;
+    //update student grades here if there are any
+    //var students = _.keyBy(selectedRows, 'student._id');
+    var studentIds = Object.keys(willUpdateGrade);
+    Student.batchUpdate(studentIds, 'grade', willUpdateGrade).$promise
+      .then(function(updated) {
+        if(updated.length) {
+          toastr.success(updated.length + ' students updated with grade data.',
+          {timeOut: 5000});
+        }
+      });
+
     AbsenceRecord.save({
       controller: 'school',
       selector: $scope.parsedRecord.schoolId
@@ -124,10 +142,20 @@ function UploadCtrl($scope, PDF, AbsenceRecord, Auth, School, toastr) {
   function handleSameSchoolYear(prevRecord, partialRecord, school) {
     var combinedEntries = _.concat(prevRecord.entries || [],
       prevRecord.missingEntries || []);
+
     var studentIdToPrevEntry = _.keyBy(combinedEntries, 'student.studentId');
     var record = groupByType(partialRecord.students, studentIdToPrevEntry);
+
+    // console.log(record);
     record.schoolYear = partialRecord.schoolYear;
     _.forEach(record.updates || [], function(update) {
+
+      //check and see if the updated records need a grade updated
+      if(update.student.studentId.indexOf(needGradeField)) {
+        var studentId = studentIdToPrevEntry[update.student.studentId];
+        willUpdateGrade[studentId.student._id] = +update.student.grade;
+      }
+
       var entry = update.entry;
       var prevEntry = studentIdToPrevEntry[update.student.studentId];
       entry.student = prevEntry.student._id;
@@ -159,9 +187,15 @@ function UploadCtrl($scope, PDF, AbsenceRecord, Auth, School, toastr) {
       .keyBy('student.studentId')
       .mapValues('student._id')
       .value();
+
     var record = groupByType(partialRecord.students, studentIdToId);
     record.schoolYear = partialRecord.schoolYear;
     _.forEach(record.updates || [], function(update) {
+      //check and see if the updated records need a grade updated
+      if(update.student.studentId.indexOf(needGradeField)) {
+        var studentId = studentIdToPrevEntry[update.student.studentId];
+        willUpdateGrade[studentId.student._id] = +update.student.grade;
+      }
       var entry = update.entry;
       entry.student = studentIdToId[update.student.studentId];
       // Updates deltas start over by setting to tardies and absences values.
@@ -186,9 +220,9 @@ function UploadCtrl($scope, PDF, AbsenceRecord, Auth, School, toastr) {
       entry.absencesDelta = entry.absences;
       entry.outreaches = createOutreaches(entry, {}, school, record.schoolYear);
     });
+    console.log('updates:', record.updates);
     record.schoolId = school._id;
     record.previousRecordId = previousRecord.recordId;
-    console.log('record:', record)
     return record;
   }
 
