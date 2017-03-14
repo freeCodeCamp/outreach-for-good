@@ -1,12 +1,29 @@
 import React, {PropTypes} from 'react';
 import DataTable from '../common/data-table/DataTable';
-import Paper from 'material-ui/Paper';
-import RaisedButton from 'material-ui/RaisedButton';
 
-const UsersTab = ({view, users}) => {
-  const columnDefs = [{
+const UsersTab = ({view, users, ...props}) => {
+  const page = {
+    title  : 'Manage User Accounts',
+    button : [{
+      label    : 'Edit',
+      primary  : true,
+      callback : props.handleClick
+    }, {
+      label     : 'Remove',
+      secondary : true
+    }]
+  };
+
+  const table = {
+    width        : view.width,
+    height       : view.height,
+    rowHeight    : 50,
+    headerHeight : 50
+  };
+
+  const columns = [{
     title : '',
-    id    : 'selected',
+    id    : '_id',
     width : 20,
     fixed : true
   }, {
@@ -27,38 +44,20 @@ const UsersTab = ({view, users}) => {
     flexGrow : 1
   }];
 
-  const tableProps = {
-    table : {
-      width  : view.width,
-      height : view.height,
-    },
-    rowHeight    : 50,
-    headerHeight : 50
-  };
-
   return (
-    <div className="admin-page-tab">
-      <div className="admin-page-title">
-        <h3>Manage User Accounts</h3>
-        <div className="buttons">
-          <RaisedButton label="Edit" primary disabled />
-          <RaisedButton label="Remove" secondary disabled />
-        </div>
-      </div>
-      <Paper className="display-paper">
-        <DataTable
-          table={tableProps}
-          column={columnDefs}
-          data={users}
-        />
-      </Paper>
-    </div>
+    <DataTable
+      page={page}
+      table={table}
+      column={columns}
+      data={users}
+    />
   );
 };
 
 UsersTab.propTypes = {
-  view  : PropTypes.object.isRequired,
-  users : PropTypes.array.isRequired,
+  view        : PropTypes.object.isRequired,
+  users       : PropTypes.array.isRequired,
+  handleClick : PropTypes.func,
 };
 
 export default UsersTab;

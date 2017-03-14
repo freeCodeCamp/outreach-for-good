@@ -11,6 +11,10 @@ import UsersTab from './UsersTab';
 
 class AdminPage extends React.Component {
 
+  handleClick() {
+    console.log('Click');
+  }
+
   render() {
     return (
       <Tabs
@@ -23,6 +27,7 @@ class AdminPage extends React.Component {
               height : this.props.containerHeight - 48 - 80
             }}
             users = {this.props.users}
+            handleClick = {this.handleClick}
           />
         </Tab>
         <Tab label="Schools">

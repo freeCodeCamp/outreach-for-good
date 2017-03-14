@@ -2,29 +2,45 @@ import React, {PropTypes} from 'react';
 import DataTable from '../common/data-table/DataTable';
 
 const SchoolsTab = ({view, schools}) => {
-  const columnDefs = [{
-    title : 'Name',
-    id    : 'name',
-    flexGrow : 1
-  }, {
-    title    : 'Actions',
-    id       : 'action',
-    width : 100
-  }];
+  const page = {
+    title : 'Schools'
+  };
 
-  const tableProps = {
-    table : {
-      width  : view.width,
-      height : view.height,
-    },
+  const table = {
+    width        : view.width,
+    height       : view.height,
     rowHeight    : 50,
     headerHeight : 50
   };
 
+  const columns = [{
+    title : '',
+    id    : '_id',
+    width : 20,
+    fixed : true
+  }, {
+    title : 'Name',
+    id    : 'name',
+    fixed : true
+  }, {
+    title    : 'Email Address',
+    id       : 'email',
+    flexGrow : 1
+  }, {
+    title    : 'Assigned School',
+    id       : 'school',
+    flexGrow : 1
+  }, {
+    title    : 'Role',
+    id       : 'role',
+    flexGrow : 1
+  }];
+
   return (
     <DataTable
-      table={tableProps}
-      column={columnDefs}
+      page={page}
+      table={table}
+      column={columns}
       data={schools}
     />
   );
