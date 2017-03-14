@@ -47,22 +47,19 @@ AbsenceRecord.remove().exec().then(function() {
 }).then(function(schoolA, schoolB) {
   // Fake names from http://homepage.net/name_generator/
   return Student.create({
-    studentId: 'sid001',
+    studentId: '1187755',
     lastName: 'Graham',
     firstName: 'Brandon',
-    grade: 5,
     school: schoolA._id
   }, {
     studentId: 'sid002',
     lastName: 'Simpson',
     firstName: 'Dan',
-    grade: 5,
     school: schoolA._id
   }, {
     studentId: 'sid003',
     lastName: 'Arnold',
     firstName: 'Gavin',
-    grade: 3,
     school: schoolA._id
   }, {
     studentId: 'sid004',
@@ -79,7 +76,7 @@ AbsenceRecord.remove().exec().then(function() {
 }).then(function(studentA, studentB, studentC, studentD, studentE) {
   var twoDaysAgo = Date.now() - 2 * 24 * 60 * 60 * 1000;
   return AbsenceRecord.create({
-    schoolYear: '2015-2016',
+    schoolYear: '2016-2017',
     school: studentA.school,
     date: twoDaysAgo,
     entries: [{
@@ -109,7 +106,7 @@ AbsenceRecord.remove().exec().then(function() {
     }],
     createdStudents: [studentA._id, studentB._id, studentC._id]
   }, {
-    schoolYear: '2015-2016',
+    schoolYear: '2016-2017',
     school: studentD.school,
     date: twoDaysAgo,
     entries: [{
