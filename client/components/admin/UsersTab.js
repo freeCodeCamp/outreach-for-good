@@ -5,27 +5,25 @@ const UsersTab = ({view, users, ...props}) => {
   const page = {
     title  : 'Manage User Accounts',
     button : [{
-      label   : 'Edit',
-      primary : true
+      label           : 'Edit',
+      labelColor      : '#FFFFFF',
+      backgroundColor : '#124e78',
+      menu : true
     }, {
-      label     : 'Remove',
-      secondary : true
+      label           : 'Remove',
+      labelColor      : '#FFFFFF',
+      backgroundColor : '#d9534f'
     }]
   };
 
   const table = {
     width        : view.width,
-    height       : view.height,
-    rowHeight    : 50,
-    headerHeight : 50
+    maxHeight    : view.height,
+    rowHeight    : 35,
+    headerHeight : 35
   };
 
   const columns = [{
-    title : '',
-    id    : '_id',
-    width : 20,
-    fixed : true
-  }, {
     title : 'Name',
     id    : 'name',
     fixed : true
@@ -44,13 +42,23 @@ const UsersTab = ({view, users, ...props}) => {
   }];
 
   return (
-    <DataTable
-      page={page}
-      table={table}
-      column={columns}
-      data={users}
-      {...props}
-    />
+    <div>
+      <DataTable
+        page={page}
+        table={table}
+        column={columns}
+        data={users}
+        {...props}
+      />
+      {/*<Dialog
+        title="Dialog With Actions"
+        actions={actions}
+        modal={true}
+        open={props.dialog.open}
+      >
+        Only actions can close this dialog.
+      </Dialog>*/}
+    </div>
   );
 };
 

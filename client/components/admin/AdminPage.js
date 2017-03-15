@@ -14,19 +14,55 @@ class AdminPage extends React.Component {
     super(props, context);
 
     this.state = {
-      tableState : []
+      tableState : [],
+      menuState  : {
+        open   : false,
+        anchor : null
+      },
+      dialogState : [],
     };
 
     this.clickHandler = this.clickHandler.bind(this);
+    this.tabHandler = this.tabHandler.bind(this);
   }
 
-  clickHandler(action, newState) {
-    if(action) {
+  clickHandler(action, data, event) {
+    //console.log('click', action, data);
+    switch (action) {
+    case 'toggleSelected':
       this.setState({
-        tableState : newState,
+        tableState : data,
       });
+      break;
+    case 'changeTabs':
+      if(this.state.tableState.length > 0) {
+        this.setState({
+          tableState : [],
+        });
+      }
+      break;
+    case 'buttonClick':
+      if(data == 'Edit') {
+        this.setState({
+          menuState : {
+            open   : true,
+            anchor : event.currentTarget
+          }
+        });
+      }
+      break;
+    case 'popoverClose':
+      this.setState({
+        menuState : {
+          open : false
+        }
+      });
+      break;
     }
-    console.log(this.state.tableState);
+  }
+
+  tabHandler() {
+    this.clickHandler('changeTabs');
   }
 
   render() {
@@ -34,7 +70,10 @@ class AdminPage extends React.Component {
       <Tabs
         style={{width: this.props.containerWidth}}
       >
-        <Tab label="Users">
+        <Tab
+          label='Users'
+          onActive={this.tabHandler}
+        >
           <UsersTab
             view = {{
               width  : this.props.containerWidth - 20,
@@ -42,10 +81,15 @@ class AdminPage extends React.Component {
             }}
             users = {this.props.users}
             tableState = {this.state.tableState}
+            menuState = {this.state.menuState}
+            dialogState = {this.state.dialogState}
             callback = {this.clickHandler}
           />
         </Tab>
-        <Tab label="Schools">
+        <Tab
+          label='Schools'
+          onActive={this.tabHandler}
+        >
           <SchoolsTab
             view = {{
               width  : this.props.containerWidth,
@@ -53,6 +97,7 @@ class AdminPage extends React.Component {
             }}
             schools = {this.props.users}
             tableState = {this.state.tableState}
+            dialogState = {this.state.dialogState}
             callback = {this.clickHandler}
           />
         </Tab>

@@ -8,17 +8,12 @@ const SchoolsTab = ({view, schools, ...props}) => {
 
   const table = {
     width        : view.width,
-    height       : view.height,
-    rowHeight    : 50,
-    headerHeight : 50
+    maxHeight    : view.height,
+    rowHeight    : 35,
+    headerHeight : 35
   };
 
   const columns = [{
-    title : '',
-    id    : '_id',
-    width : 20,
-    fixed : true
-  }, {
     title : 'Name',
     id    : 'name',
     fixed : true
