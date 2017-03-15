@@ -1,0 +1,33 @@
+.admin-page {
+  &-tab{
+    padding: 10px;
+    
+    .display-paper {
+      padding: 0px;
+      font-family: "Helvetica Neue",Helvetica,Arial,sans-serif !important;
+      .buttons {
+        text-align: center;
+        .RaisedButton {
+          margin: 12px;
+        }
+      }
+    }
+  }
+
+  &-title{
+    height: 50px;
+    padding: 0px 10px 10px;
+    position: relative;
+
+    & h3 {
+      margin: 0px;
+      position: absolute;
+      top: 10px;
+      left: 10px;
+    }
+
+    & .buttons {
+      float: right;
+    }
+  }
+}
