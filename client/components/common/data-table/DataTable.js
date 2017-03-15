@@ -34,9 +34,11 @@ const DataTable = ({page, table, column, data, ...props}) => {
           {page.button.map((button, index) =>
             <RaisedButton
               label={button.label}
+              labelColor={button.labelColor}
               value={button.label}
               primary={button.primary || false}
               secondary={button.secondary || false}
+              backgroundColor={button.backgroundColor}
               disabled={row.selected.length == 0}
               onClick={buttonHandler}
               key={index}
@@ -50,7 +52,7 @@ const DataTable = ({page, table, column, data, ...props}) => {
           headerHeight={table.headerHeight || 30}
           rowsCount={data.length}
           width={table.width}
-          height={table.height}
+          maxHeight={table.maxHeight}
           onRowClick={row.toggleSelected}
           rowClassNameGetter={row.isSelected}
         >

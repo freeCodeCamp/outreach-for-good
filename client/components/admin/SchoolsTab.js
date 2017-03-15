@@ -8,7 +8,7 @@ const SchoolsTab = ({view, schools, ...props}) => {
 
   const table = {
     width        : view.width,
-    height       : view.height,
+    maxHeight    : view.height,
     rowHeight    : 35,
     headerHeight : 35
   };

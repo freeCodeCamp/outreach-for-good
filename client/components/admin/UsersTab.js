@@ -8,14 +8,15 @@ const UsersTab = ({view, users, ...props}) => {
       label   : 'Edit',
       primary : true
     }, {
-      label     : 'Remove',
-      secondary : true
+      label           : 'Remove',
+      labelColor      : '#FFFFFF',
+      backgroundColor : '#d9534f'
     }]
   };
 
   const table = {
     width        : view.width,
-    height       : view.height,
+    maxHeight    : view.height,
     rowHeight    : 35,
     headerHeight : 35
   };
