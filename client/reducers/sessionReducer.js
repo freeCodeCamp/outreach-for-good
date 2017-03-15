@@ -2,7 +2,7 @@ import * as types from '../actions/actionTypes';
 import iState from './initialState';
 
 export default function sessionReducer(state = iState.session, action) {
-  console.log(action);
+  //console.log(action);
   switch (action.type) {
   case types.SESSION_VALID:
     return {

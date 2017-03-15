@@ -31,6 +31,10 @@ See [tools/vagrant](https://github.com/freeCodeCamp/child-first-authority/tree/m
 
 This app contains npm scripts for easy deployment to Heroku.
 
+After logging in to Heroku with Heroku toolbelt, deploying is accomplished by:
+
+    $ grunt buildcontrol:heroku
+    
 The env variables that need to be set:
 
 - APP_SECRET = *SECRET*
@@ -52,3 +56,4 @@ This version is currently under development.
 
 * Upgrade babel-loader, current version causes depreciation warning 
   * https://github.com/babel/babel-loader/pull/391
+* When session validation fails, does user stay locked-out? 
