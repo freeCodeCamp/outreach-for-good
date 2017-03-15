@@ -10,9 +10,23 @@ import SchoolsTab from './SchoolsTab';
 import UsersTab from './UsersTab';
 
 class AdminPage extends React.Component {
+  constructor(props, context) {
+    super(props, context);
 
-  handleClick() {
-    console.log('Click');
+    this.state = {
+      tableState : []
+    };
+
+    this.clickHandler = this.clickHandler.bind(this);
+  }
+
+  clickHandler(action, newState) {
+    if(action) {
+      this.setState({
+        tableState : newState,
+      });
+    }
+    console.log(this.state.tableState);
   }
 
   render() {
@@ -27,7 +41,8 @@ class AdminPage extends React.Component {
               height : this.props.containerHeight - 48 - 80
             }}
             users = {this.props.users}
-            handleClick = {this.handleClick}
+            tableState = {this.state.tableState}
+            callback = {this.clickHandler}
           />
         </Tab>
         <Tab label="Schools">
@@ -37,6 +52,8 @@ class AdminPage extends React.Component {
               height : this.props.containerHeight - 48
             }}
             schools = {this.props.users}
+            tableState = {this.state.tableState}
+            callback = {this.clickHandler}
           />
         </Tab>
       </Tabs>

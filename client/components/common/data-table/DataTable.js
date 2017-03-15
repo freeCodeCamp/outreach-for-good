@@ -8,6 +8,20 @@ import RaisedButton from 'material-ui/RaisedButton';
 const DataTable = ({page, table, column, data, ...props}) => {
   if(!page.button) page.button = [];
 
+  let row = {
+    selected : props.tableState,
+    isSelected(index) {
+      return row.selected.indexOf(index) !== -1
+        ? 'selected-row' : '';
+    },
+    toggleSelected(event, index) {
+      let location = row.selected.indexOf(index);
+      location === -1 ? row.selected.push(index)
+        : row.selected.splice(location, 1);
+      props.callback('toggleSelected', row.selected);
+    }
+  };
+
   return (
     <div className="admin-page-tab">
       <div className="admin-page-title">
@@ -31,16 +45,18 @@ const DataTable = ({page, table, column, data, ...props}) => {
           rowsCount={data.length}
           width={table.width}
           height={table.height}
-          onRowClick={props.onRowClick}
-          rowClassNameGetter={function(i) {
-            if(i === 1) {
-              return 'MakeItBlue';
-            }
-          }}
+          onRowClick={row.toggleSelected}
+          rowClassNameGetter={row.isSelected}
         >
         {column.map(col =>
           <Column
-            header={<Cell>{col.title}</Cell>}
+            header={
+              <Cell>
+                {col.title}
+                {/*<br />
+                <input type='text' style={{width: '100%'}} />*/}
+              </Cell>
+              }
             cell={<DataTableRow data={data} col={col.id} />}
             fixed={col.fixed}
             flexGrow={col.flexGrow}

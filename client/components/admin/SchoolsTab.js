@@ -1,7 +1,7 @@
 import React, {PropTypes} from 'react';
 import DataTable from '../common/data-table/DataTable';
 
-const SchoolsTab = ({view, schools}) => {
+const SchoolsTab = ({view, schools, ...props}) => {
   const page = {
     title : 'Schools'
   };
@@ -42,13 +42,15 @@ const SchoolsTab = ({view, schools}) => {
       table={table}
       column={columns}
       data={schools}
+      {...props}
     />
   );
 };
 
 SchoolsTab.propTypes = {
-  view    : PropTypes.object.isRequired,
-  schools : PropTypes.array.isRequired,
+  view     : PropTypes.object.isRequired,
+  schools  : PropTypes.array.isRequired,
+  callback : PropTypes.func.isRequired,
 };
 
 export default SchoolsTab;

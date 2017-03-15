@@ -5,9 +5,8 @@ const UsersTab = ({view, users, ...props}) => {
   const page = {
     title  : 'Manage User Accounts',
     button : [{
-      label    : 'Edit',
-      primary  : true,
-      callback : props.handleClick
+      label   : 'Edit',
+      primary : true
     }, {
       label     : 'Remove',
       secondary : true
@@ -50,14 +49,15 @@ const UsersTab = ({view, users, ...props}) => {
       table={table}
       column={columns}
       data={users}
+      {...props}
     />
   );
 };
 
 UsersTab.propTypes = {
-  view        : PropTypes.object.isRequired,
-  users       : PropTypes.array.isRequired,
-  handleClick : PropTypes.func,
+  view     : PropTypes.object.isRequired,
+  users    : PropTypes.array.isRequired,
+  callback : PropTypes.func.isRequired,
 };
 
 export default UsersTab;

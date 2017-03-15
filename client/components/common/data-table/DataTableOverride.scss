@@ -1,3 +1,7 @@
 .fixedDataTableCellGroupLayout_cellGroup div:last-child{
   border-right: 0px !important;
 }
+
+.selected-row div {
+  background-color: #FF0000;
+}
