@@ -3,7 +3,7 @@ import React from 'react';
 import {render} from 'react-dom';
 import { browserHistory} from 'react-router';
 import RTRouter from './router';
-import {loadUsers} from './actions/userActions'; // named import, shorter syntax
+import {getAllUsers} from './actions/userActions'; // named import, shorter syntax
 import configureStore from './store/configureStore';
 import {Provider} from 'react-redux';
 import './styles/styles.scss';
@@ -16,10 +16,10 @@ import injectTapEventPlugin from 'react-tap-event-plugin';
 injectTapEventPlugin();
 
 const store = configureStore();
-console.log(store.getState());
+//console.log(store.getState());
 
 // Future improvement, inject into Head on serve during initial render
-store.dispatch(loadUsers());
+store.dispatch(getAllUsers());
 const {getState} = store;
 
 render(
