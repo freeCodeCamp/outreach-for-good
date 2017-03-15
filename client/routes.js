@@ -8,6 +8,7 @@ import LoginPage from './components/login/LoginPage';
 import RecordsPage from './components/records/RecordsPage';
 import SchoolReportsPage from './components/school/reports/SchoolReportsPage';
 import SchoolSettingsPage from './components/school/settings/SchoolSettingsPage';
+import StudentPage from './components/student/StudentPage';
 import UsersPage from './components/users/UsersPage';
 import VisualizationPage from './components/visualization/VisualizationPage';
 
@@ -23,6 +24,7 @@ export default (
     <Route path="records" component={RecordsPage}/>
     <Route path="school/reports/at-risk" component={SchoolReportsPage}/>
     <Route path="school/settings" component={SchoolSettingsPage}/>
+    <Route path="student" component={StudentPage} />
     <Route path="users" component={UsersPage}/>
     <Route path="visualization" component={VisualizationPage}/>
   </Route>
