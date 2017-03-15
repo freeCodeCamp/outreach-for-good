@@ -22,6 +22,10 @@ const DataTable = ({page, table, column, data, ...props}) => {
     }
   };
 
+  function buttonHandler() {
+    props.callback('buttonClick', this.value); // eslint-disable-line no-invalid-this
+  }
+
   return (
     <div className="admin-page-tab">
       <div className="admin-page-title">
@@ -30,9 +34,11 @@ const DataTable = ({page, table, column, data, ...props}) => {
           {page.button.map((button, index) =>
             <RaisedButton
               label={button.label}
+              value={button.label}
               primary={button.primary || false}
               secondary={button.secondary || false}
-              disabled
+              disabled={row.selected.length == 0}
+              onClick={buttonHandler}
               key={index}
             />
             )}
@@ -75,7 +81,7 @@ DataTable.propTypes = {
   table      : PropTypes.object.isRequired,
   column     : PropTypes.array.isRequired,
   data       : PropTypes.array.isRequired,
-  onRowClick : PropTypes.func
+  tableState : PropTypes.array
 };
 
 export default DataTable;

@@ -18,15 +18,32 @@ class AdminPage extends React.Component {
     };
 
     this.clickHandler = this.clickHandler.bind(this);
+    this.tabHandler = this.tabHandler.bind(this);
   }
 
-  clickHandler(action, newState) {
-    if(action) {
+  clickHandler(action, data) {
+    console.log('click', action, data)
+    switch (action) {
+    case 'toggleSelected':
       this.setState({
-        tableState : newState,
+        tableState : data,
       });
+      break;
+    case 'changeTabs':
+      if(this.state.tableState.length > 0) {
+        this.setState({
+          tableState : [],
+        });
+      }
+      break;
+    case 'buttonClick':
+      console.log(data)
+      break;
     }
-    console.log(this.state.tableState);
+  }
+
+  tabHandler() {
+    this.clickHandler('changeTabs');
   }
 
   render() {
@@ -34,7 +51,10 @@ class AdminPage extends React.Component {
       <Tabs
         style={{width: this.props.containerWidth}}
       >
-        <Tab label="Users">
+        <Tab
+          label='Users'
+          onActive={this.tabHandler}
+        >
           <UsersTab
             view = {{
               width  : this.props.containerWidth - 20,
@@ -45,7 +65,10 @@ class AdminPage extends React.Component {
             callback = {this.clickHandler}
           />
         </Tab>
-        <Tab label="Schools">
+        <Tab
+          label='Schools'
+          onActive={this.tabHandler}
+        >
           <SchoolsTab
             view = {{
               width  : this.props.containerWidth,
