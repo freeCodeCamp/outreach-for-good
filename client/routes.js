@@ -11,6 +11,8 @@ import SchoolSettingsPage from './components/school/settings/SchoolSettingsPage'
 import UsersPage from './components/users/UsersPage';
 import VisualizationPage from './components/visualization/VisualizationPage';
 
+//comment
+
 export default (
   <Route path="/" component={App}>
     <IndexRoute component={LoginPage}/>

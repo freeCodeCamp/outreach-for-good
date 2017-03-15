@@ -3,6 +3,7 @@
 var _ = require('lodash');
 var AbsenceRecord = require('./absence-record.model');
 var Outreach = require('../student/outreach/outreach.model');
+var debug = require('debug')('route:api:absence-record-list');
 
 var populateOptions = [{
   path   : 'school',
@@ -228,6 +229,6 @@ exports.school = function(req, res) {
 };
 
 function handleError(res, err) {
-  console.log(err);
+  debug(err);
   return res.status(500).send(err);
 }

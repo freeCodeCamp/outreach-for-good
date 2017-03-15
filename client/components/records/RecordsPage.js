@@ -1,33 +1,76 @@
-import React from 'react';
-import { Link } from 'react-router';
+import React, {Component, PropTypes} from 'react';
+import {bindActionCreators} from 'redux';
+import {connect} from 'react-redux';
+import * as recordsActions from '../../actions/recordsActions';
+import {Tabs, Tab} from 'material-ui/Tabs';
 
-class RecordsPage extends React.Component {
+import UploadTab from './components/UploadTab';
+import ManageTab from './components/ManageTab';
+
+class RecordsPage extends Component {
+  constructor() {
+    super();
+
+    this.state = {
+      currentTab : 'upload'
+    };
+  }
+
+  componentDidMount() {
+    this.props.actions.getSchools();
+  }
+
+  confirm(record) {
+    this.props.actions.confirmRecord(record);
+  }
+
+  changeTab(tab) {
+    this.setState({ currentTab : tab });
+  }
+
   render() {
     return (
-      <div>
-            <div className="jumbotron">
-                <h1>Stand-In Template</h1>
-                <p>This will be the app record page</p>
-                <Link to="about" className="btn btn-primary btn-lg">Learn more</Link>
-            </div>
-                <h1>Stand-In Template</h1>
-                <h1>Stand-In Template</h1>
-                <h1>Stand-In Template</h1>
-                <h1>Stand-In Template</h1>
-                <h1>Stand-In Template</h1>
-                <h1>Stand-In Template</h1>
-                <h1>Stand-In Template</h1>
-                <h1>Stand-In Template</h1>
-                <h1>Stand-In Template</h1>
-                <h1>Stand-In Template</h1>
-                <h1>Stand-In Template</h1>
-                <h1>Stand-In Template</h1>
-                <h1>Stand-In Template</h1>
-                <h1>Stand-In Template</h1>
-                <h1>Stand-In Template</h1>
-</div>
+      <Tabs
+        value={this.state.currentTab}
+        onChange={this.changeTab.bind(this)}
+        >
+        <Tab
+          label="Upload"
+          value="upload">
+          <UploadTab
+            changeTab={this.changeTab.bind(this)}
+            confirm={this.confirm.bind(this)}
+            schools={this.props.records.schools}
+          />
+        </Tab>
+        <Tab
+          label="Manage"
+          value="manage">
+          <ManageTab
+            schools={this.props.records.schools}
+            absenceRecords={this.props.records.absenceRecords}
+          />
+        </Tab>
+      </Tabs>
     );
   }
 }
 
-export default RecordsPage;
+RecordsPage.propTypes = {
+  actions : PropTypes.object.isRequired
+};
+
+function mapStateToProps(state) {
+  return {
+    session : state.session,
+    records : state.records
+  };
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+    actions : bindActionCreators(recordsActions, dispatch)
+  };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(RecordsPage);

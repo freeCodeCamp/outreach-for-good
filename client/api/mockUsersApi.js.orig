@@ -20,6 +20,25 @@ const users = [
     role     : 'guest',
     __v      : 0
   }, {
+<<<<<<< HEAD
+    _id        : '589bb5ac5d4c3d03304f49bf',
+    provider   : 'local',
+    name       : 'Test Teacher',
+    email      : 'test@teacher.com',
+    role       : 'teacher',
+    __v        : 0,
+    assignment : {
+      name     : 'School 1',
+      active   : true,
+      triggers : [
+      {
+        'absences' : 15,
+        'tier'     : 1,
+        type       : 'Court Referral'
+      }
+    ],
+    }
+=======
     _id      : '58bf5cc5563060d37fe5c840',
     name     : 'Chad Sheets',
     email    : 'cjsheets@gmail.com',
@@ -53,6 +72,7 @@ const users = [
     },
     __v  : 0,
     role : 'super'
+>>>>>>> devel
   }
 ];
 
@@ -67,14 +87,22 @@ class UsersApi {
 /**
  * Get my info
  */
+<<<<<<< HEAD
+  static me() {
+=======
   static getMe() {
+>>>>>>> devel
     return new Promise(resolve => {
       setTimeout(() => {
         resolve(Object.assign([], users[2]));
       }, delay);
     });
   }
+<<<<<<< HEAD
+  
+=======
 
+>>>>>>> devel
 /**
  * Get a single user
  */
@@ -98,6 +126,10 @@ class UsersApi {
       }, delay);
     });
   }
+<<<<<<< HEAD
+
+=======
+>>>>>>> devel
 
 
   static getAllUsers() {

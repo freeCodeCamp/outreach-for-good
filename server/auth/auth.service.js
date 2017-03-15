@@ -10,6 +10,7 @@ var User = require('../api/user/user.model');
 var School = require('../api/school/school.model');
 var Student = require('../api/student/student.model');
 var validateJwt = expressJwt({secret: config.secrets.session});
+var debug = require('debug')('route:auth:service');
 
 /**
  * Attaches the user object to the request if authenticated
@@ -29,8 +30,12 @@ exports.isAuthenticated = function() {
   composed.use(function(req, res, next) {
     User.findById(req.user._id, function(err, user) {
       if(err) return next(err);
-      if(!user) return res.status(401).send('Unauthorized');
+      if(!user) {
+        debug('401, unauthorized user');
+        return res.status(401).send('Unauthorized');
+      }
       req.user = user;
+      debug('Valid, attaching user object');
       next();
     });
   });
@@ -53,6 +58,7 @@ exports.setTokenCookie = function(req, res) {
       .json({message: 'Something went wrong, please try again.'});
   }
   var token = exports.signToken(req.user._id, req.user.role);
+  //debug(token);
   res.cookie('token', JSON.stringify(token));
   res.redirect('/');
 };
