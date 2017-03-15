@@ -14,15 +14,20 @@ class AdminPage extends React.Component {
     super(props, context);
 
     this.state = {
-      tableState : []
+      tableState : [],
+      menuState  : {
+        open   : false,
+        anchor : null
+      },
+      dialogState : [],
     };
 
     this.clickHandler = this.clickHandler.bind(this);
     this.tabHandler = this.tabHandler.bind(this);
   }
 
-  clickHandler(action, data) {
-    console.log('click', action, data)
+  clickHandler(action, data, event) {
+    //console.log('click', action, data);
     switch (action) {
     case 'toggleSelected':
       this.setState({
@@ -37,7 +42,21 @@ class AdminPage extends React.Component {
       }
       break;
     case 'buttonClick':
-      console.log(data)
+      if(data == 'Edit') {
+        this.setState({
+          menuState : {
+            open   : true,
+            anchor : event.currentTarget
+          }
+        });
+      }
+      break;
+    case 'popoverClose':
+      this.setState({
+        menuState : {
+          open : false
+        }
+      });
       break;
     }
   }
@@ -62,6 +81,8 @@ class AdminPage extends React.Component {
             }}
             users = {this.props.users}
             tableState = {this.state.tableState}
+            menuState = {this.state.menuState}
+            dialogState = {this.state.dialogState}
             callback = {this.clickHandler}
           />
         </Tab>
@@ -76,6 +97,7 @@ class AdminPage extends React.Component {
             }}
             schools = {this.props.users}
             tableState = {this.state.tableState}
+            dialogState = {this.state.dialogState}
             callback = {this.clickHandler}
           />
         </Tab>

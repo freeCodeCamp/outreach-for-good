@@ -5,8 +5,10 @@ const UsersTab = ({view, users, ...props}) => {
   const page = {
     title  : 'Manage User Accounts',
     button : [{
-      label   : 'Edit',
-      primary : true
+      label           : 'Edit',
+      labelColor      : '#FFFFFF',
+      backgroundColor : '#124e78',
+      menu : true
     }, {
       label           : 'Remove',
       labelColor      : '#FFFFFF',
@@ -40,13 +42,23 @@ const UsersTab = ({view, users, ...props}) => {
   }];
 
   return (
-    <DataTable
-      page={page}
-      table={table}
-      column={columns}
-      data={users}
-      {...props}
-    />
+    <div>
+      <DataTable
+        page={page}
+        table={table}
+        column={columns}
+        data={users}
+        {...props}
+      />
+      {/*<Dialog
+        title="Dialog With Actions"
+        actions={actions}
+        modal={true}
+        open={props.dialog.open}
+      >
+        Only actions can close this dialog.
+      </Dialog>*/}
+    </div>
   );
 };
 

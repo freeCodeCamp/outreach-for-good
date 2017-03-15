@@ -5,6 +5,10 @@ import DataTableRow from './DataTableRow';
 import Paper from 'material-ui/Paper';
 import RaisedButton from 'material-ui/RaisedButton';
 
+import Popover from 'material-ui/Popover';
+import Menu from 'material-ui/Menu';
+import MenuItem from 'material-ui/MenuItem';
+
 const DataTable = ({page, table, column, data, ...props}) => {
   if(!page.button) page.button = [];
 
@@ -22,8 +26,14 @@ const DataTable = ({page, table, column, data, ...props}) => {
     }
   };
 
-  function buttonHandler() {
-    props.callback('buttonClick', this.value); // eslint-disable-line no-invalid-this
+  function buttonHandler(event) {
+    event.preventDefault();
+    //console.log(event);
+    props.callback('buttonClick', this.value, event); // eslint-disable-line no-invalid-this
+  }
+
+  function popoverClose() {
+    props.callback('popoverClose', this.value); // eslint-disable-line no-invalid-this
   }
 
   return (
@@ -39,10 +49,26 @@ const DataTable = ({page, table, column, data, ...props}) => {
               primary={button.primary || false}
               secondary={button.secondary || false}
               backgroundColor={button.backgroundColor}
+              style={{marginLeft: '10px'}}
               disabled={row.selected.length == 0}
               onClick={buttonHandler}
               key={index}
             />
+            )}
+          {page.button.filter(button => button.menu).map((button, index) =>
+            <Popover
+              open={props.menuState.open}
+              anchorEl={props.menuState.anchor}
+              anchorOrigin={{horizontal: 'right', vertical: 'bottom'}}
+              targetOrigin={{horizontal: 'right', vertical: 'top'}}
+              onRequestClose={popoverClose}
+              key={index}
+            >
+              <Menu>
+                <MenuItem primaryText="Assigned School" />
+                <MenuItem primaryText="User Role" />
+              </Menu>
+            </Popover>
             )}
         </div>
       </div>
