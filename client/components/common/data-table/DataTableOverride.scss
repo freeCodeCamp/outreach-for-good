@@ -1,0 +1,16 @@
+.fixedDataTableRowLayout_rowWrapper {
+  cursor: pointer;
+}
+
+.public_fixedDataTableCell_cellContent {
+  padding: 0px 10px;
+}
+
+.fixedDataTableCellGroupLayout_cellGroup div:last-child{
+  border-right: 0px !important;
+}
+
+.selected-row div {
+  background-color: #C9DDE1;
+  border-color: #e6f2f5;
+}

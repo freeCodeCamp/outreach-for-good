@@ -45,7 +45,7 @@
     a:hover {
       color: #fff;
       background-color: $teal-l05;
-      box-shadow: inset 2px 0 0 0 #D35400;
+      box-shadow: inset 2px 0 0 0 $cfaOrange500;
     }
     &.flex-spacer {
       flex: 1;
@@ -53,12 +53,12 @@
     }
     &.active {
       background-color: $orange;
-      background: linear-gradient(to right, $orange-d05, $orange);
+      background: linear-gradient(to right, $cfaOrange500, $cfaOrange500);
       a, a:focus {
         background: none;
       }
       a:hover {
-        background-color: $orange-l10;
+        background-color: $cfaOrange500;
       }
     }
   }
