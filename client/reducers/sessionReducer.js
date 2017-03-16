@@ -4,7 +4,8 @@ import iState from './initialState';
 export default function sessionReducer(state = iState.session, action) {
   //console.log(action);
   switch (action.type) {
-  case types.SESSION_VALID:
+  case types.SET_TOKEN:
+    //console.log('Setting Token');
     return {
       token : action.token,
       me    : {
@@ -15,7 +16,11 @@ export default function sessionReducer(state = iState.session, action) {
         role  : action.me.role
       }
     };
+  case types.SESSION_VALID:
+    //console.log('Session Valid');
+    return state;
   case types.SESSION_CLEAR:
+    //console.log('Logout');
     return {
       token : null,
       me    : {
