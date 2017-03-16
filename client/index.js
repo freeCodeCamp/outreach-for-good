@@ -4,6 +4,7 @@ import {render} from 'react-dom';
 import { browserHistory} from 'react-router';
 import RTRouter from './router';
 //import {getAllUsers} from './actions/userActions'; // named import, shorter syntax
+
 import configureStore from './store/configureStore';
 import {Provider} from 'react-redux';
 import './styles/styles.scss';
