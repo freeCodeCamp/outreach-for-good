@@ -52,12 +52,12 @@ AbsenceRecord.remove().exec().then(function() {
     firstName: 'Brandon',
     school: schoolA._id
   }, {
-    studentId: 'sid002',
+    studentId: '1189407',
     lastName: 'Simpson',
     firstName: 'Dan',
     school: schoolA._id
   }, {
-    studentId: 'sid003',
+    studentId: '1185990',
     lastName: 'Arnold',
     firstName: 'Gavin',
     school: schoolA._id
@@ -81,24 +81,24 @@ AbsenceRecord.remove().exec().then(function() {
     date: twoDaysAgo,
     entries: [{
       student: studentA._id,
-      absences: 1.0,
-      absencesDelta: 1.0,
+      absences: 0.0,
+      absencesDelta: 0.0,
       tardies: 0.0,
       tardiesDelta: 0.0,
       present: 15.0,
       enrolled: 16.0
     }, {
       student: studentB._id,
-      absences: 1.0,
-      absencesDelta: 1.0,
+      absences: 0.0,
+      absencesDelta: 0.0,
       tardies: 0.0,
       tardiesDelta: 0.0,
       present: 14.0,
       enrolled: 15.0
     }, {
       student: studentC._id,
-      absences: 1.0,
-      absencesDelta: 1.0,
+      absences: 0.0,
+      absencesDelta: 0.0,
       tardies: 0,
       tardiesDelta: 0.0,
       present: 21.0,

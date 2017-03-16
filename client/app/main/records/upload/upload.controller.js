@@ -56,8 +56,9 @@ function UploadCtrl($scope, PDF, AbsenceRecord, Auth, School, Student, toastr) {
   $scope.confirmUpload = function() {
     $scope.pending = true;
     $scope.parsedRecord.date = $scope.selected.date;
-    //update student grades here if there are any
-    //var students = _.keyBy(selectedRows, 'student._id');
+
+    //Student service called to updated student grade if they don't already
+    // have a grade
     var studentIds = Object.keys(willUpdateGrade);
     Student.batchUpdate(studentIds, 'grade', willUpdateGrade).$promise
       .then(function(updated) {
@@ -146,7 +147,6 @@ function UploadCtrl($scope, PDF, AbsenceRecord, Auth, School, Student, toastr) {
     var studentIdToPrevEntry = _.keyBy(combinedEntries, 'student.studentId');
     var record = groupByType(partialRecord.students, studentIdToPrevEntry);
 
-    // console.log(record);
     record.schoolYear = partialRecord.schoolYear;
     _.forEach(record.updates || [], function(update) {
 
