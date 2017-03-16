@@ -41,15 +41,15 @@ class Sidebar extends Component {
           <span className="fa-stack fa-lg pull-left"><i className="fa fa-stack-1x fa-wrench" /></span>
           Admin
         </Link></li>}
-        <li><Link to="/student" activeClassName="active">
+        <li><Link to="/student/1000" activeClassName="active">
           <span className="fa-stack fa-lg pull-left"><i className="fa fa-stack-1x fa-user" /></span>
           Student
         </Link></li>
         <li className="flex-spacer" />
-        <li><Link to="/admin" activeClassName="active">
-      <span className="fa-stack fa-lg pull-left"><i className="fa fa-stack-1x fa-question" /></span>
-      About
-    </Link></li>
+        <li><Link to="/about" activeClassName="active">
+          <span className="fa-stack fa-lg pull-left"><i className="fa fa-stack-1x fa-question" /></span>
+          About
+        </Link></li>
       </ul>
     </div>
     );
