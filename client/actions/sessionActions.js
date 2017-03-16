@@ -3,7 +3,6 @@ import userAPI from '../api/UsersApi';
 import cookies from 'browser-cookies';
 import { browserHistory } from 'react-router';
 
-
 export function setToken(token, me) {
   return {type: types.SET_TOKEN, token, me};
 }

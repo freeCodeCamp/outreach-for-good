@@ -11,6 +11,7 @@ const UsersTab = ({view, users, ...props}) => {
       menu            : {
         open : props.openMenus.se,
         item : [{
+
           text : '1'
         }, {
           text : '2'

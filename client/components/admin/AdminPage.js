@@ -51,6 +51,7 @@ class AdminPage extends React.Component {
           edit   : action == 'popoverClose' ? false : data == 'Edit',
           se     : action == 'popoverClose' ? false : data == 'se',
           anchor : action == 'popoverClose' ? null : event.currentTarget
+
         }
       });
       break;
