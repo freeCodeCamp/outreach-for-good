@@ -40,7 +40,7 @@ require('./config/express')(app);
 require('./routes')(app);
 
 // Start server
-server.listen(env.port, 'localhost', function() {
+server.listen(env.port, env.ip, function() {
   debug('  🌎  Express server listening on %d, in %s mode', env.port, app.get('env'));
 });
 

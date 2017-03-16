@@ -43,9 +43,9 @@ const SchoolsTab = ({view, schools, ...props}) => {
 };
 
 SchoolsTab.propTypes = {
-  view     : PropTypes.object.isRequired,
-  schools  : PropTypes.array.isRequired,
-  callback : PropTypes.func.isRequired,
+  view         : PropTypes.object.isRequired,
+  schools      : PropTypes.array.isRequired,
+  clickHandler : PropTypes.func.isRequired,
 };
 
 export default SchoolsTab;
