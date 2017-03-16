@@ -8,7 +8,7 @@ import Paper from 'material-ui/Paper';
 
 class StudentPage extends Component {
 
-  componentDidMount() {
+  componentWillMount() {
     this.props.actions.fetchStudent(this.props.params.studentId);
   }
 
