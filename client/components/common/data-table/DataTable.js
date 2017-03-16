@@ -13,7 +13,7 @@ const DataTable = ({page, table, column, data, ...props}) => {
   if(!page.button) page.button = [];
 
   let row = {
-    selected : props.tableState,
+    selected : props.selectedRows,
     isSelected(index) {
       return row.selected.indexOf(index) !== -1
         ? 'selected-row' : '';
@@ -42,33 +42,38 @@ const DataTable = ({page, table, column, data, ...props}) => {
         <h3>{page.title}</h3>
         <div className="buttons">
           {page.button.map((button, index) =>
-            <RaisedButton
-              label={button.label}
-              labelColor={button.labelColor}
-              value={button.label}
-              primary={button.primary || false}
-              secondary={button.secondary || false}
-              backgroundColor={button.backgroundColor}
-              style={{marginLeft: '10px'}}
-              disabled={row.selected.length == 0}
-              onClick={buttonHandler}
-              key={index}
-            />
-            )}
-          {page.button.filter(button => button.menu).map((button, index) =>
-            <Popover
-              open={props.menuState.open}
-              anchorEl={props.menuState.anchor}
-              anchorOrigin={{horizontal: 'right', vertical: 'bottom'}}
-              targetOrigin={{horizontal: 'right', vertical: 'top'}}
-              onRequestClose={popoverClose}
-              key={index}
-            >
-              <Menu>
-                <MenuItem primaryText="Assigned School" />
-                <MenuItem primaryText="User Role" />
-              </Menu>
-            </Popover>
+            <div key={index} style={{display: 'inline'}}>
+              <RaisedButton
+                label={button.label}
+                labelColor={button.labelColor}
+                value={button.label}
+                primary={button.primary || false}
+                secondary={button.secondary || false}
+                backgroundColor={button.backgroundColor}
+                style={{marginLeft: '10px'}}
+                disabled={row.selected.length == 0}
+                onClick={buttonHandler}
+                
+              />
+              {button.menu &&
+                <Popover
+                  open={button.menu.open}
+                  anchorEl={button.menu.anchor}
+                  anchorOrigin={{horizontal: 'right', vertical: 'bottom'}}
+                  targetOrigin={{horizontal: 'right', vertical: 'top'}}
+                  onRequestClose={popoverClose}
+                >
+                  <Menu>
+                    {button.menu.item.map((item, i) =>
+                      <MenuItem
+                        primaryText={item.text}
+                        key={i}
+                      />
+                    )}
+                  </Menu>
+                </Popover>
+              }
+            </div>
             )}
         </div>
       </div>
@@ -109,7 +114,7 @@ DataTable.propTypes = {
   table      : PropTypes.object.isRequired,
   column     : PropTypes.array.isRequired,
   data       : PropTypes.array.isRequired,
-  tableState : PropTypes.array
+  selectedRows : PropTypes.array
 };
 
 export default DataTable;

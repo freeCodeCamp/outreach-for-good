@@ -15,9 +15,12 @@ export function logout() {
   return {type: types.SESSION_CLEAR};
 }
 
+/**
+ *  Attempt to add JWT to session
+ */
 export function verifyToken() {
+  // Tokens come with surrounding parentheses
   let token = cookies.get('token').replace(/"/g, '');
-  //console.log('Validate Session: ', token)
   if(token) {
     sessionStorage.setItem('token', token);
     // Thunk returns a function that accepts a dispatch
@@ -30,9 +33,13 @@ export function verifyToken() {
       });
     };
   }
+  // No JWT to add, ensure user is logged out
   return {type: types.SESSION_CLEAR};
 }
 
+/**
+ *  Verify session contains JWT for api calls
+ */
 export function validate() {
   return (dispatch, getState) => getState().session.token // eslint-disable-line no-confusing-arrow
     ? dispatch(sessionValid()) : dispatch(verifyToken());

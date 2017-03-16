@@ -5,10 +5,31 @@ const UsersTab = ({view, users, ...props}) => {
   const page = {
     title  : 'Manage User Accounts',
     button : [{
+      label           : 'se',
+      labelColor      : '#FFFFFF',
+      backgroundColor : '#124e78',
+      menu            : {
+        open   : props.openMenus.se,
+        anchor : props.openMenus.anchor,
+        item   : [{
+          text : '1'
+        }, {
+          text : '2'
+        }]
+      }
+    }, {
       label           : 'Edit',
       labelColor      : '#FFFFFF',
       backgroundColor : '#124e78',
-      menu : true
+      menu            : {
+        open   : props.openMenus.edit,
+        anchor : props.openMenus.anchor,
+        item   : [{
+          text : 'Assigned School'
+        }, {
+          text : 'User Role'
+        }]
+      }
     }, {
       label           : 'Remove',
       labelColor      : '#FFFFFF',

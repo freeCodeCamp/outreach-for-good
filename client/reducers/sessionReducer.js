@@ -5,7 +5,7 @@ export default function sessionReducer(state = iState.session, action) {
   //console.log(action);
   switch (action.type) {
   case types.SET_TOKEN:
-    console.log('Setting Token');
+    //console.log('Setting Token');
     return {
       token : action.token,
       me    : {
@@ -17,10 +17,10 @@ export default function sessionReducer(state = iState.session, action) {
       }
     };
   case types.SESSION_VALID:
-    console.log('Session Valid');
+    //console.log('Session Valid');
     return state;
   case types.SESSION_CLEAR:
-    console.log('Logout');
+    //console.log('Logout');
     return {
       token : null,
       me    : {
