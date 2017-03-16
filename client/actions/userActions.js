@@ -37,6 +37,7 @@ export function getAllUsers() {
       dispatch(loadUsersSuccess(users));
     })
     .catch(err => {
+      console.log('error :: ', err)
       throw err;
     });
   };
