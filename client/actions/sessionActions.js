@@ -1,6 +1,8 @@
 import * as types from './actionTypes';
 import userAPI from '../api/UsersApi';
 import cookies from 'browser-cookies';
+import { browserHistory } from 'react-router';
+
 
 export function setToken(token, me) {
   return {type: types.SET_TOKEN, token, me};
@@ -12,11 +14,12 @@ export function sessionValid() {
 
 export function logout() {
   cookies.erase('token');
+  browserHistory.push('/login');
   return {type: types.SESSION_CLEAR};
 }
 
 /**
- *  Attempt to add JWT to session
+ *  Attempt to initialize session with JWT
  */
 export function verifyToken() {
   // Tokens come with surrounding parentheses
@@ -28,19 +31,18 @@ export function verifyToken() {
       return userAPI.getMyself(token).then(me => {
         dispatch(setToken(token, me));
       })
-      .catch(err => {
-        throw err;
-      });
+      .catch(() => dispatch(logout()));
     };
   }
   // No JWT to add, ensure user is logged out
-  return {type: types.SESSION_CLEAR};
+  return dispatch => dispatch(logout());
 }
 
 /**
  *  Verify session contains JWT for api calls
  */
 export function validate() {
+  //console.log('Checking session validity');
   return (dispatch, getState) => getState().session.token // eslint-disable-line no-confusing-arrow
     ? dispatch(sessionValid()) : dispatch(verifyToken());
 }
