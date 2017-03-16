@@ -6,12 +6,14 @@ class UsersApi {
   static getMyself() {
     const headers = this.requestHeaders();
     console.log(headers)
-    const request = new Request('/api/users/me', {
+    const req = new Request('/api/users/me', {
       method : 'GET',
       headers
     });
-    return fetch(request).then(response => response.json())
-    .catch(error => error);
+    return fetch(req).then(res => res.json())
+    .catch(error => {
+      throw error;
+    });
   }
 
 /**
@@ -19,12 +21,14 @@ class UsersApi {
  */
   static getUser(userId) {
     const headers = this.requestHeaders();
-    const request = new Request(`/api/users/${userId}`, {
+    const req = new Request(`/api/users/${userId}`, {
       method : 'GET',
       headers
     });
-    return fetch(request).then(response => response.json())
-    .catch(error => error);
+    return fetch(req).then(res => res.json())
+    .catch(error => {
+      throw error;
+    });
   }
 
 /**
@@ -33,12 +37,14 @@ class UsersApi {
  */
   static getUsers() {
     const headers = this.requestHeaders();
-    const request = new Request('/api/users/', {
+    const req = new Request('/api/users/', {
       method : 'GET',
       headers
     });
-    return fetch(request).then(response => response.json())
-    .catch(error => error);
+    return fetch(req).then(res => this.parseResponse(res))
+    .catch(error => {
+      throw error;
+    });
   }
 
 /**
@@ -47,12 +53,14 @@ class UsersApi {
  */
   static updateRole(userId, roleId) {
     const headers = this.requestHeaders();
-    const request = new Request(`/api/users/${userId}/${roleId}`, {
+    const req = new Request(`/api/users/${userId}/${roleId}`, {
       method : 'PUT',
       headers
     });
-    return fetch(request).then(response => response.json())
-    .catch(error => error);
+    return fetch(req).then(res => res.json())
+    .catch(error => {
+      throw error;
+    });
   }
 
 /**
@@ -61,11 +69,11 @@ class UsersApi {
  */
   static updateSchool(userId, schoolId) {
     const headers = this.requestHeaders();
-    const request = new Request(`/api/users/${userId}/${schoolId}`, {
+    const req = new Request(`/api/users/${userId}/${schoolId}`, {
       method : 'PUT',
       headers
     });
-    return fetch(request).then(response => response.json())
+    return fetch(req).then(res => res.json())
     .catch(error => error);
   }
 
@@ -75,11 +83,11 @@ class UsersApi {
  */
   static removeUser(userId) {
     const headers = this.requestHeaders();
-    const request = new Request(`/api/users/${userId}`, {
+    const req = new Request(`/api/users/${userId}`, {
       method : 'DELETE',
       headers
     });
-    return fetch(request).then(response => response.json())
+    return fetch(req).then(res => res.json())
     .catch(error => error);
   }
 
@@ -89,6 +97,20 @@ class UsersApi {
   static requestHeaders() {
     console.log('Setup Header', sessionStorage.token);
     return {Authorization: `Bearer ${sessionStorage.token}`};
+  }
+
+/**
+ * Process API response codes
+ */
+  static parseResponse(res) {
+    let status = res.status;
+    if(status >= 400 && status < 500) {
+      throw res;
+    } else if(status >= 300 && status < 400) {
+      throw res;
+    } else {
+      return res.json();
+    }
   }
 
 }

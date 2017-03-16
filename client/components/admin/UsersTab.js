@@ -9,9 +9,9 @@ const UsersTab = ({view, users, ...props}) => {
       labelColor      : '#FFFFFF',
       backgroundColor : '#124e78',
       menu            : {
-        open   : props.openMenus.se,
-        anchor : props.openMenus.anchor,
-        item   : [{
+        open : props.openMenus.se,
+        item : [{
+
           text : '1'
         }, {
           text : '2'
@@ -22,9 +22,8 @@ const UsersTab = ({view, users, ...props}) => {
       labelColor      : '#FFFFFF',
       backgroundColor : '#124e78',
       menu            : {
-        open   : props.openMenus.edit,
-        anchor : props.openMenus.anchor,
-        item   : [{
+        open : props.openMenus.edit,
+        item : [{
           text : 'Assigned School'
         }, {
           text : 'User Role'
