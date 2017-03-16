@@ -41,6 +41,16 @@
       text-decoration: none;
       color: #fff;
       border-radius: 0;
+      &.active {
+        background-color: $orange;
+        background: linear-gradient(to right, $cfaOrange500, $cfaOrange500);
+        a, a:focus {
+          background: none;
+        }
+        a:hover {
+          background-color: $cfaOrange500;
+        }
+      }
     }
     a:hover {
       color: #fff;
@@ -50,16 +60,6 @@
     &.flex-spacer {
       flex: 1;
       min-height: 0;
-    }
-    &.active {
-      background-color: $orange;
-      background: linear-gradient(to right, $cfaOrange500, $cfaOrange500);
-      a, a:focus {
-        background: none;
-      }
-      a:hover {
-        background-color: $cfaOrange500;
-      }
     }
   }
   transition: all 0.5s ease;
