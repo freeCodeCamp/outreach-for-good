@@ -45,20 +45,13 @@ class AdminPage extends React.Component {
       }
       break;
     case 'buttonClick':
-      this.setState({
-        openMenus : {
-          edit   : data == 'Edit',
-          se     : data == 'se',
-          anchor : event.currentTarget
-        }
-      });
-      break;
     case 'popoverClose':
       this.setState({
         openMenus : {
-          edit   : false,
-          se     : false,
-          anchor : null
+          edit   : action == 'popoverClose' ? false : data == 'Edit',
+          se     : action == 'popoverClose' ? false : data == 'se',
+          anchor : action == 'popoverClose' ? null : event.currentTarget
+
         }
       });
       break;

@@ -57,7 +57,7 @@ const DataTable = ({page, table, column, data, ...props}) => {
               {button.menu
                 && <Popover
                   open={button.menu.open}
-                  anchorEl={button.menu.anchor}
+                  anchorEl={props.openMenus.anchor}
                   anchorOrigin={{horizontal: 'right', vertical: 'bottom'}}
                   targetOrigin={{horizontal: 'right', vertical: 'top'}}
                   onRequestClose={popoverClose}
