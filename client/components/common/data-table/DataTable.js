@@ -13,7 +13,7 @@ const DataTable = ({page, table, column, data, ...props}) => {
   if(!page.button) page.button = [];
 
   let row = {
-    selected : props.tableState,
+    selected : props.selectedRows,
     isSelected(index) {
       return row.selected.indexOf(index) !== -1
         ? 'selected-row' : '';
@@ -22,18 +22,18 @@ const DataTable = ({page, table, column, data, ...props}) => {
       let location = row.selected.indexOf(index);
       location === -1 ? row.selected.push(index)
         : row.selected.splice(location, 1);
-      props.callback('toggleSelected', row.selected);
+      props.clickHandler('toggleSelected', row.selected);
     }
   };
 
   function buttonHandler(event) {
     event.preventDefault();
     //console.log(event);
-    props.callback('buttonClick', this.value, event); // eslint-disable-line no-invalid-this
+    props.clickHandler('buttonClick', this.value, event); // eslint-disable-line no-invalid-this
   }
 
   function popoverClose() {
-    props.callback('popoverClose', this.value); // eslint-disable-line no-invalid-this
+    props.clickHandler('popoverClose', this.value); // eslint-disable-line no-invalid-this
   }
 
   return (
@@ -42,33 +42,37 @@ const DataTable = ({page, table, column, data, ...props}) => {
         <h3>{page.title}</h3>
         <div className="buttons">
           {page.button.map((button, index) =>
-            <RaisedButton
-              label={button.label}
-              labelColor={button.labelColor}
-              value={button.label}
-              primary={button.primary || false}
-              secondary={button.secondary || false}
-              backgroundColor={button.backgroundColor}
-              style={{marginLeft: '10px'}}
-              disabled={row.selected.length == 0}
-              onClick={buttonHandler}
-              key={index}
-            />
-            )}
-          {page.button.filter(button => button.menu).map((button, index) =>
-            <Popover
-              open={props.menuState.open}
-              anchorEl={props.menuState.anchor}
-              anchorOrigin={{horizontal: 'right', vertical: 'bottom'}}
-              targetOrigin={{horizontal: 'right', vertical: 'top'}}
-              onRequestClose={popoverClose}
-              key={index}
-            >
-              <Menu>
-                <MenuItem primaryText="Assigned School" />
-                <MenuItem primaryText="User Role" />
-              </Menu>
-            </Popover>
+            <div key={index} style={{display: 'inline'}}>
+              <RaisedButton
+                label={button.label}
+                labelColor={button.labelColor}
+                value={button.label}
+                primary={button.primary || false}
+                secondary={button.secondary || false}
+                backgroundColor={button.backgroundColor}
+                style={{marginLeft: '10px'}}
+                disabled={row.selected.length == 0}
+                onClick={buttonHandler}
+              />
+              {button.menu
+                && <Popover
+                  open={button.menu.open}
+                  anchorEl={button.menu.anchor}
+                  anchorOrigin={{horizontal: 'right', vertical: 'bottom'}}
+                  targetOrigin={{horizontal: 'right', vertical: 'top'}}
+                  onRequestClose={popoverClose}
+                >
+                  <Menu>
+                    {button.menu.item.map((item, i) =>
+                      <MenuItem
+                        primaryText={item.text}
+                        key={i}
+                      />
+                    )}
+                  </Menu>
+                </Popover>
+              }
+            </div>
             )}
         </div>
       </div>
@@ -105,11 +109,11 @@ const DataTable = ({page, table, column, data, ...props}) => {
 };
 
 DataTable.propTypes = {
-  page       : PropTypes.object.isRequired,
-  table      : PropTypes.object.isRequired,
-  column     : PropTypes.array.isRequired,
-  data       : PropTypes.array.isRequired,
-  tableState : PropTypes.array
+  page         : PropTypes.object.isRequired,
+  table        : PropTypes.object.isRequired,
+  column       : PropTypes.array.isRequired,
+  data         : PropTypes.array.isRequired,
+  selectedRows : PropTypes.array
 };
 
 export default DataTable;

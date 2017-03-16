@@ -1,6 +1,7 @@
 export const BEGIN_AJAX_CALL = 'BEGIN_AJAX_CALL';
 export const AJAX_CALL_ERROR = 'AJAX_CALL_ERROR';
 
+export const SET_TOKEN = 'SET_TOKEN';
 export const SESSION_VALID = 'SESSION_VALID';
 export const SESSION_CLEAR = 'SESSION_CLEAR';
 
