@@ -22,18 +22,18 @@ const DataTable = ({page, table, column, data, ...props}) => {
       let location = row.selected.indexOf(index);
       location === -1 ? row.selected.push(index)
         : row.selected.splice(location, 1);
-      props.callback('toggleSelected', row.selected);
+      props.clickHandler('toggleSelected', row.selected);
     }
   };
 
   function buttonHandler(event) {
     event.preventDefault();
     //console.log(event);
-    props.callback('buttonClick', this.value, event); // eslint-disable-line no-invalid-this
+    props.clickHandler('buttonClick', this.value, event); // eslint-disable-line no-invalid-this
   }
 
   function popoverClose() {
-    props.callback('popoverClose', this.value); // eslint-disable-line no-invalid-this
+    props.clickHandler('popoverClose', this.value); // eslint-disable-line no-invalid-this
   }
 
   return (
@@ -53,10 +53,9 @@ const DataTable = ({page, table, column, data, ...props}) => {
                 style={{marginLeft: '10px'}}
                 disabled={row.selected.length == 0}
                 onClick={buttonHandler}
-                
               />
-              {button.menu &&
-                <Popover
+              {button.menu
+                && <Popover
                   open={button.menu.open}
                   anchorEl={button.menu.anchor}
                   anchorOrigin={{horizontal: 'right', vertical: 'bottom'}}
@@ -110,10 +109,10 @@ const DataTable = ({page, table, column, data, ...props}) => {
 };
 
 DataTable.propTypes = {
-  page       : PropTypes.object.isRequired,
-  table      : PropTypes.object.isRequired,
-  column     : PropTypes.array.isRequired,
-  data       : PropTypes.array.isRequired,
+  page         : PropTypes.object.isRequired,
+  table        : PropTypes.object.isRequired,
+  column       : PropTypes.array.isRequired,
+  data         : PropTypes.array.isRequired,
   selectedRows : PropTypes.array
 };
 

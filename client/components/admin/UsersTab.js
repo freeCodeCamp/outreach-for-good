@@ -84,9 +84,10 @@ const UsersTab = ({view, users, ...props}) => {
 };
 
 UsersTab.propTypes = {
-  view     : PropTypes.object.isRequired,
-  users    : PropTypes.array.isRequired,
-  callback : PropTypes.func.isRequired,
+  view         : PropTypes.object.isRequired,
+  users        : PropTypes.array.isRequired,
+  openMenus    : PropTypes.object,
+  clickHandler : PropTypes.func.isRequired,
 };
 
 export default UsersTab;

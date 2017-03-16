@@ -87,7 +87,7 @@ class AdminPage extends React.Component {
             selectedRows = {this.state.selectedRows}
             openMenus = {this.state.openMenus}
             openDialogs = {this.state.openDialogs}
-            callback = {this.clickHandler}
+            clickHandler = {this.clickHandler}
           />
         </Tab>
         <Tab
@@ -103,7 +103,7 @@ class AdminPage extends React.Component {
             selectedRows = {this.state.selectedRows}
             openMenus = {this.state.openMenus}
             openDialogs = {this.state.openDialogs}
-            callback = {this.clickHandler}
+            clickHandler = {this.clickHandler}
           />
         </Tab>
       </Tabs>
