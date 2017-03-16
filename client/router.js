@@ -11,6 +11,7 @@ import LoginPage from './components/login/LoginPage';
 import RecordsPage from './components/records/RecordsPage';
 import SchoolReportsPage from './components/school/reports/SchoolReportsPage';
 import SchoolSettingsPage from './components/school/settings/SchoolSettingsPage';
+import StudentPage from './components/student/StudentPage';
 import UsersPage from './components/users/UsersPage';
 import VisualizationPage from './components/visualization/VisualizationPage';
 import cookies from 'browser-cookies';
@@ -35,6 +36,7 @@ class RTRouter extends React.Component {
           <Route path="/school/reports/at-risk" component={SchoolReportsPage}/>
           <Route path="/school/settings" component={SchoolSettingsPage}/>
         </Route>
+        <Route path="/student/:studentId" component={StudentPage} onEnter={this.authorize} />
         <Route path="/users" component={UsersPage} onEnter={this.authorize} />
         <Route path="/visualization" component={VisualizationPage} onEnter={this.authorize} />
       </Route>
