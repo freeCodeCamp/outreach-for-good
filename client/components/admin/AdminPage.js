@@ -22,7 +22,9 @@ class AdminPage extends React.Component {
         anchor : null
       },
       openDialogs : {
-        edit : false
+        editSchool : false,
+        editRole   : false,
+        removeUser : false,
       },
     };
 
@@ -46,25 +48,18 @@ class AdminPage extends React.Component {
       }
       break;
     case 'menuClick':
-      console.log('menuClick')
-      this.setState({
-        openDialogs : {
-          edit : true
-        }
-      });
     case 'buttonClick':
     case 'popoverClose':
-      this.setState({
-        openMenus : {
-          edit   : action == 'popoverClose' ? false : data == 'Edit',
-          anchor : action == 'popoverClose' ? null : event.currentTarget
-        }
-      });
-      break;
     case 'dialogClick':
       this.setState({
         openDialogs : {
-          edit : false
+          editSchool : data == 'editSchoolDialog',
+          editRole   : data == 'editRoleDialog',
+          removeUser : data == 'removeUserDialog',
+        },
+        openMenus : {
+          edit   : action == 'popoverClose' ? false : data == 'editPopover',
+          anchor : action == 'popoverClose' ? null : event.currentTarget
         }
       });
       break;

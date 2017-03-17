@@ -15,10 +15,10 @@ const UsersTab = ({view, users, ...props}) => {
   function actionHandler(event) {
     event.preventDefault();
     //console.log(event);
-    props.clickHandler('dialogClick'); // eslint-disable-line no-invalid-this
+    props.clickHandler('dialogClick', this.value, event); // eslint-disable-line no-invalid-this
   }
 
-  const editDialogActions = [
+  const editSchoolDialogActions = [
     <FlatButton
       label="Cancel"
       primary
@@ -35,9 +35,17 @@ const UsersTab = ({view, users, ...props}) => {
   ];
 
   const dialogs = [{
-    title   : 'Dialog With Actions',
-    open    : props.openDialogs.edit,
-    actions : editDialogActions
+    title   : 'Change Assigned School',
+    open    : props.openDialogs.editSchool,
+    actions : editSchoolDialogActions
+  }, {
+    title   : 'Change Role',
+    open    : props.openDialogs.editRole,
+    actions : editSchoolDialogActions
+  }, {
+    title   : 'Remove Users',
+    open    : props.openDialogs.removeUser,
+    actions : editSchoolDialogActions
   }];
 
 /**
@@ -52,10 +60,11 @@ const UsersTab = ({view, users, ...props}) => {
   const editPopoverMenu = {
     open : props.openMenus.edit,
     item : [{
-      text     : 'Assigned School',
-      dialogID : 'edit'
+      text      : 'Assigned School',
+      triggerID : 'editSchoolDialog'
     }, {
-      text : 'User Role'
+      text      : 'User Role',
+      triggerID : 'editRoleDialog'
     }]
   };
 
@@ -63,11 +72,13 @@ const UsersTab = ({view, users, ...props}) => {
     label           : 'Edit',
     labelColor      : '#FFFFFF',
     backgroundColor : '#124e78',
-    menu            : editPopoverMenu
+    menu            : editPopoverMenu,
+    triggerID       : 'editPopover'
   }, {
     label           : 'Remove',
     labelColor      : '#FFFFFF',
-    backgroundColor : '#d9534f'
+    backgroundColor : '#d9534f',
+    triggerID       : 'removeUserDialog'
   }];
 
 /**
