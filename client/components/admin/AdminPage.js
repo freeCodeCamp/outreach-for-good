@@ -51,6 +51,7 @@ class AdminPage extends React.Component {
     case 'buttonClick':
     case 'popoverClose':
     case 'dialogClick':
+      //console.log(this.props.users[this.state.selectedRows[0]]);
       this.setState({
         openDialogs : {
           editSchool : data == 'editSchoolDialog',
@@ -97,8 +98,8 @@ class AdminPage extends React.Component {
         >
           <SchoolsTab
             view = {{
-              width  : this.props.containerWidth,
-              height : this.props.containerHeight - 48
+              width  : this.props.containerWidth - 20,
+              height : this.props.containerHeight - 48 - 80
             }}
             schools = {this.props.users}
             selectedRows = {this.state.selectedRows}
