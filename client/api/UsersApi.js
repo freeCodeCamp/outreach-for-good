@@ -5,7 +5,7 @@ class UsersApi {
  */
   static getMyself() {
     const headers = this.requestHeaders();
-    console.log(headers)
+    //console.log(headers)
     const req = new Request('/api/users/me', {
       method : 'GET',
       headers
@@ -95,7 +95,7 @@ class UsersApi {
  * Retrieves JWT token for authorization
  */
   static requestHeaders() {
-    console.log('Setup Header', sessionStorage.token);
+    //console.log('Setup Header', sessionStorage.token);
     return {Authorization: `Bearer ${sessionStorage.token}`};
   }
 

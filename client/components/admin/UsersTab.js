@@ -1,48 +1,80 @@
 import React, {PropTypes} from 'react';
 import DataTable from '../common/data-table/DataTable';
 
-const UsersTab = ({view, users, ...props}) => {
-  const page = {
-    title  : 'Manage User Accounts',
-    button : [{
-      label           : 'se',
-      labelColor      : '#FFFFFF',
-      backgroundColor : '#124e78',
-      menu            : {
-        open : props.openMenus.se,
-        item : [{
+import FlatButton from 'material-ui/FlatButton';
 
-          text : '1'
-        }, {
-          text : '2'
-        }]
-      }
+const UsersTab = ({view, users, ...props}) => {
+/**
+ * Configure: Material-UI <Dialog>
+ *  1. Add new <Dialog> defs to `const dialogs [..]`
+ *  2. Set `props` to an object with Dialog properties
+ *  3. Minimum properties include
+ *     - open (set to state variable true/false)
+ *     - actions (React element(s) to close dialog)
+ */
+  function actionHandler(event) {
+    event.preventDefault();
+    //console.log(event);
+    props.clickHandler('dialogClick'); // eslint-disable-line no-invalid-this
+  }
+
+  const editDialogActions = [
+    <FlatButton
+      label="Cancel"
+      primary
+      onTouchTap={actionHandler}
+      key='1'
+    />,
+    <FlatButton
+      label="Submit"
+      primary
+      keyboardFocused
+      onTouchTap={actionHandler}
+      key='2'
+    />
+  ];
+
+  const dialogs = [{
+    title   : 'Dialog With Actions',
+    open    : props.openDialogs.edit,
+    actions : editDialogActions
+  }];
+
+/**
+ * Configure: Material-UI <RaisedButton> and <Popover>
+ *  1. Add new <RaisedButton> defs to `const raisedButtons [..]`
+ *  2. If button has <Popover>, set `menu:` to an object with popover properties
+ *  3. Minimum properties include
+ *     - open (set to menu-specific state variable true/false)
+ *     - item (array of <MenuItem> definitions)
+ *  4. If button or menu-item has dialog, add `dialogID`
+ */
+  const editPopoverMenu = {
+    open : props.openMenus.edit,
+    item : [{
+      text     : 'Assigned School',
+      dialogID : 'edit'
     }, {
-      label           : 'Edit',
-      labelColor      : '#FFFFFF',
-      backgroundColor : '#124e78',
-      menu            : {
-        open : props.openMenus.edit,
-        item : [{
-          text : 'Assigned School'
-        }, {
-          text : 'User Role'
-        }]
-      }
-    }, {
-      label           : 'Remove',
-      labelColor      : '#FFFFFF',
-      backgroundColor : '#d9534f'
+      text : 'User Role'
     }]
   };
 
-  const table = {
-    width        : view.width,
-    maxHeight    : view.height,
-    rowHeight    : 35,
-    headerHeight : 35
-  };
+  const raisedButtons = [{
+    label           : 'Edit',
+    labelColor      : '#FFFFFF',
+    backgroundColor : '#124e78',
+    menu            : editPopoverMenu
+  }, {
+    label           : 'Remove',
+    labelColor      : '#FFFFFF',
+    backgroundColor : '#d9534f'
+  }];
 
+/**
+ * Configure: fixed-data-table
+ *  1.
+ *  2.
+ */
   const columns = [{
     title : 'Name',
     id    : 'name',
@@ -61,6 +93,19 @@ const UsersTab = ({view, users, ...props}) => {
     flexGrow : 1
   }];
 
+  const table = {
+    width        : view.width,
+    maxHeight    : view.height,
+    rowHeight    : 35,
+    headerHeight : 35
+  };
+
+  const page = {
+    title : 'Manage User Accounts',
+    raisedButtons,
+    dialogs
+  };
+
   return (
     <div>
       <DataTable
@@ -70,14 +115,6 @@ const UsersTab = ({view, users, ...props}) => {
         data={users}
         {...props}
       />
-      {/*<Dialog
-        title="Dialog With Actions"
-        actions={actions}
-        modal={true}
-        open={props.dialog.open}
-      >
-        Only actions can close this dialog.
-      </Dialog>*/}
     </div>
   );
 };
@@ -86,6 +123,7 @@ UsersTab.propTypes = {
   view         : PropTypes.object.isRequired,
   users        : PropTypes.array.isRequired,
   openMenus    : PropTypes.object,
+  openDialogs  : PropTypes.object,
   clickHandler : PropTypes.func.isRequired,
 };
 
