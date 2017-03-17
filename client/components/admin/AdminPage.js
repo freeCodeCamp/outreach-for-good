@@ -13,13 +13,19 @@ class AdminPage extends React.Component {
   constructor(props, context) {
     super(props, context);
 
+    this.props.actions.getAllUsers();
+
     this.state = {
-      tableState : [],
-      menuState  : {
-        open   : false,
+      selectedRows : [],
+      openMenus    : {
+        edit   : false,
         anchor : null
       },
-      dialogState : [],
+      openDialogs : {
+        editSchool : false,
+        editRole   : false,
+        removeUser : false,
+      },
     };
 
     this.clickHandler = this.clickHandler.bind(this);
@@ -31,30 +37,30 @@ class AdminPage extends React.Component {
     switch (action) {
     case 'toggleSelected':
       this.setState({
-        tableState : data,
+        selectedRows : data,
       });
       break;
     case 'changeTabs':
-      if(this.state.tableState.length > 0) {
+      if(this.state.selectedRows.length > 0) {
         this.setState({
-          tableState : [],
+          selectedRows : [],
         });
       }
       break;
+    case 'menuClick':
     case 'buttonClick':
-      if(data == 'Edit') {
-        this.setState({
-          menuState : {
-            open   : true,
-            anchor : event.currentTarget
-          }
-        });
-      }
-      break;
     case 'popoverClose':
+    case 'dialogClick':
+      //console.log(this.props.users[this.state.selectedRows[0]]);
       this.setState({
-        menuState : {
-          open : false
+        openDialogs : {
+          editSchool : data == 'editSchoolDialog',
+          editRole   : data == 'editRoleDialog',
+          removeUser : data == 'removeUserDialog',
+        },
+        openMenus : {
+          edit   : action == 'popoverClose' ? false : data == 'editPopover',
+          anchor : action == 'popoverClose' ? null : event.currentTarget
         }
       });
       break;
@@ -80,10 +86,10 @@ class AdminPage extends React.Component {
               height : this.props.containerHeight - 48 - 80
             }}
             users = {this.props.users}
-            tableState = {this.state.tableState}
-            menuState = {this.state.menuState}
-            dialogState = {this.state.dialogState}
-            callback = {this.clickHandler}
+            selectedRows = {this.state.selectedRows}
+            openMenus = {this.state.openMenus}
+            openDialogs = {this.state.openDialogs}
+            clickHandler = {this.clickHandler}
           />
         </Tab>
         <Tab
@@ -92,13 +98,14 @@ class AdminPage extends React.Component {
         >
           <SchoolsTab
             view = {{
-              width  : this.props.containerWidth,
-              height : this.props.containerHeight - 48
+              width  : this.props.containerWidth - 20,
+              height : this.props.containerHeight - 48 - 80
             }}
             schools = {this.props.users}
-            tableState = {this.state.tableState}
-            dialogState = {this.state.dialogState}
-            callback = {this.clickHandler}
+            selectedRows = {this.state.selectedRows}
+            openMenus = {this.state.openMenus}
+            openDialogs = {this.state.openDialogs}
+            clickHandler = {this.clickHandler}
           />
         </Tab>
       </Tabs>

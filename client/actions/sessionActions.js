@@ -1,30 +1,47 @@
 import * as types from './actionTypes';
 import userAPI from '../api/UsersApi';
 import cookies from 'browser-cookies';
+import { browserHistory } from 'react-router';
 
-export function loadMeSuccess(token, me) {
-  return {type: types.SESSION_VALID, token, me};
+export function setToken(token, me) {
+  return {type: types.SET_TOKEN, token, me};
 }
 
-export function validate() {
+export function sessionValid() {
+  return {type: types.SESSION_VALID};
+}
+
+export function logout() {
+  cookies.erase('token');
+  browserHistory.push('/login');
+  return {type: types.SESSION_CLEAR};
+}
+
+/**
+ *  Attempt to initialize session with JWT
+ */
+export function verifyToken() {
+  // Tokens come with surrounding parentheses
   let token = cookies.get('token').replace(/"/g, '');
-  //console.log('Validate Session: ', token)
   if(token) {
     sessionStorage.setItem('token', token);
     // Thunk returns a function that accepts a dispatch
     return function(dispatch) {
       return userAPI.getMyself(token).then(me => {
-        dispatch(loadMeSuccess(token, me));
+        dispatch(setToken(token, me));
       })
-      .catch(err => {
-        throw err;
-      });
+      .catch(() => dispatch(logout()));
     };
   }
-  return {type: types.SESSION_CLEAR};
+  // No JWT to add, ensure user is logged out
+  return dispatch => dispatch(logout());
 }
 
-export function logout() {
-  cookies.erase('token');
-  return {type: types.SESSION_CLEAR};
+/**
+ *  Verify session contains JWT for api calls
+ */
+export function validate() {
+  //console.log('Checking session validity');
+  return (dispatch, getState) => getState().session.token // eslint-disable-line no-confusing-arrow
+    ? dispatch(sessionValid()) : dispatch(verifyToken());
 }

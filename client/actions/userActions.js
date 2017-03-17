@@ -1,4 +1,5 @@
 import * as types from './actionTypes';
+import { validate } from './sessionActions';
 import userAPI from '../api/UsersApi';
 
 export function loadUsersSuccess(users) {
@@ -14,9 +15,7 @@ export function getMyself() {
     return userAPI.getMyself().then(users => {
       dispatch(loadUsersSuccess(users));
     })
-    .catch(err => {
-      throw err;
-    });
+    .catch(err => handleError(err, dispatch));
   };
 }
 
@@ -25,9 +24,7 @@ export function getUser(userId) {
     return userAPI.getUser(userId).then(users => {
       dispatch(loadUsersSuccess(users));
     })
-    .catch(err => {
-      throw err;
-    });
+    .catch(err => handleError(err, dispatch));
   };
 }
 
@@ -36,9 +33,7 @@ export function getAllUsers() {
     return userAPI.getUsers().then(users => {
       dispatch(loadUsersSuccess(users));
     })
-    .catch(err => {
-      throw err;
-    });
+    .catch(err => handleError(err, dispatch));
   };
 }
 
@@ -47,9 +42,7 @@ export function updateUserRole(userId, roleId) {
     return userAPI.updateRole(userId, roleId).then(users => {
       dispatch(loadUsersSuccess(users));
     })
-    .catch(err => {
-      throw err;
-    });
+    .catch(err => handleError(err, dispatch));
   };
 }
 
@@ -58,19 +51,27 @@ export function updateUserSchool(userId, schoolId) {
     return userAPI.updateSchool(userId, schoolId).then(users => {
       dispatch(loadUsersSuccess(users));
     })
-    .catch(err => {
-      throw err;
-    });
+    .catch(err => handleError(err, dispatch));
   };
 }
 
-export function RemoveUser(userId) {
+export function removeUser(userId) {
   return function(dispatch) {
     return userAPI.removeUser(userId).then(users => {
       dispatch(loadUsersSuccess(users));
     })
-    .catch(err => {
-      throw err;
-    });
+    .catch(err => handleError(err, dispatch));
   };
+}
+
+/**
+ * Handle expected return codes
+ */
+export function handleError(err, dispatch) {
+  let status = err.status;
+  if(status == 401) {
+    return dispatch(validate());
+  } else {
+    throw err;
+  }
 }
