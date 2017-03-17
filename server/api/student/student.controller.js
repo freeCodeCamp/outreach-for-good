@@ -80,7 +80,8 @@ exports.updateWithdrawn = function(req, res) {
 var validUpdateFields = {
   iep: true,
   cfa: true,
-  withdrawn: true
+  withdrawn: true,
+  grade: true
 };
 
 exports.validateBatchUpdate = function(req, res, next) {
@@ -92,19 +93,37 @@ exports.validateBatchUpdate = function(req, res, next) {
 };
 
 exports.batchUpdate = function(req, res) {
-  var updateValue = !!req.body.value;
-  var promises = _.map(req.students, function(student) {
-    student[req.field] = updateValue;
-    return student.save(function(err) {
-      if (err) return handleError(res, err);
-      return student;
+  console.log('initial: ', req.body.value);
+  if(req.field === 'grade') {
+    var promises = _.map(req.students, function(student) {
+      student[req.field] = +req.body.value[student._id];
+      return student.save(function(err) {
+        if(err) return handleError(res, err);
+        return student;
+      });
     });
-  });
-  Promise.all(promises).then(function(saved) {
-    return res.status(200).json(saved);
-  }).catch(function(err) {
-    return handleError(res, err);
-  })
+    Promise.all(promises).then(function(saved) {
+      console.log('saved: ', saved);
+      return res.status(200).json(saved);
+    }).catch(function(err) {
+      return handleError(res, err);
+    });
+  } else {
+    var updateValue = !!req.body.value;
+    var promises = _.map(req.students, function(student) {
+      student[req.field] = updateValue;
+      return student.save(function(err) {
+        if (err) return handleError(res, err);
+        return student;
+      });
+    });
+    Promise.all(promises).then(function(saved) {
+      console.log('saved: ', saved);
+      return res.status(200).json(saved);
+    }).catch(function(err) {
+      return handleError(res, err);
+    })
+  }
 };
 
 /**
