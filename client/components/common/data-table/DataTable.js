@@ -9,6 +9,8 @@ import Popover from 'material-ui/Popover';
 import Menu from 'material-ui/Menu';
 import MenuItem from 'material-ui/MenuItem';
 
+import Dialog from 'material-ui/Dialog';
+
 const DataTable = ({page, table, column, data, ...props}) => {
   if(!page.button) page.button = [];
 
@@ -32,6 +34,11 @@ const DataTable = ({page, table, column, data, ...props}) => {
     props.clickHandler('buttonClick', this.value, event); // eslint-disable-line no-invalid-this
   }
 
+  function menuItemHandler(event) {
+    event.preventDefault();
+    props.clickHandler('menuClick', this.value, event); // eslint-disable-line no-invalid-this
+  }
+
   function popoverClose() {
     props.clickHandler('popoverClose', this.value); // eslint-disable-line no-invalid-this
   }
@@ -41,12 +48,13 @@ const DataTable = ({page, table, column, data, ...props}) => {
       <div className="admin-page-title">
         <h3>{page.title}</h3>
         <div className="buttons">
-          {page.button.map((button, index) =>
+          {page.raisedButtons && page.raisedButtons
+            .map((button, index) =>
             <div key={index} style={{display: 'inline'}}>
               <RaisedButton
                 label={button.label}
                 labelColor={button.labelColor}
-                value={button.label}
+                value={button.triggerID || ''}
                 primary={button.primary || false}
                 secondary={button.secondary || false}
                 backgroundColor={button.backgroundColor}
@@ -66,6 +74,8 @@ const DataTable = ({page, table, column, data, ...props}) => {
                     {button.menu.item.map((item, i) =>
                       <MenuItem
                         primaryText={item.text}
+                        value={item.triggerID}
+                        onTouchTap={menuItemHandler}
                         key={i}
                       />
                     )}
@@ -73,6 +83,18 @@ const DataTable = ({page, table, column, data, ...props}) => {
                 </Popover>
               }
             </div>
+            )}
+          {page.dialogs && page.dialogs
+            .map((dialog, index) =>
+              <Dialog
+                title={dialog.title}
+                actions={dialog.actions}
+                modal
+                open={dialog.open}
+                key={index}
+              >
+                Only actions can close this dialog.
+              </Dialog>
             )}
         </div>
       </div>
@@ -86,7 +108,8 @@ const DataTable = ({page, table, column, data, ...props}) => {
           onRowClick={row.toggleSelected}
           rowClassNameGetter={row.isSelected}
         >
-        {column.map(col =>
+        {column
+          .map(col =>
           <Column
             header={
               <Cell>

@@ -19,10 +19,13 @@ class AdminPage extends React.Component {
       selectedRows : [],
       openMenus    : {
         edit   : false,
-        se     : false,
         anchor : null
       },
-      openDialogs : [],
+      openDialogs : {
+        editSchool : false,
+        editRole   : false,
+        removeUser : false,
+      },
     };
 
     this.clickHandler = this.clickHandler.bind(this);
@@ -44,14 +47,19 @@ class AdminPage extends React.Component {
         });
       }
       break;
+    case 'menuClick':
     case 'buttonClick':
     case 'popoverClose':
+    case 'dialogClick':
       this.setState({
+        openDialogs : {
+          editSchool : data == 'editSchoolDialog',
+          editRole   : data == 'editRoleDialog',
+          removeUser : data == 'removeUserDialog',
+        },
         openMenus : {
-          edit   : action == 'popoverClose' ? false : data == 'Edit',
-          se     : action == 'popoverClose' ? false : data == 'se',
+          edit   : action == 'popoverClose' ? false : data == 'editPopover',
           anchor : action == 'popoverClose' ? null : event.currentTarget
-
         }
       });
       break;
