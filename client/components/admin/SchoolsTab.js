@@ -14,20 +14,16 @@ const SchoolsTab = ({view, schools, ...props}) => {
   };
 
   const columns = [{
-    title : 'Name',
+    title : 'School Name',
     id    : 'name',
     fixed : true
   }, {
-    title    : 'Email Address',
+    title    : 'Work',
     id       : 'email',
     flexGrow : 1
   }, {
-    title    : 'Assigned School',
+    title    : 'In Progress',
     id       : 'school',
-    flexGrow : 1
-  }, {
-    title    : 'Role',
-    id       : 'role',
     flexGrow : 1
   }];
 

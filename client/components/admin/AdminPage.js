@@ -19,10 +19,13 @@ class AdminPage extends React.Component {
       selectedRows : [],
       openMenus    : {
         edit   : false,
-        se     : false,
         anchor : null
       },
-      openDialogs : [],
+      openDialogs : {
+        editSchool : false,
+        editRole   : false,
+        removeUser : false,
+      },
     };
 
     this.clickHandler = this.clickHandler.bind(this);
@@ -44,14 +47,20 @@ class AdminPage extends React.Component {
         });
       }
       break;
+    case 'menuClick':
     case 'buttonClick':
     case 'popoverClose':
+    case 'dialogClick':
+      //console.log(this.props.users[this.state.selectedRows[0]]);
       this.setState({
+        openDialogs : {
+          editSchool : data == 'editSchoolDialog',
+          editRole   : data == 'editRoleDialog',
+          removeUser : data == 'removeUserDialog',
+        },
         openMenus : {
-          edit   : action == 'popoverClose' ? false : data == 'Edit',
-          se     : action == 'popoverClose' ? false : data == 'se',
+          edit   : action == 'popoverClose' ? false : data == 'editPopover',
           anchor : action == 'popoverClose' ? null : event.currentTarget
-
         }
       });
       break;
@@ -89,8 +98,8 @@ class AdminPage extends React.Component {
         >
           <SchoolsTab
             view = {{
-              width  : this.props.containerWidth,
-              height : this.props.containerHeight - 48
+              width  : this.props.containerWidth - 20,
+              height : this.props.containerHeight - 48 - 80
             }}
             schools = {this.props.users}
             selectedRows = {this.state.selectedRows}
