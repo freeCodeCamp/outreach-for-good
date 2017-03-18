@@ -2,6 +2,8 @@ import React, {PropTypes} from 'react';
 import DataTable from '../common/data-table/DataTable';
 
 import FlatButton from 'material-ui/FlatButton';
+import DropDownMenu from 'material-ui/DropDownMenu';
+import MenuItem from 'material-ui/MenuItem';
 
 const UsersTab = ({view, users, ...props}) => {
 /**
@@ -16,6 +18,11 @@ const UsersTab = ({view, users, ...props}) => {
     event.preventDefault();
     //console.log(event);
     props.clickHandler('dialogClick', this.value, event); // eslint-disable-line no-invalid-this
+  }
+  function dropdownHandler(event, index, value) {
+    event.preventDefault();
+    //console.log(event);
+    props.clickHandler('dropdownChange', value, event); // eslint-disable-line no-invalid-this
   }
 
   const editSchoolDialogActions = [
@@ -34,20 +41,59 @@ const UsersTab = ({view, users, ...props}) => {
     />
   ];
 
+  const roles = ['guest', 'teacher', 'manager', 'admin', 'super'];
+
   const dialogs = [{
     title   : 'Change Assigned School',
     open    : props.openDialogs.editSchool,
-    actions : editSchoolDialogActions
+    actions : editSchoolDialogActions,
+    text    : [<div key='0'>
+      {'Change the assigned school for '
+      + props.selectedRows.description
+        .map(row => row.name).join(', ') + ' to '
+      + props.selectedDropdownItem},
+      <br key='1' />
+      <div key='2' style={{textAlign: 'center'}}>
+      <DropDownMenu
+        value={props.selectedDropdownItem}
+        onChange={dropdownHandler}
+        key='3'
+      >
+        {roles.map(role =>
+          <MenuItem value={role} primaryText={role} key={role} />
+        )}
+        </DropDownMenu>
+        </div></div>]
   }, {
     title   : 'Change Role',
     open    : props.openDialogs.editRole,
-    actions : editSchoolDialogActions
+    actions : editSchoolDialogActions,
+    text    : [<div key='0'>
+      {'Change the assigned school for '
+      + props.selectedRows.description
+        .map(row => row.name).join(', ') + ' to '
+      + props.selectedDropdownItem},
+      <br key='1' />
+      <div key='2' style={{textAlign: 'center'}}>
+      <DropDownMenu
+        value={props.selectedDropdownItem}
+        onChange={dropdownHandler}
+        key='3'
+      >
+        {roles.map(role =>
+          <MenuItem value={role} primaryText={role} key={role} />
+        )}
+        </DropDownMenu>
+        </div></div>]
   }, {
     title   : 'Remove Users',
     open    : props.openDialogs.removeUser,
-    actions : editSchoolDialogActions
+    actions : editSchoolDialogActions,
+    text    : [`
+      This changes the school
+    `]
   }];
-
+//      ${props.selectedRows.description.map(row => row.name)}
 /**
  * Configure: Material-UI <RaisedButton> and <Popover>
  *  1. Add new <RaisedButton> defs to `const raisedButtons [..]`
