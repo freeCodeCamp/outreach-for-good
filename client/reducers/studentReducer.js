@@ -1,26 +1,20 @@
 import * as types from '../actions/actionTypes';
+import initialState from './initialState';
 
-const students = {
-  1000 : {
-    studentId : '0001',
-    lastName  : 'Braskey',
-    firstName : 'Bill',
-    grade     : 8,
-    school    : 100001,
-    iep       : true,
-    cfa       : true,
-    withdrawn : false,
-    active    : true
-  }
-};
-
-export default function studentReducer(state = {}, action) {
+export default function studentReducer(state = initialState.student, action) {
   switch (action.type) {
-  case types.FETCH_STUDENT: {
-    let student = students[action.payload];
+  case types.FETCH_STUDENT_SUCCESS: {
+    let record = action.student;
     return {
       ...state,
-      student
+      record
+    };
+  }
+  case types.UNMOUNT_STUDENT: {
+    let record = {};
+    return {
+      ...state,
+      record
     };
   }
   default: {

@@ -86,9 +86,13 @@ class AbsenceRecordsTable extends Component {
     return (
       <div className="display-container">
         {buttons}
-        <StudentTable
-          studentType="New Students"
-          students={this.props.record.creates} />
+        {this.props.record.creates ?
+          <StudentTable
+            studentType="New Students"
+            students={this.props.record.creates} /> :
+          <StudentTable
+            studentType="Updated Students"
+            students={this.props.record.updates} />}
         <StudentTable
           studentType="New Missing Records"
           students={this.props.record.newMissingStudents} />

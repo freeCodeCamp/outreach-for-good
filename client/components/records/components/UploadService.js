@@ -84,10 +84,9 @@ function handleNewSchoolYear(prevRecord, partialRecord, school) {
   return record;
 }
 
-function completeRecord(school, partialRecord) {
-  var school = school;
-  var previousRecord = {};
-  var record = (partialRecord.schoolYear === previousRecord.schoolYear) ?
+function completeRecord(school, previousRecord, partialRecord) {
+  // var school = school;
+  var record = partialRecord.schoolYear === previousRecord.schoolYear ?
                handleSameSchoolYear(previousRecord, partialRecord, school) :
                handleNewSchoolYear(previousRecord, partialRecord, school);
   _.forEach(record.creates || [], function(create) {
@@ -98,7 +97,7 @@ function completeRecord(school, partialRecord) {
   });
   record.schoolId = school._id;
   record.previousRecordId = previousRecord.recordId;
-  console.log('record:', record)
+  // console.log('record:', record)
   return record;
 }
 
@@ -144,7 +143,7 @@ function parse(items) {
   }
 }
 
-export default function ParsePDF(school, file) {
+export default function ParsePDF(school, previousRecord, file) {
   let promise = new Promise((resolve, reject) => {
     if(file) {
       let reader = new FileReader();
@@ -167,7 +166,8 @@ export default function ParsePDF(school, file) {
 
             try {
               let partial = parse(items);
-              let complete = completeRecord(school, partial);
+              console.log(previousRecord);
+              let complete = completeRecord(school, previousRecord, partial);
               resolve(complete);
             } catch(e) {
               // PDF data format error.
