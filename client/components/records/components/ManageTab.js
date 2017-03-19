@@ -4,25 +4,23 @@ import MenuItem from 'material-ui/MenuItem';
 import Dialog from 'material-ui/Dialog';
 import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
-import AbsenceRecordsTable from './AbsenceRecordsTable';
+import EntryTable from './EntryTable';
 
 class ManageTab extends Component {
   constructor() {
     super();
 
     this.state = {
-      school        : null,
-      absenceRecord : [],
+      school        : 0,
       openDelete    : false,
       deleteText    : ''
     };
   }
 
   getRecord(event, index, school) {
-    let absenceRecord = this.props.absenceRecords
-      .filter(record => record.schoolId === this.props.schools[school]._id);
-
-    this.setState({ school, absenceRecord });
+    let newSchool = this.props.schools[school];
+    this.props.manageRecord(newSchool._id);
+    this.setState({ school });
   }
 
   deleteDialog() {
@@ -40,31 +38,29 @@ class ManageTab extends Component {
   render() {
     return (
       <div className="manage-tab">
-        <SelectField
-          floatingLabelText="Select the school"
-          value={this.state.school}
-          onChange={this.getRecord.bind(this)}
-          className="select-school"
-        >
-        {this.props.schools.map((school, i) =>
-          <MenuItem
-            key={i}
-            value={i}
-            primaryText={school.name}
-          />
-        )}
-        </SelectField>
+        <div className="manage-container">
+          <SelectField
+            floatingLabelText="Select the school"
+            value={this.state.school}
+            onChange={this.getRecord.bind(this)}
+            className="select-school"
+            >
+            {this.props.schools.map((school, i) =>
+              <MenuItem
+                key={i}
+                value={i}
+                primaryText={school.name}
+              />
+            )}
+          </SelectField>
+        </div>
         <div className="display-container">
-          {this.state.absenceRecord.length ?
-            <AbsenceRecordsTable
-              delete={this.deleteDialog}
-              record={this.state.absenceRecord[0]}
-              manageTab={true}
-            /> : ''}
+          <EntryTable
+            records={this.props.records}
+          />
         </div>
         <Dialog
           title="Dialog With Actions"
-          // actions={actions}
           modal={false}
           open={this.state.openDelete}
           onRequestClose={this.closeDeleteDialog}

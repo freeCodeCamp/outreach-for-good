@@ -41,10 +41,11 @@ class Sidebar extends Component {
           <span className="fa-stack fa-lg pull-left"><i className="fa fa-stack-1x fa-wrench" /></span>
           Admin
         </Link></li>}
-        <li><Link to="/student/1000" activeClassName="active">
+        {(this.props.student.record.hasOwnProperty('firstName')) &&
+          <li><Link to={`/student/${this.props.student.record._id}`} activeClassName="active">
           <span className="fa-stack fa-lg pull-left"><i className="fa fa-stack-1x fa-user" /></span>
           Student
-        </Link></li>
+        </Link></li>}
         <li className="flex-spacer" />
         <li><Link to="/about" activeClassName="active">
           <span className="fa-stack fa-lg pull-left"><i className="fa fa-stack-1x fa-question" /></span>
@@ -65,7 +66,8 @@ function mapStateToProps(state) {
   //console.log('Sidebar: ', state);
   return {
     session : state.session.me,
-    sidebar : state.view.sidebar
+    sidebar : state.view.sidebar,
+    student : state.student
   };
 }
 
