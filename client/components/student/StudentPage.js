@@ -12,8 +12,14 @@ class StudentPage extends Component {
     this.props.actions.fetchStudent(this.props.params.studentId);
   }
 
+  componentWillUnmount() {
+    console.log('unmount student');
+    this.props.actions.unmountStudent();
+  }
+
   render() {
-    let student = this.props.student.student;
+    let student = this.props.student.record;
+    console.log(student);
     return (
       <div className="student-page">
         <div className="info">
