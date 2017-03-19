@@ -5,6 +5,9 @@ import * as userActions from '../../actions/userActions';
 import {Tabs, Tab} from 'material-ui/Tabs';
 
 import Dimensions from 'react-dimensions';
+import {Immutable, Map} from 'immutable';
+import User from '../../models/UserModel';
+import UserList from '../../models/UserListModel';
 
 import SchoolsTab from './SchoolsTab';
 import UsersTab from './UsersTab';
@@ -58,11 +61,6 @@ class AdminPage extends React.Component {
       },
       selectedDropdownItem : 'admin',
     });
-  }
-
-  componentWillReceiveProps() {
-    console.log('Recieving Props');
-    //this.props.actions.getAllUsers();
   }
 
   clickHandler(action, data, event) {
@@ -187,7 +185,7 @@ class AdminPage extends React.Component {
 
 AdminPage.propTypes = {
   actions         : PropTypes.object.isRequired,
-  users           : PropTypes.array.isRequired,
+  users           : PropTypes.instanceOf(UserList).isRequired,
   containerWidth  : PropTypes.number.isRequired,
   containerHeight : PropTypes.number.isRequired
 };

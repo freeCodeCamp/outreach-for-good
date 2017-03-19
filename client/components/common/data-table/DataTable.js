@@ -2,6 +2,8 @@ import React, { PropTypes } from 'react';
 import { Table, Column, Cell } from 'fixed-data-table-2';
 import DataTableRow from './DataTableRow';
 
+import { List } from 'immutable';
+
 import Paper from 'material-ui/Paper';
 import RaisedButton from 'material-ui/RaisedButton';
 
@@ -109,7 +111,7 @@ const DataTable = ({page, table, column, data, ...props}) => {
         <Table
           rowHeight={table.rowHeight || 30}
           headerHeight={table.headerHeight || 30}
-          rowsCount={data.length}
+          rowsCount={data.size}
           width={table.width}
           maxHeight={table.maxHeight}
           onRowClick={row.toggleSelected}
@@ -143,7 +145,7 @@ DataTable.propTypes = {
   page         : PropTypes.object.isRequired,
   table        : PropTypes.object.isRequired,
   column       : PropTypes.array.isRequired,
-  data         : PropTypes.array.isRequired,
+  data         : PropTypes.instanceOf(List).isRequired,
   selectedRows : PropTypes.object
 };
 

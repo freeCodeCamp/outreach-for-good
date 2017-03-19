@@ -5,6 +5,10 @@ import FlatButton from 'material-ui/FlatButton';
 import DropDownMenu from 'material-ui/DropDownMenu';
 import MenuItem from 'material-ui/MenuItem';
 
+import {Immutable, Map} from 'immutable';
+import User from '../../models/UserModel';
+import UserList from '../../models/UserListModel';
+
 const UsersTab = ({view, users, ...props}) => {
 /**
  * Configure: Material-UI <Dialog>
@@ -197,7 +201,7 @@ const UsersTab = ({view, users, ...props}) => {
 
 UsersTab.propTypes = {
   view         : PropTypes.object.isRequired,
-  users        : PropTypes.array.isRequired,
+  users        : PropTypes.instanceOf(UserList).isRequired,
   openMenus    : PropTypes.object,
   openDialogs  : PropTypes.object,
   clickHandler : PropTypes.func.isRequired,
