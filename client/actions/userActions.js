@@ -30,8 +30,9 @@ export function getUser(userId) {
 
 export function getAllUsers() {
   return function(dispatch) {
-    return userAPI.getUsers().then(users => {
-      dispatch(loadUsersSuccess(users));
+    return userAPI.getUsers().then(res => {
+      console.log('getAllUsers API: ', res);
+      return dispatch(loadUsersSuccess(res));
     })
     .catch(err => handleError(err, dispatch));
   };
@@ -57,9 +58,9 @@ export function updateUserSchool(userId, schoolId) {
 
 export function removeUser(userId) {
   return function(dispatch) {
-    return userAPI.removeUser(userId).then(users => {
-      dispatch(loadUsersSuccess(users));
-    })
+    let promises = userId.map(user => userAPI.removeUser(user));
+    return Promise.all(promises)
+    .then(() => dispatch(getAllUsers()))
     .catch(err => handleError(err, dispatch));
   };
 }

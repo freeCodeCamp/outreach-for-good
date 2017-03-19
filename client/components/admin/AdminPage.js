@@ -9,15 +9,45 @@ import Dimensions from 'react-dimensions';
 import SchoolsTab from './SchoolsTab';
 import UsersTab from './UsersTab';
 
+const defaultState = {
+  selectedRows : {
+    index       : [],
+    description : []
+  },
+  openMenus : {
+    edit   : false,
+    anchor : null
+  },
+  openDialogs : {
+    editSchool : false,
+    editRole   : false,
+    removeUser : false,
+  },
+  selectedDropdownItem : 'admin',
+};
+
 class AdminPage extends React.Component {
   constructor(props, context) {
     super(props, context);
 
     this.props.actions.getAllUsers();
 
-    this.state = {
-      selectedRows : [],
-      openMenus    : {
+    this.state = Object.assign({}, defaultState,
+      {selectedTab: 'users'});
+
+    this.clickHandler = this.clickHandler.bind(this);
+    this.tabHandler = this.tabHandler.bind(this);
+  }
+
+  componentWillReceiveProps() {
+    console.log('Recieving Props');
+    // Figure out how to use a varible for this
+    this.setState({
+      selectedRows : {
+        index       : [],
+        description : []
+      },
+      openMenus : {
         edit   : false,
         anchor : null
       },
@@ -26,10 +56,13 @@ class AdminPage extends React.Component {
         editRole   : false,
         removeUser : false,
       },
-    };
+      selectedDropdownItem : 'admin',
+    });
+  }
 
-    this.clickHandler = this.clickHandler.bind(this);
-    this.tabHandler = this.tabHandler.bind(this);
+  componentWillReceiveProps() {
+    console.log('Recieving Props');
+    //this.props.actions.getAllUsers();
   }
 
   clickHandler(action, data, event) {
@@ -37,32 +70,38 @@ class AdminPage extends React.Component {
     switch (action) {
     case 'toggleSelected':
       this.setState({
-        selectedRows : data,
+        selectedRows : {
+          index       : data,
+          description : []
+        }
       });
       break;
     case 'changeTabs':
-      if(this.state.selectedRows.length > 0) {
+      if(this.state.selectedRows.index.length > 0) {
         this.setState({
-          selectedRows : [],
+          selectedRows : {
+            index       : [],
+            description : []
+          }
         });
       }
       break;
+    case 'dialogClick':
+      if(data == 'remove-user') {
+        let users = this.state.selectedRows
+          .description.map(row => row._id);
+        this.props.actions.removeUser(users);
+        break;
+      }
     case 'menuClick':
     case 'buttonClick':
+      this.updateViewState(action, data, event);
+      break;
     case 'popoverClose':
-    case 'dialogClick':
-      //console.log(this.props.users[this.state.selectedRows[0]]);
-      this.setState({
-        openDialogs : {
-          editSchool : data == 'editSchoolDialog',
-          editRole   : data == 'editRoleDialog',
-          removeUser : data == 'removeUserDialog',
-        },
-        openMenus : {
-          edit   : action == 'popoverClose' ? false : data == 'editPopover',
-          anchor : action == 'popoverClose' ? null : event.currentTarget
-        }
-      });
+      this.updateViewState(action, data, event);
+      break;
+    case 'dropdownChange':
+      this.updateDropdownState(action, data, event);
       break;
     }
   }
@@ -71,14 +110,44 @@ class AdminPage extends React.Component {
     this.clickHandler('changeTabs');
   }
 
+  lookupTableValues(data) {
+    return this.state.selectedRows.index.map(index => data[index]);
+  }
+
+  updateDropdownState(action, data, event) {
+    this.setState({
+      selectedDropdownItem : data
+    });
+  }
+
+  updateViewState(action, data, event) {
+    this.setState({
+      selectedRows : {
+        index       : this.state.selectedRows.index,
+        description : this.lookupTableValues(this.props[this.state.selectedTab])
+      },
+      openDialogs : {
+        editSchool : data == 'editSchoolDialog',
+        editRole   : data == 'editRoleDialog',
+        removeUser : data == 'removeUserDialog',
+      },
+      openMenus : {
+        edit   : action == 'popoverClose' ? false : data == 'editPopover',
+        anchor : action == 'popoverClose' ? null : event.currentTarget
+      }
+    });
+  }
+
   render() {
     return (
       <Tabs
         style={{width: this.props.containerWidth}}
+        value={this.state.selectedTab}
       >
         <Tab
           label='Users'
           onActive={this.tabHandler}
+          value='users'
         >
           <UsersTab
             view = {{
@@ -89,12 +158,14 @@ class AdminPage extends React.Component {
             selectedRows = {this.state.selectedRows}
             openMenus = {this.state.openMenus}
             openDialogs = {this.state.openDialogs}
+            selectedDropdownItem = {this.state.selectedDropdownItem}
             clickHandler = {this.clickHandler}
           />
         </Tab>
         <Tab
           label='Schools'
           onActive={this.tabHandler}
+          value='schools'
         >
           <SchoolsTab
             view = {{
@@ -105,6 +176,7 @@ class AdminPage extends React.Component {
             selectedRows = {this.state.selectedRows}
             openMenus = {this.state.openMenus}
             openDialogs = {this.state.openDialogs}
+            selectedDropdownItem = {this.state.selectedDropdownItem}
             clickHandler = {this.clickHandler}
           />
         </Tab>
