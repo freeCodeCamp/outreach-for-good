@@ -58,10 +58,9 @@ export function updateUserSchool(userId, schoolId) {
 
 export function removeUser(userId) {
   return function(dispatch) {
-    return userAPI.removeUser(userId).then(res => {
-      console.log('removeUser API: ', res);
-      return dispatch(getAllUsers());
-    })
+    let promises = userId.map(user => userAPI.removeUser(user));
+    return Promise.all(promises)
+    .then(() => dispatch(getAllUsers()))
     .catch(err => handleError(err, dispatch));
   };
 }
