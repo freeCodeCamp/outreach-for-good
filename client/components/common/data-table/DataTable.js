@@ -15,7 +15,7 @@ const DataTable = ({page, table, column, data, ...props}) => {
   if(!page.button) page.button = [];
 
   let row = {
-    selected : props.selectedRows,
+    selected : props.selectedRows.index,
     isSelected(index) {
       return row.selected.indexOf(index) !== -1
         ? 'selected-row' : '';
@@ -91,9 +91,13 @@ const DataTable = ({page, table, column, data, ...props}) => {
                 actions={dialog.actions}
                 modal
                 open={dialog.open}
+                onRequestClose={popoverClose}
                 key={index}
+                titleClassName='dialog-title'
+                bodyClassName='dialog-body'
+                contentClassName='dialog-content'
               >
-                Only actions can close this dialog.
+                {dialog.text}
               </Dialog>
             )}
         </div>
@@ -114,7 +118,8 @@ const DataTable = ({page, table, column, data, ...props}) => {
             header={
               <Cell>
                 {col.title}
-                {/*<br />
+                {/* // This will be the filter for cols
+                <br />
                 <input type='text' style={{width: '100%'}} />*/}
               </Cell>
               }
@@ -136,7 +141,7 @@ DataTable.propTypes = {
   table        : PropTypes.object.isRequired,
   column       : PropTypes.array.isRequired,
   data         : PropTypes.array.isRequired,
-  selectedRows : PropTypes.array
+  selectedRows : PropTypes.object
 };
 
 export default DataTable;

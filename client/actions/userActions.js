@@ -57,9 +57,8 @@ export function updateUserSchool(userId, schoolId) {
 
 export function removeUser(userId) {
   return function(dispatch) {
-    return userAPI.removeUser(userId).then(users => {
-      dispatch(loadUsersSuccess(users));
-    })
+    return userAPI.removeUser(userId).then(
+      dispatch(getAllUsers()))
     .catch(err => handleError(err, dispatch));
   };
 }

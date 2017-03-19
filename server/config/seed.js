@@ -34,8 +34,28 @@ AbsenceRecord.remove().exec().then(function() {
     email: 'test@test.com'
   }, {
     provider: 'local',
-    role: 'admin',
-    name: 'Admin',
+    role: 'teacher',
+    name: 'Some User',
+    email: 'admin@admin.com'
+  }, {
+    provider: 'local',
+    role: 'teacher',
+    name: 'Another User',
+    email: 'admin@admin.com'
+  }, {
+    provider: 'local',
+    role: 'guest',
+    name: 'Guest',
+    email: 'admin@admin.com'
+  }, {
+    provider: 'local',
+    role: 'manager',
+    name: 'Manager',
+    email: 'admin@admin.com'
+  }, {
+    provider: 'local',
+    role: 'teacher',
+    name: 'Teacher',
     email: 'admin@admin.com'
   }, logCreateResults('users'));
 }).then(function() {
