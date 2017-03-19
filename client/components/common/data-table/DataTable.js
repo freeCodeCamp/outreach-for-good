@@ -91,6 +91,7 @@ const DataTable = ({page, table, column, data, ...props}) => {
                 actions={dialog.actions}
                 modal
                 open={dialog.open}
+                onRequestClose={popoverClose}
                 key={index}
                 titleClassName='dialog-title'
                 bodyClassName='dialog-body'

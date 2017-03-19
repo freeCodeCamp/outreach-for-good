@@ -9,32 +9,39 @@ import Dimensions from 'react-dimensions';
 import SchoolsTab from './SchoolsTab';
 import UsersTab from './UsersTab';
 
+const defaultState = {
+  selectedRows : {
+    index       : [],
+    description : []
+  },
+  openMenus : {
+    edit   : false,
+    anchor : null
+  },
+  openDialogs : {
+    editSchool : false,
+    editRole   : false,
+    removeUser : false,
+  },
+  selectedDropdownItem : 'admin',
+};
+
 class AdminPage extends React.Component {
   constructor(props, context) {
     super(props, context);
 
     this.props.actions.getAllUsers();
 
-    this.state = {
-      selectedTab  : 'users',
-      selectedRows : {
-        index       : [],
-        description : []
-      },
-      openMenus : {
-        edit   : false,
-        anchor : null
-      },
-      openDialogs : {
-        editSchool : false,
-        editRole   : false,
-        removeUser : false,
-      },
-      selectedDropdownItem : 'admin',
-    };
+    this.state = Object.assign({}, defaultState,
+      {selectedTab: 'users'});
 
     this.clickHandler = this.clickHandler.bind(this);
     this.tabHandler = this.tabHandler.bind(this);
+  }
+
+  componentWillReceiveProps() {
+    console.log('Recieving Props');
+    //this.props.actions.getAllUsers();
   }
 
   clickHandler(action, data, event) {
@@ -58,9 +65,17 @@ class AdminPage extends React.Component {
         });
       }
       break;
+    case 'dialogClick':
+      if(data == 'remove-user') {
+        this.state.selectedRows.description
+        .forEach(row => {
+          this.props.actions.removeUser(row._id);
+        });
+        this.setState(defaultState);
+        break;
+      }
     case 'menuClick':
     case 'buttonClick':
-    case 'dialogClick':
       this.updateViewState(action, data, event);
       break;
     case 'popoverClose':
@@ -80,6 +95,12 @@ class AdminPage extends React.Component {
     return this.state.selectedRows.index.map(index => data[index]);
   }
 
+  updateDropdownState(action, data, event) {
+    this.setState({
+      selectedDropdownItem : data
+    });
+  }
+
   updateViewState(action, data, event) {
     this.setState({
       selectedRows : {
@@ -95,12 +116,6 @@ class AdminPage extends React.Component {
         edit   : action == 'popoverClose' ? false : data == 'editPopover',
         anchor : action == 'popoverClose' ? null : event.currentTarget
       }
-    });
-  }
-
-  updateDropdownState(action, data, event) {
-    this.setState({
-      selectedDropdownItem : data
     });
   }
 

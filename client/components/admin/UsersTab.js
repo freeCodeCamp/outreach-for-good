@@ -14,9 +14,8 @@ const UsersTab = ({view, users, ...props}) => {
  *     - open (set to state variable true/false)
  *     - actions (React element(s) to close dialog)
  */
-  function actionHandler(event) {
+  function buttonHandler(event) {
     event.preventDefault();
-    //console.log(event);
     props.clickHandler('dialogClick', this.value, event); // eslint-disable-line no-invalid-this
   }
   function dropdownHandler(event, index, value) {
@@ -25,18 +24,38 @@ const UsersTab = ({view, users, ...props}) => {
     props.clickHandler('dropdownChange', value, event); // eslint-disable-line no-invalid-this
   }
 
-  const editSchoolDialogActions = [
+  const editDialogActions = [
     <FlatButton
       label="Cancel"
       primary
-      onTouchTap={actionHandler}
+      onTouchTap={buttonHandler}
+      value='cancel'
       key='1'
     />,
     <FlatButton
-      label="Submit"
+      label="Save"
       primary
       keyboardFocused
-      onTouchTap={actionHandler}
+      onTouchTap={buttonHandler}
+      value='save'
+      key='2'
+    />
+  ];
+
+  const removeDialogActions = [
+    <FlatButton
+      label="Cancel"
+      primary
+      onTouchTap={buttonHandler}
+      value='cancel'
+      key='1'
+    />,
+    <FlatButton
+      label="Remove User"
+      primary
+      keyboardFocused
+      onTouchTap={buttonHandler}
+      value='remove-user'
       key='2'
     />
   ];
@@ -46,7 +65,7 @@ const UsersTab = ({view, users, ...props}) => {
   const dialogs = [{
     title   : 'Change Assigned School',
     open    : props.openDialogs.editSchool,
-    actions : editSchoolDialogActions,
+    actions : editDialogActions,
     text    : [<div key='0'>
       {'Change the assigned school for '
       + props.selectedRows.description
@@ -67,7 +86,7 @@ const UsersTab = ({view, users, ...props}) => {
   }, {
     title   : 'Change Role',
     open    : props.openDialogs.editRole,
-    actions : editSchoolDialogActions,
+    actions : editDialogActions,
     text    : [<div key='0'>
       {'Change the assigned school for '
       + props.selectedRows.description
@@ -88,7 +107,7 @@ const UsersTab = ({view, users, ...props}) => {
   }, {
     title   : 'Remove Users',
     open    : props.openDialogs.removeUser,
-    actions : editSchoolDialogActions,
+    actions : removeDialogActions,
     text    : [`
       This changes the school
     `]
