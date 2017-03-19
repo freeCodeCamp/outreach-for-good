@@ -60,6 +60,11 @@ class AdminPage extends React.Component {
     });
   }
 
+  componentWillReceiveProps() {
+    console.log('Recieving Props');
+    //this.props.actions.getAllUsers();
+  }
+
   clickHandler(action, data, event) {
     //console.log('click', action, data);
     switch (action) {

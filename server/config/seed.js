@@ -57,64 +57,6 @@ AbsenceRecord.remove().exec().then(function() {
     role: 'teacher',
     name: 'Teacher',
     email: 'admin@admin.com'
-  },{
-    provider: 'local',
-    name: 'Test User',
-    email: 'test@test.com'
-  }, {
-    provider: 'local',
-    role: 'teacher',
-    name: 'Some User',
-    email: 'admin@admin.com'
-  }, {
-    provider: 'local',
-    role: 'teacher',
-    name: 'Another User',
-    email: 'admin@admin.com'
-  }, {
-    provider: 'local',
-    role: 'guest',
-    name: 'Guest',
-    email: 'admin@admin.com'
-  }, {
-    provider: 'local',
-    role: 'manager',
-    name: 'Manager',
-    email: 'admin@admin.com'
-  }, {
-    provider: 'local',
-    role: 'teacher',
-    name: 'Teacher',
-    email: 'admin@admin.com'
-  },{
-    provider: 'local',
-    name: 'Test User',
-    email: 'test@test.com'
-  }, {
-    provider: 'local',
-    role: 'teacher',
-    name: 'Some User',
-    email: 'admin@admin.com'
-  }, {
-    provider: 'local',
-    role: 'teacher',
-    name: 'Another User',
-    email: 'admin@admin.com'
-  }, {
-    provider: 'local',
-    role: 'guest',
-    name: 'Guest',
-    email: 'admin@admin.com'
-  }, {
-    provider: 'local',
-    role: 'manager',
-    name: 'Manager',
-    email: 'admin@admin.com'
-  }, {
-    provider: 'local',
-    role: 'teacher',
-    name: 'Teacher',
-    email: 'admin@admin.com'
   }, logCreateResults('users'));
 }).then(function() {
   return School.create({
