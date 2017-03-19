@@ -10,7 +10,7 @@ class UsersApi {
       method : 'GET',
       headers
     });
-    return fetch(req).then(res => res.json())
+    return fetch(req).then(res => this.parseResponse(res))
     .catch(error => {
       throw error;
     });
@@ -25,7 +25,7 @@ class UsersApi {
       method : 'GET',
       headers
     });
-    return fetch(req).then(res => res.json())
+    return fetch(req).then(res => this.parseResponse(res))
     .catch(error => {
       throw error;
     });
@@ -57,7 +57,7 @@ class UsersApi {
       method : 'PUT',
       headers
     });
-    return fetch(req).then(res => res.json())
+    return fetch(req).then(res => this.parseResponse(res))
     .catch(error => {
       throw error;
     });
@@ -73,7 +73,7 @@ class UsersApi {
       method : 'PUT',
       headers
     });
-    return fetch(req).then(res => res.json())
+    return fetch(req).then(res => this.parseResponse(res))
     .catch(error => error);
   }
 
@@ -87,7 +87,7 @@ class UsersApi {
       method : 'DELETE',
       headers
     });
-    return fetch(req).then(res => res.json())
+    return fetch(req).then(res => this.parseResponse(res, 'DELETE'))
     .catch(error => error);
   }
 
@@ -102,14 +102,16 @@ class UsersApi {
 /**
  * Process API response codes
  */
-  static parseResponse(res) {
+  static parseResponse(res, reqType='GET') {
     let status = res.status;
     if(status >= 400 && status < 500) {
       throw res;
     } else if(status >= 300 && status < 400) {
       throw res;
-    } else {
+    } else if(reqType == 'GET') {
       return res.json();
+    } else {
+      return res;
     }
   }
 

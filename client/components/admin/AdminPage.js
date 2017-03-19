@@ -41,7 +41,23 @@ class AdminPage extends React.Component {
 
   componentWillReceiveProps() {
     console.log('Recieving Props');
-    //this.props.actions.getAllUsers();
+    // Figure out how to use a varible for this
+    this.setState({
+      selectedRows : {
+        index       : [],
+        description : []
+      },
+      openMenus : {
+        edit   : false,
+        anchor : null
+      },
+      openDialogs : {
+        editSchool : false,
+        editRole   : false,
+        removeUser : false,
+      },
+      selectedDropdownItem : 'admin',
+    });
   }
 
   clickHandler(action, data, event) {
@@ -67,11 +83,9 @@ class AdminPage extends React.Component {
       break;
     case 'dialogClick':
       if(data == 'remove-user') {
-        this.state.selectedRows.description
-        .forEach(row => {
-          this.props.actions.removeUser(row._id);
-        });
-        this.setState(defaultState);
+        let users = this.state.selectedRows
+          .description.map(row => row._id);
+        this.props.actions.removeUser(users);
         break;
       }
     case 'menuClick':

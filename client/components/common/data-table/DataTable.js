@@ -24,9 +24,12 @@ const DataTable = ({page, table, column, data, ...props}) => {
       let location = row.selected.indexOf(index);
       location === -1 ? row.selected.push(index)
         : row.selected.splice(location, 1);
+      console.log(row.selected)
       props.clickHandler('toggleSelected', row.selected);
     }
   };
+  //console.log('props: ', props.selectedRows)
+  //console.log('Row: ', row)
 
   function buttonHandler(event) {
     event.preventDefault();
