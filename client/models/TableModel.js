@@ -23,6 +23,11 @@ class TableModel extends Table {
       iMap.update(popoverValue, state => !state));
   }
 
+  resetPopovers(currentState) {
+    return currentState.update('MuiPopovers', iMap => iMap.map(() => false));
+  }
+
+  // Set anchor element for <Popover> menu
   setAnchor(currentState, anchor) {
     return currentState.set('MuiAnchor', anchor);
   }
@@ -62,10 +67,4 @@ class TableModel extends Table {
   }
 }
 
-// : { edit: true }
-  // openDialogs : {
-  //   editSchool : false,
-  //   editRole   : false,
-  //   removeUser : false,
-  // },
 export default TableModel;

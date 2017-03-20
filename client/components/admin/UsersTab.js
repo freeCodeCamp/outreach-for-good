@@ -5,7 +5,7 @@ import FlatButton from 'material-ui/FlatButton';
 import DropDownMenu from 'material-ui/DropDownMenu';
 import MenuItem from 'material-ui/MenuItem';
 
-import UserList from '../../models/UserListModel';
+import { List } from 'immutable';
 import TableModel from '../../models/TableModel';
 
 const UsersTab = ({users, ...props}) => {
@@ -126,7 +126,7 @@ const UsersTab = ({users, ...props}) => {
  *  4. If button or menu-item has dialog, add `dialogID`
  */
   const editPopover = {
-    open : props.table.get('MuiPopovers').get('edit'),
+    open : props.table.get('MuiPopovers').get('editPopover'),
     item : [{
       text      : 'Assigned School',
       triggerID : 'editSchool'
@@ -191,8 +191,8 @@ const UsersTab = ({users, ...props}) => {
 };
 
 UsersTab.propTypes = {
-  users        : PropTypes.instanceOf(UserList).isRequired,
-  table        : PropTypes.instanceOf(TableModel).isRequired,
+  users        : PropTypes.instanceOf(List).isRequired,
+  table        : PropTypes.object.isRequired,
   clickHandler : PropTypes.func.isRequired,
 };
 

@@ -66,7 +66,7 @@ const DataTable = ({page, table, column, data, ...props}) => {
               {button.menu
                 && <Popover
                   open={button.menu.open}
-                  anchorEl={table.get('selectedIndex').anchor}
+                  anchorEl={table.get('MuiAnchor')}
                   anchorOrigin={{horizontal: 'right', vertical: 'bottom'}}
                   targetOrigin={{horizontal: 'right', vertical: 'top'}}
                   onRequestClose={popoverClose}
