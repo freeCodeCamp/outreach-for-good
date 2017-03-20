@@ -32,7 +32,6 @@ const DataTable = ({page, table, column, data, ...props}) => {
 
   function buttonHandler(event) {
     event.preventDefault();
-    //console.log(event);
     props.clickHandler('buttonClick', this.value, event); // eslint-disable-line no-invalid-this
   }
 

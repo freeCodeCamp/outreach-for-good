@@ -5,8 +5,6 @@ import FlatButton from 'material-ui/FlatButton';
 import DropDownMenu from 'material-ui/DropDownMenu';
 import MenuItem from 'material-ui/MenuItem';
 
-import {Immutable, Map} from 'immutable';
-import User from '../../models/UserModel';
 import UserList from '../../models/UserListModel';
 import TableModel from '../../models/TableModel';
 
@@ -23,9 +21,9 @@ const UsersTab = ({users, ...props}) => {
     event.preventDefault();
     props.clickHandler('dialogClick', this.value, event); // eslint-disable-line no-invalid-this
   }
+
   function dropdownHandler(event, index, value) {
     event.preventDefault();
-    //console.log(event);
     props.clickHandler('dropdownChange', value, event); // eslint-disable-line no-invalid-this
   }
 
@@ -69,7 +67,7 @@ const UsersTab = ({users, ...props}) => {
 
   const dialogs = [{
     title   : 'Change Assigned School',
-    open    : props.table.get('openDialogs').editSchool,
+    open    : props.table.get('MuiDialogs').get('editSchool'),
     actions : editDialogActions,
     text    : [<div key='0'>
       {'Change the assigned school for '
@@ -90,7 +88,7 @@ const UsersTab = ({users, ...props}) => {
         </div></div>]
   }, {
     title   : 'Change Role',
-    open    : props.table.get('openDialogs').editRole,
+    open    : props.table.get('MuiDialogs').get('editRole'),
     actions : editDialogActions,
     text    : [<div key='0'>
       {'Change the assigned school for '
@@ -111,7 +109,7 @@ const UsersTab = ({users, ...props}) => {
         </div></div>]
   }, {
     title   : 'Remove Users',
-    open    : props.table.get('openDialogs').removeUser,
+    open    : props.table.get('MuiDialogs').get('removeUser'),
     actions : removeDialogActions,
     text    : [`
       This changes the school
@@ -127,14 +125,14 @@ const UsersTab = ({users, ...props}) => {
  *     - item (array of <MenuItem> definitions)
  *  4. If button or menu-item has dialog, add `dialogID`
  */
-  const editPopoverMenu = {
-    open : props.table.get('openMenus').edit,
+  const editPopover = {
+    open : props.table.get('MuiPopovers').get('edit'),
     item : [{
       text      : 'Assigned School',
-      triggerID : 'editSchoolDialog'
+      triggerID : 'editSchool'
     }, {
       text      : 'User Role',
-      triggerID : 'editRoleDialog'
+      triggerID : 'editRole'
     }]
   };
 
@@ -142,13 +140,13 @@ const UsersTab = ({users, ...props}) => {
     label           : 'Edit',
     labelColor      : '#FFFFFF',
     backgroundColor : '#124e78',
-    menu            : editPopoverMenu,
+    menu            : editPopover,
     triggerID       : 'editPopover'
   }, {
     label           : 'Remove',
     labelColor      : '#FFFFFF',
     backgroundColor : '#d9534f',
-    triggerID       : 'removeUserDialog'
+    triggerID       : 'removeUser'
   }];
 
 /**
