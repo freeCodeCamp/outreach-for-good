@@ -1,16 +1,13 @@
 import React, {PropTypes} from 'react';
 import DataTable from '../common/data-table/DataTable';
 
-const SchoolsTab = ({view, schools, ...props}) => {
+import {Immutable, Map} from 'immutable';
+import User from '../../models/UserModel';
+import UserList from '../../models/UserListModel';
+
+const SchoolsTab = ({schools, ...props}) => {
   const page = {
     title : 'Schools'
-  };
-
-  const table = {
-    width        : view.width,
-    maxHeight    : view.height,
-    rowHeight    : 35,
-    headerHeight : 35
   };
 
   const columns = [{
@@ -30,7 +27,6 @@ const SchoolsTab = ({view, schools, ...props}) => {
   return (
     <DataTable
       page={page}
-      table={table}
       column={columns}
       data={schools}
       {...props}
@@ -39,8 +35,7 @@ const SchoolsTab = ({view, schools, ...props}) => {
 };
 
 SchoolsTab.propTypes = {
-  view         : PropTypes.object.isRequired,
-  schools      : PropTypes.array.isRequired,
+  schools      : PropTypes.instanceOf(UserList).isRequired,
   clickHandler : PropTypes.func.isRequired,
 };
 

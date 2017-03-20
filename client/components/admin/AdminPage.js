@@ -1,30 +1,18 @@
-import React, {PropTypes} from 'react';
+import React, { PropTypes } from 'react';
+import * as userActions from '../../actions/userActions';
 import { bindActionCreators } from 'redux';
 import {connect} from 'react-redux';
-import * as userActions from '../../actions/userActions';
+import Dimensions from 'react-dimensions';
+
 import {Tabs, Tab} from 'material-ui/Tabs';
 
-import Dimensions from 'react-dimensions';
+import UserList from '../../models/UserListModel';
+import TableModel from '../../models/TableModel';
 
 import SchoolsTab from './SchoolsTab';
 import UsersTab from './UsersTab';
 
-const defaultState = {
-  selectedRows : {
-    index       : [],
-    description : []
-  },
-  openMenus : {
-    edit   : false,
-    anchor : null
-  },
-  openDialogs : {
-    editSchool : false,
-    editRole   : false,
-    removeUser : false,
-  },
-  selectedDropdownItem : 'admin',
-};
+const table = new TableModel();
 
 class AdminPage extends React.Component {
   constructor(props, context) {
@@ -32,8 +20,17 @@ class AdminPage extends React.Component {
 
     this.props.actions.getAllUsers();
 
-    this.state = Object.assign({}, defaultState,
-      {selectedTab: 'users'});
+    // Register Initial Component State
+    let nextTable = table.setSelectedTab(table, 'users');
+    nextTable = table.addPopovers(nextTable, {edit: false});
+    nextTable = table.addDialogs(nextTable, {
+      editSchool : false,
+      editRole   : false,
+      removeUser : false
+    });
+    this.state = Object.assign({ table: nextTable }, {
+      selectedDropdownItem : 'admin'
+    });
 
     this.clickHandler = this.clickHandler.bind(this);
     this.tabHandler = this.tabHandler.bind(this);
@@ -43,47 +40,22 @@ class AdminPage extends React.Component {
     console.log('Recieving Props');
     // Figure out how to use a varible for this
     this.setState({
-      selectedRows : {
-        index       : [],
-        description : []
-      },
-      openMenus : {
-        edit   : false,
-        anchor : null
-      },
-      openDialogs : {
-        editSchool : false,
-        editRole   : false,
-        removeUser : false,
-      },
-      selectedDropdownItem : 'admin',
+      table                : this.state.table,
+      selectedDropdownItem : 'admin'
     });
   }
 
-  componentWillReceiveProps() {
-    console.log('Recieving Props');
-    //this.props.actions.getAllUsers();
-  }
-
   clickHandler(action, data, event) {
-    //console.log('click', action, data);
+    let nextTable;
     switch (action) {
     case 'toggleSelected':
-      this.setState({
-        selectedRows : {
-          index       : data,
-          description : []
-        }
-      });
+      nextTable = table.toggleSelectedIndex(this.state.table, data);
+      this.setState({table: nextTable});
       break;
     case 'changeTabs':
       if(this.state.selectedRows.index.length > 0) {
-        this.setState({
-          selectedRows : {
-            index       : [],
-            description : []
-          }
-        });
+        nextTable = table.resetTable();
+        this.setState({table: nextTable});
       }
       break;
     case 'dialogClick':
@@ -91,16 +63,30 @@ class AdminPage extends React.Component {
         let users = this.state.selectedRows
           .description.map(row => row._id);
         this.props.actions.removeUser(users);
-        break;
+      } else {
+        nextTable = table.resetDialogs(this.state.table);
+        this.setState({table: nextTable});
       }
+      break;
     case 'menuClick':
     case 'buttonClick':
-      this.updateViewState(action, data, event);
+      nextTable = table.setSelectedData(this.state.table,
+        this.lookupTableValues(this.props[this.state.table.get('selectedTab')]));
+      if(data == 'editSchool' || data == 'editRole' || data == 'removeUser') {
+        nextTable = table.toggleDialogs(nextTable, data);
+      } else if(data == 'editPopover') {
+        nextTable = table.togglePopovers(nextTable, data);
+        nextTable = table.setAnchor(nextTable, event.currentTarget);
+      }
+      this.setState({table: nextTable});
       break;
     case 'popoverClose':
-      this.updateViewState(action, data, event);
+      nextTable = table.resetDialogs(this.state.table);
+      this.setState({table: nextTable});
+      //this.updateViewState(action, data, event);
       break;
     case 'dropdownChange':
+      console.log(action, data);
       this.updateDropdownState(action, data, event);
       break;
     }
@@ -110,8 +96,9 @@ class AdminPage extends React.Component {
     this.clickHandler('changeTabs');
   }
 
-  lookupTableValues(data) {
-    return this.state.selectedRows.index.map(index => data[index]);
+  lookupTableValues(tableData) {
+    return tableData.filter((v, i) =>
+      this.state.table.get('selectedIndex').indexOf(i) != -1);
   }
 
   updateDropdownState(action, data, event) {
@@ -155,9 +142,7 @@ class AdminPage extends React.Component {
               height : this.props.containerHeight - 48 - 80
             }}
             users = {this.props.users}
-            selectedRows = {this.state.selectedRows}
-            openMenus = {this.state.openMenus}
-            openDialogs = {this.state.openDialogs}
+            table = {this.state.table}
             selectedDropdownItem = {this.state.selectedDropdownItem}
             clickHandler = {this.clickHandler}
           />
@@ -173,9 +158,7 @@ class AdminPage extends React.Component {
               height : this.props.containerHeight - 48 - 80
             }}
             schools = {this.props.users}
-            selectedRows = {this.state.selectedRows}
-            openMenus = {this.state.openMenus}
-            openDialogs = {this.state.openDialogs}
+            table = {this.state.table}
             selectedDropdownItem = {this.state.selectedDropdownItem}
             clickHandler = {this.clickHandler}
           />
@@ -187,7 +170,7 @@ class AdminPage extends React.Component {
 
 AdminPage.propTypes = {
   actions         : PropTypes.object.isRequired,
-  users           : PropTypes.array.isRequired,
+  users           : PropTypes.instanceOf(UserList).isRequired,
   containerWidth  : PropTypes.number.isRequired,
   containerHeight : PropTypes.number.isRequired
 };
