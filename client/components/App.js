@@ -1,4 +1,7 @@
-import React, {PropTypes} from 'react';
+import React, {Component, PropTypes} from 'react';
+import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
+import * as sessionActions from '../actions/sessionActions';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import muiTheme from '../styles/muiTheme.js';
 import Header from './common/Header';
@@ -6,19 +9,19 @@ import Sidebar from './common/Sidebar';
 import Footer from './common/Footer';
 
 
-class App extends React.Component {
+class App extends Component {
   render() {
     return (
       <MuiThemeProvider muiTheme={muiTheme}>
         <div className="viewport">
-          <Header/>
+          {this.props.session.token && <Header/>}
           <section className="main-body">
-            <Sidebar/>
+            {this.props.session.token && <Sidebar/>}
             <section id="main-view">
               <div id="main-content">
                 {this.props.children}
               </div>
-              <Footer />
+              {this.props.session.token && <Footer />}
             </section>
           </section>
         </div>
@@ -29,6 +32,19 @@ class App extends React.Component {
 
 App.propTypes = {
   children : PropTypes.object.isRequired,
+  session  : PropTypes.object.isRequired
 };
 
-export default App;
+function mapStateToProps(state) {
+  return {
+    session : state.session
+  };
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+    actions : bindActionCreators(sessionActions, dispatch)
+  };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);
