@@ -16,16 +16,22 @@ class RecordsPage extends Component {
     };
   }
 
-  componentDidMount() {
-    this.props.actions.getSchools();
+  componentWillMount() {
+    this.props.actions.fetchSchools();
+    this.props.actions.fetchCurrentRecord();
   }
 
-  confirm(record) {
-    this.props.actions.confirmRecord(record);
+  confirm(record, date) {
+    record.date = date;
+    this.props.actions.postRecord(record);
   }
 
   changeTab(tab) {
-    this.setState({ currentTab : tab });
+    this.setState({ currentTab: tab });
+  }
+
+  manageRecord(schoolId) {
+    this.props.actions.fetchRecordList(schoolId);
   }
 
   render() {
@@ -40,6 +46,7 @@ class RecordsPage extends Component {
           <UploadTab
             changeTab={this.changeTab.bind(this)}
             confirm={this.confirm.bind(this)}
+            current={this.props.records.current}
             schools={this.props.records.schools}
           />
         </Tab>
@@ -48,7 +55,8 @@ class RecordsPage extends Component {
           value="manage">
           <ManageTab
             schools={this.props.records.schools}
-            absenceRecords={this.props.records.absenceRecords}
+            manageRecord={this.manageRecord.bind(this)}
+            records={this.props.records.list}
           />
         </Tab>
       </Tabs>

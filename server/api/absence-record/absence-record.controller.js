@@ -80,6 +80,7 @@ function createOutreaches(outreaches) {
  * restriction: 'teacher'
  */
 exports.create = function(req, res) {
+  debug(req.body);
   var result = {};
   var existingEntries = _.map(req.body.updates, 'entry');
   var newStudents = _.map(req.body.creates, 'student');
