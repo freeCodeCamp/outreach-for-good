@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {PropTypes} from 'react';
 import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn} from 'material-ui/Table';
 
 
@@ -28,7 +28,8 @@ const EntryTable = ({ records }) =>
   </Table>
 ;
 
-export default EntryTable;
+EntryTable.propTypes = {
+  records : PropTypes.array
+};
 
-/**
-*/
+export default EntryTable;
