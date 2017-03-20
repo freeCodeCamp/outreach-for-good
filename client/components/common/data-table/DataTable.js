@@ -2,6 +2,9 @@ import React, { PropTypes } from 'react';
 import { Table, Column, Cell } from 'fixed-data-table-2';
 import DataTableRow from './DataTableRow';
 
+import { List } from 'immutable';
+import TableModel from '../../../models/TableModel';
+
 import Paper from 'material-ui/Paper';
 import RaisedButton from 'material-ui/RaisedButton';
 
@@ -15,17 +18,13 @@ const DataTable = ({page, table, column, data, ...props}) => {
   if(!page.button) page.button = [];
 
   let row = {
-    selected : props.selectedRows.index,
+    selected : table.get('selectedIndex'),
     isSelected(index) {
-      return row.selected.indexOf(index) !== -1
+      return row.selected.includes(index)
         ? 'selected-row' : '';
     },
     toggleSelected(event, index) {
-      let location = row.selected.indexOf(index);
-      location === -1 ? row.selected.push(index)
-        : row.selected.splice(location, 1);
-      console.log(row.selected)
-      props.clickHandler('toggleSelected', row.selected);
+      props.clickHandler('toggleSelected', index);
     }
   };
   //console.log('props: ', props.selectedRows)
@@ -33,7 +32,6 @@ const DataTable = ({page, table, column, data, ...props}) => {
 
   function buttonHandler(event) {
     event.preventDefault();
-    //console.log(event);
     props.clickHandler('buttonClick', this.value, event); // eslint-disable-line no-invalid-this
   }
 
@@ -68,7 +66,7 @@ const DataTable = ({page, table, column, data, ...props}) => {
               {button.menu
                 && <Popover
                   open={button.menu.open}
-                  anchorEl={props.openMenus.anchor}
+                  anchorEl={table.get('selectedIndex').anchor}
                   anchorOrigin={{horizontal: 'right', vertical: 'bottom'}}
                   targetOrigin={{horizontal: 'right', vertical: 'top'}}
                   onRequestClose={popoverClose}
@@ -107,11 +105,11 @@ const DataTable = ({page, table, column, data, ...props}) => {
       </div>
       <Paper className="display-paper">
         <Table
-          rowHeight={table.rowHeight || 30}
-          headerHeight={table.headerHeight || 30}
-          rowsCount={data.length}
-          width={table.width}
-          maxHeight={table.maxHeight}
+          rowHeight={table.get('rowHeight') || 30}
+          headerHeight={table.get('headerHeight') || 30}
+          rowsCount={data.size}
+          width={props.view.width}
+          maxHeight={props.view.height}
           onRowClick={row.toggleSelected}
           rowClassNameGetter={row.isSelected}
         >
@@ -140,10 +138,11 @@ const DataTable = ({page, table, column, data, ...props}) => {
 };
 
 DataTable.propTypes = {
+  view         : PropTypes.object.isRequired,
   page         : PropTypes.object.isRequired,
-  table        : PropTypes.object.isRequired,
+  table        : PropTypes.instanceOf(TableModel).isRequired,
   column       : PropTypes.array.isRequired,
-  data         : PropTypes.array.isRequired,
+  data         : PropTypes.instanceOf(List).isRequired,
   selectedRows : PropTypes.object
 };
 
