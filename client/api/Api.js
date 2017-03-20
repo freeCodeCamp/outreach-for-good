@@ -31,7 +31,7 @@ class Api {
   /**
    * Fetch requests
    */
-  static fetchRequest(method, url, body) {
+  static fetchRequest(method = 'GET', url, body) {
     console.log(method, url, body);
   }
 }

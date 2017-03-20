@@ -1,5 +1,4 @@
-import React, {Component} from 'react';
-
+import React, {Component, PropTypes} from 'react';
 import LinearProgress from 'material-ui/LinearProgress';
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
@@ -22,6 +21,13 @@ class UploadTab extends Component {
       date                 : new Date(),
       recordResultsMessage : ''
     };
+
+    this.confirm = this.confirm.bind(this);
+    this.cancel = this.cancel.bind(this);
+    this.changeFile = this.changeFile.bind(this);
+    this.changeSchool = this.changeSchool.bind(this);
+    this.changeDate = this.changeDate.bind(this);
+    this.closeSnackbar = this.closeSnackbar.bind(this);
   }
 
   changeSchool(e, i, school) {
@@ -32,9 +38,9 @@ class UploadTab extends Component {
     this.setState({ loadingState: 'indeterminate', loadingValue: null });
     if(accepted) {
       let currentSchool = this.props.schools[this.state.school];
-      let currentRecord = this.props.current.filter(current => {
-        return current._id === currentSchool._id;
-      })[0];
+      let currentRecord = this.props.current.filter(current =>
+        current._id === currentSchool._id
+      )[0];
       ParsePDF(currentSchool, currentRecord, accepted[0])
       .then(record => {
         let message = '';
@@ -92,7 +98,7 @@ class UploadTab extends Component {
             <SelectField
               floatingLabelText="Select a school..."
               value={this.state.school}
-              onChange={this.changeSchool.bind(this)}
+              onChange={this.changeSchool}
               fullWidth
               >
               {this.props.schools.map((school, i) =>
@@ -104,17 +110,17 @@ class UploadTab extends Component {
             </SelectField>
             <DatePicker
               value={this.state.date}
-              onChange={this.changeDate.bind(this)}
+              onChange={this.changeDate}
               hintText="Landscape Inline Dialog"
               container="inline"
               mode="landscape"
-              maxDate={new Date}
+              maxDate={new Date()}
               fullWidth
             />
           </div>
           <div className="column">
             <Dropzone
-              onDrop={this.changeFile.bind(this)}
+              onDrop={this.changeFile}
               multiple={false}
               accept="application/pdf"
               className="dropzone">
@@ -122,26 +128,33 @@ class UploadTab extends Component {
             </Dropzone>
           </div>
         </div>
-        {this.state.loadingValue > 0 &&
-          <LinearProgress
+        {this.state.loadingValue > 0
+          && <LinearProgress
             mode={this.state.loadingState}
             value={this.state.loadingValue}
           />}
-        {this.state.record ?
-          <AbsenceRecordsTable
-            confirm={this.confirm.bind(this)}
-            cancel={this.cancel.bind(this)}
+        {this.state.record
+          && <AbsenceRecordsTable
+            confirm={this.confirm}
+            cancel={this.cancel}
             record={this.state.record}
-            uploadTab={true}
-          /> : ''}
+            uploadTab
+          />}
         <Snackbar
           open={this.state.recordResults}
           message={this.state.recordResultsMessage}
           autoHideDuration={3000}
-          onRequestClose={this.closeSnackbar.bind(this)}
+          onRequestClose={this.closeSnackbar}
         />
       </div>
     );
   }
 }
+
+UploadTab.propTypes = {
+  schools : PropTypes.array.isRequired,
+  current : PropTypes.array.isRequired,
+  confirm : PropTypes.func
+};
+
 export default UploadTab;
