@@ -23,10 +23,13 @@ class Sidebar extends Component {
           <span className="fa-stack fa-lg pull-left"><i className="fa fa-stack-1x fa-area-chart" /></span>
           Data Visualization
         </Link></li>
-        <li><Link to="/records" activeClassName="active">
+        {(this.props.session.role === 'teacher' ||
+          this.props.session.role === 'admin' ||
+          this.props.session.role === 'super') &&
+          <li><Link to="/records" activeClassName="active">
           <span className="fa-stack fa-lg pull-left"><i className="fa fa-stack-1x fa-file" /></span>
           Records
-        </Link></li>
+        </Link></li>}
         <li><Link to="/school/reports/at-risk" activeClassName="active">
           <span className="fa-stack fa-lg pull-left"><i className="fa fa-stack-1x fa-graduation-cap" /></span>
           School Reports
