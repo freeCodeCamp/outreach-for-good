@@ -8,26 +8,12 @@ import Dimensions from 'react-dimensions';
 import {Immutable, Map} from 'immutable';
 import User from '../../models/UserModel';
 import UserList from '../../models/UserListModel';
+import TableModel from '../../models/TableModel';
 
 import SchoolsTab from './SchoolsTab';
 import UsersTab from './UsersTab';
 
-const defaultState = {
-  selectedRows : {
-    index       : [],
-    description : []
-  },
-  openMenus : {
-    edit   : false,
-    anchor : null
-  },
-  openDialogs : {
-    editSchool : false,
-    editRole   : false,
-    removeUser : false,
-  },
-  selectedDropdownItem : 'admin',
-};
+const table = new TableModel();
 
 class AdminPage extends React.Component {
   constructor(props, context) {
@@ -35,8 +21,12 @@ class AdminPage extends React.Component {
 
     this.props.actions.getAllUsers();
 
-    this.state = Object.assign({}, defaultState,
-      {selectedTab: 'users'});
+    table.setSelectedTab(table, 'users');
+
+    this.state = Object.assign({}, {
+      table                : table,
+      selectedDropdownItem : 'admin'
+    });
 
     this.clickHandler = this.clickHandler.bind(this);
     this.tabHandler = this.tabHandler.bind(this);
@@ -46,20 +36,8 @@ class AdminPage extends React.Component {
     console.log('Recieving Props');
     // Figure out how to use a varible for this
     this.setState({
-      selectedRows : {
-        index       : [],
-        description : []
-      },
-      openMenus : {
-        edit   : false,
-        anchor : null
-      },
-      openDialogs : {
-        editSchool : false,
-        editRole   : false,
-        removeUser : false,
-      },
-      selectedDropdownItem : 'admin',
+      table                : table,
+      selectedDropdownItem : 'admin'
     });
   }
 
@@ -68,19 +46,13 @@ class AdminPage extends React.Component {
     switch (action) {
     case 'toggleSelected':
       this.setState({
-        selectedRows : {
-          index       : data,
-          description : []
-        }
+        table : table.toggleSelectedIndex(this.state.table, data)
       });
       break;
     case 'changeTabs':
       if(this.state.selectedRows.index.length > 0) {
         this.setState({
-          selectedRows : {
-            index       : [],
-            description : []
-          }
+          table : table.resetTable()
         });
       }
       break;
@@ -153,9 +125,7 @@ class AdminPage extends React.Component {
               height : this.props.containerHeight - 48 - 80
             }}
             users = {this.props.users}
-            selectedRows = {this.state.selectedRows}
-            openMenus = {this.state.openMenus}
-            openDialogs = {this.state.openDialogs}
+            table = {this.state.table}
             selectedDropdownItem = {this.state.selectedDropdownItem}
             clickHandler = {this.clickHandler}
           />
@@ -171,9 +141,7 @@ class AdminPage extends React.Component {
               height : this.props.containerHeight - 48 - 80
             }}
             schools = {this.props.users}
-            selectedRows = {this.state.selectedRows}
-            openMenus = {this.state.openMenus}
-            openDialogs = {this.state.openDialogs}
+            table = {this.state.table}
             selectedDropdownItem = {this.state.selectedDropdownItem}
             clickHandler = {this.clickHandler}
           />

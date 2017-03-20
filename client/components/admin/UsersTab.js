@@ -8,8 +8,9 @@ import MenuItem from 'material-ui/MenuItem';
 import {Immutable, Map} from 'immutable';
 import User from '../../models/UserModel';
 import UserList from '../../models/UserListModel';
+import TableModel from '../../models/TableModel';
 
-const UsersTab = ({view, users, ...props}) => {
+const UsersTab = ({users, ...props}) => {
 /**
  * Configure: Material-UI <Dialog>
  *  1. Add new <Dialog> defs to `const dialogs [..]`
@@ -68,17 +69,17 @@ const UsersTab = ({view, users, ...props}) => {
 
   const dialogs = [{
     title   : 'Change Assigned School',
-    open    : props.openDialogs.editSchool,
+    open    : props.table.get('openDialogs').editSchool,
     actions : editDialogActions,
     text    : [<div key='0'>
       {'Change the assigned school for '
-      + props.selectedRows.description
+      + props.table.get('selectedData')
         .map(row => row.name).join(', ') + ' to '
-      + props.selectedDropdownItem},
+      + props.table.get('selectedDropdownItem')},
       <br key='1' />
       <div key='2' style={{textAlign: 'center'}}>
       <DropDownMenu
-        value={props.selectedDropdownItem}
+        value={props.table.get('selectedDropdownItem')}
         onChange={dropdownHandler}
         key='3'
       >
@@ -89,17 +90,17 @@ const UsersTab = ({view, users, ...props}) => {
         </div></div>]
   }, {
     title   : 'Change Role',
-    open    : props.openDialogs.editRole,
+    open    : props.table.get('openDialogs').editRole,
     actions : editDialogActions,
     text    : [<div key='0'>
       {'Change the assigned school for '
-      + props.selectedRows.description
+      + props.table.get('selectedData')
         .map(row => row.name).join(', ') + ' to '
-      + props.selectedDropdownItem},
+      + props.table.get('selectedDropdownItem')},
       <br key='1' />
       <div key='2' style={{textAlign: 'center'}}>
       <DropDownMenu
-        value={props.selectedDropdownItem}
+        value={props.table.get('selectedDropdownItem')}
         onChange={dropdownHandler}
         key='3'
       >
@@ -110,7 +111,7 @@ const UsersTab = ({view, users, ...props}) => {
         </div></div>]
   }, {
     title   : 'Remove Users',
-    open    : props.openDialogs.removeUser,
+    open    : props.table.get('openDialogs').removeUser,
     actions : removeDialogActions,
     text    : [`
       This changes the school
@@ -127,7 +128,7 @@ const UsersTab = ({view, users, ...props}) => {
  *  4. If button or menu-item has dialog, add `dialogID`
  */
   const editPopoverMenu = {
-    open : props.openMenus.edit,
+    open : props.table.get('openMenus').edit,
     item : [{
       text      : 'Assigned School',
       triggerID : 'editSchoolDialog'
@@ -173,13 +174,6 @@ const UsersTab = ({view, users, ...props}) => {
     flexGrow : 1
   }];
 
-  const table = {
-    width        : view.width,
-    maxHeight    : view.height,
-    rowHeight    : 35,
-    headerHeight : 35
-  };
-
   const page = {
     title : 'Manage User Accounts',
     raisedButtons,
@@ -190,7 +184,6 @@ const UsersTab = ({view, users, ...props}) => {
     <div>
       <DataTable
         page={page}
-        table={table}
         column={columns}
         data={users}
         {...props}
@@ -200,10 +193,8 @@ const UsersTab = ({view, users, ...props}) => {
 };
 
 UsersTab.propTypes = {
-  view         : PropTypes.object.isRequired,
   users        : PropTypes.instanceOf(UserList).isRequired,
-  openMenus    : PropTypes.object,
-  openDialogs  : PropTypes.object,
+  table        : PropTypes.instanceOf(TableModel).isRequired,
   clickHandler : PropTypes.func.isRequired,
 };
 
