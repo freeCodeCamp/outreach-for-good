@@ -5,6 +5,12 @@
   flex-direction: column;
 }
 
+.main-header {
+  .is-expanded {
+    transform: rotate(90deg);
+  }
+}
+
 .main-body {
   display: flex;
   flex: 1;
