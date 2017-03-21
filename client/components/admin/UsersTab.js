@@ -1,7 +1,8 @@
 import React, {PropTypes} from 'react';
 import DataTable from '../common/data-table/DataTable';
-
 import { List } from 'immutable';
+
+import * as locAct from './localActions';
 import DialogModel from '../../models/DialogModel';
 import DropdownModel from '../../models/DropdownModel';
 import RaisedButtonModel from '../../models/RaisedButtonModel';
@@ -44,7 +45,7 @@ const UsersTab = ({users, ...props}) => {
 
     dialogs.push(new DialogModel({
       title   : 'Change Assigned School',
-      open    : props.table.get('MuiDialogs').get('editSchool'),
+      open    : props.table.get('MuiDialogs').get(locAct.EDIT_SCHOOL),
       actions : [
         { label: 'Cancel', click: buttonHandler },
         { label: 'Save', click: buttonHandler },
@@ -62,7 +63,7 @@ const UsersTab = ({users, ...props}) => {
 
     dialogs.push(new DialogModel({
       title   : 'Change User Role',
-      open    : props.table.get('MuiDialogs').get('editRole'),
+      open    : props.table.get('MuiDialogs').get(locAct.EDIT_ROLE),
       actions : List([
         { label: 'Cancel', click: buttonHandler },
         { label: 'Save', click: buttonHandler },
@@ -80,13 +81,13 @@ const UsersTab = ({users, ...props}) => {
 
     dialogs.push(new DialogModel({
       title   : 'Remove Users',
-      open    : props.table.get('MuiDialogs').get('removeUser'),
+      open    : props.table.get('MuiDialogs').get(locAct.REMOVE_USER),
       actions : List([
         { label: 'Cancel', click: buttonHandler },
         { label: 'Remove', click: buttonHandler },
       ]),
-      text : [`
-        This changes the school
+      text : [` Permanently remove
+        ${props.table.selectedRowsToCsv(props.table, 'name')}
       `]
     }));
   }
@@ -103,16 +104,16 @@ const UsersTab = ({users, ...props}) => {
  */
 
   const editButton = new RaisedButtonModel({
-    label     : 'Edit',
-    triggerID : 'editPopover',
-    menu      : {
-      open : props.table.get('MuiPopovers').get('editPopover'),
+    label    : 'Edit',
+    actionID : locAct.EDIT,
+    menu     : {
+      open : props.table.get('MuiPopovers').get(locAct.EDIT),
       item : [{
-        text      : 'Assigned School',
-        triggerID : 'editSchool'
+        text     : 'Assigned School',
+        actionID : locAct.EDIT_SCHOOL
       }, {
-        text      : 'User Role',
-        triggerID : 'editRole'
+        text     : 'User Role',
+        actionID : locAct.EDIT_ROLE
       }]
     }
   });
@@ -120,7 +121,7 @@ const UsersTab = ({users, ...props}) => {
   const removeButton = new RaisedButtonModel({
     label           : 'Remove',
     backgroundColor : '#d9534f',
-    triggerID       : 'removeUser'
+    actionID        : locAct.REMOVE_USER
   });
 
 /**
@@ -169,7 +170,7 @@ const UsersTab = ({users, ...props}) => {
 UsersTab.propTypes = {
   users        : PropTypes.instanceOf(List).isRequired,
   table        : PropTypes.object.isRequired,
-  selectedItem : PropTypes.func.isRequired,
+  selectedItem : PropTypes.string.isRequired,
   clickHandler : PropTypes.func.isRequired,
 };
 

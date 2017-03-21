@@ -55,7 +55,7 @@ const DataTable = ({page, table, data, ...props}) => {
               <RaisedButton
                 label={button.get('label')}
                 labelColor={button.get('labelColor')}
-                value={button.get('triggerID') || ''}
+                value={button.get('actionID') || ''}
                 primary={button.get('primary') || false}
                 secondary={button.get('secondary') || false}
                 backgroundColor={button.get('backgroundColor')}
@@ -75,7 +75,7 @@ const DataTable = ({page, table, data, ...props}) => {
                     {button.get('menu').item.map((item, i) =>
                       <MenuItem
                         primaryText={item.text}
-                        value={item.triggerID}
+                        value={item.actionID}
                         onTouchTap={menuItemHandler}
                         key={i}
                       />

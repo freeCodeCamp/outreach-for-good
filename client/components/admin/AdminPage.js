@@ -1,14 +1,13 @@
 import React, { PropTypes } from 'react';
-import * as userActions from '../../actions/userActions';
 import { bindActionCreators } from 'redux';
 import {connect} from 'react-redux';
+import { List } from 'immutable';
+import {Tabs, Tab} from 'material-ui/Tabs';
 import Dimensions from 'react-dimensions';
 
-import {Tabs, Tab} from 'material-ui/Tabs';
-
-import { List } from 'immutable';
+import * as userActions from '../../actions/userActions';
+import * as locAct from './localActions';
 import TableModel from '../../models/TableModel';
-
 import SchoolsTab from './SchoolsTab';
 import UsersTab from './UsersTab';
 
@@ -23,11 +22,13 @@ class AdminPage extends React.Component {
 
     // Register Initial Component State
     let nextTable = table.setSelectedTab(table, 'users');
-    nextTable = table.addPopovers(nextTable, {editPopover: false});
+    nextTable = table.addPopovers(nextTable, {
+      [locAct.EDIT] : false
+    });
     nextTable = table.addDialogs(nextTable, {
-      editSchool : false,
-      editRole   : false,
-      removeUser : false
+      [locAct.EDIT_SCHOOL] : false,
+      [locAct.EDIT_ROLE]   : false,
+      [locAct.REMOVE_USER] : false
     });
     this.state = Object.assign({ table: nextTable }, {
       selectedItem : ''
@@ -79,10 +80,12 @@ class AdminPage extends React.Component {
     case 'buttonClick':
       nextTable = table.setSelectedRowData(this.state.table,
         this.getSelectedRowData());
-      if(data == 'editSchool' || data == 'editRole' || data == 'removeUser') {
+      if(data == locAct.EDIT_SCHOOL
+        || data == locAct.EDIT_ROLE
+        || data == locAct.REMOVE_USER) {
         nextTable = table.toggleDialogs(nextTable, data);
         nextTable = table.resetPopovers(nextTable);
-      } else if(data == 'editPopover') {
+      } else if(data == locAct.EDIT) {
         nextTable = table.togglePopovers(nextTable, data);
         nextTable = table.setAnchor(nextTable, event.currentTarget);
         nextTable = table.resetDialogs(nextTable);
@@ -150,7 +153,7 @@ class AdminPage extends React.Component {
             }}
             schools = {this.props.users}
             table = {this.state.table}
-            selectedDropdownItem = {this.state.selectedDropdownItem}
+            selectedItem = {this.state.selectedItem}
             clickHandler = {this.clickHandler}
           />
         </Tab>
