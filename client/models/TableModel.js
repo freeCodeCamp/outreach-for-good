@@ -14,10 +14,6 @@ export const Table = Immutable.Record({
 
 class TableModel extends Table {
 
-  resetTable() {
-    return TableModel;
-  }
-
   // Set anchor element for <Popover> menu
   setAnchor(currentState, anchor) {
     return currentState.set('MuiAnchor', anchor);

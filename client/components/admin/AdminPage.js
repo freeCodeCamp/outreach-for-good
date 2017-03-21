@@ -21,20 +21,14 @@ class AdminPage extends React.Component {
     this.props.actions.getAllUsers();
 
     // Register Initial Component State
-    let nextTable = table.setSelectedTab(table, 'users');
-    nextTable = table.addPopovers(nextTable, {
-      [locAct.EDIT] : false
-    });
-    nextTable = table.addDialogs(nextTable, {
-      [locAct.EDIT_SCHOOL] : false,
-      [locAct.EDIT_ROLE]   : false,
-      [locAct.REMOVE_USER] : false
-    });
+    let nextTable = this.initializeTable('users');
     this.state = Object.assign({ table: nextTable }, {
       selectedItem : ''
     });
 
+    this.initializeTable = this.initializeTable.bind(this);
     this.clickHandler = this.clickHandler.bind(this);
+    this.getSelectedRowData = this.getSelectedRowData.bind(this);
     this.tabHandler = this.tabHandler.bind(this);
   }
 
@@ -45,22 +39,45 @@ class AdminPage extends React.Component {
     });
   }
 
+  initializeTable(currentTab) {
+    let nextTable;
+    switch (currentTab) {
+
+    // Setup component state for `Users` Tab
+    case 'users':
+      nextTable = table.setSelectedTab(table, 'users');
+      nextTable = table.addPopovers(nextTable, {
+        [locAct.EDIT] : false
+      });
+      nextTable = table.addDialogs(nextTable, {
+        [locAct.EDIT_SCHOOL] : false,
+        [locAct.EDIT_ROLE]   : false,
+        [locAct.REMOVE_USER] : false
+      });
+      break;
+
+    // Setup component state for `Schools` Tab
+    case 'schools':
+      nextTable = table.setSelectedTab(table, 'schools');
+      break;
+    }
+    return nextTable;
+  }
+
   clickHandler(action, data, event) {
     let nextTable;
     switch (action) {
+
+    // Clicked a main tab
+    case 'changeTabs':
+      nextTable = this.initializeTable(data.props.value);
+      this.setState({table: nextTable});
+      break;
 
     // Clicked a table row
     case 'toggleSelected':
       nextTable = table.toggleSelectedRowIndex(this.state.table, data);
       this.setState({table: nextTable});
-      break;
-
-    // Clicked a main tab
-    case 'changeTabs':
-      if(this.state.selectedRows.index.length > 0) {
-        nextTable = table.resetTable();
-        this.setState({table: nextTable});
-      }
       break;
 
     // Clicked a dialog (modal window)
@@ -108,10 +125,6 @@ class AdminPage extends React.Component {
     }
   }
 
-  tabHandler() {
-    this.clickHandler('changeTabs');
-  }
-
   // Returns full row data for selected table index values
   getSelectedRowData() {
     return this.props[this.state.table.get('selectedTab')]
@@ -119,11 +132,15 @@ class AdminPage extends React.Component {
       .indexOf(i) != -1);
   }
 
+  tabHandler(data) {
+    this.clickHandler('changeTabs', data);
+  }
+
   render() {
     return (
       <Tabs
         style={{width: this.props.containerWidth}}
-        value={this.state.selectedTab}
+        value={this.state.table.get('selectedTab')}
       >
         <Tab
           label='Users'

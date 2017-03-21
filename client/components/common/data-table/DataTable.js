@@ -126,7 +126,6 @@ const DataTable = ({page, table, data, ...props}) => {
                 {/* // This will be the filter for cols
                 <br />
                 <input type='text' style={{width: '100%'}} />*/}
-                {console.log('render table')}
               </Cell>
               }
             cell={<DataTableRow data={data} col={col.id} />}

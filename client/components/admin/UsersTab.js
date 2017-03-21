@@ -30,7 +30,6 @@ const UsersTab = ({users, ...props}) => {
 
   // Defer building dialogs/dropdowns until something is selected
   if(props.table.get('selectedData').first()) {
-
     const schoolDropdown = new DropdownModel({
       items    : ['guest', 'teacher', 'manager', 'admin', 'super'],
       selected : props.selectedItem || 'teacher',
