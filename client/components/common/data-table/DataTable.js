@@ -53,26 +53,26 @@ const DataTable = ({page, table, data, ...props}) => {
             .map((button, index) =>
             <div key={index} style={{display: 'inline'}}>
               <RaisedButton
-                label={button.label}
-                labelColor={button.labelColor}
-                value={button.triggerID || ''}
-                primary={button.primary || false}
-                secondary={button.secondary || false}
-                backgroundColor={button.backgroundColor}
+                label={button.get('label')}
+                labelColor={button.get('labelColor')}
+                value={button.get('triggerID') || ''}
+                primary={button.get('primary') || false}
+                secondary={button.get('secondary') || false}
+                backgroundColor={button.get('backgroundColor')}
                 style={{marginLeft: '10px'}}
                 disabled={row.selected.length == 0}
                 onClick={buttonHandler}
               />
-              {button.menu
+              {button.get('menu').open
                 && <Popover
-                  open={button.menu.open}
+                  open={button.get('menu').open}
                   anchorEl={table.get('MuiAnchor')}
                   anchorOrigin={{horizontal: 'right', vertical: 'bottom'}}
                   targetOrigin={{horizontal: 'right', vertical: 'top'}}
                   onRequestClose={popoverClose}
                 >
                   <Menu>
-                    {button.menu.item.map((item, i) =>
+                    {button.get('menu').item.map((item, i) =>
                       <MenuItem
                         primaryText={item.text}
                         value={item.triggerID}

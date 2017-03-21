@@ -3,11 +3,11 @@ import Immutable from 'immutable';
 import FlatButton from 'material-ui/FlatButton';
 
 export const RaisedButton = Immutable.Record({
-  label           : 'Edit',
+  label           : '',
   labelColor      : '#FFFFFF',
   backgroundColor : '#124e78',
   triggerID       : '',
-  menu            : Immutable.Map()
+  menu            : {}
 });
 
 class RaisedButtonModel extends RaisedButton {

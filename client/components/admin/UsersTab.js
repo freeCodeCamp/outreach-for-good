@@ -4,8 +4,9 @@ import DataTable from '../common/data-table/DataTable';
 import DropDownMenu from 'material-ui/DropDownMenu';
 import MenuItem from 'material-ui/MenuItem';
 
-import { List } from 'immutable';
+import { List, Map } from 'immutable';
 import DialogModel from '../../models/DialogModel';
+import RaisedButtonModel from '../../models/RaisedButtonModel';
 
 const UsersTab = ({users, ...props}) => {
 /**
@@ -39,7 +40,7 @@ const UsersTab = ({users, ...props}) => {
       {`Change the assigned school for ${
        props.table.get('selectedData')
         .map(row => row.name)
-        .join(', ')  } to ${
+        .join(', ') } to ${
        props.table.get('selectedDropdownItem')}`},
       <br key='1' />
       <div key='2' style={{textAlign: 'center'}}>
@@ -66,7 +67,7 @@ const UsersTab = ({users, ...props}) => {
       {`Change the assigned school for ${
        props.table.get('selectedData')
         .map(row => row.name)
-        .join(', ')  } to ${
+        .join(', ') } to ${
        props.table.get('selectedDropdownItem')}`},
       <br key='1' />
       <div key='2' style={{textAlign: 'center'}}>
@@ -104,29 +105,27 @@ const UsersTab = ({users, ...props}) => {
  *     - item (array of <MenuItem> definitions)
  *  4. If button or menu-item has dialog, add `dialogID`
  */
-  const editPopover = {
-    open : props.table.get('MuiPopovers').get('editPopover'),
-    item : [{
-      text      : 'Assigned School',
-      triggerID : 'editSchool'
-    }, {
-      text      : 'User Role',
-      triggerID : 'editRole'
-    }]
-  };
 
-  const raisedButtons = [{
-    label           : 'Edit',
-    labelColor      : '#FFFFFF',
-    backgroundColor : '#124e78',
-    menu            : editPopover,
-    triggerID       : 'editPopover'
-  }, {
+  const editButton = new RaisedButtonModel({
+    label     : 'Edit',
+    triggerID : 'editPopover',
+    menu      : {
+      open : props.table.get('MuiPopovers').get('editPopover'),
+      item : [{
+        text      : 'Assigned School',
+        triggerID : 'editSchool'
+      }, {
+        text      : 'User Role',
+        triggerID : 'editRole'
+      }]
+    }
+  });
+
+  const removeButton = new RaisedButtonModel({
     label           : 'Remove',
-    labelColor      : '#FFFFFF',
     backgroundColor : '#d9534f',
     triggerID       : 'removeUser'
-  }];
+  });
 
 /**
  * Configure: fixed-data-table
@@ -136,11 +135,6 @@ const UsersTab = ({users, ...props}) => {
 
   const page = {
     title   : 'Manage User Accounts',
-    dialogs : [
-      changeSchoolDialog,
-      changeRoleDialog,
-      removeUserDialog
-    ],
     columns : [{
       title : 'Name',
       id    : 'name',
@@ -158,7 +152,15 @@ const UsersTab = ({users, ...props}) => {
       id       : 'role',
       flexGrow : 1
     }],
-    raisedButtons,
+    dialogs : [
+      changeSchoolDialog,
+      changeRoleDialog,
+      removeUserDialog
+    ],
+    raisedButtons : [
+      editButton,
+      removeButton
+    ]
   };
 
   return (
