@@ -1,9 +1,8 @@
 import React, {PropTypes} from 'react';
 import DataTable from '../common/data-table/DataTable';
 
-import {Immutable, Map} from 'immutable';
+import {List, Map} from 'immutable';
 import User from '../../models/UserModel';
-import UserList from '../../models/UserListModel';
 
 const SchoolsTab = ({schools, ...props}) => {
   const page = {
@@ -35,7 +34,7 @@ const SchoolsTab = ({schools, ...props}) => {
 };
 
 SchoolsTab.propTypes = {
-  schools      : PropTypes.instanceOf(UserList).isRequired,
+  schools      : PropTypes.instanceOf(List).isRequired,
   clickHandler : PropTypes.func.isRequired,
 };
 

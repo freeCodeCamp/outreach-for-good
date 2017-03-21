@@ -1,12 +1,12 @@
 import React, {PropTypes} from 'react';
 import DataTable from '../common/data-table/DataTable';
 
-import FlatButton from 'material-ui/FlatButton';
 import DropDownMenu from 'material-ui/DropDownMenu';
 import MenuItem from 'material-ui/MenuItem';
 
-import UserList from '../../models/UserListModel';
-import TableModel from '../../models/TableModel';
+import { List, Map } from 'immutable';
+import DialogModel from '../../models/DialogModel';
+import RaisedButtonModel from '../../models/RaisedButtonModel';
 
 const UsersTab = ({users, ...props}) => {
 /**
@@ -27,53 +27,21 @@ const UsersTab = ({users, ...props}) => {
     props.clickHandler('dropdownChange', value, event); // eslint-disable-line no-invalid-this
   }
 
-  const editDialogActions = [
-    <FlatButton
-      label="Cancel"
-      primary
-      onTouchTap={buttonHandler}
-      value='cancel'
-      key='1'
-    />,
-    <FlatButton
-      label="Save"
-      primary
-      keyboardFocused
-      onTouchTap={buttonHandler}
-      value='save'
-      key='2'
-    />
-  ];
-
-  const removeDialogActions = [
-    <FlatButton
-      label="Cancel"
-      primary
-      onTouchTap={buttonHandler}
-      value='cancel'
-      key='1'
-    />,
-    <FlatButton
-      label="Remove User"
-      primary
-      keyboardFocused
-      onTouchTap={buttonHandler}
-      value='remove-user'
-      key='2'
-    />
-  ];
-
   const roles = ['guest', 'teacher', 'manager', 'admin', 'super'];
 
-  const dialogs = [{
+  const changeSchoolDialog = new DialogModel({
     title   : 'Change Assigned School',
     open    : props.table.get('MuiDialogs').get('editSchool'),
-    actions : editDialogActions,
-    text    : [<div key='0'>
-      {'Change the assigned school for '
-      + props.table.get('selectedData')
-        .map(row => row.name).join(', ') + ' to '
-      + props.table.get('selectedDropdownItem')},
+    actions : [
+      { label: 'Cancel', click: buttonHandler },
+      { label: 'Save', click: buttonHandler },
+    ],
+    text : [<div key='0'>
+      {`Change the assigned school for ${
+       props.table.get('selectedData')
+        .map(row => row.name)
+        .join(', ') } to ${
+       props.table.get('selectedDropdownItem')}`},
       <br key='1' />
       <div key='2' style={{textAlign: 'center'}}>
       <DropDownMenu
@@ -86,15 +54,21 @@ const UsersTab = ({users, ...props}) => {
         )}
         </DropDownMenu>
         </div></div>]
-  }, {
-    title   : 'Change Role',
+  });
+
+  const changeRoleDialog = new DialogModel({
+    title   : 'Change Assigned School',
     open    : props.table.get('MuiDialogs').get('editRole'),
-    actions : editDialogActions,
-    text    : [<div key='0'>
-      {'Change the assigned school for '
-      + props.table.get('selectedData')
-        .map(row => row.name).join(', ') + ' to '
-      + props.table.get('selectedDropdownItem')},
+    actions : List([
+      { label: 'Cancel', click: buttonHandler },
+      { label: 'Remove', click: buttonHandler },
+    ]),
+    text : [<div key='0'>
+      {`Change the assigned school for ${
+       props.table.get('selectedData')
+        .map(row => row.name)
+        .join(', ') } to ${
+       props.table.get('selectedDropdownItem')}`},
       <br key='1' />
       <div key='2' style={{textAlign: 'center'}}>
       <DropDownMenu
@@ -107,14 +81,20 @@ const UsersTab = ({users, ...props}) => {
         )}
         </DropDownMenu>
         </div></div>]
-  }, {
+  });
+
+  const removeUserDialog = new DialogModel({
     title   : 'Remove Users',
     open    : props.table.get('MuiDialogs').get('removeUser'),
-    actions : removeDialogActions,
-    text    : [`
+    actions : List([
+      { label: 'Cancel', click: buttonHandler },
+      { label: 'Remove', click: buttonHandler },
+    ]),
+    text : [`
       This changes the school
     `]
-  }];
+  });
+
 //      ${props.selectedRows.description.map(row => row.name)}
 /**
  * Configure: Material-UI <RaisedButton> and <Popover>
@@ -125,64 +105,68 @@ const UsersTab = ({users, ...props}) => {
  *     - item (array of <MenuItem> definitions)
  *  4. If button or menu-item has dialog, add `dialogID`
  */
-  const editPopover = {
-    open : props.table.get('MuiPopovers').get('edit'),
-    item : [{
-      text      : 'Assigned School',
-      triggerID : 'editSchool'
-    }, {
-      text      : 'User Role',
-      triggerID : 'editRole'
-    }]
-  };
 
-  const raisedButtons = [{
-    label           : 'Edit',
-    labelColor      : '#FFFFFF',
-    backgroundColor : '#124e78',
-    menu            : editPopover,
-    triggerID       : 'editPopover'
-  }, {
+  const editButton = new RaisedButtonModel({
+    label     : 'Edit',
+    triggerID : 'editPopover',
+    menu      : {
+      open : props.table.get('MuiPopovers').get('editPopover'),
+      item : [{
+        text      : 'Assigned School',
+        triggerID : 'editSchool'
+      }, {
+        text      : 'User Role',
+        triggerID : 'editRole'
+      }]
+    }
+  });
+
+  const removeButton = new RaisedButtonModel({
     label           : 'Remove',
-    labelColor      : '#FFFFFF',
     backgroundColor : '#d9534f',
     triggerID       : 'removeUser'
-  }];
+  });
 
 /**
  * Configure: fixed-data-table
  *  1.
  *  2.
  */
-  const columns = [{
-    title : 'Name',
-    id    : 'name',
-    fixed : true
-  }, {
-    title    : 'Email Address',
-    id       : 'email',
-    flexGrow : 1
-  }, {
-    title    : 'Assigned School',
-    id       : 'school',
-    flexGrow : 1
-  }, {
-    title    : 'Role',
-    id       : 'role',
-    flexGrow : 1
-  }];
 
   const page = {
-    title : 'Manage User Accounts',
-    raisedButtons,
-    dialogs
+    title   : 'Manage User Accounts',
+    columns : [{
+      title : 'Name',
+      id    : 'name',
+      fixed : true
+    }, {
+      title    : 'Email Address',
+      id       : 'email',
+      flexGrow : 1
+    }, {
+      title    : 'Assigned School',
+      id       : 'school',
+      flexGrow : 1
+    }, {
+      title    : 'Role',
+      id       : 'role',
+      flexGrow : 1
+    }],
+    dialogs : [
+      changeSchoolDialog,
+      changeRoleDialog,
+      removeUserDialog
+    ],
+    raisedButtons : [
+      editButton,
+      removeButton
+    ]
   };
 
   return (
     <div>
       <DataTable
         page={page}
-        column={columns}
         data={users}
         {...props}
       />
@@ -191,8 +175,8 @@ const UsersTab = ({users, ...props}) => {
 };
 
 UsersTab.propTypes = {
-  users        : PropTypes.instanceOf(UserList).isRequired,
-  table        : PropTypes.instanceOf(TableModel).isRequired,
+  users        : PropTypes.instanceOf(List).isRequired,
+  table        : PropTypes.object.isRequired,
   clickHandler : PropTypes.func.isRequired,
 };
 

@@ -6,7 +6,7 @@ import Dimensions from 'react-dimensions';
 
 import {Tabs, Tab} from 'material-ui/Tabs';
 
-import UserList from '../../models/UserListModel';
+import { List } from 'immutable';
 import TableModel from '../../models/TableModel';
 
 import SchoolsTab from './SchoolsTab';
@@ -18,11 +18,12 @@ class AdminPage extends React.Component {
   constructor(props, context) {
     super(props, context);
 
+    // Pull users from the API
     this.props.actions.getAllUsers();
 
     // Register Initial Component State
     let nextTable = table.setSelectedTab(table, 'users');
-    nextTable = table.addPopovers(nextTable, {edit: false});
+    nextTable = table.addPopovers(nextTable, {editPopover: false});
     nextTable = table.addDialogs(nextTable, {
       editSchool : false,
       editRole   : false,
@@ -37,8 +38,6 @@ class AdminPage extends React.Component {
   }
 
   componentWillReceiveProps() {
-    console.log('Recieving Props');
-    // Figure out how to use a varible for this
     this.setState({
       table                : this.state.table,
       selectedDropdownItem : 'admin'
@@ -48,16 +47,22 @@ class AdminPage extends React.Component {
   clickHandler(action, data, event) {
     let nextTable;
     switch (action) {
+
+    // Clicked a table row
     case 'toggleSelected':
       nextTable = table.toggleSelectedIndex(this.state.table, data);
       this.setState({table: nextTable});
       break;
+
+    // Clicked a main tab
     case 'changeTabs':
       if(this.state.selectedRows.index.length > 0) {
         nextTable = table.resetTable();
         this.setState({table: nextTable});
       }
       break;
+
+    // Clicked a dialog (modal window)
     case 'dialogClick':
       if(data == 'remove-user') {
         let users = this.state.selectedRows
@@ -68,23 +73,30 @@ class AdminPage extends React.Component {
         this.setState({table: nextTable});
       }
       break;
+
+    // Clicked a popover menu item -or- a RaisedButton
     case 'menuClick':
     case 'buttonClick':
       nextTable = table.setSelectedData(this.state.table,
-        this.lookupTableValues(this.props[this.state.table.get('selectedTab')]));
+        this.getSelectedData());
       if(data == 'editSchool' || data == 'editRole' || data == 'removeUser') {
         nextTable = table.toggleDialogs(nextTable, data);
+        nextTable = table.resetPopovers(nextTable);
       } else if(data == 'editPopover') {
         nextTable = table.togglePopovers(nextTable, data);
         nextTable = table.setAnchor(nextTable, event.currentTarget);
+        nextTable = table.resetDialogs(nextTable);
       }
       this.setState({table: nextTable});
       break;
+
+    // Clicked away from popover menu
     case 'popoverClose':
-      nextTable = table.resetDialogs(this.state.table);
+      nextTable = table.resetPopovers(this.state.table);
       this.setState({table: nextTable});
       //this.updateViewState(action, data, event);
       break;
+
     case 'dropdownChange':
       console.log(action, data);
       this.updateDropdownState(action, data, event);
@@ -92,36 +104,20 @@ class AdminPage extends React.Component {
     }
   }
 
-  tabHandler() {
-    this.clickHandler('changeTabs');
+  // Returns full row data for selected table index values
+  getSelectedData() {
+    return this.props[this.state.table.get('selectedTab')]
+      .filter((v, i) => this.state.table.get('selectedIndex')
+      .indexOf(i) != -1);
   }
 
-  lookupTableValues(tableData) {
-    return tableData.filter((v, i) =>
-      this.state.table.get('selectedIndex').indexOf(i) != -1);
+  tabHandler() {
+    this.clickHandler('changeTabs');
   }
 
   updateDropdownState(action, data, event) {
     this.setState({
       selectedDropdownItem : data
-    });
-  }
-
-  updateViewState(action, data, event) {
-    this.setState({
-      selectedRows : {
-        index       : this.state.selectedRows.index,
-        description : this.lookupTableValues(this.props[this.state.selectedTab])
-      },
-      openDialogs : {
-        editSchool : data == 'editSchoolDialog',
-        editRole   : data == 'editRoleDialog',
-        removeUser : data == 'removeUserDialog',
-      },
-      openMenus : {
-        edit   : action == 'popoverClose' ? false : data == 'editPopover',
-        anchor : action == 'popoverClose' ? null : event.currentTarget
-      }
     });
   }
 
@@ -170,7 +166,7 @@ class AdminPage extends React.Component {
 
 AdminPage.propTypes = {
   actions         : PropTypes.object.isRequired,
-  users           : PropTypes.instanceOf(UserList).isRequired,
+  users           : PropTypes.instanceOf(List).isRequired,
   containerWidth  : PropTypes.number.isRequired,
   containerHeight : PropTypes.number.isRequired
 };

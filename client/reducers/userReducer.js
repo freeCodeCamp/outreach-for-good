@@ -1,10 +1,9 @@
 import * as types from '../actions/actionTypes';
 
-import { fromJS } from 'immutable';
+import { List, fromJS } from 'immutable';
 import User from '../models/UserModel';
-import UserList from '../models/UserListModel';
 
-const initialState = new UserList();
+const initialState = new List();
 
 const mergeEntities = (state, newUsers) =>
   state.merge(newUsers.map(user => new User(user)));
