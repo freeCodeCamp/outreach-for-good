@@ -5,7 +5,8 @@ import { List } from 'immutable';
 import {Tabs, Tab} from 'material-ui/Tabs';
 import Dimensions from 'react-dimensions';
 
-import * as userActions from '../../actions/userActions';
+import * as usrAct from '../../actions/userActions';
+import * as schAct from '../../actions/schoolActions';
 import * as locAct from './localActions';
 import TableModel from '../../models/TableModel';
 import SchoolsTab from './SchoolsTab';
@@ -16,9 +17,6 @@ const table = new TableModel();
 class AdminPage extends React.Component {
   constructor(props, context) {
     super(props, context);
-
-    // Pull users from the API
-    this.props.actions.getAllUsers();
 
     // Register Initial Component State
     let nextTable = this.initializeTable('users');
@@ -45,6 +43,8 @@ class AdminPage extends React.Component {
 
     // Setup component state for `Users` Tab
     case 'users':
+      // Pull users from the API
+      this.props.usrAct.getAllUsers();
       nextTable = table.setSelectedTab(table, 'users');
       nextTable = table.addPopovers(nextTable, {
         [locAct.EDIT] : false
@@ -58,6 +58,8 @@ class AdminPage extends React.Component {
 
     // Setup component state for `Schools` Tab
     case 'schools':
+      // Pull schools from the API
+      this.props.schAct.getAllSchools();
       nextTable = table.setSelectedTab(table, 'schools');
       break;
     }
@@ -180,7 +182,8 @@ class AdminPage extends React.Component {
 }
 
 AdminPage.propTypes = {
-  actions         : PropTypes.object.isRequired,
+  usrAct          : PropTypes.object.isRequired,
+  schAct          : PropTypes.object.isRequired,
   users           : PropTypes.instanceOf(List).isRequired,
   containerWidth  : PropTypes.number.isRequired,
   containerHeight : PropTypes.number.isRequired
@@ -194,7 +197,8 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    actions : bindActionCreators(userActions, dispatch)
+    usrAct : bindActionCreators(usrAct, dispatch),
+    schAct : bindActionCreators(schAct, dispatch)
   };
 }
 

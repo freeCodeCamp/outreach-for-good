@@ -1,4 +1,6 @@
-class UsersApi {
+import Api from './Api';
+
+class UsersApi extends Api {
 
 /**
  * Get my info
@@ -90,31 +92,6 @@ class UsersApi {
     return fetch(req).then(res => this.parseResponse(res, 'DELETE'))
     .catch(error => error);
   }
-
-/**
- * Retrieves JWT token for authorization
- */
-  static requestHeaders() {
-    //console.log('Setup Header', sessionStorage.token);
-    return {Authorization: `Bearer ${sessionStorage.token}`};
-  }
-
-/**
- * Process API response codes
- */
-  static parseResponse(res, reqType='GET') {
-    let status = res.status;
-    if(status >= 400 && status < 500) {
-      throw res;
-    } else if(status >= 300 && status < 400) {
-      throw res;
-    } else if(reqType == 'GET') {
-      return res.json();
-    } else {
-      return res;
-    }
-  }
-
 }
 
 export default UsersApi;

@@ -10,14 +10,16 @@ class Api {
   /**
    * Process API response codes
    */
-  static parseResponse(res) {
+  static parseResponse(res, reqType='GET') {
     let status = res.status;
     if(status >= 400 && status < 500) {
       throw res;
     } else if(status >= 300 && status < 400) {
       throw res;
-    } else {
+    } else if(reqType == 'GET') {
       return res.json();
+    } else {
+      return res;
     }
   }
 
