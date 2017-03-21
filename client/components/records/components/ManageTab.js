@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {Component, PropTypes} from 'react';
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
 import Dialog from 'material-ui/Dialog';
@@ -11,10 +11,12 @@ class ManageTab extends Component {
     super();
 
     this.state = {
-      school        : 0,
-      openDelete    : false,
-      deleteText    : ''
+      school     : 0,
+      openDelete : false,
+      deleteText : ''
     };
+
+    this.getRecord = this.getRecord.bind(this);
   }
 
   getRecord(event, index, school) {
@@ -42,9 +44,8 @@ class ManageTab extends Component {
           <SelectField
             floatingLabelText="Select the school"
             value={this.state.school}
-            onChange={this.getRecord.bind(this)}
-            className="select-school"
-            >
+            onChange={this.getRecord}
+            className="select-school">
             {this.props.schools.map((school, i) =>
               <MenuItem
                 key={i}
@@ -87,4 +88,11 @@ class ManageTab extends Component {
     );
   }
 }
+
+ManageTab.propTypes = {
+  records      : PropTypes.array.isRequired,
+  schools      : PropTypes.array.isRequired,
+  manageRecord : PropTypes.func
+};
+
 export default ManageTab;
