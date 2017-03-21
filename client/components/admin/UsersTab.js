@@ -1,11 +1,9 @@
 import React, {PropTypes} from 'react';
 import DataTable from '../common/data-table/DataTable';
 
-import DropDownMenu from 'material-ui/DropDownMenu';
-import MenuItem from 'material-ui/MenuItem';
-
 import { List } from 'immutable';
 import DialogModel from '../../models/DialogModel';
+import DropdownModel from '../../models/DropdownModel';
 import RaisedButtonModel from '../../models/RaisedButtonModel';
 
 const UsersTab = ({users, ...props}) => {
@@ -27,69 +25,71 @@ const UsersTab = ({users, ...props}) => {
     props.clickHandler('dropdownChange', value, event); // eslint-disable-line no-invalid-this
   }
 
-  const roles = ['guest', 'teacher', 'manager', 'admin', 'super'];
+  let dialogs = [];
 
-  const changeSchoolDialog = new DialogModel({
-    title   : 'Change Assigned School',
-    open    : props.table.get('MuiDialogs').get('editSchool'),
-    actions : [
-      { label: 'Cancel', click: buttonHandler },
-      { label: 'Save', click: buttonHandler },
-    ],
-    text : [<div key='0'>
-      {`Change the assigned school for 
-      ${props.table.selectedRowsToCsv(props.table, 'name')} to
-      ${props.table.get('selectedDropdownItem')}`},
-      <br key='1' />
-      <div key='2' style={{textAlign: 'center'}}>
-      <DropDownMenu
-        value={props.table.get('selectedDropdownItem')}
-        onChange={dropdownHandler}
-        key='3'
-      >
-        {roles.map(role =>
-          <MenuItem value={role} primaryText={role} key={role} />
-        )}
-        </DropDownMenu>
+  // Defer building dialogs/dropdowns until something is selected
+  if(props.table.get('selectedData').first()) {
+
+    const schoolDropdown = new DropdownModel({
+      items    : ['guest', 'teacher', 'manager', 'admin', 'super'],
+      selected : props.selectedItem || 'teacher',
+      onChange : dropdownHandler
+    });
+
+    const rolesDropdown = new DropdownModel({
+      items    : ['guest', 'teacher', 'manager', 'admin', 'super'],
+      selected : props.selectedItem || 'teacher',
+      onChange : dropdownHandler
+    });
+
+    dialogs.push(new DialogModel({
+      title   : 'Change Assigned School',
+      open    : props.table.get('MuiDialogs').get('editSchool'),
+      actions : [
+        { label: 'Cancel', click: buttonHandler },
+        { label: 'Save', click: buttonHandler },
+      ],
+      text : [<div key='0'>
+        {`Change the assigned school for 
+        ${props.table.selectedRowsToCsv(props.table, 'name')} to
+        ${schoolDropdown.get('selected')}`},
+        <br key='1' />
+        <div key='2' style={{textAlign: 'center'}}>
+        {schoolDropdown.getDropdown(schoolDropdown,
+          dropdownHandler, 3)}
         </div></div>]
-  });
+    }));
 
-  const changeRoleDialog = new DialogModel({
-    title   : 'Change User Role',
-    open    : props.table.get('MuiDialogs').get('editRole'),
-    actions : List([
-      { label: 'Cancel', click: buttonHandler },
-      { label: 'Save', click: buttonHandler },
-    ]),
-    text : [<div key='0'>
-      {`Change the assigned role of
-      ${props.table.selectedRowsToCsv(props.table, 'name')} to
-      ${props.table.get('selectedDropdownItem')}`},
-      <br key='1' />
-      <div key='2' style={{textAlign: 'center'}}>
-      <DropDownMenu
-        value={props.table.get('selectedDropdownItem')}
-        onChange={dropdownHandler}
-        key='3'
-      >
-        {roles.map(role =>
-          <MenuItem value={role} primaryText={role} key={role} />
-        )}
-        </DropDownMenu>
+    dialogs.push(new DialogModel({
+      title   : 'Change User Role',
+      open    : props.table.get('MuiDialogs').get('editRole'),
+      actions : List([
+        { label: 'Cancel', click: buttonHandler },
+        { label: 'Save', click: buttonHandler },
+      ]),
+      text : [<div key='0'>
+        {`Change the assigned role of
+        ${props.table.selectedRowsToCsv(props.table, 'name')} to
+        ${rolesDropdown.get('selected')}`},
+        <br key='1' />
+        <div key='2' style={{textAlign: 'center'}}>
+        {rolesDropdown.getDropdown(rolesDropdown,
+          dropdownHandler, 3)}
         </div></div>]
-  });
+    }));
 
-  const removeUserDialog = new DialogModel({
-    title   : 'Remove Users',
-    open    : props.table.get('MuiDialogs').get('removeUser'),
-    actions : List([
-      { label: 'Cancel', click: buttonHandler },
-      { label: 'Remove', click: buttonHandler },
-    ]),
-    text : [`
-      This changes the school
-    `]
-  });
+    dialogs.push(new DialogModel({
+      title   : 'Remove Users',
+      open    : props.table.get('MuiDialogs').get('removeUser'),
+      actions : List([
+        { label: 'Cancel', click: buttonHandler },
+        { label: 'Remove', click: buttonHandler },
+      ]),
+      text : [`
+        This changes the school
+      `]
+    }));
+  }
 
 //      ${props.selectedRows.description.map(row => row.name)}
 /**
@@ -148,11 +148,7 @@ const UsersTab = ({users, ...props}) => {
       id       : 'role',
       flexGrow : 1
     }],
-    dialogs : [
-      changeSchoolDialog,
-      changeRoleDialog,
-      removeUserDialog
-    ],
+    dialogs,
     raisedButtons : [
       editButton,
       removeButton
@@ -173,6 +169,7 @@ const UsersTab = ({users, ...props}) => {
 UsersTab.propTypes = {
   users        : PropTypes.instanceOf(List).isRequired,
   table        : PropTypes.object.isRequired,
+  selectedItem : PropTypes.func.isRequired,
   clickHandler : PropTypes.func.isRequired,
 };
 

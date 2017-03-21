@@ -7,6 +7,7 @@ export const Dialog = Immutable.Record({
   open    : '',
   actions : Immutable.List(),
   text    : Immutable.List(),
+  result  : '',
 });
 
 class DialogModel extends Dialog {
@@ -23,6 +24,10 @@ class DialogModel extends Dialog {
       value={label}
       key={key}
     />;
+  }
+
+  setResult(currentState, result) {
+    return currentState.update('result', () => result);
   }
 }
 

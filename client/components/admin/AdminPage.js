@@ -30,7 +30,7 @@ class AdminPage extends React.Component {
       removeUser : false
     });
     this.state = Object.assign({ table: nextTable }, {
-      selectedDropdownItem : 'admin'
+      selectedItem : ''
     });
 
     this.clickHandler = this.clickHandler.bind(this);
@@ -39,8 +39,8 @@ class AdminPage extends React.Component {
 
   componentWillReceiveProps() {
     this.setState({
-      table                : this.state.table,
-      selectedDropdownItem : 'admin'
+      table        : this.state.table,
+      selectedItem : ''
     });
   }
 
@@ -78,7 +78,7 @@ class AdminPage extends React.Component {
     case 'menuClick':
     case 'buttonClick':
       nextTable = table.setSelectedRowData(this.state.table,
-        this.setSelectedRowData());
+        this.getSelectedRowData());
       if(data == 'editSchool' || data == 'editRole' || data == 'removeUser') {
         nextTable = table.toggleDialogs(nextTable, data);
         nextTable = table.resetPopovers(nextTable);
@@ -98,8 +98,9 @@ class AdminPage extends React.Component {
       break;
 
     case 'dropdownChange':
-      console.log(action, data);
-      this.updateDropdownState(action, data, event);
+      this.setState({
+        selectedItem : data
+      });
       break;
     }
   }
@@ -108,10 +109,11 @@ class AdminPage extends React.Component {
     this.clickHandler('changeTabs');
   }
 
-  updateDropdownState(action, data, event) {
-    this.setState({
-      selectedDropdownItem : data
-    });
+  // Returns full row data for selected table index values
+  getSelectedRowData() {
+    return this.props[this.state.table.get('selectedTab')]
+      .filter((v, i) => this.state.table.get('selectedIndex')
+      .indexOf(i) != -1);
   }
 
   render() {
@@ -132,7 +134,7 @@ class AdminPage extends React.Component {
             }}
             users = {this.props.users}
             table = {this.state.table}
-            selectedDropdownItem = {this.state.selectedDropdownItem}
+            selectedItem = {this.state.selectedItem}
             clickHandler = {this.clickHandler}
           />
         </Tab>
