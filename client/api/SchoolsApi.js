@@ -5,10 +5,10 @@ class SchoolsApi extends Api {
 /**
  * Get my info
  */
-  static getMySchool() {
+  static getSchoolNames() {
     const headers = this.requestHeaders();
     //console.log(headers)
-    const req = new Request('/api/schools/me', {
+    const req = new Request('/api/schools/name', {
       method : 'GET',
       headers
     });
@@ -47,6 +47,20 @@ class SchoolsApi extends Api {
     .catch(error => {
       throw error;
     });
+  }
+
+/**
+ * Adds a school
+ * restriction: 'admin'
+ */
+  static addSchool(schoolName) {
+    const headers = this.requestHeaders();
+    const req = new Request(`/api/schools/${schoolName}`, {
+      method : 'POST',
+      headers
+    });
+    return fetch(req).then(res => this.parseResponse(res, 'POST'))
+    .catch(error => error);
   }
 
 /**

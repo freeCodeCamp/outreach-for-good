@@ -3,16 +3,16 @@ import { validate } from './sessionActions';
 import schoolAPI from '../api/SchoolsApi';
 
 export function loadSchoolsSuccess(schools) {
-  return {type: types.LOAD_USERS_SUCCESS, schools};
+  return {type: types.LOAD_SCHOOLS_SUCCESS, schools};
 }
 
 // Functions below handle asynchronous calls.
 // Each returns a function that accepts a dispatch.
 // These are used by redux-thunk to support asynchronous interactions.
 
-export function getMySchool() {
+export function getSchoolNames() {
   return function(dispatch) {
-    return schoolAPI.getMySchool().then(schools => {
+    return schoolAPI.getSchoolNames().then(schools => {
       dispatch(loadSchoolsSuccess(schools));
     })
     .catch(err => handleError(err, dispatch));
@@ -34,6 +34,15 @@ export function getAllSchools() {
       console.log('getAllSchools API: ', res);
       return dispatch(loadSchoolsSuccess(res));
     })
+    .catch(err => handleError(err, dispatch));
+  };
+}
+
+export function addSchool(schoolName) {
+  return function(dispatch) {
+    let promises = schoolName.map(school => schoolAPI.addSchool(school));
+    return Promise.all(promises)
+    .then(() => dispatch(getAllSchools()))
     .catch(err => handleError(err, dispatch));
   };
 }
