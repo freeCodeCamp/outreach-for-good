@@ -14,7 +14,7 @@ import MenuItem from 'material-ui/MenuItem';
 
 import Dialog from 'material-ui/Dialog';
 
-const DataTable = ({page, table, column, data, ...props}) => {
+const DataTable = ({page, table, data, ...props}) => {
   if(!page.button) page.button = [];
 
   let row = {
@@ -88,10 +88,14 @@ const DataTable = ({page, table, column, data, ...props}) => {
           {page.dialogs && page.dialogs
             .map((dialog, index) =>
               <Dialog
-                title={dialog.title}
-                actions={dialog.actions}
+                title={dialog.get('title')}
+                actions={dialog.get('actions')
+                  .map((v, i) => dialog.getActionButton(
+                    v.label, v.click, i
+                  ))
+                }
                 modal
-                open={dialog.open}
+                open={dialog.get('open')}
                 onRequestClose={popoverClose}
                 key={index}
                 titleClassName='dialog-title'
@@ -113,7 +117,7 @@ const DataTable = ({page, table, column, data, ...props}) => {
           onRowClick={row.toggleSelected}
           rowClassNameGetter={row.isSelected}
         >
-        {column
+        {page.columns && page.columns
           .map(col =>
           <Column
             header={
@@ -141,7 +145,6 @@ DataTable.propTypes = {
   view         : PropTypes.object.isRequired,
   page         : PropTypes.object.isRequired,
   table        : PropTypes.instanceOf(TableModel).isRequired,
-  column       : PropTypes.array.isRequired,
   data         : PropTypes.instanceOf(List).isRequired,
   selectedRows : PropTypes.object
 };

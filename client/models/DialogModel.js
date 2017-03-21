@@ -1,4 +1,6 @@
+import React from 'react';
 import Immutable from 'immutable';
+import FlatButton from 'material-ui/FlatButton';
 
 export const Dialog = Immutable.Record({
   title   : '',
@@ -20,6 +22,16 @@ class DialogModel extends Dialog {
 
   resetDialogs(currentState) {
     return currentState.update('MuiDialogs', iMap => iMap.map(() => false));
+  }
+
+  getActionButton(label, onTouchTap, key) {
+    return <FlatButton
+      label={label}
+      primary
+      onTouchTap={onTouchTap}
+      value={label}
+      key={key}
+    />;
   }
 }
 
