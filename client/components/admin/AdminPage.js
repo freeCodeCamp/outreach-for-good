@@ -50,7 +50,7 @@ class AdminPage extends React.Component {
 
     // Clicked a table row
     case 'toggleSelected':
-      nextTable = table.toggleSelectedIndex(this.state.table, data);
+      nextTable = table.toggleSelectedRowIndex(this.state.table, data);
       this.setState({table: nextTable});
       break;
 
@@ -77,8 +77,8 @@ class AdminPage extends React.Component {
     // Clicked a popover menu item -or- a RaisedButton
     case 'menuClick':
     case 'buttonClick':
-      nextTable = table.setSelectedData(this.state.table,
-        this.getSelectedData());
+      nextTable = table.setSelectedRowData(this.state.table,
+        this.setSelectedRowData());
       if(data == 'editSchool' || data == 'editRole' || data == 'removeUser') {
         nextTable = table.toggleDialogs(nextTable, data);
         nextTable = table.resetPopovers(nextTable);
@@ -102,13 +102,6 @@ class AdminPage extends React.Component {
       this.updateDropdownState(action, data, event);
       break;
     }
-  }
-
-  // Returns full row data for selected table index values
-  getSelectedData() {
-    return this.props[this.state.table.get('selectedTab')]
-      .filter((v, i) => this.state.table.get('selectedIndex')
-      .indexOf(i) != -1);
   }
 
   tabHandler() {

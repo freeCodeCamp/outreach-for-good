@@ -4,7 +4,7 @@ import DataTable from '../common/data-table/DataTable';
 import DropDownMenu from 'material-ui/DropDownMenu';
 import MenuItem from 'material-ui/MenuItem';
 
-import { List, Map } from 'immutable';
+import { List } from 'immutable';
 import DialogModel from '../../models/DialogModel';
 import RaisedButtonModel from '../../models/RaisedButtonModel';
 
@@ -37,11 +37,9 @@ const UsersTab = ({users, ...props}) => {
       { label: 'Save', click: buttonHandler },
     ],
     text : [<div key='0'>
-      {`Change the assigned school for ${
-       props.table.get('selectedData')
-        .map(row => row.name)
-        .join(', ') } to ${
-       props.table.get('selectedDropdownItem')}`},
+      {`Change the assigned school for 
+      ${props.table.selectedRowsToCsv(props.table, 'name')} to
+      ${props.table.get('selectedDropdownItem')}`},
       <br key='1' />
       <div key='2' style={{textAlign: 'center'}}>
       <DropDownMenu
@@ -57,18 +55,16 @@ const UsersTab = ({users, ...props}) => {
   });
 
   const changeRoleDialog = new DialogModel({
-    title   : 'Change Assigned School',
+    title   : 'Change User Role',
     open    : props.table.get('MuiDialogs').get('editRole'),
     actions : List([
       { label: 'Cancel', click: buttonHandler },
-      { label: 'Remove', click: buttonHandler },
+      { label: 'Save', click: buttonHandler },
     ]),
     text : [<div key='0'>
-      {`Change the assigned school for ${
-       props.table.get('selectedData')
-        .map(row => row.name)
-        .join(', ') } to ${
-       props.table.get('selectedDropdownItem')}`},
+      {`Change the assigned role of
+      ${props.table.selectedRowsToCsv(props.table, 'name')} to
+      ${props.table.get('selectedDropdownItem')}`},
       <br key='1' />
       <div key='2' style={{textAlign: 'center'}}>
       <DropDownMenu

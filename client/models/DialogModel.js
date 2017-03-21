@@ -15,15 +15,6 @@ class DialogModel extends Dialog {
     return currentState.update('MuiDialogs', i => i.clear().merge(dialogValues));
   }
 
-  toggleDialogs(currentState, dialogValue) {
-    return currentState.update('MuiDialogs', iMap =>
-      iMap.update(dialogValue, state => !state));
-  }
-
-  resetDialogs(currentState) {
-    return currentState.update('MuiDialogs', iMap => iMap.map(() => false));
-  }
-
   getActionButton(label, onTouchTap, key) {
     return <FlatButton
       label={label}
