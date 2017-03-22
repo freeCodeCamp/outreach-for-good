@@ -7,6 +7,7 @@ export const Dialog = Immutable.Record({
   open    : '',
   actions : Immutable.List(),
   text    : Immutable.List(),
+  result  : '',
 });
 
 class DialogModel extends Dialog {
@@ -15,23 +16,18 @@ class DialogModel extends Dialog {
     return currentState.update('MuiDialogs', i => i.clear().merge(dialogValues));
   }
 
-  toggleDialogs(currentState, dialogValue) {
-    return currentState.update('MuiDialogs', iMap =>
-      iMap.update(dialogValue, state => !state));
-  }
-
-  resetDialogs(currentState) {
-    return currentState.update('MuiDialogs', iMap => iMap.map(() => false));
-  }
-
-  getActionButton(label, onTouchTap, key) {
+  getActionButton(label, onTouchTap, key, value = '') {
     return <FlatButton
       label={label}
       primary
       onTouchTap={onTouchTap}
-      value={label}
+      value={value}
       key={key}
     />;
+  }
+
+  setResult(currentState, result) {
+    return currentState.update('result', () => result);
   }
 }
 

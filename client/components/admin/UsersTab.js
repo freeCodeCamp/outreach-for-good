@@ -1,11 +1,10 @@
 import React, {PropTypes} from 'react';
 import DataTable from '../common/data-table/DataTable';
+import { List } from 'immutable';
 
-import DropDownMenu from 'material-ui/DropDownMenu';
-import MenuItem from 'material-ui/MenuItem';
-
-import { List, Map } from 'immutable';
+import * as locAct from './localActions';
 import DialogModel from '../../models/DialogModel';
+import DropdownModel from '../../models/DropdownModel';
 import RaisedButtonModel from '../../models/RaisedButtonModel';
 
 const UsersTab = ({users, ...props}) => {
@@ -27,73 +26,70 @@ const UsersTab = ({users, ...props}) => {
     props.clickHandler('dropdownChange', value, event); // eslint-disable-line no-invalid-this
   }
 
-  const roles = ['guest', 'teacher', 'manager', 'admin', 'super'];
+  let dialogs = [];
 
-  const changeSchoolDialog = new DialogModel({
-    title   : 'Change Assigned School',
-    open    : props.table.get('MuiDialogs').get('editSchool'),
-    actions : [
-      { label: 'Cancel', click: buttonHandler },
-      { label: 'Save', click: buttonHandler },
-    ],
-    text : [<div key='0'>
-      {`Change the assigned school for ${
-       props.table.get('selectedData')
-        .map(row => row.name)
-        .join(', ') } to ${
-       props.table.get('selectedDropdownItem')}`},
-      <br key='1' />
-      <div key='2' style={{textAlign: 'center'}}>
-      <DropDownMenu
-        value={props.table.get('selectedDropdownItem')}
-        onChange={dropdownHandler}
-        key='3'
-      >
-        {roles.map(role =>
-          <MenuItem value={role} primaryText={role} key={role} />
-        )}
-        </DropDownMenu>
+  // Defer building dialogs/dropdowns until something is selected
+  if(props.table.get('selectedData').first()) {
+    const schoolDropdown = new DropdownModel({
+      items    : ['guest', 'teacher', 'manager', 'admin', 'super'],
+      selected : props.selectedItem,
+      onChange : dropdownHandler
+    });
+
+    const rolesDropdown = new DropdownModel({
+      items    : ['guest', 'teacher', 'manager', 'admin', 'super'],
+      selected : props.selectedItem,
+      onChange : dropdownHandler
+    });
+
+    dialogs.push(new DialogModel({
+      title   : 'Change Assigned School',
+      open    : props.table.get('MuiDialogs').get(locAct.EDIT_SCHOOL),
+      actions : [
+        { label: 'Cancel', click: buttonHandler },
+        { label: 'Save', click: buttonHandler, value: locAct.EDIT_SCHOOL },
+      ],
+      text : [<div key='0'>
+        {`Change the assigned school for 
+        ${props.table.selectedRowsToCsv(props.table, 'name')} to
+        ${schoolDropdown.get('selected')}`},
+        <br key='1' />
+        <div key='2' style={{textAlign: 'center'}}>
+        {schoolDropdown.getDropdown(schoolDropdown,
+          dropdownHandler, 3)}
         </div></div>]
-  });
+    }));
 
-  const changeRoleDialog = new DialogModel({
-    title   : 'Change Assigned School',
-    open    : props.table.get('MuiDialogs').get('editRole'),
-    actions : List([
-      { label: 'Cancel', click: buttonHandler },
-      { label: 'Remove', click: buttonHandler },
-    ]),
-    text : [<div key='0'>
-      {`Change the assigned school for ${
-       props.table.get('selectedData')
-        .map(row => row.name)
-        .join(', ') } to ${
-       props.table.get('selectedDropdownItem')}`},
-      <br key='1' />
-      <div key='2' style={{textAlign: 'center'}}>
-      <DropDownMenu
-        value={props.table.get('selectedDropdownItem')}
-        onChange={dropdownHandler}
-        key='3'
-      >
-        {roles.map(role =>
-          <MenuItem value={role} primaryText={role} key={role} />
-        )}
-        </DropDownMenu>
+    dialogs.push(new DialogModel({
+      title   : 'Change User Role',
+      open    : props.table.get('MuiDialogs').get(locAct.EDIT_ROLE),
+      actions : List([
+        { label: 'Cancel', click: buttonHandler },
+        { label: 'Save', click: buttonHandler, value: locAct.EDIT_ROLE },
+      ]),
+      text : [<div key='0'>
+        {`Change the assigned role of
+        ${props.table.selectedRowsToCsv(props.table, 'name')} to
+        ${rolesDropdown.get('selected')}`},
+        <br key='1' />
+        <div key='2' style={{textAlign: 'center'}}>
+        {rolesDropdown.getDropdown(rolesDropdown,
+          dropdownHandler, 3)}
         </div></div>]
-  });
+    }));
 
-  const removeUserDialog = new DialogModel({
-    title   : 'Remove Users',
-    open    : props.table.get('MuiDialogs').get('removeUser'),
-    actions : List([
-      { label: 'Cancel', click: buttonHandler },
-      { label: 'Remove', click: buttonHandler },
-    ]),
-    text : [`
-      This changes the school
-    `]
-  });
+    dialogs.push(new DialogModel({
+      title   : 'Remove Users',
+      open    : props.table.get('MuiDialogs').get(locAct.REMOVE_USER),
+      actions : List([
+        { label: 'Cancel', click: buttonHandler },
+        { label: 'Remove', click: buttonHandler, value: locAct.REMOVE_USER },
+      ]),
+      text : [` Permanently remove
+        ${props.table.selectedRowsToCsv(props.table, 'name')}
+      `]
+    }));
+  }
 
 //      ${props.selectedRows.description.map(row => row.name)}
 /**
@@ -107,16 +103,16 @@ const UsersTab = ({users, ...props}) => {
  */
 
   const editButton = new RaisedButtonModel({
-    label     : 'Edit',
-    triggerID : 'editPopover',
-    menu      : {
-      open : props.table.get('MuiPopovers').get('editPopover'),
+    label    : 'Edit',
+    actionID : locAct.EDIT,
+    menu     : {
+      open : props.table.get('MuiPopovers').get(locAct.EDIT),
       item : [{
-        text      : 'Assigned School',
-        triggerID : 'editSchool'
+        text     : 'Assigned School',
+        actionID : locAct.EDIT_SCHOOL
       }, {
-        text      : 'User Role',
-        triggerID : 'editRole'
+        text     : 'User Role',
+        actionID : locAct.EDIT_ROLE
       }]
     }
   });
@@ -124,7 +120,7 @@ const UsersTab = ({users, ...props}) => {
   const removeButton = new RaisedButtonModel({
     label           : 'Remove',
     backgroundColor : '#d9534f',
-    triggerID       : 'removeUser'
+    actionID        : locAct.REMOVE_USER
   });
 
 /**
@@ -152,11 +148,7 @@ const UsersTab = ({users, ...props}) => {
       id       : 'role',
       flexGrow : 1
     }],
-    dialogs : [
-      changeSchoolDialog,
-      changeRoleDialog,
-      removeUserDialog
-    ],
+    dialogs,
     raisedButtons : [
       editButton,
       removeButton
@@ -177,6 +169,7 @@ const UsersTab = ({users, ...props}) => {
 UsersTab.propTypes = {
   users        : PropTypes.instanceOf(List).isRequired,
   table        : PropTypes.object.isRequired,
+  selectedItem : PropTypes.string.isRequired,
   clickHandler : PropTypes.func.isRequired,
 };
 
