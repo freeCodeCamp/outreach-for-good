@@ -15,6 +15,7 @@ import MenuItem from 'material-ui/MenuItem';
 import Dialog from 'material-ui/Dialog';
 
 const DataTable = ({page, table, data, ...props}) => {
+
   let row = {
     selected : table.get('selectedIndex'),
     isSelected(index) {
