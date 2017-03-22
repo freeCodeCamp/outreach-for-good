@@ -40,29 +40,26 @@ class AdminPage extends React.Component {
   initializeTable(currentTab) {
     let nextTable;
     switch (currentTab) {
-
-    // Setup component state for `Users` Tab
     case 'users':
-      // Pull users from the API
       this.props.usrAct.getAllUsers();
       nextTable = table.setSelectedTab(table, 'users');
-      nextTable = table.addPopovers(nextTable, {
-        [locAct.EDIT] : false
-      });
-      nextTable = table.addDialogs(nextTable, {
-        [locAct.EDIT_SCHOOL] : false,
-        [locAct.EDIT_ROLE]   : false,
-        [locAct.REMOVE_USER] : false
-      });
       break;
-
-    // Setup component state for `Schools` Tab
     case 'schools':
-      // Pull schools from the API
       this.props.schAct.getAllSchools();
       nextTable = table.setSelectedTab(table, 'schools');
       break;
     }
+    nextTable = table.addPopovers(nextTable, {
+      [locAct.EDIT] : false
+    });
+    nextTable = table.addDialogs(nextTable, {
+      [locAct.EDIT_SCHOOL]   : false,
+      [locAct.EDIT_ROLE]     : false,
+      [locAct.REMOVE_USER]   : false,
+      [locAct.NEW_SCHOOL]    : false,
+      [locAct.REMOVE_SCHOOL] : false
+    });
+
     return nextTable;
   }
 
@@ -99,9 +96,7 @@ class AdminPage extends React.Component {
     case 'buttonClick':
       nextTable = table.setSelectedRowData(this.state.table,
         this.getSelectedRowData());
-      if(data == locAct.EDIT_SCHOOL
-        || data == locAct.EDIT_ROLE
-        || data == locAct.REMOVE_USER) {
+      if(locAct.DIALOG_LIST.indexOf(data) != -1) {
         nextTable = table.toggleDialogs(nextTable, data);
         nextTable = table.resetPopovers(nextTable);
       } else if(data == locAct.EDIT) {
@@ -170,7 +165,7 @@ class AdminPage extends React.Component {
               width  : this.props.containerWidth - 20,
               height : this.props.containerHeight - 48 - 80
             }}
-            schools = {this.props.users}
+            schools = {this.props.schools}
             table = {this.state.table}
             selectedItem = {this.state.selectedItem}
             clickHandler = {this.clickHandler}
@@ -184,14 +179,16 @@ class AdminPage extends React.Component {
 AdminPage.propTypes = {
   usrAct          : PropTypes.object.isRequired,
   schAct          : PropTypes.object.isRequired,
-  users           : PropTypes.instanceOf(List).isRequired,
+  users           : PropTypes.instanceOf(List),
+  schools         : PropTypes.instanceOf(List),
   containerWidth  : PropTypes.number.isRequired,
   containerHeight : PropTypes.number.isRequired
 };
 
 function mapStateToProps(state) {
   return {
-    users : state.users
+    schools : state.schools,
+    users   : state.users
   };
 }
 
