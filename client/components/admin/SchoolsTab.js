@@ -29,7 +29,7 @@ const SchoolsTab = ({schools, ...props}) => {
       open    : props.table.get('MuiDialogs').get(locAct.NEW_SCHOOL),
       actions : List([
         { label: 'Cancel', click: buttonHandler },
-        { label: 'Add', click: buttonHandler },
+        { label: 'Add', click: buttonHandler, value: locAct.NEW_SCHOOL },
       ]),
       text : [` Add a new school
       `]
@@ -40,7 +40,7 @@ const SchoolsTab = ({schools, ...props}) => {
       open    : props.table.get('MuiDialogs').get(locAct.REMOVE_SCHOOL),
       actions : List([
         { label: 'Cancel', click: buttonHandler },
-        { label: 'Remove', click: buttonHandler },
+        { label: 'Remove', click: buttonHandler, value: locAct.REMOVE_SCHOOL },
       ]),
       text : [` Permanently remove
         ${props.table.selectedRowsToCsv(props.table, 'name')}
@@ -59,9 +59,9 @@ const SchoolsTab = ({schools, ...props}) => {
  *  4. If button or menu-item has dialog, add `dialogID`
  */
   const newButton = new RaisedButtonModel({
-    label    : 'New',
+    label           : 'New',
     backgroundColor : '#009d9d',
-    actionID : locAct.NEW_SCHOOL
+    actionID        : locAct.NEW_SCHOOL
   });
 
   const removeButton = new RaisedButtonModel({
@@ -75,8 +75,6 @@ const SchoolsTab = ({schools, ...props}) => {
  *  1.
  *  2.
  */
-
-  console.log(dialogs)
   const page = {
     title   : 'Manage School Accounts',
     columns : [{

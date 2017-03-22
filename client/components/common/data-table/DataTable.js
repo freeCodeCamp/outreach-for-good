@@ -15,8 +15,6 @@ import MenuItem from 'material-ui/MenuItem';
 import Dialog from 'material-ui/Dialog';
 
 const DataTable = ({page, table, data, ...props}) => {
-  if(!page.button) page.button = [];
-
   let row = {
     selected : table.get('selectedIndex'),
     isSelected(index) {
@@ -27,8 +25,6 @@ const DataTable = ({page, table, data, ...props}) => {
       props.clickHandler('toggleSelected', index);
     }
   };
-  //console.log('props: ', props.selectedRows)
-  //console.log('Row: ', row)
 
   function buttonHandler(event) {
     event.preventDefault();
@@ -60,7 +56,7 @@ const DataTable = ({page, table, data, ...props}) => {
                 secondary={button.get('secondary') || false}
                 backgroundColor={button.get('backgroundColor')}
                 style={{marginLeft: '10px'}}
-                disabled={row.selected.length == 0}
+                disabled={row.selected.size == 0}
                 onClick={buttonHandler}
               />
               {button.get('menu').open
@@ -91,7 +87,7 @@ const DataTable = ({page, table, data, ...props}) => {
                 title={dialog.get('title')}
                 actions={dialog.get('actions')
                   .map((v, i) => dialog.getActionButton(
-                    v.label, v.click, i
+                    v.label, v.click, i, v.value
                   ))
                 }
                 modal

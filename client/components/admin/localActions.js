@@ -24,6 +24,7 @@ export const REMOVE_SCHOOL = 'REMOVE_SCHOOL';
  * Both Tabs
  */
 
+// This list helps keep if-statements shorter
 export const DIALOG_LIST = [
   'EDIT_SCHOOL',
   'EDIT_ROLE',

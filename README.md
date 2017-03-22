@@ -55,3 +55,5 @@ This version is currently under development.
 * When session validation fails, does user stay locked-out? 
 * admin-page
   * Prevent users from deleting themselves
+  * User photo in left-most column
+  * Sort when clicking header

@@ -47,7 +47,7 @@ const UsersTab = ({users, ...props}) => {
       open    : props.table.get('MuiDialogs').get(locAct.EDIT_SCHOOL),
       actions : [
         { label: 'Cancel', click: buttonHandler },
-        { label: 'Save', click: buttonHandler },
+        { label: 'Save', click: buttonHandler, value: locAct.EDIT_SCHOOL },
       ],
       text : [<div key='0'>
         {`Change the assigned school for 
@@ -65,7 +65,7 @@ const UsersTab = ({users, ...props}) => {
       open    : props.table.get('MuiDialogs').get(locAct.EDIT_ROLE),
       actions : List([
         { label: 'Cancel', click: buttonHandler },
-        { label: 'Save', click: buttonHandler },
+        { label: 'Save', click: buttonHandler, value: locAct.EDIT_ROLE },
       ]),
       text : [<div key='0'>
         {`Change the assigned role of
@@ -83,7 +83,7 @@ const UsersTab = ({users, ...props}) => {
       open    : props.table.get('MuiDialogs').get(locAct.REMOVE_USER),
       actions : List([
         { label: 'Cancel', click: buttonHandler },
-        { label: 'Remove', click: buttonHandler },
+        { label: 'Remove', click: buttonHandler, value: locAct.REMOVE_USER },
       ]),
       text : [` Permanently remove
         ${props.table.selectedRowsToCsv(props.table, 'name')}

@@ -81,10 +81,29 @@ class AdminPage extends React.Component {
 
     // Clicked a dialog (modal window)
     case 'dialogClick':
-      if(data == 'remove-user') {
-        let users = this.state.selectedRows
-          .description.map(row => row._id);
-        this.props.actions.removeUser(users);
+      if(locAct.DIALOG_LIST.indexOf(data) != -1) {
+        // Click inside dialog with associated API action
+        let users;
+        switch (data) {
+        case locAct.EDIT_SCHOOL:
+          users = this.state.selectedRows
+            .description.map(row => row._id);
+          this.props.usrAct.removeUser(users);
+          break;
+        case locAct.EDIT_ROLE:
+          break;
+        case locAct.REMOVE_USER:
+          users = this.state.table.get('selectedData')
+            .map(row => row._id);
+          this.props.usrAct.removeUser(users.toArray());
+          break;
+        case locAct.NEW_SCHOOL:
+          break;
+        case locAct.REMOVE_SCHOOL:
+          break;
+        }
+        nextTable = this.initializeTable(this.state.table.selectedTab);
+        this.setState({table: nextTable});
       } else {
         nextTable = table.resetDialogs(this.state.table);
         this.setState({table: nextTable});
