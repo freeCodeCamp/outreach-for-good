@@ -15,7 +15,6 @@ import MenuItem from 'material-ui/MenuItem';
 import Dialog from 'material-ui/Dialog';
 
 const DataTable = ({page, table, data, ...props}) => {
-  if(!page.button) page.button = [];
 
   let row = {
     selected : table.get('selectedIndex'),
@@ -27,8 +26,6 @@ const DataTable = ({page, table, data, ...props}) => {
       props.clickHandler('toggleSelected', index);
     }
   };
-  //console.log('props: ', props.selectedRows)
-  //console.log('Row: ', row)
 
   function buttonHandler(event) {
     event.preventDefault();
@@ -55,12 +52,12 @@ const DataTable = ({page, table, data, ...props}) => {
               <RaisedButton
                 label={button.get('label')}
                 labelColor={button.get('labelColor')}
-                value={button.get('triggerID') || ''}
+                value={button.get('actionID') || ''}
                 primary={button.get('primary') || false}
                 secondary={button.get('secondary') || false}
                 backgroundColor={button.get('backgroundColor')}
                 style={{marginLeft: '10px'}}
-                disabled={row.selected.length == 0}
+                disabled={row.selected.size == 0}
                 onClick={buttonHandler}
               />
               {button.get('menu').open
@@ -75,7 +72,7 @@ const DataTable = ({page, table, data, ...props}) => {
                     {button.get('menu').item.map((item, i) =>
                       <MenuItem
                         primaryText={item.text}
-                        value={item.triggerID}
+                        value={item.actionID}
                         onTouchTap={menuItemHandler}
                         key={i}
                       />
@@ -91,7 +88,7 @@ const DataTable = ({page, table, data, ...props}) => {
                 title={dialog.get('title')}
                 actions={dialog.get('actions')
                   .map((v, i) => dialog.getActionButton(
-                    v.label, v.click, i
+                    v.label, v.click, i, v.value
                   ))
                 }
                 modal

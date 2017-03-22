@@ -14,6 +14,12 @@ export const Table = Immutable.Record({
 
 class TableModel extends Table {
 
+  // Set anchor element for <Popover> menu
+  setAnchor(currentState, anchor) {
+    return currentState.set('MuiAnchor', anchor);
+  }
+
+  // MUI <Popover> integration
   addPopovers(currentState, popoverValues) {
     return currentState.update('MuiPopovers', i => i.clear().merge(popoverValues));
   }
@@ -27,11 +33,7 @@ class TableModel extends Table {
     return currentState.update('MuiPopovers', iMap => iMap.map(() => false));
   }
 
-  // Set anchor element for <Popover> menu
-  setAnchor(currentState, anchor) {
-    return currentState.set('MuiAnchor', anchor);
-  }
-
+  // MUI <Dialog> integration
   addDialogs(currentState, dialogValues) {
     return currentState.update('MuiDialogs', i => i.clear().merge(dialogValues));
   }
@@ -45,7 +47,12 @@ class TableModel extends Table {
     return currentState.update('MuiDialogs', iMap => iMap.map(() => false));
   }
 
-  toggleSelectedIndex(currentState, index) {
+  setSelectedTab(currentState, name) {
+    return currentState.set('selectedTab', name);
+  }
+
+  // Facilitate user selecting table rows
+  toggleSelectedRowIndex(currentState, index) {
     let target = currentState.get('selectedIndex').indexOf(index);
     if(target == -1) {
       return currentState.update('selectedIndex', i => i.push(index));
@@ -54,16 +61,16 @@ class TableModel extends Table {
     }
   }
 
-  resetTable() {
-    return TableModel;
-  }
-
-  setSelectedData(currentState, data) {
+  // Return data stored in selected rows
+  setSelectedRowData(currentState, data) {
     return currentState.update('selectedData', i => i.clear().merge(data));
   }
 
-  setSelectedTab(currentState, name) {
-    return currentState.set('selectedTab', name);
+  // Return string of comma seperated cell values (from selection)
+  selectedRowsToCsv(currentState, column) {
+    return currentState.get('selectedData')
+      .map(row => row[column])
+      .join(', ');
   }
 }
 
