@@ -61,7 +61,8 @@ const SchoolsTab = ({schools, ...props}) => {
   const newButton = new RaisedButtonModel({
     label           : 'New',
     backgroundColor : '#009d9d',
-    actionID        : locAct.NEW_SCHOOL
+    actionID        : locAct.NEW_SCHOOL,
+    disabled        : false
   });
 
   const removeButton = new RaisedButtonModel({

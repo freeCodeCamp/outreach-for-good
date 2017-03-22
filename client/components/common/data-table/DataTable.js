@@ -57,7 +57,7 @@ const DataTable = ({page, table, data, ...props}) => {
                 secondary={button.get('secondary') || false}
                 backgroundColor={button.get('backgroundColor')}
                 style={{marginLeft: '10px'}}
-                disabled={row.selected.size == 0}
+                disabled={row.selected.size == 0 && button.get('disabled')}
                 onClick={buttonHandler}
               />
               {button.get('menu').open
