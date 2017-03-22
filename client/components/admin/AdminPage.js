@@ -49,6 +49,7 @@ class AdminPage extends React.Component {
       nextTable = table.setSelectedTab(table, 'schools');
       break;
     }
+    // All tabs initialize on section-load
     nextTable = table.addPopovers(nextTable, {
       [locAct.EDIT] : false
     });
@@ -86,11 +87,13 @@ class AdminPage extends React.Component {
         let users;
         switch (data) {
         case locAct.EDIT_SCHOOL:
-          users = this.state.selectedRows
-            .description.map(row => row._id);
-          this.props.usrAct.removeUser(users);
+          users = this.state.table.get('selectedData').map(row => row._id);
+          //console.log(users.toArray(), this.state.selectedItem)
+          this.props.usrAct.updateUserSchool(users.toArray(), this.state.selectedItem);
           break;
         case locAct.EDIT_ROLE:
+          users = this.state.table.get('selectedData').map(row => row._id);
+          this.props.usrAct.updateUserRole(users.toArray(), this.state.selectedItem);
           break;
         case locAct.REMOVE_USER:
           users = this.state.table.get('selectedData')
@@ -115,15 +118,33 @@ class AdminPage extends React.Component {
     case 'buttonClick':
       nextTable = table.setSelectedRowData(this.state.table,
         this.getSelectedRowData());
+      let selectedItem = '';
       if(locAct.DIALOG_LIST.indexOf(data) != -1) {
         nextTable = table.toggleDialogs(nextTable, data);
         nextTable = table.resetPopovers(nextTable);
+        switch (data) {
+        case locAct.EDIT_SCHOOL:
+          selectedItem = 'super';
+          break;
+        case locAct.EDIT_ROLE:
+          selectedItem = 'super';
+          break;
+        case locAct.REMOVE_USER:
+          selectedItem = 'super';
+          break;
+        case locAct.NEW_SCHOOL:
+          selectedItem = 'super';
+          break;
+        case locAct.REMOVE_SCHOOL:
+          selectedItem = 'super';
+          break;
+        }
       } else if(data == locAct.EDIT) {
         nextTable = table.togglePopovers(nextTable, data);
         nextTable = table.setAnchor(nextTable, event.currentTarget);
         nextTable = table.resetDialogs(nextTable);
       }
-      this.setState({table: nextTable});
+      this.setState({table: nextTable, selectedItem});
       break;
 
     // Clicked away from popover menu

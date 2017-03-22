@@ -55,9 +55,11 @@ class UsersApi extends Api {
  */
   static updateRole(userId, roleId) {
     const headers = this.requestHeaders();
-    const req = new Request(`/api/users/${userId}/${roleId}`, {
+    const body = this.requestBody({role: roleId});
+    const req = new Request(`/api/users/${userId}/role`, {
       method : 'PUT',
-      headers
+      headers,
+      body
     });
     return fetch(req).then(res => this.parseResponse(res))
     .catch(error => {

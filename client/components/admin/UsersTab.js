@@ -32,13 +32,13 @@ const UsersTab = ({users, ...props}) => {
   if(props.table.get('selectedData').first()) {
     const schoolDropdown = new DropdownModel({
       items    : ['guest', 'teacher', 'manager', 'admin', 'super'],
-      selected : props.selectedItem || 'teacher',
+      selected : props.selectedItem,
       onChange : dropdownHandler
     });
 
     const rolesDropdown = new DropdownModel({
       items    : ['guest', 'teacher', 'manager', 'admin', 'super'],
-      selected : props.selectedItem || 'teacher',
+      selected : props.selectedItem,
       onChange : dropdownHandler
     });
 
