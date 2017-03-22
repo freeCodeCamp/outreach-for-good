@@ -5,6 +5,7 @@ import { List } from 'immutable';
 import * as locAct from './localActions';
 import DialogModel from '../../models/DialogModel';
 import RaisedButtonModel from '../../models/RaisedButtonModel';
+import TextFieldModel from '../../models/TextFieldModel';
 
 const SchoolsTab = ({schools, ...props}) => {
 /**
@@ -20,21 +21,37 @@ const SchoolsTab = ({schools, ...props}) => {
     props.clickHandler('dialogClick', this.value, event); // eslint-disable-line no-invalid-this
   }
 
+  function textFieldHandler(event) {
+    event.preventDefault();
+    props.clickHandler('textFieldEntry', this.value, event); // eslint-disable-line no-invalid-this
+  }
+
   let dialogs = [];
+  let schoolNames = schools.map(i => i.get('name')).toJS();
+
+  const newSchoolTextField = new TextFieldModel({
+    label          : 'School Name',
+    invalidEntries : schoolNames,
+    onChange       : textFieldHandler,
+    errorText      : ''
+  });
+
+  dialogs.push(new DialogModel({
+    title   : 'New Schools',
+    open    : props.table.get('MuiDialogs').get(locAct.NEW_SCHOOL),
+    actions : List([
+      { label: 'Cancel', click: buttonHandler },
+      { label: 'Add', click: buttonHandler, value: locAct.NEW_SCHOOL },
+    ]),
+    text : [<div key='0'>
+      {'Add a new school to the application'}
+      <div key='2' style={{textAlign: 'center'}}>
+      {newSchoolTextField.getTextField(newSchoolTextField, 3)}
+      </div></div>]
+  }));
 
   // Defer building dialogs/dropdowns until something is selected
   if(props.table.get('selectedData').first()) {
-    dialogs.push(new DialogModel({
-      title   : 'New Schools',
-      open    : props.table.get('MuiDialogs').get(locAct.NEW_SCHOOL),
-      actions : List([
-        { label: 'Cancel', click: buttonHandler },
-        { label: 'Add', click: buttonHandler, value: locAct.NEW_SCHOOL },
-      ]),
-      text : [` Add a new school
-      `]
-    }));
-
     dialogs.push(new DialogModel({
       title   : 'Remove Schools',
       open    : props.table.get('MuiDialogs').get(locAct.REMOVE_SCHOOL),
