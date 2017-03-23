@@ -3,7 +3,6 @@ import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import * as recordsActions from '../../actions/recordsActions';
 import {Tabs, Tab} from 'material-ui/Tabs';
-
 import UploadTab from './components/UploadTab';
 import ManageTab from './components/ManageTab';
 
@@ -14,32 +13,43 @@ class RecordsPage extends Component {
     this.state = {
       currentTab : 'upload'
     };
+
+    this.changeTab = this.changeTab.bind(this);
+    this.confirm = this.confirm.bind(this);
+    this.manageRecord = this.manageRecord.bind(this);
   }
 
-  componentDidMount() {
-    this.props.actions.getSchools();
+  componentWillMount() {
+    this.props.actions.fetchSchools();
+    this.props.actions.fetchCurrentRecord();
   }
 
-  confirm(record) {
-    this.props.actions.confirmRecord(record);
+  confirm(record, date) {
+    record.date = date;
+    this.props.actions.postRecord(record);
   }
 
   changeTab(tab) {
-    this.setState({ currentTab : tab });
+    this.setState({ currentTab: tab });
+  }
+
+  manageRecord(schoolId) {
+    this.props.actions.fetchRecordList(schoolId);
   }
 
   render() {
     return (
       <Tabs
         value={this.state.currentTab}
-        onChange={this.changeTab.bind(this)}
+        onChange={this.changeTab}
         >
         <Tab
           label="Upload"
           value="upload">
           <UploadTab
-            changeTab={this.changeTab.bind(this)}
-            confirm={this.confirm.bind(this)}
+            changeTab={this.changeTab}
+            confirm={this.confirm}
+            current={this.props.records.current}
             schools={this.props.records.schools}
           />
         </Tab>
@@ -48,7 +58,8 @@ class RecordsPage extends Component {
           value="manage">
           <ManageTab
             schools={this.props.records.schools}
-            absenceRecords={this.props.records.absenceRecords}
+            manageRecord={this.manageRecord}
+            records={this.props.records.list}
           />
         </Tab>
       </Tabs>
@@ -57,7 +68,8 @@ class RecordsPage extends Component {
 }
 
 RecordsPage.propTypes = {
-  actions : PropTypes.object.isRequired
+  actions : PropTypes.object.isRequired,
+  records : PropTypes.object.isRequired
 };
 
 function mapStateToProps(state) {

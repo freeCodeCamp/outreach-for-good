@@ -1,7 +1,7 @@
 import * as types from '../actions/actionTypes';
-import iState from './initialState';
+import initialState from './initialState';
 
-export default function recordsReducer(state = iState.records, action) {
+export default function recordsReducer(state = initialState.records, action) {
   switch (action.type) {
   case types.CONFIRM_RECORD: {
     return {
@@ -9,25 +9,30 @@ export default function recordsReducer(state = iState.records, action) {
       absenceRecords : [...state.absenceRecords, action.payload]
     };
   }
-  case types.GET_SCHOOLS: {
-    const schools = [
-      {_id: 1001, name: 'School A', triggers: [], active: true},
-      {_id: 1002, name: 'School B', triggers: [], active: true},
-      {_id: 1003, name: 'School C', triggers: [], active: true},
-      {_id: 1004, name: 'School D', triggers: [], active: true}
-    ];
-
+  case types.FETCH_SCHOOLS_SUCCESS: {
+    let schools = action.schools;
     return {
       ...state,
       schools
     };
   }
-  // case types.GET_SCHOOL_RECORD: {
-  //   let schoolRecord = state.absenceRecords.filter(record => record.schoolId === action.payload)
-  //   return {
-  //     ...state,
-  //   };
-  // }
+  case types.FETCH_CURRENT_RECORD_SUCCESS: {
+    let current = action.current;
+    return {
+      ...state,
+      current
+    };
+  }
+  case types.FETCH_RECORD_LIST_SUCCESS: {
+    let list = action.records;
+    return {
+      ...state,
+      list
+    };
+  }
+  case types.POST_RECORD_SUCCESS: {
+    return {...state};
+  }
   default: {
     return state;
   }

@@ -1,5 +1,4 @@
-import React, {Component} from 'react';
-
+import React, {Component, PropTypes} from 'react';
 import LinearProgress from 'material-ui/LinearProgress';
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
@@ -19,11 +18,16 @@ class UploadTab extends Component {
       record               : null,
       school               : 0,
       recordResults        : false,
+      date                 : new Date(),
       recordResultsMessage : ''
     };
 
     this.confirm = this.confirm.bind(this);
     this.cancel = this.cancel.bind(this);
+    this.changeFile = this.changeFile.bind(this);
+    this.changeSchool = this.changeSchool.bind(this);
+    this.changeDate = this.changeDate.bind(this);
+    this.closeSnackbar = this.closeSnackbar.bind(this);
   }
 
   changeSchool(e, i, school) {
@@ -33,12 +37,29 @@ class UploadTab extends Component {
   changeFile(accepted) {
     this.setState({ loadingState: 'indeterminate', loadingValue: null });
     if(accepted) {
-      ParsePDF(this.props.schools[this.state.school], accepted[0])
+      let currentSchool = this.props.schools[this.state.school];
+      let currentRecord = this.props.current.filter(current =>
+        current._id === currentSchool._id
+      )[0];
+      ParsePDF(currentSchool, currentRecord, accepted[0])
       .then(record => {
-        let message = `New Records: ${record.creates.length}, Missing Records: ${record.missingEntries.length}, New Missing Students: ${record.newMissingStudents.length}`;
+        let message = '';
+        if(record.creates) {
+          message += `New records: ${record.creates.length}.`;
+        }
+        if(record.updates) {
+          message += ` Updated records: ${record.updates.length}.`;
+        }
+        if(record.missingEntries.length) {
+          message += ` Missing Records: ${record.missingEntries.length}.`;
+        }
+        if(record.newMissingStudents.length) {
+          message += `New Missing Students: ${record.newMissingStudents.length}.`;
+        }
 
         this.setState({
           record,
+          date                 : new Date(),
           recordResults        : true,
           recordResultsMessage : message,
           loadingState         : 'determinate',
@@ -48,10 +69,14 @@ class UploadTab extends Component {
     }
   }
 
+  changeDate(e, date) {
+    this.setState({ date });
+  }
+
   confirm() {
-    this.props.confirm(this.state.record);
+    this.props.confirm(this.state.record, this.state.date);
     this.cancel();
-    this.props.changeTab('manage');
+    // this.props.changeTab('manage');
   }
 
   cancel() {
@@ -73,7 +98,7 @@ class UploadTab extends Component {
             <SelectField
               floatingLabelText="Select a school..."
               value={this.state.school}
-              onChange={this.changeSchool.bind(this)}
+              onChange={this.changeSchool}
               fullWidth
               >
               {this.props.schools.map((school, i) =>
@@ -84,17 +109,18 @@ class UploadTab extends Component {
                 )}
             </SelectField>
             <DatePicker
-              defaultDate={new Date()}
+              value={this.state.date}
+              onChange={this.changeDate}
               hintText="Landscape Inline Dialog"
               container="inline"
               mode="landscape"
-              maxDate={new Date}
+              maxDate={new Date()}
               fullWidth
             />
           </div>
           <div className="column">
             <Dropzone
-              onDrop={this.changeFile.bind(this)}
+              onDrop={this.changeFile}
               multiple={false}
               accept="application/pdf"
               className="dropzone">
@@ -102,25 +128,33 @@ class UploadTab extends Component {
             </Dropzone>
           </div>
         </div>
-        <LinearProgress
-          mode={this.state.loadingState}
-          value={this.state.loadingValue}
-        />
-        {this.state.record ?
-          <AbsenceRecordsTable
+        {this.state.loadingValue > 0
+          && <LinearProgress
+            mode={this.state.loadingState}
+            value={this.state.loadingValue}
+          />}
+        {this.state.record
+          && <AbsenceRecordsTable
             confirm={this.confirm}
             cancel={this.cancel}
             record={this.state.record}
-            uploadTab={true}
-          /> : ''}
+            uploadTab
+          />}
         <Snackbar
           open={this.state.recordResults}
           message={this.state.recordResultsMessage}
-          autoHideDuration="3000"
-          onRequestClose={this.closeSnackbar.bind(this)}
+          autoHideDuration={3000}
+          onRequestClose={this.closeSnackbar}
         />
       </div>
     );
   }
 }
+
+UploadTab.propTypes = {
+  schools : PropTypes.array.isRequired,
+  current : PropTypes.array.isRequired,
+  confirm : PropTypes.func
+};
+
 export default UploadTab;

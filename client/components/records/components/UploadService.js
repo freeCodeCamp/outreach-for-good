@@ -8,24 +8,24 @@ function groupByType(students, idKeys) {
 }
 
 function createOutreaches(entry, prevEntry, school, schoolYear) {
-  if (!entry.absencesDelta) {
+  if(!entry.absencesDelta) {
     return [];
   }
   var prevTotal = prevEntry.absences || 0;
   return _(school.triggers)
     .filter(function(trigger) {
-      return trigger.absences > prevTotal &&
-             trigger.absences <= entry.absences;
+      return trigger.absences > prevTotal
+        && trigger.absences <= entry.absences;
     })
     .map(function(trigger) {
       return {
-        type: trigger.type,
-        tier: trigger.tier,
-        absences: trigger.absences,
-        student: entry.student,
-        school: school._id,
-        schoolYear: schoolYear,
-        withdrawn: !!(prevEntry.student || {}).withdrawn
+        type      : trigger.type,
+        tier      : trigger.tier,
+        absences  : trigger.absences,
+        student   : entry.student,
+        school    : school._id,
+        schoolYear,
+        withdrawn : !!(prevEntry.student || {}).withdrawn
       };
     })
     .value();
@@ -44,18 +44,16 @@ function handleSameSchoolYear(prevRecord, partialRecord, school) {
     // Updates use previous entry to calculate deltas.
     entry.tardiesDelta = entry.tardies - prevEntry.tardies;
     entry.absencesDelta = entry.absences - prevEntry.absences;
-    entry.outreaches =
-      createOutreaches(entry, prevEntry, school, record.schoolYear);
+    entry.outreaches = createOutreaches(entry, prevEntry, school, record.schoolYear);
   });
-  record.missingEntries =
-    _.differenceBy(combinedEntries, partialRecord.students || [],
+  record.missingEntries = _.differenceBy(combinedEntries, partialRecord.students || [],
       'student.studentId');
   record.newMissingStudents = _(record.missingEntries || [])
     .differenceBy(prevRecord.missingEntries || [], 'student.studentId')
     .map('student._id')
     .value();
   _.forEach(record.missingEntries, function(missingEntry) {
-    if (!missingEntry.date) {
+    if(!missingEntry.date) {
       missingEntry.date = prevRecord.date;
     }
   });
@@ -84,12 +82,12 @@ function handleNewSchoolYear(prevRecord, partialRecord, school) {
   return record;
 }
 
-function completeRecord(school, partialRecord) {
-  var school = school;
-  var previousRecord = {};
-  var record = (partialRecord.schoolYear === previousRecord.schoolYear) ?
-               handleSameSchoolYear(previousRecord, partialRecord, school) :
-               handleNewSchoolYear(previousRecord, partialRecord, school);
+function completeRecord(school, previousRecord, partialRecord) {
+  // TODO: If there is no previous record an error is thrown.
+  var record = partialRecord.schoolYear === previousRecord.schoolYear
+    ? handleSameSchoolYear(previousRecord, partialRecord, school)
+    : handleNewSchoolYear(previousRecord, partialRecord, school);
+
   _.forEach(record.creates || [], function(create) {
     var entry = create.entry;
     entry.tardiesDelta = entry.tardies;
@@ -98,7 +96,7 @@ function completeRecord(school, partialRecord) {
   });
   record.schoolId = school._id;
   record.previousRecordId = previousRecord.recordId;
-  console.log('record:', record)
+  // console.log('record:', record)
   return record;
 }
 
@@ -125,10 +123,10 @@ function parse(items) {
         entry : {
           enrolled : items[idx + 1 + !sid], // Membership
           absences : items[idx + 2 + !sid], // Absent Days
-          present : items[idx + 3 + !sid], // Present Days
+          present  : items[idx + 3 + !sid], // Present Days
           // ADM: items[idx + 4], uncomment if needed
           // ADA: items[idx + 5], uncomment if needed
-          tardies : items[idx + 6 + !sid] // unexcused Days
+          tardies  : items[idx + 6 + !sid] // unexcused Days
         }
       });
     }
@@ -144,7 +142,7 @@ function parse(items) {
   }
 }
 
-export default function ParsePDF(school, file) {
+export default function ParsePDF(school, previousRecord, file) {
   let promise = new Promise((resolve, reject) => {
     if(file) {
       let reader = new FileReader();
@@ -162,12 +160,12 @@ export default function ParsePDF(school, file) {
                 });
               });
             });
-          })).then(function(pages) {
-            var items = [].concat.apply([], pages);
+          })).then(function(allPages) {
+            var items = [].concat.apply([], allPages);
 
             try {
               let partial = parse(items);
-              let complete = completeRecord(school, partial);
+              let complete = completeRecord(school, previousRecord, partial);
               resolve(complete);
             } catch(e) {
               // PDF data format error.

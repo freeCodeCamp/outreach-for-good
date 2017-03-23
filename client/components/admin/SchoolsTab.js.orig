@@ -5,7 +5,10 @@ import { List } from 'immutable';
 import * as locAct from './localActions';
 import DialogModel from '../../models/DialogModel';
 import RaisedButtonModel from '../../models/RaisedButtonModel';
+<<<<<<< HEAD
 import TextFieldModel from '../../models/TextFieldModel';
+=======
+>>>>>>> devel
 
 const SchoolsTab = ({schools, ...props}) => {
 /**
@@ -21,6 +24,7 @@ const SchoolsTab = ({schools, ...props}) => {
     props.clickHandler('dialogClick', this.value, event); // eslint-disable-line no-invalid-this
   }
 
+<<<<<<< HEAD
   function textFieldHandler(event, newValue) {
     event.preventDefault();
     props.clickHandler('textFieldChange', newValue, event); // eslint-disable-line no-invalid-this
@@ -54,10 +58,27 @@ const SchoolsTab = ({schools, ...props}) => {
       {newSchoolTextField.getTextField(newSchoolTextField, 3)}
       </div></div>]
   }));
+=======
+  let dialogs = [];
+>>>>>>> devel
 
   // Defer building dialogs/dropdowns until something is selected
   if(props.table.get('selectedData').first()) {
     dialogs.push(new DialogModel({
+<<<<<<< HEAD
+=======
+      title   : 'New Schools',
+      open    : props.table.get('MuiDialogs').get(locAct.NEW_SCHOOL),
+      actions : List([
+        { label: 'Cancel', click: buttonHandler },
+        { label: 'Add', click: buttonHandler, value: locAct.NEW_SCHOOL },
+      ]),
+      text : [` Add a new school
+      `]
+    }));
+
+    dialogs.push(new DialogModel({
+>>>>>>> devel
       title   : 'Remove Schools',
       open    : props.table.get('MuiDialogs').get(locAct.REMOVE_SCHOOL),
       actions : List([
@@ -83,8 +104,12 @@ const SchoolsTab = ({schools, ...props}) => {
   const newButton = new RaisedButtonModel({
     label           : 'New',
     backgroundColor : '#009d9d',
+<<<<<<< HEAD
     actionID        : locAct.NEW_SCHOOL,
     disabled        : false
+=======
+    actionID        : locAct.NEW_SCHOOL
+>>>>>>> devel
   });
 
   const removeButton = new RaisedButtonModel({
@@ -126,7 +151,11 @@ const SchoolsTab = ({schools, ...props}) => {
 SchoolsTab.propTypes = {
   schools      : PropTypes.instanceOf(List).isRequired,
   table        : PropTypes.object.isRequired,
+<<<<<<< HEAD
   formState    : PropTypes.object.isRequired,
+=======
+  selectedItem : PropTypes.string.isRequired,
+>>>>>>> devel
   clickHandler : PropTypes.func.isRequired,
 };
 

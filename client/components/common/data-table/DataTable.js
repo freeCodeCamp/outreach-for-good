@@ -2,6 +2,9 @@ import React, { PropTypes } from 'react';
 import { Table, Column, Cell } from 'fixed-data-table-2';
 import DataTableRow from './DataTableRow';
 
+import { List } from 'immutable';
+import TableModel from '../../../models/TableModel';
+
 import Paper from 'material-ui/Paper';
 import RaisedButton from 'material-ui/RaisedButton';
 
@@ -11,26 +14,21 @@ import MenuItem from 'material-ui/MenuItem';
 
 import Dialog from 'material-ui/Dialog';
 
-const DataTable = ({page, table, column, data, ...props}) => {
-  if(!page.button) page.button = [];
+const DataTable = ({page, table, data, ...props}) => {
 
   let row = {
-    selected : props.selectedRows,
+    selected : table.get('selectedIndex'),
     isSelected(index) {
-      return row.selected.indexOf(index) !== -1
+      return row.selected.includes(index)
         ? 'selected-row' : '';
     },
     toggleSelected(event, index) {
-      let location = row.selected.indexOf(index);
-      location === -1 ? row.selected.push(index)
-        : row.selected.splice(location, 1);
-      props.clickHandler('toggleSelected', row.selected);
+      props.clickHandler('toggleSelected', index);
     }
   };
 
   function buttonHandler(event) {
     event.preventDefault();
-    //console.log(event);
     props.clickHandler('buttonClick', this.value, event); // eslint-disable-line no-invalid-this
   }
 
@@ -52,29 +50,29 @@ const DataTable = ({page, table, column, data, ...props}) => {
             .map((button, index) =>
             <div key={index} style={{display: 'inline'}}>
               <RaisedButton
-                label={button.label}
-                labelColor={button.labelColor}
-                value={button.triggerID || ''}
-                primary={button.primary || false}
-                secondary={button.secondary || false}
-                backgroundColor={button.backgroundColor}
+                label={button.get('label')}
+                labelColor={button.get('labelColor')}
+                value={button.get('actionID') || ''}
+                primary={button.get('primary') || false}
+                secondary={button.get('secondary') || false}
+                backgroundColor={button.get('backgroundColor')}
                 style={{marginLeft: '10px'}}
-                disabled={row.selected.length == 0}
+                disabled={row.selected.size == 0 && button.get('disabled')}
                 onClick={buttonHandler}
               />
-              {button.menu
+              {button.get('menu').open
                 && <Popover
-                  open={button.menu.open}
-                  anchorEl={props.openMenus.anchor}
+                  open={button.get('menu').open}
+                  anchorEl={table.get('MuiAnchor')}
                   anchorOrigin={{horizontal: 'right', vertical: 'bottom'}}
                   targetOrigin={{horizontal: 'right', vertical: 'top'}}
                   onRequestClose={popoverClose}
                 >
                   <Menu>
-                    {button.menu.item.map((item, i) =>
+                    {button.get('menu').item.map((item, i) =>
                       <MenuItem
                         primaryText={item.text}
-                        value={item.triggerID}
+                        value={item.actionID}
                         onTouchTap={menuItemHandler}
                         key={i}
                       />
@@ -87,34 +85,43 @@ const DataTable = ({page, table, column, data, ...props}) => {
           {page.dialogs && page.dialogs
             .map((dialog, index) =>
               <Dialog
-                title={dialog.title}
-                actions={dialog.actions}
+                title={dialog.get('title')}
+                actions={dialog.get('actions')
+                  .map((v, i) => dialog.getActionButton(
+                    v.label, v.click, i, v.value, v.disabled
+                  ))
+                }
                 modal
-                open={dialog.open}
+                open={dialog.get('open')}
+                onRequestClose={popoverClose}
                 key={index}
+                titleClassName='dialog-title'
+                bodyClassName='dialog-body'
+                contentClassName='dialog-content'
               >
-                Only actions can close this dialog.
+                {dialog.text}
               </Dialog>
             )}
         </div>
       </div>
       <Paper className="display-paper">
         <Table
-          rowHeight={table.rowHeight || 30}
-          headerHeight={table.headerHeight || 30}
-          rowsCount={data.length}
-          width={table.width}
-          maxHeight={table.maxHeight}
+          rowHeight={table.get('rowHeight') || 30}
+          headerHeight={table.get('headerHeight') || 30}
+          rowsCount={data.size}
+          width={props.view.width}
+          maxHeight={props.view.height}
           onRowClick={row.toggleSelected}
           rowClassNameGetter={row.isSelected}
         >
-        {column
+        {page.columns && page.columns
           .map(col =>
           <Column
             header={
               <Cell>
                 {col.title}
-                {/*<br />
+                {/* // This will be the filter for cols
+                <br />
                 <input type='text' style={{width: '100%'}} />*/}
               </Cell>
               }
@@ -132,11 +139,11 @@ const DataTable = ({page, table, column, data, ...props}) => {
 };
 
 DataTable.propTypes = {
+  view         : PropTypes.object.isRequired,
   page         : PropTypes.object.isRequired,
-  table        : PropTypes.object.isRequired,
-  column       : PropTypes.array.isRequired,
-  data         : PropTypes.array.isRequired,
-  selectedRows : PropTypes.array
+  table        : PropTypes.instanceOf(TableModel).isRequired,
+  data         : PropTypes.instanceOf(List).isRequired,
+  selectedRows : PropTypes.object
 };
 
 export default DataTable;

@@ -32,13 +32,21 @@ const UsersTab = ({users, ...props}) => {
   if(props.table.get('selectedData').first()) {
     const schoolDropdown = new DropdownModel({
       items    : ['guest', 'teacher', 'manager', 'admin', 'super'],
+<<<<<<< HEAD
       selected : props.formState.selectedItem,
+=======
+      selected : props.selectedItem,
+>>>>>>> devel
       onChange : dropdownHandler
     });
 
     const rolesDropdown = new DropdownModel({
       items    : ['guest', 'teacher', 'manager', 'admin', 'super'],
+<<<<<<< HEAD
       selected : props.formState.selectedItem,
+=======
+      selected : props.selectedItem,
+>>>>>>> devel
       onChange : dropdownHandler
     });
 
@@ -155,7 +163,7 @@ const UsersTab = ({users, ...props}) => {
     ]
   };
 
-    return (
+  return (
     <div>
       <DataTable
         page={page}
@@ -169,7 +177,11 @@ const UsersTab = ({users, ...props}) => {
 UsersTab.propTypes = {
   users        : PropTypes.instanceOf(List).isRequired,
   table        : PropTypes.object.isRequired,
+<<<<<<< HEAD
   formState    : PropTypes.object.isRequired,
+=======
+  selectedItem : PropTypes.string.isRequired,
+>>>>>>> devel
   clickHandler : PropTypes.func.isRequired,
 };
 

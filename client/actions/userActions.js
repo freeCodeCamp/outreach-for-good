@@ -10,6 +10,9 @@ export function loadUsersSuccess(users) {
 // Each returns a function that accepts a dispatch.
 // These are used by redux-thunk to support asynchronous interactions.
 
+/**
+ * Get my record, allowed for all registered users
+ */
 export function getMyself() {
   return function(dispatch) {
     return userAPI.getMyself().then(users => {
@@ -19,6 +22,7 @@ export function getMyself() {
   };
 }
 
+// Not Tested
 export function getUser(userId) {
   return function(dispatch) {
     return userAPI.getUser(userId).then(users => {
@@ -28,24 +32,38 @@ export function getUser(userId) {
   };
 }
 
+/**
+ * Get a list of all users
+ */
 export function getAllUsers() {
   return function(dispatch) {
-    return userAPI.getUsers().then(users => {
-      dispatch(loadUsersSuccess(users));
+    return userAPI.getUsers().then(res => {
+      //console.log('getAllUsers API: ', res);
+      return dispatch(loadUsersSuccess(res));
     })
     .catch(err => handleError(err, dispatch));
   };
 }
 
+/**
+ * Modify users role
+ * @input:  ary   _id
+ * @input:  str   guest|teacher|manager|admin|super
+ */
 export function updateUserRole(userId, roleId) {
   return function(dispatch) {
-    return userAPI.updateRole(userId, roleId).then(users => {
-      dispatch(loadUsersSuccess(users));
-    })
+    let promises = userId.map(user => userAPI.updateRole(user, roleId));
+    return Promise.all(promises)
+    .then(() => dispatch(getAllUsers()))
     .catch(err => handleError(err, dispatch));
   };
 }
 
+/**
+ * Modify users assigned school
+ * @input:  ary   _id
+ * @input:  str   _id  (assigned school)
+ */
 export function updateUserSchool(userId, schoolId) {
   return function(dispatch) {
     return userAPI.updateSchool(userId, schoolId).then(users => {
@@ -55,11 +73,15 @@ export function updateUserSchool(userId, schoolId) {
   };
 }
 
+/**
+ * Remove users from the database
+ * @input:  ary   _id
+ */
 export function removeUser(userId) {
   return function(dispatch) {
-    return userAPI.removeUser(userId).then(users => {
-      dispatch(loadUsersSuccess(users));
-    })
+    let promises = userId.map(user => userAPI.removeUser(user));
+    return Promise.all(promises)
+    .then(() => dispatch(getAllUsers()))
     .catch(err => handleError(err, dispatch));
   };
 }

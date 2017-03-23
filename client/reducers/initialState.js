@@ -17,6 +17,10 @@ export default {
   },
   records : {
     schools : [],
-    absenceRecords : []
+    current : [],
+    list    : []
+  },
+  student : {
+    record : {}
   }
 };

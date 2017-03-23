@@ -1,14 +1,14 @@
 import Api from './Api';
 
-class UsersApi extends Api {
+class SchoolsApi extends Api {
 
 /**
  * Get my info
  */
-  static getMyself() {
+  static getSchoolNames() {
     const headers = this.requestHeaders();
     //console.log(headers)
-    const req = new Request('/api/users/me', {
+    const req = new Request('/api/schools/name', {
       method : 'GET',
       headers
     });
@@ -19,11 +19,11 @@ class UsersApi extends Api {
   }
 
 /**
- * Get a single user
+ * Get a single school
  */
-  static getUser(userId) {
+  static getSchool(schoolId) {
     const headers = this.requestHeaders();
-    const req = new Request(`/api/users/${userId}`, {
+    const req = new Request(`/api/schools/${schoolId}`, {
       method : 'GET',
       headers
     });
@@ -34,12 +34,12 @@ class UsersApi extends Api {
   }
 
 /**
- * Get list of users
+ * Get list of schools
  * restriction: 'admin'
  */
-  static getUsers() {
+  static getSchools() {
     const headers = this.requestHeaders();
-    const req = new Request('/api/users/', {
+    const req = new Request('/api/schools/', {
       method : 'GET',
       headers
     });
@@ -50,44 +50,26 @@ class UsersApi extends Api {
   }
 
 /**
- * Change a user's role.
+ * Adds a school
  * restriction: 'admin'
  */
-  static updateRole(userId, roleId) {
+  static addSchool(schoolName) {
     const headers = this.requestHeaders();
-    const body = this.requestBody({role: roleId});
-    const req = new Request(`/api/users/${userId}/role`, {
-      method : 'PUT',
-      headers,
-      body
-    });
-    return fetch(req).then(res => this.parseResponse(res))
-    .catch(error => {
-      throw error;
-    });
-  }
-
-/**
- * Change a user's assigned school.
- * restriction: 'admin'
- */
-  static updateSchool(userId, schoolId) {
-    const headers = this.requestHeaders();
-    const req = new Request(`/api/users/${userId}/${schoolId}`, {
-      method : 'PUT',
+    const req = new Request(`/api/schools/${schoolName}`, {
+      method : 'POST',
       headers
     });
-    return fetch(req).then(res => this.parseResponse(res))
+    return fetch(req).then(res => this.parseResponse(res, 'POST'))
     .catch(error => error);
   }
 
 /**
- * Deletes a user
+ * Deletes a school
  * restriction: 'admin'
  */
-  static removeUser(userId) {
+  static removeSchool(schoolId) {
     const headers = this.requestHeaders();
-    const req = new Request(`/api/users/${userId}`, {
+    const req = new Request(`/api/schools/${schoolId}`, {
       method : 'DELETE',
       headers
     });
@@ -96,4 +78,4 @@ class UsersApi extends Api {
   }
 }
 
-export default UsersApi;
+export default SchoolsApi;
