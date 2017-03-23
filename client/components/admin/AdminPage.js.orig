@@ -21,11 +21,15 @@ class AdminPage extends React.Component {
     // Register Initial Component State
     let nextTable = this.initializeTable('users');
     this.state = Object.assign({ table: nextTable }, {
+<<<<<<< HEAD
       formState : {
         selectedItem   : '',
         submitDisabled : true,
         error          : {}
       }
+=======
+      selectedItem : ''
+>>>>>>> devel
     });
 
     this.initializeTable = this.initializeTable.bind(this);
@@ -36,13 +40,45 @@ class AdminPage extends React.Component {
 
   componentWillReceiveProps() {
     this.setState({
+<<<<<<< HEAD
       table     : this.state.table,
       formState : {
         selectedItem   : '',
         submitDisabled : true,
         error          : {}
       }
+=======
+      table        : this.state.table,
+      selectedItem : ''
     });
+  }
+
+  initializeTable(currentTab) {
+    let nextTable;
+    switch (currentTab) {
+    case 'users':
+      this.props.usrAct.getAllUsers();
+      nextTable = table.setSelectedTab(table, 'users');
+      break;
+    case 'schools':
+      this.props.schAct.getAllSchools();
+      nextTable = table.setSelectedTab(table, 'schools');
+      break;
+    }
+    // All tabs initialize on section-load
+    nextTable = table.addPopovers(nextTable, {
+      [locAct.EDIT] : false
+    });
+    nextTable = table.addDialogs(nextTable, {
+      [locAct.EDIT_SCHOOL]   : false,
+      [locAct.EDIT_ROLE]     : false,
+      [locAct.REMOVE_USER]   : false,
+      [locAct.NEW_SCHOOL]    : false,
+      [locAct.REMOVE_SCHOOL] : false
+>>>>>>> devel
+    });
+
+    return nextTable;
   }
 
   initializeTable(currentTab) {
@@ -96,12 +132,21 @@ class AdminPage extends React.Component {
         switch (data) {
         case locAct.EDIT_SCHOOL:
           users = this.state.table.get('selectedData').map(row => row._id);
+<<<<<<< HEAD
           //console.log(users.toArray(), this.state.formState.selectedItem)
           this.props.usrAct.updateUserSchool(users.toArray(), this.state.formState.selectedItem);
           break;
         case locAct.EDIT_ROLE:
           users = this.state.table.get('selectedData').map(row => row._id);
           this.props.usrAct.updateUserRole(users.toArray(), this.state.formState.selectedItem);
+=======
+          //console.log(users.toArray(), this.state.selectedItem)
+          this.props.usrAct.updateUserSchool(users.toArray(), this.state.selectedItem);
+          break;
+        case locAct.EDIT_ROLE:
+          users = this.state.table.get('selectedData').map(row => row._id);
+          this.props.usrAct.updateUserRole(users.toArray(), this.state.selectedItem);
+>>>>>>> devel
           break;
         case locAct.REMOVE_USER:
           users = this.state.table.get('selectedData')
@@ -126,12 +171,17 @@ class AdminPage extends React.Component {
     case 'buttonClick':
       nextTable = table.setSelectedRowData(this.state.table,
         this.getSelectedRowData());
+<<<<<<< HEAD
       let formState = this.state.formState;
+=======
+      let selectedItem = '';
+>>>>>>> devel
       if(locAct.DIALOG_LIST.indexOf(data) != -1) {
         nextTable = table.toggleDialogs(nextTable, data);
         nextTable = table.resetPopovers(nextTable);
         switch (data) {
         case locAct.EDIT_SCHOOL:
+<<<<<<< HEAD
           formState = Object.assign(this.state.formState, {
             selectedItem : 'super'
           });
@@ -155,6 +205,21 @@ class AdminPage extends React.Component {
           formState = Object.assign(this.state.formState, {
             selectedItem : 'super'
           });
+=======
+          selectedItem = 'super';
+          break;
+        case locAct.EDIT_ROLE:
+          selectedItem = 'super';
+          break;
+        case locAct.REMOVE_USER:
+          selectedItem = 'super';
+          break;
+        case locAct.NEW_SCHOOL:
+          selectedItem = 'super';
+          break;
+        case locAct.REMOVE_SCHOOL:
+          selectedItem = 'super';
+>>>>>>> devel
           break;
         }
       } else if(data == locAct.EDIT) {
@@ -162,7 +227,11 @@ class AdminPage extends React.Component {
         nextTable = table.setAnchor(nextTable, event.currentTarget);
         nextTable = table.resetDialogs(nextTable);
       }
+<<<<<<< HEAD
       this.setState({table: nextTable, formState});
+=======
+      this.setState({table: nextTable, selectedItem});
+>>>>>>> devel
       break;
 
     // Clicked away from popover menu
@@ -173,6 +242,7 @@ class AdminPage extends React.Component {
       break;
 
     case 'dropdownChange':
+<<<<<<< HEAD
       this.setState(Object.assign(this.state.formState, {
         selectedItem : data
       }));
@@ -187,6 +257,11 @@ class AdminPage extends React.Component {
         }));
         break;
       }
+=======
+      this.setState({
+        selectedItem : data
+      });
+>>>>>>> devel
       break;
     }
   }
@@ -220,7 +295,11 @@ class AdminPage extends React.Component {
             }}
             users = {this.props.users}
             table = {this.state.table}
+<<<<<<< HEAD
             formState = {this.state.formState}
+=======
+            selectedItem = {this.state.selectedItem}
+>>>>>>> devel
             clickHandler = {this.clickHandler}
           />
         </Tab>
@@ -236,7 +315,11 @@ class AdminPage extends React.Component {
             }}
             schools = {this.props.schools}
             table = {this.state.table}
+<<<<<<< HEAD
             formState = {this.state.formState}
+=======
+            selectedItem = {this.state.selectedItem}
+>>>>>>> devel
             clickHandler = {this.clickHandler}
           />
         </Tab>
