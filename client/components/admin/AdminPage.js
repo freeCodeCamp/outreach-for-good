@@ -21,7 +21,11 @@ class AdminPage extends React.Component {
     // Register Initial Component State
     let nextTable = this.initializeTable('users');
     this.state = Object.assign({ table: nextTable }, {
-      selectedItem : ''
+      formState : {
+        selectedItem   : '',
+        submitDisabled : true,
+        error          : {}
+      }
     });
 
     this.initializeTable = this.initializeTable.bind(this);
@@ -32,8 +36,12 @@ class AdminPage extends React.Component {
 
   componentWillReceiveProps() {
     this.setState({
-      table        : this.state.table,
-      selectedItem : ''
+      table     : this.state.table,
+      formState : {
+        selectedItem   : '',
+        submitDisabled : true,
+        error          : {}
+      }
     });
   }
 
@@ -88,12 +96,12 @@ class AdminPage extends React.Component {
         switch (data) {
         case locAct.EDIT_SCHOOL:
           users = this.state.table.get('selectedData').map(row => row._id);
-          //console.log(users.toArray(), this.state.selectedItem)
-          this.props.usrAct.updateUserSchool(users.toArray(), this.state.selectedItem);
+          //console.log(users.toArray(), this.state.formState.selectedItem)
+          this.props.usrAct.updateUserSchool(users.toArray(), this.state.formState.selectedItem);
           break;
         case locAct.EDIT_ROLE:
           users = this.state.table.get('selectedData').map(row => row._id);
-          this.props.usrAct.updateUserRole(users.toArray(), this.state.selectedItem);
+          this.props.usrAct.updateUserRole(users.toArray(), this.state.formState.selectedItem);
           break;
         case locAct.REMOVE_USER:
           users = this.state.table.get('selectedData')
@@ -118,25 +126,35 @@ class AdminPage extends React.Component {
     case 'buttonClick':
       nextTable = table.setSelectedRowData(this.state.table,
         this.getSelectedRowData());
-      let selectedItem = '';
+      let formState = this.state.formState;
       if(locAct.DIALOG_LIST.indexOf(data) != -1) {
         nextTable = table.toggleDialogs(nextTable, data);
         nextTable = table.resetPopovers(nextTable);
         switch (data) {
         case locAct.EDIT_SCHOOL:
-          selectedItem = 'super';
+          formState = Object.assign(this.state.formState, {
+            selectedItem : 'super'
+          });
           break;
         case locAct.EDIT_ROLE:
-          selectedItem = 'super';
+          formState = Object.assign(this.state.formState, {
+            selectedItem : 'teacher'
+          });
           break;
         case locAct.REMOVE_USER:
-          selectedItem = 'super';
+          formState = Object.assign(this.state.formState, {
+            selectedItem : 'super'
+          });
           break;
         case locAct.NEW_SCHOOL:
-          selectedItem = 'super';
+          formState = Object.assign(this.state.formState, {
+            submitButtonEnabled : false
+          });
           break;
         case locAct.REMOVE_SCHOOL:
-          selectedItem = 'super';
+          formState = Object.assign(this.state.formState, {
+            selectedItem : 'super'
+          });
           break;
         }
       } else if(data == locAct.EDIT) {
@@ -144,7 +162,7 @@ class AdminPage extends React.Component {
         nextTable = table.setAnchor(nextTable, event.currentTarget);
         nextTable = table.resetDialogs(nextTable);
       }
-      this.setState({table: nextTable, selectedItem});
+      this.setState({table: nextTable, formState});
       break;
 
     // Clicked away from popover menu
@@ -155,9 +173,20 @@ class AdminPage extends React.Component {
       break;
 
     case 'dropdownChange':
-      this.setState({
+      this.setState(Object.assign(this.state.formState, {
         selectedItem : data
-      });
+      }));
+      break;
+
+    case 'textFieldChange':
+      switch (event.target.id) {
+      case locAct.NEW_SCHOOL:
+        let submitDisabled = data.length == 0;
+        this.setState(Object.assign(this.state.formState, {
+          submitDisabled
+        }));
+        break;
+      }
       break;
     }
   }
@@ -191,7 +220,7 @@ class AdminPage extends React.Component {
             }}
             users = {this.props.users}
             table = {this.state.table}
-            selectedItem = {this.state.selectedItem}
+            formState = {this.state.formState}
             clickHandler = {this.clickHandler}
           />
         </Tab>
@@ -207,7 +236,7 @@ class AdminPage extends React.Component {
             }}
             schools = {this.props.schools}
             table = {this.state.table}
-            selectedItem = {this.state.selectedItem}
+            formState = {this.state.formState}
             clickHandler = {this.clickHandler}
           />
         </Tab>

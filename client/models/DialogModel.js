@@ -16,12 +16,13 @@ class DialogModel extends Dialog {
     return currentState.update('MuiDialogs', i => i.clear().merge(dialogValues));
   }
 
-  getActionButton(label, onTouchTap, key, value = '') {
+  getActionButton(label, onTouchTap, key, value = '', disabled = false) {
     return <FlatButton
       label={label}
       primary
       onTouchTap={onTouchTap}
       value={value}
+      disabled={disabled}
       key={key}
     />;
   }

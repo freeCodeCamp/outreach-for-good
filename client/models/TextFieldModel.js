@@ -3,9 +3,10 @@ import Immutable from 'immutable';
 import TextField from 'material-ui/TextField';
 
 export const Text = Immutable.Record({
-  label    : '',
-  selected : [],
-  onChange : ''
+  label     : '',
+  id        : '',
+  onChange  : '',
+  errorText : ''
 });
 
 class TextFieldModel extends Text {
@@ -18,6 +19,10 @@ class TextFieldModel extends Text {
     return <TextField
         floatingLabelText={currentState.label}
         floatingLabelStyle={{fontWeight: 'normal'}}
+        id={currentState.id}
+        name={currentState.id}
+        onChange={currentState.onChange}
+        errorText={currentState.errorText}
         key={key}
       />;
   }

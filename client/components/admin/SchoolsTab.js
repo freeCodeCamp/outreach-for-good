@@ -21,27 +21,32 @@ const SchoolsTab = ({schools, ...props}) => {
     props.clickHandler('dialogClick', this.value, event); // eslint-disable-line no-invalid-this
   }
 
-  function textFieldHandler(event) {
+  function textFieldHandler(event, newValue) {
     event.preventDefault();
-    props.clickHandler('textFieldEntry', this.value, event); // eslint-disable-line no-invalid-this
+    props.clickHandler('textFieldChange', newValue, event); // eslint-disable-line no-invalid-this
   }
 
   let dialogs = [];
   let schoolNames = schools.map(i => i.get('name')).toJS();
 
   const newSchoolTextField = new TextFieldModel({
-    label          : 'School Name',
-    invalidEntries : schoolNames,
-    onChange       : textFieldHandler,
-    errorText      : ''
+    label     : 'School Name',
+    id        : locAct.NEW_SCHOOL,
+    onChange  : textFieldHandler,
+    errorText : props.formState.error.NewSchool
   });
 
   dialogs.push(new DialogModel({
-    title   : 'New Schools',
+    title   : 'New School',
     open    : props.table.get('MuiDialogs').get(locAct.NEW_SCHOOL),
     actions : List([
       { label: 'Cancel', click: buttonHandler },
-      { label: 'Add', click: buttonHandler, value: locAct.NEW_SCHOOL },
+      {
+        label    : 'Add',
+        click    : buttonHandler,
+        value    : locAct.NEW_SCHOOL,
+        disabled : props.formState.submitDisabled
+      },
     ]),
     text : [<div key='0'>
       {'Add a new school to the application'}
@@ -121,7 +126,7 @@ const SchoolsTab = ({schools, ...props}) => {
 SchoolsTab.propTypes = {
   schools      : PropTypes.instanceOf(List).isRequired,
   table        : PropTypes.object.isRequired,
-  selectedItem : PropTypes.string.isRequired,
+  formState    : PropTypes.object.isRequired,
   clickHandler : PropTypes.func.isRequired,
 };
 

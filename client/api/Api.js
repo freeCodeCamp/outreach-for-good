@@ -27,6 +27,7 @@ class Api {
   static parseResponse(res, reqType = 'GET') {
     let status = res.status;
     if(status >= 400 && status < 500) {
+      console.log('Leaving this message in until I figure out how to catch 401s')
       throw res;
     } else if(status >= 300 && status < 400) {
       throw res;
