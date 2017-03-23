@@ -27,13 +27,12 @@ const SchoolsTab = ({schools, ...props}) => {
   }
 
   let dialogs = [];
-  let schoolNames = schools.map(i => i.get('name')).toJS();
 
   const newSchoolTextField = new TextFieldModel({
     label     : 'School Name',
     id        : locAct.NEW_SCHOOL,
     onChange  : textFieldHandler,
-    errorText : props.formState.error.NewSchool
+    errorText : props.form.get('error').get('newSchool')
   });
 
   dialogs.push(new DialogModel({
@@ -45,7 +44,7 @@ const SchoolsTab = ({schools, ...props}) => {
         label    : 'Add',
         click    : buttonHandler,
         value    : locAct.NEW_SCHOOL,
-        disabled : props.formState.submitDisabled
+        disabled : props.form.get('submitDisabled')
       },
     ]),
     text : [<div key='0'>
@@ -126,7 +125,7 @@ const SchoolsTab = ({schools, ...props}) => {
 SchoolsTab.propTypes = {
   schools      : PropTypes.instanceOf(List).isRequired,
   table        : PropTypes.object.isRequired,
-  formState    : PropTypes.object.isRequired,
+  form         : PropTypes.object.isRequired,
   clickHandler : PropTypes.func.isRequired,
 };
 

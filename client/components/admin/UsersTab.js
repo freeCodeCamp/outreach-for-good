@@ -30,15 +30,16 @@ const UsersTab = ({users, ...props}) => {
 
   // Defer building dialogs/dropdowns until something is selected
   if(props.table.get('selectedData').first()) {
+    //props.form.map(i => console.log(i))
     const schoolDropdown = new DropdownModel({
       items    : ['guest', 'teacher', 'manager', 'admin', 'super'],
-      selected : props.formState.selectedItem,
+      selected : props.form.get('field').get('editRole'),
       onChange : dropdownHandler
     });
 
     const rolesDropdown = new DropdownModel({
       items    : ['guest', 'teacher', 'manager', 'admin', 'super'],
-      selected : props.formState.selectedItem,
+      selected : props.form.get('field').get('editRole'),
       onChange : dropdownHandler
     });
 
@@ -169,7 +170,7 @@ const UsersTab = ({users, ...props}) => {
 UsersTab.propTypes = {
   users        : PropTypes.instanceOf(List).isRequired,
   table        : PropTypes.object.isRequired,
-  formState    : PropTypes.object.isRequired,
+  form         : PropTypes.object.isRequired,
   clickHandler : PropTypes.func.isRequired,
 };
 

@@ -9,10 +9,12 @@ import * as usrAct from '../../actions/userActions';
 import * as schAct from '../../actions/schoolActions';
 import * as locAct from './localActions';
 import TableModel from '../../models/TableModel';
+import FormModel from '../../models/FormModel';
 import SchoolsTab from './SchoolsTab';
 import UsersTab from './UsersTab';
 
 const table = new TableModel();
+const form = new FormModel();
 
 class AdminPage extends React.Component {
   constructor(props, context) {
@@ -20,13 +22,7 @@ class AdminPage extends React.Component {
 
     // Register Initial Component State
     let nextTable = this.initializeTable('users');
-    this.state = Object.assign({ table: nextTable }, {
-      formState : {
-        selectedItem   : '',
-        submitDisabled : true,
-        error          : {}
-      }
-    });
+    this.state = Object.assign({ table: nextTable }, {form});
 
     this.initializeTable = this.initializeTable.bind(this);
     this.clickHandler = this.clickHandler.bind(this);
@@ -36,12 +32,8 @@ class AdminPage extends React.Component {
 
   componentWillReceiveProps() {
     this.setState({
-      table     : this.state.table,
-      formState : {
-        selectedItem   : '',
-        submitDisabled : true,
-        error          : {}
-      }
+      table : this.state.table,
+      form  : this.state.form
     });
   }
 
@@ -74,6 +66,7 @@ class AdminPage extends React.Component {
 
   clickHandler(action, data, event) {
     let nextTable;
+    let nextForm;
     switch (action) {
 
     // Clicked a main tab
@@ -88,20 +81,21 @@ class AdminPage extends React.Component {
       this.setState({table: nextTable});
       break;
 
-    // Clicked a dialog (modal window)
+    // Clicked a dialog (modal) action, handle submit/cancel
     case 'dialogClick':
       if(locAct.DIALOG_LIST.indexOf(data) != -1) {
         // Click inside dialog with associated API action
-        let users;
+        let users, schools; // eslint-disable-line one-var
         switch (data) {
         case locAct.EDIT_SCHOOL:
           users = this.state.table.get('selectedData').map(row => row._id);
           //console.log(users.toArray(), this.state.formState.selectedItem)
-          this.props.usrAct.updateUserSchool(users.toArray(), this.state.formState.selectedItem);
+          // this.props.usrAct.updateUserSchool(users.toArray(),
+          //   this.state.form.get('field').find(v => v.id));
           break;
         case locAct.EDIT_ROLE:
-          users = this.state.table.get('selectedData').map(row => row._id);
-          this.props.usrAct.updateUserRole(users.toArray(), this.state.formState.selectedItem);
+          // users = this.state.table.get('selectedData').map(row => row._id);
+          // this.props.usrAct.updateUserRole(users.toArray(), this.state.formState.selectedItem);
           break;
         case locAct.REMOVE_USER:
           users = this.state.table.get('selectedData')
@@ -109,52 +103,46 @@ class AdminPage extends React.Component {
           this.props.usrAct.removeUser(users.toArray());
           break;
         case locAct.NEW_SCHOOL:
+          console.log(data)
           break;
         case locAct.REMOVE_SCHOOL:
+          schools = this.state.table.get('selectedData')
+            .map(row => row._id);
+          this.props.schAct.removeSchool(schools.toArray());
           break;
         }
         nextTable = this.initializeTable(this.state.table.selectedTab);
         this.setState({table: nextTable});
       } else {
+        // Click inside dialog with no API action (close dialog)
         nextTable = table.resetDialogs(this.state.table);
         this.setState({table: nextTable});
       }
-      break;
+      break; // End of: case 'dialogClick'
 
     // Clicked a popover menu item -or- a RaisedButton
+    //   - usually initializing <Dialog> modal parameters
     case 'menuClick':
     case 'buttonClick':
       nextTable = table.setSelectedRowData(this.state.table,
         this.getSelectedRowData());
-      let formState = this.state.formState;
+      nextForm = this.state.form;
       if(locAct.DIALOG_LIST.indexOf(data) != -1) {
         nextTable = table.toggleDialogs(nextTable, data);
         nextTable = table.resetPopovers(nextTable);
         switch (data) {
         case locAct.EDIT_SCHOOL:
-          formState = Object.assign(this.state.formState, {
-            selectedItem : 'super'
-          });
+          nextForm = form.setFieldValue(nextForm, 'editRole', 'teacher');
           break;
         case locAct.EDIT_ROLE:
-          formState = Object.assign(this.state.formState, {
-            selectedItem : 'teacher'
-          });
+          nextForm = form.setFieldValue(nextForm, 'editRole', 'teacher');
           break;
         case locAct.REMOVE_USER:
-          formState = Object.assign(this.state.formState, {
-            selectedItem : 'super'
-          });
           break;
         case locAct.NEW_SCHOOL:
-          formState = Object.assign(this.state.formState, {
-            submitButtonEnabled : false
-          });
+          nextForm = form.disableSubmitButton(nextForm);
           break;
         case locAct.REMOVE_SCHOOL:
-          formState = Object.assign(this.state.formState, {
-            selectedItem : 'super'
-          });
           break;
         }
       } else if(data == locAct.EDIT) {
@@ -162,8 +150,8 @@ class AdminPage extends React.Component {
         nextTable = table.setAnchor(nextTable, event.currentTarget);
         nextTable = table.resetDialogs(nextTable);
       }
-      this.setState({table: nextTable, formState});
-      break;
+      this.setState({table: nextTable, form: nextForm});
+      break; // End of: case 'menuClick' or 'buttonClick'
 
     // Clicked away from popover menu
     case 'popoverClose':
@@ -172,24 +160,33 @@ class AdminPage extends React.Component {
       //this.updateViewState(action, data, event);
       break;
 
+    // User made new dropdown menu selection
     case 'dropdownChange':
-      this.setState(Object.assign(this.state.formState, {
-        selectedItem : data
-      }));
+      // this.setState(Object.assign(this.state.formState, {
+      //   selectedItem : data
+      // }));
       break;
 
+    // Real-time text field validation
     case 'textFieldChange':
+      nextForm = this.state.form;
       switch (event.target.id) {
       case locAct.NEW_SCHOOL:
-        let submitDisabled = data.length == 0;
-        this.setState(Object.assign(this.state.formState, {
-          submitDisabled
-        }));
+        if(!this.props.schools.filter(i => i.includes(data)).isEmpty()) {
+          nextForm = form.disableSubmitButton(nextForm);
+          nextForm = form.setErrorMessage(nextForm, 'newSchool', 'School name already exists');
+        } else if(data.length == 0) {
+          nextForm = form.disableSubmitButton(nextForm);
+        } else {
+          nextForm = form.setErrorMessage(nextForm, 'newSchool', '');
+          nextForm = form.enableSubmitButton(nextForm);
+        }
+        this.setState({form: nextForm});
         break;
       }
-      break;
+      break; // End of: case 'textFieldChange'
     }
-  }
+  } // End of: clickHandler()
 
   // Returns full row data for selected table index values
   getSelectedRowData() {
@@ -198,6 +195,7 @@ class AdminPage extends React.Component {
       .indexOf(i) != -1);
   }
 
+  // Handle user changing tabs
   tabHandler(data) {
     this.clickHandler('changeTabs', data);
   }
@@ -217,10 +215,10 @@ class AdminPage extends React.Component {
             view = {{
               width  : this.props.containerWidth - 20,
               height : this.props.containerHeight - 48 - 80
-            }}
+            }} // Facillitates table realtime resizing
             users = {this.props.users}
             table = {this.state.table}
-            formState = {this.state.formState}
+            form = {this.state.form}
             clickHandler = {this.clickHandler}
           />
         </Tab>
@@ -233,10 +231,10 @@ class AdminPage extends React.Component {
             view = {{
               width  : this.props.containerWidth - 20,
               height : this.props.containerHeight - 48 - 80
-            }}
+            }} // Facillitates table realtime resizing
             schools = {this.props.schools}
             table = {this.state.table}
-            formState = {this.state.formState}
+            form = {this.state.form}
             clickHandler = {this.clickHandler}
           />
         </Tab>
