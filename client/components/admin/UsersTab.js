@@ -155,7 +155,7 @@ const UsersTab = ({users, ...props}) => {
     ]
   };
 
-  return (
+    return (
     <div>
       <DataTable
         page={page}
