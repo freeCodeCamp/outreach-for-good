@@ -7,6 +7,7 @@ export const RaisedButton = Immutable.Record({
   labelColor      : '#FFFFFF',
   backgroundColor : '#124e78',
   actionID        : '',
+  disabled        : true,
   menu            : {}
 });
 
