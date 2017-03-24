@@ -92,6 +92,7 @@ class AdminPage extends React.Component {
         case locAct.EDIT_SCHOOL:
           users = this.state.table.get('selectedData')
             .map(row => row._id);
+          //console.log(this.getSchoolId(this.state.form.get('field').get('editSchool')));
           this.props.usrAct.updateUserSchool(users.toArray(),
             this.getSchoolId(this.state.form.get('field').get('editSchool')));
           break;
@@ -106,7 +107,7 @@ class AdminPage extends React.Component {
           this.props.usrAct.removeUser(users.toArray());
           break;
         case locAct.NEW_SCHOOL:
-          console.log(this.state.form.get('field').get('newSchool'))
+          this.props.schAct.addSchool(this.state.form.get('field').get('newSchool'));
           break;
         case locAct.REMOVE_SCHOOL:
           schools = this.state.table.get('selectedData')

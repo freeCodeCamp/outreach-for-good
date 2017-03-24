@@ -66,9 +66,9 @@ export function updateUserRole(userId, roleId) {
  */
 export function updateUserSchool(userId, schoolId) {
   return function(dispatch) {
-    return userAPI.updateSchool(userId, schoolId).then(users => {
-      dispatch(loadUsersSuccess(users));
-    })
+    let promises = userId.map(user => userAPI.updateSchool(user, schoolId));
+    return Promise.all(promises)
+    .then(() => dispatch(getAllUsers()))
     .catch(err => handleError(err, dispatch));
   };
 }
@@ -91,6 +91,7 @@ export function removeUser(userId) {
  */
 export function handleError(err, dispatch) {
   let status = err.status;
+  console.log('In userActions.js, handleError()', status, err);
   if(status == 401) {
     return dispatch(validate());
   } else {

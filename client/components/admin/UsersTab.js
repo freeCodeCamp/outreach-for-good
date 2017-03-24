@@ -146,7 +146,7 @@ const UsersTab = ({users, schools, ...props}) => {
       flexGrow : 1
     }, {
       title    : 'Assigned School',
-      id       : 'school',
+      id       : 'assignment',
       flexGrow : 1
     }, {
       title    : 'Role',
@@ -159,12 +159,16 @@ const UsersTab = ({users, schools, ...props}) => {
       removeButton
     ]
   };
-
+// users.map(i => { if(i.assignment) console.log(i.assignment.toJS())})
   return (
     <div>
       <DataTable
         page={page}
-        data={users}
+        data={users.map(iMap =>  // eslint-disable-line no-confusing-arrow
+          iMap.assignment
+          ? iMap.update('assignment', id => id.get('name'))
+          : iMap
+        )}
         {...props}
       />
     </div>

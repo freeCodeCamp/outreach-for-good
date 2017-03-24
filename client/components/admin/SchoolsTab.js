@@ -63,9 +63,24 @@ const SchoolsTab = ({schools, ...props}) => {
         { label: 'Cancel', click: buttonHandler },
         { label: 'Remove', click: buttonHandler, value: locAct.REMOVE_SCHOOL },
       ]),
-      text : [` Permanently remove
-        ${props.table.selectedRowsToCsv(props.table, 'name')}
-      `]
+      text : [<div className="alert alert-danger" key='1'>
+        <strong key='2'>WARNING!</strong>
+        <br key='3' />
+        In addition to deleting {props.table.selectedRowsToCsv(props.table, 'name')}, this operation will
+        <strong key='4'> permanently</strong> delete:<br key='12' />
+        <ul key='5'>
+          <li key='6'>Absence Records</li>
+          <li key='7'>Assigned students, including associated:
+            <ul key='8'>
+              <li key='9'>Outreaches</li>
+              <li key='10'>Interventions</li>
+              <li key='11'>Notes</li>
+            </ul>
+          </li>
+        </ul>
+        Also, teachers assigned to this school will have access revoked until reassigned.
+      </div>
+      ]
     }));
   }
 

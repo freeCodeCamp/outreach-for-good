@@ -1,19 +1,30 @@
 class Api {
+
   /**
-   * Retrieves JWT token for authorization
+   * Generate application/json request header / body
    */
   static requestHeaders() {
-    //console.log('Setup Header', sessionStorage.token);
+    return {
+      Authorization  : `Bearer ${sessionStorage.token}`,
+      'Content-Type' : 'application/json'
+    };
+  }
+
+  static requestBody(body) {
+    return JSON.stringify(body);
+  }
+
+  /**
+   * Generate application/x-www-form-urlencoded request header / body
+   */
+  static requestUrlEncodedHeaders() {
     return {
       Authorization  : `Bearer ${sessionStorage.token}`,
       'Content-Type' : 'application/x-www-form-urlencoded'
     };
   }
 
-  /**
-   * Generate application/x-www-form-urlencoded request body
-   */
-  static requestBody(body) {
+  static requestUrlEncodedBody(body) {
     let data = [];
     for(let key in body) {
       data.push(`${encodeURIComponent(key)}=${encodeURIComponent(body[key])}`);
