@@ -7,7 +7,7 @@ import DialogModel from '../../models/DialogModel';
 import DropdownModel from '../../models/DropdownModel';
 import RaisedButtonModel from '../../models/RaisedButtonModel';
 
-const UsersTab = ({users, ...props}) => {
+const UsersTab = ({users, schools, ...props}) => {
 /**
  * Configure: Material-UI <Dialog>
  *  1. Add new <Dialog> defs to `const dialogs [..]`
@@ -21,9 +21,14 @@ const UsersTab = ({users, ...props}) => {
     props.clickHandler('dialogClick', this.value, event); // eslint-disable-line no-invalid-this
   }
 
-  function dropdownHandler(event, index, value) {
+  function dropdownHandlerSchool(event, index, value) {
     event.preventDefault();
-    props.clickHandler('dropdownChange', value, event); // eslint-disable-line no-invalid-this
+    props.clickHandler('dropdownChange', value, locAct.EDIT_SCHOOL); // eslint-disable-line no-invalid-this
+  }
+
+  function dropdownHandlerRole(event, index, value) {
+    event.preventDefault();
+    props.clickHandler('dropdownChange', value, locAct.EDIT_ROLE); // eslint-disable-line no-invalid-this
   }
 
   let dialogs = [];
@@ -32,15 +37,16 @@ const UsersTab = ({users, ...props}) => {
   if(props.table.get('selectedData').first()) {
     //props.form.map(i => console.log(i))
     const schoolDropdown = new DropdownModel({
-      items    : ['guest', 'teacher', 'manager', 'admin', 'super'],
-      selected : props.form.get('field').get('editRole'),
-      onChange : dropdownHandler
+      items    : schools.map(s => s.name),
+      selected : props.form.get('field').get('editSchool'),
+      onChange : dropdownHandlerSchool
     });
 
     const rolesDropdown = new DropdownModel({
       items    : ['guest', 'teacher', 'manager', 'admin', 'super'],
-      selected : props.form.get('field').get('editRole'),
-      onChange : dropdownHandler
+      selected : props.form.get('field').get('editRole')
+        || 'teacher',
+      onChange : dropdownHandlerRole
     });
 
     dialogs.push(new DialogModel({
@@ -56,8 +62,7 @@ const UsersTab = ({users, ...props}) => {
         ${schoolDropdown.get('selected')}`},
         <br key='1' />
         <div key='2' style={{textAlign: 'center'}}>
-        {schoolDropdown.getDropdown(schoolDropdown,
-          dropdownHandler, 3)}
+        {schoolDropdown.getDropdown(schoolDropdown, 3)}
         </div></div>]
     }));
 
@@ -74,8 +79,7 @@ const UsersTab = ({users, ...props}) => {
         ${rolesDropdown.get('selected')}`},
         <br key='1' />
         <div key='2' style={{textAlign: 'center'}}>
-        {rolesDropdown.getDropdown(rolesDropdown,
-          dropdownHandler, 3)}
+        {rolesDropdown.getDropdown(rolesDropdown, 3)}
         </div></div>]
     }));
 
@@ -169,6 +173,7 @@ const UsersTab = ({users, ...props}) => {
 
 UsersTab.propTypes = {
   users        : PropTypes.instanceOf(List).isRequired,
+  schools      : PropTypes.instanceOf(List).isRequired,
   table        : PropTypes.object.isRequired,
   form         : PropTypes.object.isRequired,
   clickHandler : PropTypes.func.isRequired,
