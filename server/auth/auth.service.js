@@ -114,24 +114,6 @@ exports.school = function(req, res, next) {
   });
 };
 
-/**
- * Attaches setting object to request if user has is at least manager or
- * has assignment to setting.
- */
-exports.setting = function(req, res, next) {
-  School.findById(req.params.settingId, function(err, setting) {
-    if (err) return handleError(res, err);
-    if (!setting) return res.sendStatus(404);
-    if (!managerOrAssignedSchool(setting.id, req.user)) {
-      return res.status(403).json({
-        reason: settingMsg(req.user.assignment || 'None')
-      });
-    }
-    req.setting = setting;
-    next();
-  });
-};
-
 function studentMsg(student, req) {
   return 'Your current role of teacher and assignment to schoolId: ' +
          req.user.assignment.toString() +

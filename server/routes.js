@@ -20,7 +20,7 @@ module.exports = function(app) {
   app.use('/api/visualizations', require('./api/visualization'));
 
   // configurations
-  app.use('/settings', require('./api/setting'));
+  app.use('/api/settings', require('./api/setting'));
 
   // development
   app.use('/api/devs', require('./api/dev'));

@@ -21,7 +21,7 @@ AbsenceRecord.remove().exec().then(function() {
 }).then(function() {
   return School.remove().exec();
 }).then(function() {
-  return Settings.remove().exec();
+  return Setting.remove().exec();
 }).then(function() {
   return Student.remove().exec();
 }).then(function() {
@@ -76,17 +76,6 @@ AbsenceRecord.remove().exec().then(function() {
     grade: 6,
     school: schoolB._id
   }, logCreateResults('students'));
-}).then(function() {
-  return Setting.create({ option : [{
-    title: 'One Intervention',
-    description: 'A description of one intervention with more details'
-  }, {
-    title: 'Two Intervention',
-    description: 'A description of two intervention with more details'
-  }, {
-    title: 'Three Intervention',
-    description: 'A description of three intervention with more details'
-  }]}, logCreateResults('settings'));
 }).then(function(studentA, studentB, studentC, studentD, studentE) {
   var twoDaysAgo = Date.now() - 2 * 24 * 60 * 60 * 1000;
   return AbsenceRecord.create({
@@ -142,6 +131,19 @@ AbsenceRecord.remove().exec().then(function() {
     }],
     createdStudents: [studentD._id, studentE._id]
   }, logCreateResults('AbsenceRecords'));
+}).then(function() {
+  return Setting.create({ intervention : { 
+    types: [{
+      title: 'One Intervention',
+      description: 'A description of one intervention with more details'
+    }, {
+      title: 'Two Intervention',
+      description: 'A description of two intervention with more details'
+    }, {
+      title: 'Three Intervention',
+      description: 'A description of three intervention with more details'
+    }]
+  }}, logCreateResults('settings'));
 }).then(function() {
   return Student.find().populate('school').exec(function(err, students) {
     console.log('\nSchools to Students');
