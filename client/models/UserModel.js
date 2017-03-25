@@ -1,11 +1,12 @@
 import Immutable from 'immutable';
 
 const UserRecord = Immutable.Record({
-  _id      : '',
-  provider : 'local',
-  name     : '',
-  email    : '',
-  role     : 'guest',
+  _id        : '',
+  provider   : 'local',
+  name       : '',
+  email      : '',
+  role       : 'guest',
+  assignment : '',
 });
 
 // This extension is not needed yet

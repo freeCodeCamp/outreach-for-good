@@ -54,10 +54,10 @@ class SchoolsApi extends Api {
  * restriction: 'admin'
  */
   static addSchool(schoolName) {
-    const headers = this.requestHeaders();
-    const req = new Request(`/api/schools/${schoolName}`, {
-      method : 'POST',
-      headers
+    const req = new Request('/api/schools', {
+      method  : 'POST',
+      headers : this.requestHeaders(),
+      body    : this.requestBody({name: schoolName})
     });
     return fetch(req).then(res => this.parseResponse(res, 'POST'))
     .catch(error => error);
@@ -68,10 +68,9 @@ class SchoolsApi extends Api {
  * restriction: 'admin'
  */
   static removeSchool(schoolId) {
-    const headers = this.requestHeaders();
     const req = new Request(`/api/schools/${schoolId}`, {
-      method : 'DELETE',
-      headers
+      method  : 'DELETE',
+      headers : this.requestHeaders()
     });
     return fetch(req).then(res => this.parseResponse(res, 'DELETE'))
     .catch(error => error);

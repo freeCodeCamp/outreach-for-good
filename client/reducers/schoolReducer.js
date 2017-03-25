@@ -5,14 +5,14 @@ import School from '../models/SchoolModel';
 
 const initialState = new List();
 
-const mergeEntities = (state, newSchools) =>
-  state.merge(newSchools.map(school => new School(school)));
+// const mergeEntities = (state, newSchools) =>
+//   state.merge(newSchools.map(school => new School(school)));
 
 export default (state = initialState, action) => {
   switch (action.type) {
   // Received schools from getAllSchools()
   case types.LOAD_SCHOOLS_SUCCESS:
-    return mergeEntities(state, fromJS(action.schools));
+    return fromJS(action.schools).map(school => new School(school));
 
   default:
     return state;
