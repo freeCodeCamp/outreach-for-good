@@ -3,7 +3,7 @@ import DataTable from '../common/data-table/DataTable';
 
 const SstTab = ({schools, ...props}) => {
   const page = {
-    title   : 'Manage User Accounts',
+    title   : 'SST Dashboard',
     columns : [{
       title    : 'Name',
       id       : 'name',

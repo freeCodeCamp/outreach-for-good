@@ -3,7 +3,7 @@ import DataTable from '../common/data-table/DataTable';
 
 const CourtTab = ({schools, ...props}) => {
   const page = {
-    title   : 'Manage User Accounts',
+    title   : 'Court Dashboard',
     columns : [{
       title    : 'Name',
       id       : 'name',
