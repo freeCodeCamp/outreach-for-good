@@ -101,13 +101,15 @@ const UsersTab = ({users, schools, ...props}) => {
     }));
   }
 
+  let buttons = [];
+
   /**
    * Material-UI <RaisedButton> and <Popover>
    *  - `menu:` become a <Popover> menu under button
    *  - `actionID:` is used by parent to launch dialogs
    *  - See RaisedButtonModel for default parameters
    */
-  const editButton = new RaisedButtonModel({
+  buttons.push(new RaisedButtonModel({
     label    : 'Edit',
     actionID : locAct.EDIT,
     menu     : {
@@ -120,13 +122,13 @@ const UsersTab = ({users, schools, ...props}) => {
         actionID : locAct.EDIT_ROLE
       }]
     }
-  });
+  }));
 
-  const removeButton = new RaisedButtonModel({
+  buttons.push(new RaisedButtonModel({
     label           : 'Remove',
     backgroundColor : '#d9534f',
     actionID        : locAct.REMOVE_USER
-  });
+  }));
 
   /**
    * Fixed-Data-Table Parameters
@@ -153,10 +155,7 @@ const UsersTab = ({users, schools, ...props}) => {
       flexGrow : 1
     }],
     dialogs,
-    raisedButtons : [
-      editButton,
-      removeButton
-    ]
+    buttons
   };
   return (
     <div>

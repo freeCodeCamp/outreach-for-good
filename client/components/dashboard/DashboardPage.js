@@ -22,7 +22,7 @@ class DashboardPage extends React.Component {
     super(props, context);
 
     // Register Initial Component State
-    let nextTable = this.initializeTable('users');
+    let nextTable = this.initializeTable('student');
     this.state = Object.assign({ table: nextTable });
 
     this.initializeTable = this.initializeTable.bind(this);
@@ -45,13 +45,24 @@ class DashboardPage extends React.Component {
   initializeTable(currentTab) {
     let nextTable;
     switch (currentTab) {
-    case 'users':
-
-      nextTable = table.setSelectedTab(table, 'users');
+    case 'court':
+      //this.props.usrAct.getAllUsers();
+      nextTable = table.setSelectedTab(table, 'court');
       break;
-    case 'schools':
-
-      nextTable = table.setSelectedTab(table, 'schools');
+    case 'home':
+      nextTable = table.setSelectedTab(table, 'home');
+      break;
+    case 'letter':
+      nextTable = table.setSelectedTab(table, 'letter');
+      break;
+    case 'phone':
+      nextTable = table.setSelectedTab(table, 'phone');
+      break;
+    case 'sst':
+      nextTable = table.setSelectedTab(table, 'sst');
+      break;
+    case 'student':
+      nextTable = table.setSelectedTab(table, 'student');
       break;
     }
     return nextTable;
@@ -73,8 +84,8 @@ class DashboardPage extends React.Component {
         <Tab label={<i className="fa fa-child fa-2x" />}>
           <StudentTab
             view = {{
-              width  : this.props.containerWidth,
-              height : this.props.containerHeight - 48
+              width  : this.props.containerWidth - 20,
+              height : this.props.containerHeight - 48 - 80
             }}
             schools = {this.props.users}
             table = {this.state.table}
@@ -84,8 +95,8 @@ class DashboardPage extends React.Component {
         <Tab label={<i className="fa fa-phone fa-2x" />}>
           <PhoneTab
             view = {{
-              width  : this.props.containerWidth,
-              height : this.props.containerHeight - 48
+              width  : this.props.containerWidth - 20,
+              height : this.props.containerHeight - 48 - 80
             }}
             schools = {this.props.users}
             table = {this.state.table}
@@ -95,8 +106,8 @@ class DashboardPage extends React.Component {
         <Tab label={<i className="fa fa-envelope fa-2x" />}>
           <LetterTab
             view = {{
-              width  : this.props.containerWidth,
-              height : this.props.containerHeight - 48
+              width  : this.props.containerWidth - 20,
+              height : this.props.containerHeight - 48 - 80
             }}
             schools = {this.props.users}
             table = {this.state.table}
@@ -106,8 +117,8 @@ class DashboardPage extends React.Component {
         <Tab label={<i className="fa fa-home fa-2x" />}>
           <HomeTab
             view = {{
-              width  : this.props.containerWidth,
-              height : this.props.containerHeight - 48
+              width  : this.props.containerWidth - 20,
+              height : this.props.containerHeight - 48 - 80
             }}
             schools = {this.props.users}
             table = {this.state.table}
@@ -117,8 +128,8 @@ class DashboardPage extends React.Component {
         <Tab label={<i className="fa fa-support fa-2x" />}>
           <SstTab
             view = {{
-              width  : this.props.containerWidth,
-              height : this.props.containerHeight - 48
+              width  : this.props.containerWidth - 20,
+              height : this.props.containerHeight - 48 - 80
             }}
             schools = {this.props.users}
             table = {this.state.table}
@@ -128,8 +139,8 @@ class DashboardPage extends React.Component {
         <Tab label={<i className="fa fa-gavel fa-2x" />}>
           <CourtTab
             view = {{
-              width  : this.props.containerWidth,
-              height : this.props.containerHeight - 48
+              width  : this.props.containerWidth - 20,
+              height : this.props.containerHeight - 48 - 80
             }}
             schools = {this.props.users}
             table = {this.state.table}

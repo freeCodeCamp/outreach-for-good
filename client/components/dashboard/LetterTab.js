@@ -3,7 +3,7 @@ import DataTable from '../common/data-table/DataTable';
 
 const LetterTab = ({schools, ...props}) => {
   const page = {
-    title   : 'Manage User Accounts',
+    title   : 'Letters Sent Dashboard',
     columns : [{
       title    : 'Name',
       id       : 'name',

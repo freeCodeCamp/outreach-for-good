@@ -50,7 +50,7 @@ const DataTable = ({page, table, data, ...props}) => {
       <div className="admin-page-title">
         <h3>{page.title}</h3>
         <div className="buttons">
-          {page.raisedButtons && page.raisedButtons
+          {page.buttons && page.buttons
             .map((button, index) =>
             <div key={index} style={{display: 'inline'}}>
               <RaisedButton
