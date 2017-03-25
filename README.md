@@ -52,3 +52,8 @@ This version is currently under development.
 
 * Upgrade babel-loader, current version causes depreciation warning 
   * https://github.com/babel/babel-loader/pull/391
+* When session validation fails, does user stay locked-out? 
+* admin-page
+  * Prevent users from deleting themselves
+  * User photo in left-most column
+  * Sort when clicking header

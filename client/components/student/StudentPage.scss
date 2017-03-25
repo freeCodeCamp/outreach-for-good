@@ -1,0 +1,22 @@
+.student-page {
+  padding: 10px;
+
+  .info {
+    margin-bottom: 10px;
+    [class*='col-'] {
+      float: left;
+      width: 49.5%;
+      height: 220px;
+      padding: 10px;
+      margin-right: 1%;
+      &:last-of-type {
+        margin-right: 0;
+      }
+    }
+    &:after {
+      content: '';
+      display: table;
+      clear: both;
+    }
+  }
+}

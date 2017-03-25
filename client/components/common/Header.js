@@ -69,7 +69,9 @@ class Header extends Component {
             onClick={this.handleExpandSidebar}
             iconStyle={{color: '#EFEFEF'}}
           >
-            <NavigationMenu />
+            <NavigationMenu
+              className={this.props.view.sidebar.expand ? 'is-expanded' : ''}
+            />
           </IconButton>
         }
       />

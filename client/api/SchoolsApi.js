@@ -1,0 +1,80 @@
+import Api from './Api';
+
+class SchoolsApi extends Api {
+
+/**
+ * Get my info
+ */
+  static getSchoolNames() {
+    const headers = this.requestHeaders();
+    //console.log(headers)
+    const req = new Request('/api/schools/name', {
+      method : 'GET',
+      headers
+    });
+    return fetch(req).then(res => this.parseResponse(res))
+    .catch(error => {
+      throw error;
+    });
+  }
+
+/**
+ * Get a single school
+ */
+  static getSchool(schoolId) {
+    const headers = this.requestHeaders();
+    const req = new Request(`/api/schools/${schoolId}`, {
+      method : 'GET',
+      headers
+    });
+    return fetch(req).then(res => this.parseResponse(res))
+    .catch(error => {
+      throw error;
+    });
+  }
+
+/**
+ * Get list of schools
+ * restriction: 'admin'
+ */
+  static getSchools() {
+    const headers = this.requestHeaders();
+    const req = new Request('/api/schools/', {
+      method : 'GET',
+      headers
+    });
+    return fetch(req).then(res => this.parseResponse(res))
+    .catch(error => {
+      throw error;
+    });
+  }
+
+/**
+ * Adds a school
+ * restriction: 'admin'
+ */
+  static addSchool(schoolName) {
+    const req = new Request('/api/schools', {
+      method  : 'POST',
+      headers : this.requestHeaders(),
+      body    : this.requestBody({name: schoolName})
+    });
+    return fetch(req).then(res => this.parseResponse(res, 'POST'))
+    .catch(error => error);
+  }
+
+/**
+ * Deletes a school
+ * restriction: 'admin'
+ */
+  static removeSchool(schoolId) {
+    const req = new Request(`/api/schools/${schoolId}`, {
+      method  : 'DELETE',
+      headers : this.requestHeaders()
+    });
+    return fetch(req).then(res => this.parseResponse(res, 'DELETE'))
+    .catch(error => error);
+  }
+}
+
+export default SchoolsApi;

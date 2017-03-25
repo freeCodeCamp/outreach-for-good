@@ -23,10 +23,13 @@ class Sidebar extends Component {
           <span className="fa-stack fa-lg pull-left"><i className="fa fa-stack-1x fa-area-chart" /></span>
           Data Visualization
         </Link></li>
-        <li><Link to="/records" activeClassName="active">
+        {(this.props.session.role === 'teacher' ||
+          this.props.session.role === 'admin' ||
+          this.props.session.role === 'super') &&
+          <li><Link to="/records" activeClassName="active">
           <span className="fa-stack fa-lg pull-left"><i className="fa fa-stack-1x fa-file" /></span>
           Records
-        </Link></li>
+        </Link></li>}
         <li><Link to="/school/reports/at-risk" activeClassName="active">
           <span className="fa-stack fa-lg pull-left"><i className="fa fa-stack-1x fa-graduation-cap" /></span>
           School Reports
@@ -35,15 +38,22 @@ class Sidebar extends Component {
           <span className="fa-stack fa-lg pull-left"><i className="fa fa-stack-1x fa-cogs" /></span>
           School Settings
         </Link></li>
+        {(this.props.session.role == 'admin' ||
+          this.props.session.role == 'super') &&
         <li><Link to="/admin" activeClassName="active">
           <span className="fa-stack fa-lg pull-left"><i className="fa fa-stack-1x fa-wrench" /></span>
           Admin
-        </Link></li>
+        </Link></li>}
+        {(this.props.student.record.hasOwnProperty('firstName')) &&
+          <li><Link to={`/student/${this.props.student.record._id}`} activeClassName="active">
+          <span className="fa-stack fa-lg pull-left"><i className="fa fa-stack-1x fa-user" /></span>
+          Student
+        </Link></li>}
         <li className="flex-spacer" />
-        <li><Link to="/admin" activeClassName="active">
-      <span className="fa-stack fa-lg pull-left"><i className="fa fa-stack-1x fa-question" /></span>
-      About
-    </Link></li>
+        <li><Link to="/about" activeClassName="active">
+          <span className="fa-stack fa-lg pull-left"><i className="fa fa-stack-1x fa-question" /></span>
+          About
+        </Link></li>
       </ul>
     </div>
     );
@@ -51,13 +61,16 @@ class Sidebar extends Component {
 }
 
 Sidebar.propTypes = {
+  session : PropTypes.object.isRequired,
   sidebar : PropTypes.object.isRequired
 };
 
 function mapStateToProps(state) {
   //console.log('Sidebar: ', state);
   return {
-    sidebar : state.view.sidebar
+    session : state.session.me,
+    sidebar : state.view.sidebar,
+    student : state.student
   };
 }
 

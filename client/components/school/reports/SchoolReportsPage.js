@@ -5,7 +5,7 @@ class SchoolReportsPage extends React.Component {
         return (
             <div>
                 <h1>School Reports</h1>
-                <p>This is a sample about page</p>
+                <p>Another work in progress</p>
             </div>
         );
     }
