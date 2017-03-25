@@ -1,11 +1,15 @@
 'use strict';
 
-function StudentInterventionsCtrl($scope, $stateParams, Intervention, Modal,
+function StudentInterventionsCtrl($scope, $stateParams, Intervention, Settings, Modal,
   toastr) {
   Intervention.query({
     studentId: $stateParams.studentId
   }, function(interventions) {
     $scope.interventions = interventions;
+  });
+
+  Settings.query({}, function(types) {
+    $scope.types = types;
   });
 
   $scope.createInterventionNote = function(intervention) {
@@ -68,14 +72,19 @@ function StudentInterventionsCtrl($scope, $stateParams, Intervention, Modal,
       var createInterventionFn = function(model) {
         model.student = $scope.student._id;
         model.school = $scope.student.school._id;
+        model.type = $scope.types[model.type].title;
         return Intervention.save({}, model, function(res) {
           $scope.$evalAsync(function() {
             $scope.interventions.unshift(res);
+            toastr.success(
+              'New intervention created'
+            );
           });
         });
       };
-      Modal.form(
+      Modal.interventionForm(
         'Create New Intervention',
+        $scope.types,
         'app/main/student/interventions/modal.create-intervention.html',
         createInterventionFn);
     }

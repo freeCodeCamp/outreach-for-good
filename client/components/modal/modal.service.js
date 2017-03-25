@@ -192,6 +192,73 @@ function Modal($rootScope, $uibModal) {
       }, 'modal-success', 'components/modal/form-modal.html');
     },
 
+    interventionEdit: function(title, model, templateUrl, cb) {
+      var formModal = openModal({
+        modal: {
+          dismissable: true,
+          title: title,
+          templateUrl: templateUrl,
+          submitFn: function(form, model) {
+            if (form.$valid) {
+              cb(model).$promise.then(function() {
+                formModal.close();
+              }, function(err) {
+                console.log(err);
+                // TODO: Handle error from submitting form.
+              });
+            }
+          },
+          buttons: [{
+            classes: 'btn-success',
+            text: 'Submit',
+            type: 'submit',
+            click: angular.noop
+          }, {
+            classes: 'btn-default',
+            text: 'Cancel',
+            click: function(e) {
+              formModal.dismiss(e);
+            }
+          }]
+        },
+        model: model
+      }, 'modal-success', 'components/modal/form-modal.html');
+    },
+
+    interventionForm: function(title, types, templateUrl, cb) {
+      var interventionForm = openModal({
+        modal: {
+          dismissable: true,
+          title: title,
+          templateUrl: templateUrl,
+          types: types,
+          submitFn: function(form, model) {
+            if (form.$valid) {
+              cb(model).$promise.then(function() {
+                interventionForm.close();
+              }, function(err) {
+                console.log(err);
+                // TODO: Handle error from submitting form.
+              });
+            }
+          },
+          buttons: [{
+            classes: 'btn-success',
+            text: 'Submit',
+            type: 'submit',
+            click: angular.noop
+          }, {
+            classes: 'btn-default',
+            text: 'Cancel',
+            click: function(e) {
+              interventionForm.dismiss(e);
+            }
+          }]
+        },
+        model: {}
+      }, 'modal-success', 'components/modal/form-modal.html');
+    },
+
     confirmDelete: function(title, templateUrl, model, cb) {
       var confirmDelete = openModal({
         modal: {

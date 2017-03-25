@@ -1,7 +1,7 @@
 'use strict';
 
 function AdminCtrl($scope, $http, uiGridConstants, Auth, User, School,
-  Modal, ROLES, toastr) {
+  Modal, Settings, ROLES, toastr) {
   $scope.roles = ROLES.slice(0, ROLES.indexOf(Auth.getCurrentUser().role) + 1);
   $scope.auth = Auth;
 
@@ -181,6 +181,20 @@ function AdminCtrl($scope, $http, uiGridConstants, Auth, User, School,
       deleteFn);
   };
 
+  $scope.schoolMenuItems = [{
+    text: 'Add New School',
+    action: function() {
+      var addSchoolFn = function(model) {
+        return School.save({}, model, function() {
+          $scope.schoolGridOptions.data = School.query();
+        });
+      };
+      Modal.form('Add New School',
+      'app/main/admin/partial/modal.add-school.html',
+      addSchoolFn);
+    }
+  }];
+
   // Development
 
   $scope.reset = function() {
@@ -193,19 +207,89 @@ function AdminCtrl($scope, $http, uiGridConstants, Auth, User, School,
     Modal.confirm.reset(resetFn)();
   };
 
-  $scope.schoolMenuItems = [{
-    text: 'Add New School',
+
+  // Interventions
+  $scope.interventionGridOptions = {
+    enableSorting: true,
+    enableGridMenu: true,
+    rowHeight: 54
+  }
+  $scope.interventionGridOptions.columnDefs = [
+    {
+      name: 'title',
+      displayName: 'Title',
+      minWidth: 300
+    },
+    {
+      name: 'description',
+      displayName: 'Description',
+      minWidth: 300
+    },
+    {
+      name: 'active',
+      displayName: 'Active',
+      minWidth: 100
+    },
+    {
+      name: 'Actions',
+      width: 108,
+      enableSorting: false,
+      cellClass: 'action-col',
+      cellTemplate: 'app/main/admin/partial/cell.action-interventions.html',
+      enableCellEdit: false
+    }
+  ];
+  $scope.interventionGridOptions.onRegisterApi = function(gridApi) {
+    $scope.interventionGridOptions = gridApi;
+    $scope.interventionGridOptions.data = Settings.query();
+  }
+
+  $scope.interventionMenuItems = [{
+    text: 'Add New Intervention',
     action: function() {
-      var addSchoolFn = function(model) {
-        return School.save({}, model, function() {
-          $scope.schoolGridOptions.data = School.query();
+      var addInterventionFn = function(model) {
+        return Settings.save({}, model, function() {
+          $scope.interventionGridOptions.data = Settings.query();
         });
       };
-      Modal.form('Add New School',
-        'app/main/admin/partial/modal.add-school.html',
-        addSchoolFn);
+      Modal.form('Add New Intervention',
+        'app/main/admin/partial/modal.intervention-type.html',
+        addInterventionFn);
     }
   }];
+  $scope.updateIntervention = function(intervention) {
+    console.log(intervention);
+    var updateFn = function(model) {
+      return Settings.update({}, model, function(response) {
+        console.log(response);
+      })
+    }
+    Modal.interventionEdit(
+      'Edit Intervention',
+      intervention,
+      'app/main/admin/partial/modal.intervention-type.html',
+      updateFn
+    );
+  }
+  $scope.deleteIntervention = function(intervention) {
+    console.log(intervention);
+    var deleteFn = function(model) {
+      return Settings.delete({}, model, function(response) {
+        _.pull($scope.interventionGridOptions.data, model);
+        toastr.error(
+          'Deleted intervention ' + model.title
+        );
+      }, function(err) {
+        console.log(err);
+        toastr.error(err);
+      });
+    };
+    Modal.confirmDelete(
+      'Delete ' + intervention.title,
+      'app/main/admin/partial/modal.delete-intervention.html',
+      intervention,
+      deleteFn);
+  };
 }
 
 angular.module('app').controller('AdminCtrl', AdminCtrl);

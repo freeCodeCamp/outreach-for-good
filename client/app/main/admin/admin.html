@@ -24,5 +24,11 @@
       <button ng-click="reset()" class="btn btn-danger">RESET APP</button>
     </div>
   </div>
+  <heading text="'Interventions'" menu-items="interventionMenuItems"></heading>
+  <div class="interventions">
+    <div ui-grid="interventionGridOptions"
+      ui-grid-auto-resize
+      id="intervention-grid"
+      class="grid"></div>
+  </div>
 </section>
-
