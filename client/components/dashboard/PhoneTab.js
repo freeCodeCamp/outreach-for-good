@@ -3,7 +3,7 @@ import DataTable from '../common/data-table/DataTable';
 
 const PhoneTab = ({schools, ...props}) => {
   const page = {
-    title   : 'Manage User Accounts',
+    title   : 'Phone Call Dashboard',
     columns : [{
       title    : 'Name',
       id       : 'name',

@@ -97,23 +97,25 @@ const SchoolsTab = ({schools, ...props}) => {
     }));
   }
 
+  let buttons = [];
+
   /**
    * Material-UI <RaisedButton> and <Popover>
    *  - `actionID:` is used by parent to launch dialogs
    *  - See RaisedButtonModel for default parameters
    */
-  const newButton = new RaisedButtonModel({
+  buttons.push(new RaisedButtonModel({
     label           : 'New',
     backgroundColor : '#009d9d',
     actionID        : locAct.NEW_SCHOOL,
     disabled        : false
-  });
+  }));
 
-  const removeButton = new RaisedButtonModel({
+  buttons.push(new RaisedButtonModel({
     label           : 'Remove',
     backgroundColor : '#d9534f',
     actionID        : locAct.REMOVE_SCHOOL
-  });
+  }));
 
   /**
    * Fixed-Data-Table Parameters
@@ -128,10 +130,7 @@ const SchoolsTab = ({schools, ...props}) => {
       flexGrow : 1
     }],
     dialogs,
-    raisedButtons : [
-      newButton,
-      removeButton
-    ]
+    buttons
   };
 
   return (
