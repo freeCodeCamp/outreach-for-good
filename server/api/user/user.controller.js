@@ -46,6 +46,7 @@ exports.index = function(req, res) {
  * A user can only assign equal or lower roles to other users.
  */
 exports.validateUpdateRole = function(req, res, next) {
+  console.log(req.body);
   return auth.hasRole(req.body.role)(req, res, next);
 };
 

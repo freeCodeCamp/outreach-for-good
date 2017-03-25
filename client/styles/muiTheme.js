@@ -302,12 +302,15 @@ var cfa500 = exports.cfa500 = '#265e6d';
 // var cfa800 = exports.cfa800 = '#424242';
 // var cfa900 = exports.cfa900 = '#212121';
 
+var cfaOrange500 = exports.cfaOrange500 = '#ed9a00';
+var cfaOrange700 = exports.cfaOrange700 = '#f59e00';
+
 export default getMuiTheme({
   palette : {
     primary1Color      : cfa500,
     primary2Color      : blueGrey700,
     primary3Color      : grey400,
-    accent1Color       : pinkA200,
+    accent1Color       : cfaOrange700,
     accent2Color       : grey100,
     accent3Color       : grey500,
     textColor          : darkBlack,

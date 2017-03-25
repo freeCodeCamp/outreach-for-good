@@ -1,0 +1,8 @@
+{
+  "_id": "58d4a16d3bb36ac1204e669c",
+  "provider": "local",
+  "name": "Test User",
+  "email": "test@test.com",
+  "__v": 0,
+  "role": "teacher"
+}

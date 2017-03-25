@@ -15,4 +15,12 @@ export default {
       popover : false
     }
   },
+  records : {
+    schools : [],
+    current : [],
+    list    : []
+  },
+  student : {
+    record : {}
+  }
 };
