@@ -10,6 +10,10 @@ router.get('/types',
   auth.hasRole('teacher'),
   controller.types);
 
+router.put('/types/:typeId',
+  auth.hasRole('admin'),
+  controller.update);
+
 router.post('/types',
   auth.hasRole('admin'),
   controller.create);

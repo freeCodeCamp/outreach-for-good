@@ -132,7 +132,7 @@ AbsenceRecord.remove().exec().then(function() {
     createdStudents: [studentD._id, studentE._id]
   }, logCreateResults('AbsenceRecords'));
 }).then(function() {
-  return Setting.create({ intervention : { 
+  return Setting.create({ intervention : {
     types: [{
       title: 'One Intervention',
       description: 'A description of one intervention with more details'

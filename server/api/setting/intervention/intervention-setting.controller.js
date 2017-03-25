@@ -23,7 +23,6 @@ exports.types = function(req, res) {
  * restriction: 'admin'
  */
 exports.create = function(req, res) {
-  console.log(req.body)
   Setting.findOneAndUpdate({"name": "settings"},
     {$push: {"intervention.types": req.body}},
     function(err, setting) {
@@ -31,6 +30,19 @@ exports.create = function(req, res) {
     return res.status(201).json(setting);
   });
 };
+
+/**
+ * Updates an existing intervention record
+ */
+exports.update = function(req, res) {
+  console.log('intervention update: ', req.body);
+  Setting.findOneAndUpdate({"name": "settings", "intervention.types._id": req.params.typeId}, {$set: {"intervention.types.$": req.body}}, function(err, intervention) {
+    if(err) return handleError(res, err);
+
+    console.log(intervention);
+    return res.status(200).json(intervention);
+  });
+}
 
 /**
  * Remove an intervention type from the database
