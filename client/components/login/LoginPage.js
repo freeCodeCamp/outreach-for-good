@@ -7,6 +7,7 @@ import {browserHistory} from 'react-router';
 
 import RaisedButton from 'material-ui/RaisedButton';
 import FontIcon from 'material-ui/FontIcon';
+import logo from '../../assets/images/mstile-150x150.png';
 
 class LoginPage extends React.Component {
 
@@ -20,13 +21,23 @@ class LoginPage extends React.Component {
   render() {
     return (
       <div className="login-page">
-        <img src="/assets/images/mstile-150x150.png" />
+        <img src={logo} />
         <div>
+          <div className="login-page-title">
+            Student absenteeism tracking and reporting
+          </div>
           <RaisedButton
             href="/auth/google"
             label="Sign In with Google"
+            labelStyle={{
+              fontSize      : '14px',
+              textTransform : 'none',
+              fontWeight    : '500',
+              paddingLeft   : '10px',
+            }}
             backgroundColor='#DF4A32'
             labelColor='#FEFFFF'
+            className='login-button'
             icon={<FontIcon className="fa fa-google-plus" />}
           />
         </div>
