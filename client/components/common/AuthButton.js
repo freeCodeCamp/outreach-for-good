@@ -24,11 +24,7 @@ const AuthButton = ({label, openMenu, toggleMenu, handleMenuItem}) =>
         lineHeight : '55px',
       }}
     >
-      <MenuItem value="1" primaryText="Refresh" />
-      <MenuItem
-        value="2"
-        primaryText="Help"
-      />
+      <MenuItem value="dashboard" primaryText="Dashboard" />
       <MenuItem
         value="logout"
         primaryText="Sign out"
