@@ -5,15 +5,17 @@ import MenuItem from 'material-ui/MenuItem';
 import FlatButton from 'material-ui/FlatButton';
 
 
-const AuthButton = ({label, openMenu, toggleMenu, handleMenuItem}) => 
+const AuthButton = ({label, openMenu, toggleMenu, handleMenuItem}) =>
     <IconMenu
       iconButtonElement={
         <FlatButton
           onTouchTap={openMenu}
           label={label.userName}
           labelStyle={{
-            color      : '#FFFFFF',
-            fontWeight : '400'
+            color         : '#FFFFFF',
+            fontWeight    : '400',
+            fontSize      : '16px',
+            textTransform : 'none'
           }}
             />
       }
@@ -24,11 +26,7 @@ const AuthButton = ({label, openMenu, toggleMenu, handleMenuItem}) =>
         lineHeight : '55px',
       }}
     >
-      <MenuItem value="1" primaryText="Refresh" />
-      <MenuItem
-        value="2"
-        primaryText="Help"
-      />
+      <MenuItem value="dashboard" primaryText="Dashboard" />
       <MenuItem
         value="logout"
         primaryText="Sign out"

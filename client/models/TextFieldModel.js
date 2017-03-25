@@ -23,6 +23,7 @@ class TextFieldModel extends Text {
         name={currentState.id}
         onChange={currentState.onChange}
         errorText={currentState.errorText}
+        errorStyle={{textAlign: 'left'}}
         key={key}
       />;
   }
