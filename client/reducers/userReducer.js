@@ -5,14 +5,14 @@ import User from '../models/UserModel';
 
 const initialState = new List();
 
-const mergeEntities = (state, newUsers) =>
-  state.merge(newUsers.map(user => new User(user)));
+// const mergeEntities = (state, newUsers) => 
+//   state.merge(newUsers.map(user => new User(user)));
 
 export default (state = initialState, action) => {
   switch (action.type) {
   // Received users from getAllUsers()
   case types.LOAD_USERS_SUCCESS:
-    return mergeEntities(state, fromJS(action.users));
+    return fromJS(action.users).map(user => new User(user));
 
   default:
     return state;

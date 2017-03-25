@@ -40,8 +40,7 @@ export function getAllSchools() {
 
 export function addSchool(schoolName) {
   return function(dispatch) {
-    let promises = schoolName.map(school => schoolAPI.addSchool(school));
-    return Promise.all(promises)
+    return schoolAPI.addSchool(schoolName)
     .then(() => dispatch(getAllSchools()))
     .catch(err => handleError(err, dispatch));
   };

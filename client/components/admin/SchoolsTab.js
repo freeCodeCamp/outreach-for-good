@@ -26,6 +26,11 @@ const SchoolsTab = ({schools, ...props}) => {
     props.clickHandler('textFieldChange', newValue, event); // eslint-disable-line no-invalid-this
   }
 
+  function submitTextField(event) {
+    event.preventDefault();
+    props.clickHandler('textFieldEnter', '', event); // eslint-disable-line no-invalid-this
+  }
+
   let dialogs = [];
   let schoolNames = schools.map(i => i.get('name')).toJS();
 
@@ -55,6 +60,34 @@ const SchoolsTab = ({schools, ...props}) => {
       </div></div>]
   }));
 
+  const newSchoolTextField = new TextFieldModel({
+    label     : 'School Name',
+    id        : locAct.NEW_SCHOOL,
+    onChange  : textFieldHandler,
+    errorText : props.form.get('error').get('newSchool')
+  });
+
+  dialogs.push(new DialogModel({
+    title   : 'New School',
+    open    : props.table.get('MuiDialogs').get(locAct.NEW_SCHOOL),
+    actions : List([
+      { label: 'Cancel', click: buttonHandler },
+      {
+        label    : 'Add',
+        click    : buttonHandler,
+        value    : locAct.NEW_SCHOOL,
+        disabled : props.form.get('submitDisabled')
+      },
+    ]),
+    text : [<div key='0'>
+      {'Add a new school to the application'}
+      <div key='2' style={{textAlign: 'center'}}>
+        <form onSubmit={submitTextField} id='NEW_SCHOOL_FORM'>
+        {newSchoolTextField.getTextField(newSchoolTextField, 3)}
+        </form>
+      </div></div>]
+  }));
+
   // Defer building dialogs/dropdowns until something is selected
   if(props.table.get('selectedData').first()) {
     dialogs.push(new DialogModel({
@@ -64,9 +97,24 @@ const SchoolsTab = ({schools, ...props}) => {
         { label: 'Cancel', click: buttonHandler },
         { label: 'Remove', click: buttonHandler, value: locAct.REMOVE_SCHOOL },
       ]),
-      text : [` Permanently remove
-        ${props.table.selectedRowsToCsv(props.table, 'name')}
-      `]
+      text : [<div className="alert alert-danger" key='1'>
+        <strong key='2'>WARNING!</strong>
+        <br key='3' />
+        In addition to deleting {props.table.selectedRowsToCsv(props.table, 'name')}, this operation will
+        <strong key='4'> permanently</strong> delete:<br key='12' />
+        <ul key='5'>
+          <li key='6'>Absence Records</li>
+          <li key='7'>Assigned students, including associated:
+            <ul key='8'>
+              <li key='9'>Outreaches</li>
+              <li key='10'>Interventions</li>
+              <li key='11'>Notes</li>
+            </ul>
+          </li>
+        </ul>
+        Also, teachers assigned to this school will have access revoked until reassigned.
+      </div>
+      ]
     }));
   }
 
@@ -126,7 +174,7 @@ const SchoolsTab = ({schools, ...props}) => {
 SchoolsTab.propTypes = {
   schools      : PropTypes.instanceOf(List).isRequired,
   table        : PropTypes.object.isRequired,
-  formState    : PropTypes.object.isRequired,
+  form         : PropTypes.object.isRequired,
   clickHandler : PropTypes.func.isRequired,
 };
 
