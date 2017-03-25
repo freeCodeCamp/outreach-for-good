@@ -9,12 +9,8 @@ import TextFieldModel from '../../models/TextFieldModel';
 
 const SchoolsTab = ({schools, ...props}) => {
 /**
- * Configure: Material-UI <Dialog>
- *  1. Add new <Dialog> defs to `const dialogs [..]`
- *  2. Set `props` to an object with Dialog properties
- *  3. Minimum properties include
- *     - open (set to state variable true/false)
- *     - actions (React element(s) to close dialog)
+ * Handler Functions
+ *   - Catch events from page elements and send to parent component
  */
   function buttonHandler(event) {
     event.preventDefault();
@@ -26,16 +22,30 @@ const SchoolsTab = ({schools, ...props}) => {
     props.clickHandler('textFieldChange', newValue, event); // eslint-disable-line no-invalid-this
   }
 
-  let dialogs = [];
-  let schoolNames = schools.map(i => i.get('name')).toJS();
+  function submitTextField(event) {
+    event.preventDefault();
+    props.clickHandler('textFieldEnter', '', event); // eslint-disable-line no-invalid-this
+  }
 
+  /**
+   * Material-UI <TextField>
+   *  - Used inside <Dialog> prompts
+   *  - See TextFieldModel for default parameters
+   */
   const newSchoolTextField = new TextFieldModel({
     label     : 'School Name',
     id        : locAct.NEW_SCHOOL,
     onChange  : textFieldHandler,
-    errorText : props.formState.error.NewSchool
+    errorText : props.form.get('error').get('newSchool')
   });
 
+  let dialogs = [];
+
+  /**
+   * Material-UI <Dialog>
+   *  - `actions:` become <FlatButton>s in dialog
+   *  - See DialogModel for default parameters
+   */
   dialogs.push(new DialogModel({
     title   : 'New School',
     open    : props.table.get('MuiDialogs').get(locAct.NEW_SCHOOL),
@@ -45,13 +55,15 @@ const SchoolsTab = ({schools, ...props}) => {
         label    : 'Add',
         click    : buttonHandler,
         value    : locAct.NEW_SCHOOL,
-        disabled : props.formState.submitDisabled
+        disabled : props.form.get('submitDisabled')
       },
     ]),
     text : [<div key='0'>
       {'Add a new school to the application'}
       <div key='2' style={{textAlign: 'center'}}>
-      {newSchoolTextField.getTextField(newSchoolTextField, 3)}
+        <form onSubmit={submitTextField} id='NEW_SCHOOL_FORM'>
+        {newSchoolTextField.getTextField(newSchoolTextField, 3)}
+        </form>
       </div></div>]
   }));
 
@@ -64,40 +76,52 @@ const SchoolsTab = ({schools, ...props}) => {
         { label: 'Cancel', click: buttonHandler },
         { label: 'Remove', click: buttonHandler, value: locAct.REMOVE_SCHOOL },
       ]),
-      text : [` Permanently remove
-        ${props.table.selectedRowsToCsv(props.table, 'name')}
-      `]
+      text : [<div className="alert alert-danger" key='1'>
+        <strong key='2'>WARNING!</strong>
+        <br key='3' />
+        In addition to deleting {props.table.selectedRowsToCsv(props.table, 'name')}, this operation will
+        <strong key='4'> permanently</strong> delete:<br key='12' />
+        <ul key='5'>
+          <li key='6'>Absence Records</li>
+          <li key='7'>Assigned students, including associated:
+            <ul key='8'>
+              <li key='9'>Outreaches</li>
+              <li key='10'>Interventions</li>
+              <li key='11'>Notes</li>
+            </ul>
+          </li>
+        </ul>
+        Also, teachers assigned to this school will have access revoked until reassigned.
+      </div>
+      ]
     }));
   }
 
-//      ${props.selectedRows.description.map(row => row.name)}
-/**
- * Configure: Material-UI <RaisedButton> and <Popover>
- *  1. Add new <RaisedButton> defs to `const raisedButtons [..]`
- *  2. If button has <Popover>, set `menu:` to an object with popover properties
- *  3. Minimum properties include
- *     - open (set to menu-specific state variable true/false)
- *     - item (array of <MenuItem> definitions)
- *  4. If button or menu-item has dialog, add `dialogID`
- */
-  const newButton = new RaisedButtonModel({
+  let buttons = [];
+
+  /**
+   * Material-UI <RaisedButton> and <Popover>
+   *  - `actionID:` is used by parent to launch dialogs
+   *  - See RaisedButtonModel for default parameters
+   */
+  buttons.push(new RaisedButtonModel({
     label           : 'New',
     backgroundColor : '#009d9d',
     actionID        : locAct.NEW_SCHOOL,
     disabled        : false
-  });
+  }));
 
-  const removeButton = new RaisedButtonModel({
+  buttons.push(new RaisedButtonModel({
     label           : 'Remove',
     backgroundColor : '#d9534f',
     actionID        : locAct.REMOVE_SCHOOL
-  });
+  }));
 
-/**
- * Configure: fixed-data-table
- *  1.
- *  2.
- */
+  /**
+   * Fixed-Data-Table Parameters
+   *  - basic fixed-data-table column configuration (`id:` = property to display)
+   *  - dialogs and buttons are passed in as properties on `page`
+   */
   const page = {
     title   : 'Manage School Accounts',
     columns : [{
@@ -106,10 +130,7 @@ const SchoolsTab = ({schools, ...props}) => {
       flexGrow : 1
     }],
     dialogs,
-    raisedButtons : [
-      newButton,
-      removeButton
-    ]
+    buttons
   };
 
   return (
@@ -126,7 +147,7 @@ const SchoolsTab = ({schools, ...props}) => {
 SchoolsTab.propTypes = {
   schools      : PropTypes.instanceOf(List).isRequired,
   table        : PropTypes.object.isRequired,
-  formState    : PropTypes.object.isRequired,
+  form         : PropTypes.object.isRequired,
   clickHandler : PropTypes.func.isRequired,
 };
 

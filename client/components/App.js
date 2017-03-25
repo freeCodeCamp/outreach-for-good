@@ -18,7 +18,7 @@ class App extends Component {
           <section className="main-body">
             {this.props.session.token && <Sidebar/>}
             <section id="main-view">
-              <div id="main-content">
+              <div id={this.props.session.token ? 'main-content' : 'login-content'}>
                 {this.props.children}
               </div>
               {this.props.session.token && <Footer />}

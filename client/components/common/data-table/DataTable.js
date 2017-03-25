@@ -15,7 +15,7 @@ import MenuItem from 'material-ui/MenuItem';
 import Dialog from 'material-ui/Dialog';
 
 const DataTable = ({page, table, data, ...props}) => {
-
+  // Highlight selected rows and handle row clicks
   let row = {
     selected : table.get('selectedIndex'),
     isSelected(index) {
@@ -27,6 +27,10 @@ const DataTable = ({page, table, data, ...props}) => {
     }
   };
 
+  /**
+   * Handler Functions
+   *   - Catch events from page elements and send to parent component
+   */
   function buttonHandler(event) {
     event.preventDefault();
     props.clickHandler('buttonClick', this.value, event); // eslint-disable-line no-invalid-this
@@ -46,7 +50,7 @@ const DataTable = ({page, table, data, ...props}) => {
       <div className="admin-page-title">
         <h3>{page.title}</h3>
         <div className="buttons">
-          {page.raisedButtons && page.raisedButtons
+          {page.buttons && page.buttons
             .map((button, index) =>
             <div key={index} style={{display: 'inline'}}>
               <RaisedButton

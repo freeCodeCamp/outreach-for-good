@@ -15,10 +15,10 @@ class DropdownModel extends Dropdown {
     return currentState.update('MuiDropdowns', i => i.clear().merge(DropdownValues));
   }
 
-  getDropdown(currentState, onChange, key) {
+  getDropdown(currentState, key) {
     return <DropDownMenu
         value={currentState.get('selected')}
-        onChange={onChange}
+        onChange={currentState.get('onChange')}
         key={key}
       >
         {currentState.get('items').map(item =>
