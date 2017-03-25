@@ -38,7 +38,7 @@ export function getUser(userId) {
 export function getAllUsers() {
   return function(dispatch) {
     return userAPI.getUsers().then(res => {
-      //console.log('getAllUsers API: ', res);
+      console.log('getAllUsers API: ', res);
       return dispatch(loadUsersSuccess(res));
     })
     .catch(err => handleError(err, dispatch));

@@ -98,6 +98,7 @@ class AdminPage extends React.Component {
           break;
         case locAct.EDIT_ROLE:
           users = this.state.table.get('selectedData').map(row => row._id);
+          console.log(users.toArray(), this.state.form.get('field').get('editRole'))
           this.props.usrAct.updateUserRole(users.toArray(),
             this.state.form.get('field').get('editRole'));
           break;
@@ -194,6 +195,19 @@ class AdminPage extends React.Component {
           nextForm = form.enableSubmitButton(nextForm);
         }
         this.setState({form: nextForm});
+        break;
+      }
+      break; // End of: case 'textFieldChange'
+
+    // Catch [ENTER] keystrokes and submit
+    case 'textFieldEnter':
+      // Catching enter requires workaround (submitting a form-wrapper)
+      switch (event.target.id) {
+      case 'NEW_SCHOOL_FORM':
+        if(this.props.schools.filter(i => i.includes(this.state.form.get('field').get('newSchool'))).isEmpty()
+          && document.getElementById(locAct.NEW_SCHOOL).value.length != 0) {
+          this.clickHandler('dialogClick', locAct.NEW_SCHOOL, event);
+        }
         break;
       }
       break; // End of: case 'textFieldChange'

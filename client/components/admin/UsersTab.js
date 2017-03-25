@@ -159,7 +159,6 @@ const UsersTab = ({users, schools, ...props}) => {
       removeButton
     ]
   };
-// users.map(i => { if(i.assignment) console.log(i.assignment.toJS())})
   return (
     <div>
       <DataTable

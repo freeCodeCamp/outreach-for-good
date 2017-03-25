@@ -26,6 +26,11 @@ const SchoolsTab = ({schools, ...props}) => {
     props.clickHandler('textFieldChange', newValue, event); // eslint-disable-line no-invalid-this
   }
 
+  function submitTextField(event) {
+    event.preventDefault();
+    props.clickHandler('textFieldEnter', '', event); // eslint-disable-line no-invalid-this
+  }
+
   let dialogs = [];
 
   const newSchoolTextField = new TextFieldModel({
@@ -50,7 +55,9 @@ const SchoolsTab = ({schools, ...props}) => {
     text : [<div key='0'>
       {'Add a new school to the application'}
       <div key='2' style={{textAlign: 'center'}}>
-      {newSchoolTextField.getTextField(newSchoolTextField, 3)}
+        <form onSubmit={submitTextField} id='NEW_SCHOOL_FORM'>
+        {newSchoolTextField.getTextField(newSchoolTextField, 3)}
+        </form>
       </div></div>]
   }));
 
