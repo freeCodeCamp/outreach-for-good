@@ -1,38 +1,32 @@
 import React, {PropTypes} from 'react';
 import DataTable from '../common/data-table/DataTable';
 
-const LetterTab = ({view, schools}) => {
-  const columnDefs = [{
-    title : 'Name',
-    id    : 'name',
-    flexGrow : 1
-  }, {
-    title    : 'Actions',
-    id       : 'action',
-    width : 100
-  }];
-
-  const tableProps = {
-    table : {
-      width  : view.width,
-      height : view.height,
-    },
-    rowHeight    : 50,
-    headerHeight : 50
+const LetterTab = ({schools, ...props}) => {
+  const page = {
+    title   : 'Manage User Accounts',
+    columns : [{
+      title    : 'Name',
+      id       : 'name',
+      flexGrow : 1
+    }, {
+      title : 'Actions',
+      id    : 'action',
+      width : 100
+    }]
   };
 
   return (
     <DataTable
-      table={tableProps}
-      column={columnDefs}
+      page={page}
       data={schools}
+      {...props}
     />
   );
 };
 
 LetterTab.propTypes = {
   view    : PropTypes.object.isRequired,
-  schools : PropTypes.array.isRequired,
+  schools : PropTypes.object.isRequired,
 };
 
 export default LetterTab;
