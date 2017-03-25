@@ -38,6 +38,11 @@ class AdminPage extends React.Component {
     });
   }
 
+  /**
+   * Initialize Data Table
+   *   - Retrieve and configure data for table
+   *   - Set default state for 'action' variables
+   */
   initializeTable(currentTab) {
     let nextTable;
     switch (currentTab) {
@@ -66,6 +71,12 @@ class AdminPage extends React.Component {
     return nextTable;
   }
 
+  /**
+   * Click Handler
+   *   - Child component actions that affect local state
+   *   - Any actions that affect redux state
+   *   - Actions resulting in API calls
+   */
   clickHandler(action, data, event) {
     let nextTable;
     let nextForm;
@@ -77,13 +88,16 @@ class AdminPage extends React.Component {
       this.setState({table: nextTable});
       break;
 
-    // Clicked a table row
+    // Clicked (select/de-select) a table row
     case 'toggleSelected':
       nextTable = table.toggleSelectedRowIndex(this.state.table, data);
       this.setState({table: nextTable});
       break;
 
-    // Clicked a dialog (modal) action, handle submit/cancel
+    /**
+     * Dialog / Modal Click Handler
+     *   - Typically results in `Cancel` or `Submit` (API Call)
+     */
     case 'dialogClick':
       if(locAct.DIALOG_LIST.indexOf(data) != -1) {
         // Click inside dialog with associated API action
@@ -92,13 +106,11 @@ class AdminPage extends React.Component {
         case locAct.EDIT_SCHOOL:
           users = this.state.table.get('selectedData')
             .map(row => row._id);
-          //console.log(this.getSchoolId(this.state.form.get('field').get('editSchool')));
           this.props.usrAct.updateUserSchool(users.toArray(),
             this.getSchoolId(this.state.form.get('field').get('editSchool')));
           break;
         case locAct.EDIT_ROLE:
           users = this.state.table.get('selectedData').map(row => row._id);
-          console.log(users.toArray(), this.state.form.get('field').get('editRole'))
           this.props.usrAct.updateUserRole(users.toArray(),
             this.state.form.get('field').get('editRole'));
           break;
@@ -125,8 +137,11 @@ class AdminPage extends React.Component {
       }
       break; // End of: case 'dialogClick'
 
-    // Clicked a popover menu item -or- a RaisedButton
-    //   - usually initializing <Dialog> modal parameters
+    /**
+     * Button / Popover Menu Click Handler
+     *   - Typically opens a <Dialog> modal or popover menu
+     *   - Initialize dialog and form field parameters
+     */
     case 'menuClick':
     case 'buttonClick':
       nextTable = table.setSelectedRowData(this.state.table,
@@ -166,6 +181,11 @@ class AdminPage extends React.Component {
       this.setState({table: nextTable});
       break;
 
+    /**
+     * Form Field Click Handler(s)
+     *   - Form state is tracked in this.state.form
+     */
+
     // User made new dropdown menu selection
     case 'dropdownChange':
       switch (event) {
@@ -199,7 +219,7 @@ class AdminPage extends React.Component {
       }
       break; // End of: case 'textFieldChange'
 
-    // Catch [ENTER] keystrokes and submit
+    // Catch [ENTER] keystrokes and submit form
     case 'textFieldEnter':
       // Catching enter requires workaround (submitting a form-wrapper)
       switch (event.target.id) {
@@ -214,19 +234,19 @@ class AdminPage extends React.Component {
     }
   } // End of: clickHandler()
 
-  // Returns full row data for selected table index values
+  // Given a table-row index number, return object containing all row data
   getSelectedRowData() {
     return this.props[this.state.table.get('selectedTab')]
       .filter((v, i) => this.state.table.get('selectedIndex')
       .indexOf(i) != -1);
   }
 
-  // Returns full row data for selected table index values
+  // Given a school name, return school _id
   getSchoolId(schoolName) {
     return this.props.schools.find(v => v.name == schoolName)._id;
   }
 
-  // Handle user changing tabs
+  // Handle user changing main tabs
   tabHandler(data) {
     this.clickHandler('changeTabs', data);
   }

@@ -9,12 +9,8 @@ import RaisedButtonModel from '../../models/RaisedButtonModel';
 
 const UsersTab = ({users, schools, ...props}) => {
 /**
- * Configure: Material-UI <Dialog>
- *  1. Add new <Dialog> defs to `const dialogs [..]`
- *  2. Set `props` to an object with Dialog properties
- *  3. Minimum properties include
- *     - open (set to state variable true/false)
- *     - actions (React element(s) to close dialog)
+ * Handler Functions
+ *   - Catch events from page elements and send to parent component
  */
   function buttonHandler(event) {
     event.preventDefault();
@@ -35,7 +31,11 @@ const UsersTab = ({users, schools, ...props}) => {
 
   // Defer building dialogs/dropdowns until something is selected
   if(props.table.get('selectedData').first()) {
-    //props.form.map(i => console.log(i))
+    /**
+     * Material-UI <Dropdown>
+     *  - Used inside <Dialog> prompts
+     *  - See DropdownModel for default parameters
+     */
     const schoolDropdown = new DropdownModel({
       items    : schools.map(s => s.name),
       selected : props.form.get('field').get('editSchool'),
@@ -49,6 +49,11 @@ const UsersTab = ({users, schools, ...props}) => {
       onChange : dropdownHandlerRole
     });
 
+    /**
+     * Material-UI <Dialog>
+     *  - `actions:` become <FlatButton>s in dialog
+     *  - See DialogModel for default parameters
+     */
     dialogs.push(new DialogModel({
       title   : 'Change Assigned School',
       open    : props.table.get('MuiDialogs').get(locAct.EDIT_SCHOOL),
@@ -96,17 +101,12 @@ const UsersTab = ({users, schools, ...props}) => {
     }));
   }
 
-//      ${props.selectedRows.description.map(row => row.name)}
-/**
- * Configure: Material-UI <RaisedButton> and <Popover>
- *  1. Add new <RaisedButton> defs to `const raisedButtons [..]`
- *  2. If button has <Popover>, set `menu:` to an object with popover properties
- *  3. Minimum properties include
- *     - open (set to menu-specific state variable true/false)
- *     - item (array of <MenuItem> definitions)
- *  4. If button or menu-item has dialog, add `dialogID`
- */
-
+  /**
+   * Material-UI <RaisedButton> and <Popover>
+   *  - `menu:` become a <Popover> menu under button
+   *  - `actionID:` is used by parent to launch dialogs
+   *  - See RaisedButtonModel for default parameters
+   */
   const editButton = new RaisedButtonModel({
     label    : 'Edit',
     actionID : locAct.EDIT,
@@ -128,12 +128,11 @@ const UsersTab = ({users, schools, ...props}) => {
     actionID        : locAct.REMOVE_USER
   });
 
-/**
- * Configure: fixed-data-table
- *  1.
- *  2.
- */
-
+  /**
+   * Fixed-Data-Table Parameters
+   *  - basic fixed-data-table column configuration (`id:` = property to display)
+   *  - dialogs and buttons are passed in as properties on `page`
+   */
   const page = {
     title   : 'Manage User Accounts',
     columns : [{

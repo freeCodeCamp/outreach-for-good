@@ -9,12 +9,8 @@ import TextFieldModel from '../../models/TextFieldModel';
 
 const SchoolsTab = ({schools, ...props}) => {
 /**
- * Configure: Material-UI <Dialog>
- *  1. Add new <Dialog> defs to `const dialogs [..]`
- *  2. Set `props` to an object with Dialog properties
- *  3. Minimum properties include
- *     - open (set to state variable true/false)
- *     - actions (React element(s) to close dialog)
+ * Handler Functions
+ *   - Catch events from page elements and send to parent component
  */
   function buttonHandler(event) {
     event.preventDefault();
@@ -31,35 +27,11 @@ const SchoolsTab = ({schools, ...props}) => {
     props.clickHandler('textFieldEnter', '', event); // eslint-disable-line no-invalid-this
   }
 
-  let dialogs = [];
-  let schoolNames = schools.map(i => i.get('name')).toJS();
-
-  const newSchoolTextField = new TextFieldModel({
-    label     : 'School Name',
-    id        : locAct.NEW_SCHOOL,
-    onChange  : textFieldHandler,
-    errorText : props.formState.error.NewSchool
-  });
-
-  dialogs.push(new DialogModel({
-    title   : 'New School',
-    open    : props.table.get('MuiDialogs').get(locAct.NEW_SCHOOL),
-    actions : List([
-      { label: 'Cancel', click: buttonHandler },
-      {
-        label    : 'Add',
-        click    : buttonHandler,
-        value    : locAct.NEW_SCHOOL,
-        disabled : props.formState.submitDisabled
-      },
-    ]),
-    text : [<div key='0'>
-      {'Add a new school to the application'}
-      <div key='2' style={{textAlign: 'center'}}>
-      {newSchoolTextField.getTextField(newSchoolTextField, 3)}
-      </div></div>]
-  }));
-
+  /**
+   * Material-UI <TextField>
+   *  - Used inside <Dialog> prompts
+   *  - See TextFieldModel for default parameters
+   */
   const newSchoolTextField = new TextFieldModel({
     label     : 'School Name',
     id        : locAct.NEW_SCHOOL,
@@ -67,6 +39,13 @@ const SchoolsTab = ({schools, ...props}) => {
     errorText : props.form.get('error').get('newSchool')
   });
 
+  let dialogs = [];
+
+  /**
+   * Material-UI <Dialog>
+   *  - `actions:` become <FlatButton>s in dialog
+   *  - See DialogModel for default parameters
+   */
   dialogs.push(new DialogModel({
     title   : 'New School',
     open    : props.table.get('MuiDialogs').get(locAct.NEW_SCHOOL),
@@ -118,16 +97,11 @@ const SchoolsTab = ({schools, ...props}) => {
     }));
   }
 
-//      ${props.selectedRows.description.map(row => row.name)}
-/**
- * Configure: Material-UI <RaisedButton> and <Popover>
- *  1. Add new <RaisedButton> defs to `const raisedButtons [..]`
- *  2. If button has <Popover>, set `menu:` to an object with popover properties
- *  3. Minimum properties include
- *     - open (set to menu-specific state variable true/false)
- *     - item (array of <MenuItem> definitions)
- *  4. If button or menu-item has dialog, add `dialogID`
- */
+  /**
+   * Material-UI <RaisedButton> and <Popover>
+   *  - `actionID:` is used by parent to launch dialogs
+   *  - See RaisedButtonModel for default parameters
+   */
   const newButton = new RaisedButtonModel({
     label           : 'New',
     backgroundColor : '#009d9d',
@@ -141,11 +115,11 @@ const SchoolsTab = ({schools, ...props}) => {
     actionID        : locAct.REMOVE_SCHOOL
   });
 
-/**
- * Configure: fixed-data-table
- *  1.
- *  2.
- */
+  /**
+   * Fixed-Data-Table Parameters
+   *  - basic fixed-data-table column configuration (`id:` = property to display)
+   *  - dialogs and buttons are passed in as properties on `page`
+   */
   const page = {
     title   : 'Manage School Accounts',
     columns : [{
