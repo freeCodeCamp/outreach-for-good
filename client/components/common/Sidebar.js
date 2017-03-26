@@ -23,10 +23,10 @@ class Sidebar extends Component {
           <span className="fa-stack fa-lg pull-left"><i className="fa fa-stack-1x fa-area-chart" /></span>
           Data Visualization
         </Link></li>
-        {(this.props.session.role === 'teacher' ||
-          this.props.session.role === 'admin' ||
-          this.props.session.role === 'super') &&
-          <li><Link to="/records" activeClassName="active">
+        {(this.props.session.role === 'teacher'
+          || this.props.session.role === 'admin'
+          || this.props.session.role === 'super')
+          && <li><Link to="/records" activeClassName="active">
           <span className="fa-stack fa-lg pull-left"><i className="fa fa-stack-1x fa-file" /></span>
           Records
         </Link></li>}
@@ -38,14 +38,14 @@ class Sidebar extends Component {
           <span className="fa-stack fa-lg pull-left"><i className="fa fa-stack-1x fa-cogs" /></span>
           School Settings
         </Link></li>
-        {(this.props.session.role == 'admin' ||
-          this.props.session.role == 'super') &&
-        <li><Link to="/admin" activeClassName="active">
+        {(this.props.session.role == 'admin'
+          || this.props.session.role == 'super')
+        && <li><Link to="/admin" activeClassName="active">
           <span className="fa-stack fa-lg pull-left"><i className="fa fa-stack-1x fa-wrench" /></span>
           Admin
         </Link></li>}
-        {(this.props.student.record.hasOwnProperty('firstName')) &&
-          <li><Link to={`/student/${this.props.student.record._id}`} activeClassName="active">
+        {this.props.student.student.hasOwnProperty('firstName')
+          && <li><Link to={`/student/${this.props.student.student._id}`} activeClassName="active">
           <span className="fa-stack fa-lg pull-left"><i className="fa fa-stack-1x fa-user" /></span>
           Student
         </Link></li>}
