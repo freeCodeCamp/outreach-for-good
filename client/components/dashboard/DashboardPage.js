@@ -5,7 +5,7 @@ import {Tabs, Tab} from 'material-ui/Tabs';
 import Dimensions from 'react-dimensions';
 
 import * as usrAct from '../../actions/userActions';
-import * as schAct from '../../actions/schoolActions';
+import * as absAct from '../../actions/absenceRecordActions';
 import TableModel from '../../models/TableModel';
 
 import CourtTab from './CourtTab';
@@ -46,7 +46,6 @@ class DashboardPage extends React.Component {
     let nextTable;
     switch (currentTab) {
     case 'court':
-      //this.props.usrAct.getAllUsers();
       nextTable = table.setSelectedTab(table, 'court');
       break;
     case 'home':
@@ -62,6 +61,7 @@ class DashboardPage extends React.Component {
       nextTable = table.setSelectedTab(table, 'sst');
       break;
     case 'student':
+      this.props.absAct.fetchRecordsList();
       nextTable = table.setSelectedTab(table, 'student');
       break;
     }
@@ -87,7 +87,7 @@ class DashboardPage extends React.Component {
               width  : this.props.containerWidth - 20,
               height : this.props.containerHeight - 48 - 80
             }}
-            schools = {this.props.users}
+            absenceRecords = {this.props.absenceRecords}
             table = {this.state.table}
             clickHandler = {this.clickHandler}
           />
@@ -98,7 +98,7 @@ class DashboardPage extends React.Component {
               width  : this.props.containerWidth - 20,
               height : this.props.containerHeight - 48 - 80
             }}
-            schools = {this.props.users}
+            absenceRecords = {this.props.absenceRecords}
             table = {this.state.table}
             clickHandler = {this.clickHandler}
           />
@@ -109,7 +109,7 @@ class DashboardPage extends React.Component {
               width  : this.props.containerWidth - 20,
               height : this.props.containerHeight - 48 - 80
             }}
-            schools = {this.props.users}
+            absenceRecords = {this.props.absenceRecords}
             table = {this.state.table}
             clickHandler = {this.clickHandler}
           />
@@ -120,7 +120,7 @@ class DashboardPage extends React.Component {
               width  : this.props.containerWidth - 20,
               height : this.props.containerHeight - 48 - 80
             }}
-            schools = {this.props.users}
+            absenceRecords = {this.props.absenceRecords}
             table = {this.state.table}
             clickHandler = {this.clickHandler}
           />
@@ -131,7 +131,7 @@ class DashboardPage extends React.Component {
               width  : this.props.containerWidth - 20,
               height : this.props.containerHeight - 48 - 80
             }}
-            schools = {this.props.users}
+            absenceRecords = {this.props.absenceRecords}
             table = {this.state.table}
             clickHandler = {this.clickHandler}
           />
@@ -142,7 +142,7 @@ class DashboardPage extends React.Component {
               width  : this.props.containerWidth - 20,
               height : this.props.containerHeight - 48 - 80
             }}
-            schools = {this.props.users}
+            absenceRecords = {this.props.absenceRecords}
             table = {this.state.table}
             clickHandler = {this.clickHandler}
           />
@@ -153,20 +153,22 @@ class DashboardPage extends React.Component {
 }
 
 DashboardPage.propTypes = {
+  absAct          : PropTypes.object.isRequired,
   usrAct          : PropTypes.object.isRequired,
-  users           : PropTypes.object.isRequired,
+  absenceRecords  : PropTypes.object.isRequired,
   containerWidth  : PropTypes.number.isRequired,
   containerHeight : PropTypes.number.isRequired
 };
 
 function mapStateToProps(state) {
   return {
-    users : state.users
+    absenceRecords : state.absenceRecords
   };
 }
 
 function mapDispatchToProps(dispatch) {
   return {
+    absAct : bindActionCreators(absAct, dispatch),
     usrAct : bindActionCreators(usrAct, dispatch)
   };
 }

@@ -1,7 +1,7 @@
 import React, {PropTypes} from 'react';
 import DataTable from '../common/data-table/DataTable';
 
-const CourtTab = ({schools, ...props}) => {
+const CourtTab = ({absenceRecords, ...props}) => {
   const page = {
     title   : 'Court Dashboard',
     columns : [{
@@ -18,7 +18,7 @@ const CourtTab = ({schools, ...props}) => {
   return (
     <DataTable
       page={page}
-      data={schools}
+      data={absenceRecords}
       {...props}
     />
   );
@@ -26,7 +26,7 @@ const CourtTab = ({schools, ...props}) => {
 
 CourtTab.propTypes = {
   view    : PropTypes.object.isRequired,
-  schools : PropTypes.object.isRequired,
+  absenceRecords : PropTypes.object.isRequired,
 };
 
 export default CourtTab;
