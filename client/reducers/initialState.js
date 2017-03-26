@@ -22,6 +22,10 @@ export default {
     list    : []
   },
   student : {
-    record : {}
+    student       : {},
+    records       : [],
+    interventions : [],
+    outreaches    : [],
+    notes         : []
   }
 };
