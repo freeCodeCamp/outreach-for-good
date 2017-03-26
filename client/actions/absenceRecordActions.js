@@ -2,8 +2,8 @@ import * as types from './actionTypes';
 import { validate } from './sessionActions';
 import AbsenceRecordsApi from '../api/AbsenceRecordsAltApi';
 
-export function loadRecordsSuccess(users) {
-  return {type: types.LOAD_ABSENCE_RECORD_SUCCESS, users};
+export function loadRecordsSuccess(absenceRecords) {
+  return {type: types.LOAD_ABSENCE_RECORD_SUCCESS, absenceRecords};
 }
 
 // Functions below handle asynchronous calls.

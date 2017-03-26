@@ -15,7 +15,8 @@ export default {
       popover : false
     }
   },
-  records : {
+  absenceRecords : [],
+  records        : {
     schools : [],
     current : [],
     list    : []
