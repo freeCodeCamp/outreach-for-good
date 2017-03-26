@@ -12,8 +12,7 @@ const styles = {
   }
 };
 
-const StudentTable = props => {
-  // let isExpandable = props.students.length ? true : false;
+const StudentTable = props =>
   <Card style={styles.card}>
     <CardHeader
       title={props.studentType}
@@ -50,7 +49,6 @@ const StudentTable = props => {
       </Table>
     </CardText>
   </Card>;
-};
 
 StudentTable.propTypes = {
   students    : PropTypes.array,
@@ -61,18 +59,18 @@ class AbsenceRecordsTable extends Component {
   render() {
     let buttons;
     if(this.props.manageTab) {
-      buttons = (
-        <div className="buttons">
+      buttons
+        = <div className="buttons">
           <RaisedButton
             onClick={this.props.delete}
             label="Delete Records"
             primary
           />;
         </div>
-      );
+      ;
     } else if(this.props.uploadTab) {
-      buttons = (
-        <div className="buttons">
+      buttons
+        = <div className="buttons">
           <RaisedButton
             onClick={this.props.confirm}
             label="Confirm"
@@ -84,8 +82,9 @@ class AbsenceRecordsTable extends Component {
             secondary
           />
         </div>
-      );
+      ;
     }
+    console.log(this.props.record);
     return (
       <div className="display-container">
         {buttons}

@@ -11,7 +11,7 @@ class ManageTab extends Component {
     super();
 
     this.state = {
-      school     : 0,
+      school     : {},
       openDelete : false,
       deleteText : ''
     };
@@ -20,8 +20,7 @@ class ManageTab extends Component {
   }
 
   getRecord(event, index, school) {
-    let newSchool = this.props.schools[school];
-    this.props.manageRecord(newSchool._id);
+    this.props.manageRecord(school._id);
     this.setState({ school });
   }
 
@@ -49,7 +48,7 @@ class ManageTab extends Component {
             {this.props.schools.map((school, i) =>
               <MenuItem
                 key={i}
-                value={i}
+                value={school}
                 primaryText={school.name}
               />
             )}

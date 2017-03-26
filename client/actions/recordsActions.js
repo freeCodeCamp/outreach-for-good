@@ -7,28 +7,28 @@ export function confirmRecord(record) {
     payload : record
   };
 }
+// COMMENTED OUT TO MAKE USE OF THE GET SCHOOL NAMES CALL IN SCHOOLS API
+// export function fetchSchools() {
+//   return dispatch => AbsenceRecordsApi.fetchSchools()
+//     .then(schools => dispatch({
+//       type : types.FETCH_SCHOOLS_SUCCESS,
+//       schools
+//     }));
+// }
 
-export function fetchSchools() {
-  return dispatch => AbsenceRecordsApi.fetchSchools()
-    .then(schools => dispatch({
-      type : types.FETCH_SCHOOLS_SUCCESS,
-      schools
-    }));
-}
-
-export function fetchCurrentRecord() {
-  return dispatch => AbsenceRecordsApi.fetchCurrentRecord()
+export function getCurrentRecord() {
+  return dispatch => AbsenceRecordsApi.getCurrentRecord()
     .then(current => dispatch({
       type : types.FETCH_CURRENT_RECORD_SUCCESS,
       current
     }));
 }
 
-export function fetchRecordList(schoolId) {
-  return dispatch => AbsenceRecordsApi.fetchRecordList(schoolId)
-    .then(records => dispatch({
-      type : types.FETCH_RECORD_LIST_SUCCESS,
-      records
+export function getSchoolRecordList(schoolId) {
+  return dispatch => AbsenceRecordsApi.getSchoolRecordList(schoolId)
+    .then(recordsList => dispatch({
+      type : types.FETCH_SCHOOL_RECORD_LIST,
+      recordsList
     }));
 }
 

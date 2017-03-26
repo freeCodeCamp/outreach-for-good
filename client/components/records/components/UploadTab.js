@@ -16,7 +16,7 @@ class UploadTab extends Component {
       loadingState         : 'determinate',
       loadingValue         : 0,
       record               : null,
-      school               : 0,
+      school               : {},
       recordResults        : false,
       date                 : new Date(),
       recordResultsMessage : ''
@@ -37,12 +37,13 @@ class UploadTab extends Component {
   changeFile(accepted) {
     this.setState({ loadingState: 'indeterminate', loadingValue: null });
     if(accepted) {
-      let currentSchool = this.props.schools[this.state.school];
+      let currentSchool = this.state.school;
       let currentRecord = this.props.current.filter(current =>
         current._id === currentSchool._id
       )[0];
       ParsePDF(currentSchool, currentRecord, accepted[0])
       .then(record => {
+        console.log(record);
         let message = '';
         if(record.creates) {
           message += `New records: ${record.creates.length}.`;
@@ -59,7 +60,6 @@ class UploadTab extends Component {
 
         this.setState({
           record,
-          date                 : new Date(),
           recordResults        : true,
           recordResultsMessage : message,
           loadingState         : 'determinate',
@@ -76,7 +76,6 @@ class UploadTab extends Component {
   confirm() {
     this.props.confirm(this.state.record, this.state.date);
     this.cancel();
-    // this.props.changeTab('manage');
   }
 
   cancel() {
@@ -104,7 +103,7 @@ class UploadTab extends Component {
               {this.props.schools.map((school, i) =>
                 <MenuItem
                   key={i}
-                  value={i}
+                  value={school}
                   primaryText={school.name} />
                 )}
             </SelectField>
