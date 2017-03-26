@@ -16,11 +16,14 @@ export default {
     }
   },
   records : {
-    schools : [],
     current : [],
     list    : []
   },
   student : {
-    record : {}
+    student       : {},
+    records       : [],
+    interventions : [],
+    outreaches    : [],
+    notes         : []
   }
 };

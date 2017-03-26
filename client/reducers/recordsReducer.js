@@ -16,6 +16,12 @@ export default function recordsReducer(state = initialState.records, action) {
       schools
     };
   }
+  case types.FETCH_SCHOOL_RECORD_LIST: {
+    return {
+      ...state,
+      list : action.recordsList
+    };
+  }
   case types.FETCH_CURRENT_RECORD_SUCCESS: {
     let current = action.current;
     return {

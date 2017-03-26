@@ -2,14 +2,16 @@ import React, {Component, PropTypes} from 'react';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import * as studentActions from '../../actions/studentActions';
-import StudentTabs from './components/StudentTabs';
+import StudentTabs from './partials/StudentTabs';
+import StudentAbsenceRecordTable from './partials/StudentAbsenceRecordTable';
 import Checkbox from 'material-ui/Checkbox';
 import Paper from 'material-ui/Paper';
 
 class StudentPage extends Component {
 
   componentWillMount() {
-    this.props.actions.fetchStudent(this.props.params.studentId);
+    this.props.actions.getStudent(this.props.params.studentId);
+    this.props.actions.getStudentRecords(this.props.params.studentId);
   }
 
   componentWillUnmount() {
@@ -18,8 +20,7 @@ class StudentPage extends Component {
   }
 
   render() {
-    let student = this.props.student.record;
-    console.log(student);
+    let student = this.props.student.student;
     return (
       <div className="student-page">
         <div className="info">
@@ -40,7 +41,7 @@ class StudentPage extends Component {
             />
           </Paper>
           <Paper className="col-attendance" zDepth={1}>
-            Some kind of attendance table
+            <StudentAbsenceRecordTable records={this.props.student.records} />
           </Paper>
           <br/>
           <br/>
@@ -55,6 +56,7 @@ class StudentPage extends Component {
 }
 
 StudentPage.propTypes = {
+  params  : PropTypes.object,
   student : PropTypes.object.isRequired,
   actions : PropTypes.object.isRequired
 };
