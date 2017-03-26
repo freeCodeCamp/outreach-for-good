@@ -5,8 +5,8 @@ import { List } from 'immutable';
 
 const DataTableRow = ({rowIndex, data, col, ...props}) =>
     <Cell {...props}>
-      {/*console.log('Data: ', data.get(rowIndex))*/}
-      {data.get(rowIndex)[col]}
+      {/*console.log('Data: ', data.get(rowIndex).get(col), rowIndex, col)*/}
+      {data.get(rowIndex).get(col)}
     </Cell>
   ;
 
