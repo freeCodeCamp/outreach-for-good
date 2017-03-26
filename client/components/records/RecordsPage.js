@@ -2,6 +2,7 @@ import React, {Component, PropTypes} from 'react';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import * as recordsActions from '../../actions/recordsActions';
+import * as schoolActions from '../../actions/schoolActions';
 import {Tabs, Tab} from 'material-ui/Tabs';
 import UploadTab from './components/UploadTab';
 import ManageTab from './components/ManageTab';
@@ -20,13 +21,13 @@ class RecordsPage extends Component {
   }
 
   componentWillMount() {
-    this.props.actions.fetchSchools();
-    this.props.actions.fetchCurrentRecord();
+    this.props.schoolActions.getAllSchools();
+    this.props.recordsActions.getCurrentRecord();
   }
 
   confirm(record, date) {
     record.date = date;
-    this.props.actions.postRecord(record);
+    this.props.recordsActions.postRecord(record);
   }
 
   changeTab(tab) {
@@ -34,7 +35,8 @@ class RecordsPage extends Component {
   }
 
   manageRecord(schoolId) {
-    this.props.actions.fetchRecordList(schoolId);
+    console.log('record list changed');
+    this.props.recordsActions.getSchoolRecordList(schoolId);
   }
 
   render() {
@@ -47,17 +49,16 @@ class RecordsPage extends Component {
           label="Upload"
           value="upload">
           <UploadTab
-            changeTab={this.changeTab}
             confirm={this.confirm}
             current={this.props.records.current}
-            schools={this.props.records.schools}
+            schools={this.props.schools}
           />
         </Tab>
         <Tab
           label="Manage"
           value="manage">
           <ManageTab
-            schools={this.props.records.schools}
+            schools={this.props.schools}
             manageRecord={this.manageRecord}
             records={this.props.records.list}
           />
@@ -68,20 +69,23 @@ class RecordsPage extends Component {
 }
 
 RecordsPage.propTypes = {
-  actions : PropTypes.object.isRequired,
-  records : PropTypes.object.isRequired
+  schoolActions  : PropTypes.object.isRequired,
+  recordsActions : PropTypes.object.isRequired,
+  records        : PropTypes.object.isRequired
 };
 
 function mapStateToProps(state) {
   return {
     session : state.session,
-    records : state.records
+    records : state.records,
+    schools : state.schools
   };
 }
 
 function mapDispatchToProps(dispatch) {
   return {
-    actions : bindActionCreators(recordsActions, dispatch)
+    recordsActions : bindActionCreators(recordsActions, dispatch),
+    schoolActions  : bindActionCreators(schoolActions, dispatch)
   };
 }
 

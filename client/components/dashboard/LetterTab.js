@@ -1,7 +1,7 @@
 import React, {PropTypes} from 'react';
 import DataTable from '../common/data-table/DataTable';
 
-const LetterTab = ({schools, ...props}) => {
+const LetterTab = ({absenceRecords, ...props}) => {
   const page = {
     title   : 'Letters Sent Dashboard',
     columns : [{
@@ -18,7 +18,7 @@ const LetterTab = ({schools, ...props}) => {
   return (
     <DataTable
       page={page}
-      data={schools}
+      data={absenceRecords}
       {...props}
     />
   );
@@ -26,7 +26,7 @@ const LetterTab = ({schools, ...props}) => {
 
 LetterTab.propTypes = {
   view    : PropTypes.object.isRequired,
-  schools : PropTypes.object.isRequired,
+  absenceRecords : PropTypes.object.isRequired,
 };
 
 export default LetterTab;

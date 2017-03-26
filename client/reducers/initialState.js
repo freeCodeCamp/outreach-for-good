@@ -15,12 +15,17 @@ export default {
       popover : false
     }
   },
-  records : {
+  absenceRecords : [],
+  records        : {
     schools : [],
     current : [],
     list    : []
   },
   student : {
-    record : {}
+    student       : {},
+    records       : [],
+    interventions : [],
+    outreaches    : [],
+    notes         : []
   }
 };
