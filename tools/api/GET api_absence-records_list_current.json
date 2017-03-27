@@ -1,0 +1,138 @@
+[
+  {
+    "recordId": "58d58da4b26bb2ed2a49fc53",
+    "date": "2017-03-22T21:20:36.593Z",
+    "school": {
+      "_id": "58d58da4b26bb2ed2a49fc4b",
+      "name": "School A"
+    },
+    "entry": {
+      "student": "58d58da4b26bb2ed2a49fc50",
+      "absences": 0,
+      "absencesDelta": 0,
+      "tardies": 0,
+      "tardiesDelta": 0,
+      "present": 21,
+      "enrolled": 22,
+      "_id": "58d58da4b26bb2ed2a49fc54"
+    },
+    "student": {
+      "_id": "58d58da4b26bb2ed2a49fc50",
+      "studentId": "1185990",
+      "lastName": "Arnold",
+      "firstName": "Gavin",
+      "withdrawn": false,
+      "cfa": false,
+      "iep": false
+    }
+  },
+  {
+    "recordId": "58d58da4b26bb2ed2a49fc53",
+    "date": "2017-03-22T21:20:36.593Z",
+    "school": {
+      "_id": "58d58da4b26bb2ed2a49fc4b",
+      "name": "School A"
+    },
+    "entry": {
+      "student": "58d58da4b26bb2ed2a49fc4f",
+      "absences": 0,
+      "absencesDelta": 0,
+      "tardies": 0,
+      "tardiesDelta": 0,
+      "present": 14,
+      "enrolled": 15,
+      "_id": "58d58da4b26bb2ed2a49fc55"
+    },
+    "student": {
+      "_id": "58d58da4b26bb2ed2a49fc4f",
+      "studentId": "1189407",
+      "lastName": "Simpson",
+      "firstName": "Dan",
+      "withdrawn": false,
+      "cfa": false,
+      "iep": false
+    }
+  },
+  {
+    "recordId": "58d58da4b26bb2ed2a49fc53",
+    "date": "2017-03-22T21:20:36.593Z",
+    "school": {
+      "_id": "58d58da4b26bb2ed2a49fc4b",
+      "name": "School A"
+    },
+    "entry": {
+      "student": "58d58da4b26bb2ed2a49fc4e",
+      "absences": 0,
+      "absencesDelta": 0,
+      "tardies": 0,
+      "tardiesDelta": 0,
+      "present": 15,
+      "enrolled": 16,
+      "_id": "58d58da4b26bb2ed2a49fc56"
+    },
+    "student": {
+      "_id": "58d58da4b26bb2ed2a49fc4e",
+      "studentId": "1187755",
+      "lastName": "Graham",
+      "firstName": "Brandon",
+      "withdrawn": false,
+      "cfa": false,
+      "iep": false
+    }
+  },
+  {
+    "recordId": "58d58da4b26bb2ed2a49fc57",
+    "date": "2017-03-22T21:20:36.593Z",
+    "school": {
+      "_id": "58d58da4b26bb2ed2a49fc4c",
+      "name": "School B"
+    },
+    "entry": {
+      "student": "58d58da4b26bb2ed2a49fc52",
+      "absences": 0,
+      "absencesDelta": 0,
+      "tardies": 0,
+      "tardiesDelta": 0,
+      "present": 22,
+      "enrolled": 22,
+      "_id": "58d58da4b26bb2ed2a49fc58"
+    },
+    "student": {
+      "_id": "58d58da4b26bb2ed2a49fc52",
+      "studentId": "sid005",
+      "lastName": "Thomson",
+      "firstName": "Sue",
+      "grade": 6,
+      "withdrawn": false,
+      "cfa": false,
+      "iep": false
+    }
+  },
+  {
+    "recordId": "58d58da4b26bb2ed2a49fc57",
+    "date": "2017-03-22T21:20:36.593Z",
+    "school": {
+      "_id": "58d58da4b26bb2ed2a49fc4c",
+      "name": "School B"
+    },
+    "entry": {
+      "student": "58d58da4b26bb2ed2a49fc51",
+      "absences": 0,
+      "absencesDelta": 0,
+      "tardies": 0,
+      "tardiesDelta": 0,
+      "present": 1,
+      "enrolled": 1,
+      "_id": "58d58da4b26bb2ed2a49fc59"
+    },
+    "student": {
+      "_id": "58d58da4b26bb2ed2a49fc51",
+      "studentId": "sid004",
+      "lastName": "Hughes",
+      "firstName": "Victor",
+      "withdrawn": false,
+      "cfa": false,
+      "iep": false
+    }
+  }
+]
