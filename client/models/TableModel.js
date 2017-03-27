@@ -4,6 +4,7 @@ export const Table = Immutable.Record({
   title         : '',
   rowHeight     : 35,
   headerHeight  : 35,
+  sortedIndex   : Immutable.List(),
   selectedTab   : '',
   selectedIndex : Immutable.List(),
   selectedData  : Immutable.List(),
@@ -14,44 +15,18 @@ export const Table = Immutable.Record({
 
 class TableModel extends Table {
 
-  // Set anchor element for <Popover> menu
-  setAnchor(currentState, anchor) {
-    return currentState.set('MuiAnchor', anchor);
-  }
-
-  // MUI <Popover> integration
-  addPopovers(currentState, popoverValues) {
-    return currentState.update('MuiPopovers', i => i.clear().merge(popoverValues));
-  }
-
-  togglePopovers(currentState, popoverValue) {
-    return currentState.update('MuiPopovers', iMap =>
-      iMap.update(popoverValue, state => !state));
-  }
-
-  resetPopovers(currentState) {
-    return currentState.update('MuiPopovers', iMap => iMap.map(() => false));
-  }
-
-  // MUI <Dialog> integration
-  addDialogs(currentState, dialogValues) {
-    return currentState.update('MuiDialogs', i => i.clear().merge(dialogValues));
-  }
-
-  toggleDialogs(currentState, dialogValue) {
-    return currentState.update('MuiDialogs', iMap =>
-      iMap.update(dialogValue, state => !state));
-  }
-
-  resetDialogs(currentState) {
-    return currentState.update('MuiDialogs', iMap => iMap.map(() => false));
-  }
-
   setSelectedTab(currentState, name) {
     return currentState.set('selectedTab', name);
   }
 
-  // Facilitate user selecting table rows
+  updateSortIndex(currentState, data) {
+    console.log(data)
+    return currentState;
+  }
+
+  /**
+   * Row Select and Highlighting
+   */
   toggleSelectedRowIndex(currentState, index) {
     let target = currentState.get('selectedIndex').indexOf(index);
     if(target == -1) {
@@ -71,6 +46,43 @@ class TableModel extends Table {
     return currentState.get('selectedData')
       .map(row => row[column])
       .join(', ');
+  }
+
+  /**
+   * Material-UI <Popover>
+   */
+  addPopovers(currentState, popoverValues) {
+    return currentState.update('MuiPopovers', i => i.clear().merge(popoverValues));
+  }
+
+  togglePopovers(currentState, popoverValue) {
+    return currentState.update('MuiPopovers', iMap =>
+      iMap.update(popoverValue, state => !state));
+  }
+
+  resetPopovers(currentState) {
+    return currentState.update('MuiPopovers', iMap => iMap.map(() => false));
+  }
+
+  // Set anchor element for <Popover> menu
+  setAnchor(currentState, anchor) {
+    return currentState.set('MuiAnchor', anchor);
+  }
+
+  /**
+   * Material-UI <Dialog>
+   */
+  addDialogs(currentState, dialogValues) {
+    return currentState.update('MuiDialogs', i => i.clear().merge(dialogValues));
+  }
+
+  toggleDialogs(currentState, dialogValue) {
+    return currentState.update('MuiDialogs', iMap =>
+      iMap.update(dialogValue, state => !state));
+  }
+
+  resetDialogs(currentState) {
+    return currentState.update('MuiDialogs', iMap => iMap.map(() => false));
   }
 }
 

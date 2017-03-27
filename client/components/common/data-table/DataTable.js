@@ -1,5 +1,6 @@
 import React, { PropTypes } from 'react';
 import { Table, Column, Cell } from 'fixed-data-table-2';
+import DataTableHeader from './DataTableHeader';
 import DataTableRow from './DataTableRow';
 
 import { List } from 'immutable';
@@ -122,12 +123,9 @@ const DataTable = ({page, table, data, ...props}) => {
           .map(col =>
           <Column
             header={
-              <Cell>
-                {col.title}
-                {/* // This will be the filter for cols
-                <br />
-                <input type='text' style={{width: '100%'}} />*/}
-              </Cell>
+              <DataTableHeader
+                title={col.title}
+              />
               }
             cell={<DataTableRow data={data} col={col.id} />}
             fixed={col.fixed}
