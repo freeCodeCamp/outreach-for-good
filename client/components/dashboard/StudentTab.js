@@ -1,10 +1,11 @@
 import React, {PropTypes} from 'react';
 import DataTable from '../common/data-table/DataTable';
+import { List } from 'immutable';
 
 import * as locAct from './localActions';
 import RaisedButtonModel from '../../models/RaisedButtonModel';
 
-const StudentTab = ({schools, ...props}) => {
+const StudentTab = ({absenceRecords, ...props}) => {
   let buttons = [];
 
   /**
@@ -32,60 +33,75 @@ const StudentTab = ({schools, ...props}) => {
   const page = {
     title   : 'Students Dashboard',
     columns : [{
+      title    : 'Last Name',
+      id       : 'student.lastName',
+      width    : 125,
+      flexGrow : 1,
+      fixed    : true
+    }, {
+      title    : 'First Name',
+      id       : 'student.firstName',
+      width    : 125,
+      flexGrow : 1
+    }, {
       title    : 'School',
-      id       : 'name',
+      id       : 'school.name',
+      width    : 125,
       flexGrow : 1
     }, {
       title    : 'Student ID',
-      id       : 'name',
-      flexGrow : 1
-    }, {
-      title    : 'First Name',
-      id       : 'name',
-      flexGrow : 1
-    }, {
-      title    : 'Last Name',
-      id       : 'name',
+      id       : 'student.studentId',
+      width    : 90,
       flexGrow : 1
     }, {
       title    : 'Grade',
-      id       : 'name',
+      id       : '',
+      width    : 60,
       flexGrow : 1
     }, {
       title    : 'Absences',
-      id       : 'name',
+      id       : 'entry.absences',
+      width    : 100,
       flexGrow : 1
     }, {
       title    : 'Δ',
-      id       : 'name',
+      id       : 'entry.absencesDelta',
+      width    : 50,
       flexGrow : 1
     }, {
       title    : 'Tardies',
-      id       : 'name',
+      id       : 'entry.tardies',
+      width    : 100,
       flexGrow : 1
     }, {
       title    : 'Δ',
-      id       : 'name',
+      id       : 'entry.tardiesDelta',
+      width    : 50,
       flexGrow : 1
     }, {
       title    : 'Present',
-      id       : 'name',
+      id       : 'entry.present',
+      width    : 75,
       flexGrow : 1
     }, {
       title    : 'Enrolled',
-      id       : 'name',
+      id       : 'entry.enrolled',
+      width    : 75,
       flexGrow : 1
     }, {
       title    : 'IEP',
-      id       : 'name',
+      id       : 'student.iep',
+      width    : 50,
       flexGrow : 1
     }, {
       title    : 'CFA',
-      id       : 'name',
+      id       : 'student.cfa',
+      width    : 50,
       flexGrow : 1
     }, {
       title    : 'Updated',
-      id       : 'name',
+      id       : '',
+      width    : 75,
       flexGrow : 1
     }],
     buttons
@@ -94,15 +110,14 @@ const StudentTab = ({schools, ...props}) => {
   return (
     <DataTable
       page={page}
-      data={schools}
+      data={absenceRecords}
       {...props}
     />
   );
 };
 
 StudentTab.propTypes = {
-  view    : PropTypes.object.isRequired,
-  schools : PropTypes.object.isRequired,
+  absenceRecords : PropTypes.instanceOf(List).isRequired,
 };
 
 export default StudentTab;
