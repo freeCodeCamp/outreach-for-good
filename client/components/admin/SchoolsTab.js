@@ -134,13 +134,14 @@ const SchoolsTab = ({schools, ...props}) => {
   };
 
   return (
-    <div>
-      <DataTable
-        page={page}
-        data={schools}
-        {...props}
-      />
-    </div>
+    props.table.get('selectedTab') == 'schools'
+    && <div>
+        <DataTable
+          page={page}
+          data={schools}
+          {...props}
+        />
+      </div>
   );
 };
 

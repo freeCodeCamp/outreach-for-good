@@ -1,5 +1,6 @@
 import React, { PropTypes } from 'react';
 import { Table, Column, Cell } from 'fixed-data-table-2';
+import DataTableHeader from './DataTableHeader';
 import DataTableRow from './DataTableRow';
 
 import { List } from 'immutable';
@@ -26,6 +27,14 @@ const DataTable = ({page, table, data, ...props}) => {
       props.clickHandler('toggleSelected', index);
     }
   };
+
+  /**
+   * DataTable Handler
+   *   - Catch events from the table and send to parent component
+   */
+  function tableSortHandler(event) {
+    props.clickHandler('toggleSortCol', event.target.id);
+  }
 
   /**
    * Handler Functions
@@ -122,14 +131,20 @@ const DataTable = ({page, table, data, ...props}) => {
           .map(col =>
           <Column
             header={
-              <Cell>
-                {col.title}
-                {/* // This will be the filter for cols
-                <br />
-                <input type='text' style={{width: '100%'}} />*/}
-              </Cell>
+              <DataTableHeader
+                id={col.id}
+                title={col.title}
+                sortCol={table.get('sortIndex')}
+                sortDir={table.get('sortDirection')}
+                sortHandler={tableSortHandler}
+              />
               }
-            cell={<DataTableRow data={data} col={col.id} />}
+            cell={
+              <DataTableRow
+                indexMap={table.get('indexMap')}
+                data={data}
+                col={col.id}
+              />}
             fixed={col.fixed}
             flexGrow={col.flexGrow}
             key={col.id}
