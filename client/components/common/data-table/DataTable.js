@@ -140,7 +140,12 @@ const DataTable = ({page, table, data, ...props}) => {
                 sortHandler={tableSortHandler}
               />
               }
-            cell={<DataTableRow data={data} col={col.id} />}
+            cell={
+              <DataTableRow
+                indexMap={table.get('indexMap')}
+                data={data}
+                col={col.id}
+              />}
             fixed={col.fixed}
             flexGrow={col.flexGrow}
             key={col.id}
