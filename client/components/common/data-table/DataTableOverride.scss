@@ -25,6 +25,8 @@
 .datatable-header {
 
   & a, & a:hover {
+    width: 100%;
+    display: block;
     color: #000000;
     text-decoration: none;
     user-select: none;

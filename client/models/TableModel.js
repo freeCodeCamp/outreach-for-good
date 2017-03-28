@@ -5,6 +5,7 @@ export const Table = Immutable.Record({
   title         : '',
   rowHeight     : 35,
   headerHeight  : 35,
+  indexMap      : Immutable.List(),
   sortDirection : locAct.SORT_ASC,
   sortIndex     : '',
   selectedTab   : '',
@@ -21,12 +22,25 @@ class TableModel extends Table {
     return currentState.set('selectedTab', name);
   }
 
-  updateSortIndex(currentState, data) {
+  /**
+   * Sort table by column
+   */
+  buildIndexMap(currentState, data) {
+    return currentState.update('indexMap', () => {
+      let indexMap = [];
+      for(var index = 0; index < data.length; index++) {
+        indexMap.push(index);
+      }
+      return indexMap;
+    });
+  }
+
+  updateSortIndex(currentState, nextSortIndex) {
     let nextState = currentState.update('sortDirection', sortDir =>
-      data == currentState.get('sortIndex')
+      nextSortIndex == currentState.get('sortIndex')
       ? locAct.SORT_ASC == sortDir
         ? locAct.SORT_DESC : locAct.SORT_ASC : locAct.SORT_ASC);
-    return nextState.update('sortIndex', () => data);
+    return nextState.update('sortIndex', () => nextSortIndex);
   }
 
   /**
