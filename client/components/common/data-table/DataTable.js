@@ -33,7 +33,6 @@ const DataTable = ({page, table, data, ...props}) => {
    *   - Catch events from the table and send to parent component
    */
   function tableSortHandler(event) {
-    console.log(event.target.id)
     props.clickHandler('toggleSortCol', event.target.id);
   }
 
