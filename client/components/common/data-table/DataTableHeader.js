@@ -1,18 +1,29 @@
 import React, { PropTypes } from 'react';
+import * as locAct from './localActions';
 import { Cell } from 'fixed-data-table-2';
 
-const DataTableHeader = ({...props}) =>
-    <Cell {...props}>
-      {/*console.log('Data: ', data.get(rowIndex).get(col), rowIndex, col)*/}
-      {props.title}
-      {/* // This will be the filter for cols
-      <br />
-      <input type='text' style={{width: '100%'}} />*/}
+const DataTableHeader = ({id, title, sortCol, sortDir, sortHandler, ...props}) => {
+  function clickHandler(event) {
+    event.preventDefault();
+    sortHandler(event);
+  }
+
+  return (
+    <Cell className='datatable-header' {...props}>
+       <a onClick={clickHandler} id={id}>
+        {title}
+        {sortCol == id && sortDir ? sortDir === locAct.SORT_DESC ? '↓' : '↑' : ''}
+      </a>
     </Cell>
-  ;
+  );
+};
 
 DataTableHeader.propTypes = {
-  title : PropTypes.string
+  id          : PropTypes.string,
+  sortCol     : PropTypes.string,
+  sortDir     : PropTypes.string,
+  sortHandler : PropTypes.func,
+  title       : PropTypes.string
 };
 
 export default DataTableHeader;

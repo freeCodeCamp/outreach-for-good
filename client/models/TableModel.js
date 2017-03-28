@@ -1,10 +1,12 @@
 import Immutable from 'immutable';
+import * as locAct from '../components/common/data-table/localActions';
 
 export const Table = Immutable.Record({
   title         : '',
   rowHeight     : 35,
   headerHeight  : 35,
-  sortedIndex   : Immutable.List(),
+  sortDirection : locAct.SORT_ASC,
+  sortIndex     : '',
   selectedTab   : '',
   selectedIndex : Immutable.List(),
   selectedData  : Immutable.List(),
@@ -20,8 +22,11 @@ class TableModel extends Table {
   }
 
   updateSortIndex(currentState, data) {
-    console.log(data)
-    return currentState;
+    let nextState = currentState.update('sortDirection', sortDir =>
+      data == currentState.get('sortIndex')
+      ? locAct.SORT_ASC == sortDir
+        ? locAct.SORT_DESC : locAct.SORT_ASC : locAct.SORT_ASC);
+    return nextState.update('sortIndex', () => data);
   }
 
   /**

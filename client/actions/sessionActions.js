@@ -42,7 +42,7 @@ export function verifyToken() {
  *  Verify session contains JWT for api calls
  */
 export function validate() {
-  return (dispatch, getState) => // eslint-disable-line no-confusing-arrow
+  return (dispatch, getState) =>
     getState().session.token
     ? userAPI.getMyself().then(() =>
       dispatch(sessionValid()))
