@@ -15,9 +15,9 @@ export function loadUsersSuccess(users) {
  */
 export function getMyself() {
   return function(dispatch) {
-    return userAPI.getMyself().then(users => {
-      dispatch(loadUsersSuccess(users));
-    })
+    return userAPI.getMyself().then(users =>
+      dispatch(loadUsersSuccess(users))
+    )
     .catch(err => handleError(err, dispatch));
   };
 }
@@ -25,9 +25,9 @@ export function getMyself() {
 // Not Tested
 export function getUser(userId) {
   return function(dispatch) {
-    return userAPI.getUser(userId).then(users => {
-      dispatch(loadUsersSuccess(users));
-    })
+    return userAPI.getUser(userId).then(users =>
+      dispatch(loadUsersSuccess(users))
+    )
     .catch(err => handleError(err, dispatch));
   };
 }
