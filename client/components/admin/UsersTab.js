@@ -161,7 +161,7 @@ const UsersTab = ({users, schools, ...props}) => {
     <div>
       <DataTable
         page={page}
-        data={users.map(iMap =>  // eslint-disable-line no-confusing-arrow
+        data={users.map(iMap =>
           iMap.assignment
           ? iMap.update('assignment', id => id.get('name'))
           : iMap

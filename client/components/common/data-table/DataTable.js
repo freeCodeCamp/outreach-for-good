@@ -29,6 +29,15 @@ const DataTable = ({page, table, data, ...props}) => {
   };
 
   /**
+   * DataTable Handler
+   *   - Catch events from the table and send to parent component
+   */
+  function tableSortHandler(event) {
+    console.log(event.target.id)
+    props.clickHandler('toggleSortCol', event.target.id);
+  }
+
+  /**
    * Handler Functions
    *   - Catch events from page elements and send to parent component
    */
@@ -124,7 +133,11 @@ const DataTable = ({page, table, data, ...props}) => {
           <Column
             header={
               <DataTableHeader
+                id={col.id}
                 title={col.title}
+                sortCol={table.get('sortIndex')}
+                sortDir={table.get('sortDirection')}
+                sortHandler={tableSortHandler}
               />
               }
             cell={<DataTableRow data={data} col={col.id} />}

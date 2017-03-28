@@ -35,10 +35,10 @@ class AdminPage extends React.Component {
     let nextTable = this.state.table;
     switch (nextTable.get('selectedTab')) {
     case 'users':
-      nextTable = table.updateSortIndex(nextTable, this.props.users);
+      nextTable = table.updateSortIndex(nextTable, '');
       break;
     case 'schools':
-      nextTable = table.updateSortIndex(nextTable, this.props.schools);
+      nextTable = table.updateSortIndex(nextTable, '');
       break;
     }
     this.setState({
@@ -97,9 +97,18 @@ class AdminPage extends React.Component {
       this.setState({table: nextTable});
       break;
 
-    // Clicked (select/de-select) a table row
+    /**
+     * DataTable Click Handler
+     *   - Select / de-select a table row
+     *   - Sort by a column
+     *   - Apply a filter
+     */
     case 'toggleSelected':
       nextTable = table.toggleSelectedRowIndex(this.state.table, data);
+      this.setState({table: nextTable});
+      break;
+    case 'toggleSortCol':
+      nextTable = table.updateSortIndex(this.state.table, data);
       this.setState({table: nextTable});
       break;
 
