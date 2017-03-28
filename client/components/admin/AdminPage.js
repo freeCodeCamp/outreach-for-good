@@ -111,11 +111,9 @@ class AdminPage extends React.Component {
       break;
     case 'toggleSortCol':
       nextTable = table.updateSortIndex(this.state.table, data);
-      console.log(nextTable.get('indexMap'))
       nextTable = table.updateIndexMap(nextTable,
         nextTable.get('selectedTab') == 'users'
           ? this.props.users : this.props.schools);
-      console.log(nextTable.get('indexMap'))
       this.setState({table: nextTable});
       break;
 
