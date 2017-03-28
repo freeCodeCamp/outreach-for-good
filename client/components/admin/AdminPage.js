@@ -32,8 +32,17 @@ class AdminPage extends React.Component {
   }
 
   componentWillReceiveProps() {
+    let nextTable = this.state.table;
+    switch (nextTable.get('selectedTab')) {
+    case 'users':
+      nextTable = table.updateSortIndex(nextTable, this.props.users);
+      break;
+    case 'schools':
+      nextTable = table.updateSortIndex(nextTable, this.props.schools);
+      break;
+    }
     this.setState({
-      table : this.state.table,
+      table : nextTable,
       form  : this.state.form
     });
   }

@@ -4,6 +4,7 @@ import cookies from 'browser-cookies';
 import { browserHistory } from 'react-router';
 
 export function setToken(token, me) {
+  console.log('Setting Token');
   return {type: types.SET_TOKEN, token, me};
 }
 
@@ -41,7 +42,10 @@ export function verifyToken() {
  *  Verify session contains JWT for api calls
  */
 export function validate() {
-  //console.log('Checking session validity');
-  return (dispatch, getState) => getState().session.token // eslint-disable-line no-confusing-arrow
-    ? dispatch(sessionValid()) : dispatch(verifyToken());
+  return (dispatch, getState) => // eslint-disable-line no-confusing-arrow
+    getState().session.token
+    ? userAPI.getMyself().then(() =>
+      dispatch(sessionValid()))
+      .catch(() => dispatch(verifyToken()))
+    : dispatch(verifyToken());
 }
