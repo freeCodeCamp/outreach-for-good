@@ -1,48 +1,76 @@
-import React from 'react';
+import React, {PropTypes} from 'react';
 import DataTable from '../../common/data-table/DataTable';
-import Dimensions from 'react-dimensions';
-import TableModel from '../../../models/TableModel';
-import {List} from 'immutable';
+import RaisedButtonModel from '../../../models/RaisedButtonModel';
+import {Link} from 'react-router';
 
-const table = new TableModel();
-const manageList = new List();
-// table.setSelectedTab(table, 'manage');
+const ManageTab = ({records, manageRecords, ...props}) => {
+  const tempClick = () => {
+    console.log('clicked');
+  };
 
-const ManageTab = ({records, manageView, ...props}) => {
+  const buttons = [
+    new RaisedButtonModel({
+      label    : 'Select School',
+      actionID : tempClick
+    }),
+    new RaisedButtonModel({
+      label    : 'Delete Record',
+      actionID : tempClick
+    })
+  ];
+
   const page = {
     title   : 'Manage School Absence Records',
     columns : [{
-      title : 'Name',
-      id    : 'name',
+      title : 'Date',
+      id    : 'date',
       fixed : true
     }, {
-      title    : 'Email Address',
-      id       : 'email',
+      title    : 'School Year',
+      id       : 'schoolYear',
       flexGrow : 1
     }, {
-      title    : 'Assigned School',
-      id       : 'assignment',
+      title    : 'Entries',
+      id       : 'entries.size',
       flexGrow : 1
     }, {
-      title    : 'Role',
-      id       : 'role',
+      title    : 'Missing Students',
+      id       : 'missingStudents.size',
       flexGrow : 1
-    }]
+    }, {
+      title    : 'New Missing Students',
+      id       : 'newMissingStudents.size',
+      flexGrow : 1
+    }],
+    buttons
   };
+
+  const studentLinks = manageRecords.map((record, i) =>
+    <li key={i}>
+      <Link to={`/student/${record.get('_id')}`}>
+        Student Name
+      </Link>
+    </li>
+  );
+
   return (
     <div className="manage-tab">
       <DataTable
         page={page}
-        data={manageList}
-        table={table}
-        view={{
-          width  : props.containerWidth - 20,
-          height : props.containerHeight - 48 - 80
-        }}
+        data={records}
         {...props}
       />
+      <div className="entries">
+        <h3>Student Entries</h3>
+        <ul>{studentLinks}</ul>
+      </div>
     </div>
   );
 };
 
-export default Dimensions({elementResize: true})(ManageTab);
+ManageTab.propTypes = {
+  records       : PropTypes.object,
+  manageRecords : PropTypes.object
+};
+
+export default ManageTab;
