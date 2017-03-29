@@ -4,8 +4,9 @@ import {connect} from 'react-redux';
 import * as recordsActions from '../../actions/recordsActions';
 import * as schoolActions from '../../actions/schoolActions';
 import {Tabs, Tab} from 'material-ui/Tabs';
-import UploadTab from './components/UploadTab';
-import ManageTab from './components/ManageTab';
+import UploadTab from './partials/UploadTab';
+import ManageTab from './partials/ManageTab';
+
 
 class RecordsPage extends Component {
   constructor() {
@@ -59,8 +60,6 @@ class RecordsPage extends Component {
           value="manage">
           <ManageTab
             schools={this.props.schools}
-            manageRecord={this.manageRecord}
-            records={this.props.records.list}
           />
         </Tab>
       </Tabs>
