@@ -31,7 +31,7 @@ export function getSchool(schoolId) {
 export function getAllSchools() {
   return function(dispatch) {
     return schoolAPI.getSchools().then(res => {
-      console.log('getAllSchools API: ', res);
+      //console.log('getAllSchools API: ', res);
       return dispatch(loadSchoolsSuccess(res));
     })
     .catch(err => handleError(err, dispatch));
