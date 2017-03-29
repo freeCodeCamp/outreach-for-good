@@ -7,53 +7,49 @@ import DialogModel from '../../models/DialogModel';
 import DropdownModel from '../../models/DropdownModel';
 import RaisedButtonModel from '../../models/RaisedButtonModel';
 
-const UsersTab = ({users, schools, ...props}) => {
+const UsersTab = ({users, ...props}) => {
 /**
- * Handler Functions
- *   - Catch events from page elements and send to parent component
+ * Configure: Material-UI <Dialog>
+ *  1. Add new <Dialog> defs to `const dialogs [..]`
+ *  2. Set `props` to an object with Dialog properties
+ *  3. Minimum properties include
+ *     - open (set to state variable true/false)
+ *     - actions (React element(s) to close dialog)
  */
   function buttonHandler(event) {
     event.preventDefault();
     props.clickHandler('dialogClick', this.value, event); // eslint-disable-line no-invalid-this
   }
 
-  function dropdownHandlerSchool(event, index, value) {
+  function dropdownHandler(event, index, value) {
     event.preventDefault();
-    props.clickHandler('dropdownChange', value, locAct.EDIT_SCHOOL); // eslint-disable-line no-invalid-this
-  }
-
-  function dropdownHandlerRole(event, index, value) {
-    event.preventDefault();
-    props.clickHandler('dropdownChange', value, locAct.EDIT_ROLE); // eslint-disable-line no-invalid-this
+    props.clickHandler('dropdownChange', value, event); // eslint-disable-line no-invalid-this
   }
 
   let dialogs = [];
 
   // Defer building dialogs/dropdowns until something is selected
   if(props.table.get('selectedData').first()) {
-    /**
-     * Material-UI <Dropdown>
-     *  - Used inside <Dialog> prompts
-     *  - See DropdownModel for default parameters
-     */
     const schoolDropdown = new DropdownModel({
-      items    : schools.map(s => s.name),
-      selected : props.form.get('field').get('editSchool'),
-      onChange : dropdownHandlerSchool
+      items    : ['guest', 'teacher', 'manager', 'admin', 'super'],
+<<<<<<< HEAD
+      selected : props.formState.selectedItem,
+=======
+      selected : props.selectedItem,
+>>>>>>> devel
+      onChange : dropdownHandler
     });
 
     const rolesDropdown = new DropdownModel({
       items    : ['guest', 'teacher', 'manager', 'admin', 'super'],
-      selected : props.form.get('field').get('editRole')
-        || 'teacher',
-      onChange : dropdownHandlerRole
+<<<<<<< HEAD
+      selected : props.formState.selectedItem,
+=======
+      selected : props.selectedItem,
+>>>>>>> devel
+      onChange : dropdownHandler
     });
 
-    /**
-     * Material-UI <Dialog>
-     *  - `actions:` become <FlatButton>s in dialog
-     *  - See DialogModel for default parameters
-     */
     dialogs.push(new DialogModel({
       title   : 'Change Assigned School',
       open    : props.table.get('MuiDialogs').get(locAct.EDIT_SCHOOL),
@@ -67,7 +63,8 @@ const UsersTab = ({users, schools, ...props}) => {
         ${schoolDropdown.get('selected')}`},
         <br key='1' />
         <div key='2' style={{textAlign: 'center'}}>
-        {schoolDropdown.getDropdown(schoolDropdown, 3)}
+        {schoolDropdown.getDropdown(schoolDropdown,
+          dropdownHandler, 3)}
         </div></div>]
     }));
 
@@ -84,7 +81,8 @@ const UsersTab = ({users, schools, ...props}) => {
         ${rolesDropdown.get('selected')}`},
         <br key='1' />
         <div key='2' style={{textAlign: 'center'}}>
-        {rolesDropdown.getDropdown(rolesDropdown, 3)}
+        {rolesDropdown.getDropdown(rolesDropdown,
+          dropdownHandler, 3)}
         </div></div>]
     }));
 
@@ -101,15 +99,18 @@ const UsersTab = ({users, schools, ...props}) => {
     }));
   }
 
-  let buttons = [];
+//      ${props.selectedRows.description.map(row => row.name)}
+/**
+ * Configure: Material-UI <RaisedButton> and <Popover>
+ *  1. Add new <RaisedButton> defs to `const raisedButtons [..]`
+ *  2. If button has <Popover>, set `menu:` to an object with popover properties
+ *  3. Minimum properties include
+ *     - open (set to menu-specific state variable true/false)
+ *     - item (array of <MenuItem> definitions)
+ *  4. If button or menu-item has dialog, add `dialogID`
+ */
 
-  /**
-   * Material-UI <RaisedButton> and <Popover>
-   *  - `menu:` become a <Popover> menu under button
-   *  - `actionID:` is used by parent to launch dialogs
-   *  - See RaisedButtonModel for default parameters
-   */
-  buttons.push(new RaisedButtonModel({
+  const editButton = new RaisedButtonModel({
     label    : 'Edit',
     actionID : locAct.EDIT,
     menu     : {
@@ -122,19 +123,20 @@ const UsersTab = ({users, schools, ...props}) => {
         actionID : locAct.EDIT_ROLE
       }]
     }
-  }));
+  });
 
-  buttons.push(new RaisedButtonModel({
+  const removeButton = new RaisedButtonModel({
     label           : 'Remove',
     backgroundColor : '#d9534f',
     actionID        : locAct.REMOVE_USER
-  }));
+  });
 
-  /**
-   * Fixed-Data-Table Parameters
-   *  - basic fixed-data-table column configuration (`id:` = property to display)
-   *  - dialogs and buttons are passed in as properties on `page`
-   */
+/**
+ * Configure: fixed-data-table
+ *  1.
+ *  2.
+ */
+
   const page = {
     title   : 'Manage User Accounts',
     columns : [{
@@ -147,7 +149,7 @@ const UsersTab = ({users, schools, ...props}) => {
       flexGrow : 1
     }, {
       title    : 'Assigned School',
-      id       : 'assignment',
+      id       : 'school',
       flexGrow : 1
     }, {
       title    : 'Role',
@@ -155,29 +157,31 @@ const UsersTab = ({users, schools, ...props}) => {
       flexGrow : 1
     }],
     dialogs,
-    buttons
+    raisedButtons : [
+      editButton,
+      removeButton
+    ]
   };
+
   return (
-    props.table.get('selectedTab') == 'users'
-    && <div>
-        <DataTable
-          page={page}
-          data={users.map(iMap =>
-            iMap.assignment
-            ? iMap.update('assignment', id => id.get('name'))
-            : iMap
-          )}
-          {...props}
-        />
-      </div>
+    <div>
+      <DataTable
+        page={page}
+        data={users}
+        {...props}
+      />
+    </div>
   );
 };
 
 UsersTab.propTypes = {
   users        : PropTypes.instanceOf(List).isRequired,
-  schools      : PropTypes.instanceOf(List).isRequired,
   table        : PropTypes.object.isRequired,
-  form         : PropTypes.object.isRequired,
+<<<<<<< HEAD
+  formState    : PropTypes.object.isRequired,
+=======
+  selectedItem : PropTypes.string.isRequired,
+>>>>>>> devel
   clickHandler : PropTypes.func.isRequired,
 };
 
