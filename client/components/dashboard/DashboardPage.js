@@ -30,10 +30,37 @@ class DashboardPage extends React.Component {
     this.tabHandler = this.tabHandler.bind(this);
   }
 
-  componentWillReceiveProps() {
+  componentWillReceiveProps(nextProps) {
+    let nextTable = this.state.table;
+    switch (nextTable.get('selectedTab')) {
+    case 'court':
+      nextTable = table.updateSortIndex(nextTable, '');
+      nextTable = table.buildIndexMap(nextTable, nextProps.absenceRecords);
+      break;
+    case 'home':
+      nextTable = table.updateSortIndex(nextTable, '');
+      nextTable = table.buildIndexMap(nextTable, nextProps.absenceRecords);
+      break;
+    case 'letter':
+      nextTable = table.updateSortIndex(nextTable, '');
+      nextTable = table.buildIndexMap(nextTable, nextProps.absenceRecords);
+      break;
+    case 'phone':
+      nextTable = table.updateSortIndex(nextTable, '');
+      nextTable = table.buildIndexMap(nextTable, nextProps.absenceRecords);
+      break;
+    case 'sst':
+      nextTable = table.updateSortIndex(nextTable, '');
+      nextTable = table.buildIndexMap(nextTable, nextProps.absenceRecords);
+      break;
+    case 'student':
+      nextTable = table.setSelectedTab(table, 'student');
+      nextTable = table.updateSortIndex(nextTable, '');
+      nextTable = table.buildIndexMap(nextTable, nextProps.absenceRecords);
+      break;
+    }
     this.setState({
-      table : this.state.table,
-      form  : this.state.form
+      table : nextTable
     });
   }
 
@@ -69,6 +96,26 @@ class DashboardPage extends React.Component {
   }
 
   clickHandler(action, data, event) {
+    let nextTable;
+    let nextForm;
+    switch (action) {
+
+    /**
+     * DataTable Click Handler
+     *   - Select / de-select a table row
+     *   - Sort by a column
+     *   - Apply a filter
+     */
+    case 'toggleSelected':
+      nextTable = table.toggleSelectedRowIndex(this.state.table, data);
+      this.setState({table: nextTable});
+      break;
+    case 'toggleSortCol':
+      nextTable = table.updateSortIndex(this.state.table, data);
+      nextTable = table.updateIndexMap(nextTable, this.props.absenceRecords);
+      this.setState({table: nextTable});
+      break;
+    }
   }
 
   // Handle user changing main tabs
