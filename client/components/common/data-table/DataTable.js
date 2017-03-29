@@ -151,6 +151,7 @@ const DataTable = ({page, table, data, ...props}) => {
             width={col.width || 200}
           />
           )}
+          {/*console.log('Debugging race condition: ', data.toJS())*/}
         </Table>
       </Paper>
     </div>
