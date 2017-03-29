@@ -31,16 +31,16 @@ class AdminPage extends React.Component {
     this.tabHandler = this.tabHandler.bind(this);
   }
 
-  componentWillReceiveProps() {
+  componentWillReceiveProps(nextProps) {
     let nextTable = this.state.table;
     switch (nextTable.get('selectedTab')) {
     case 'users':
       nextTable = table.updateSortIndex(nextTable, '');
-      nextTable = table.buildIndexMap(nextTable, this.props.users);
+      nextTable = table.buildIndexMap(nextTable, nextProps.users);
       break;
     case 'schools':
       nextTable = table.updateSortIndex(nextTable, '');
-      nextTable = table.buildIndexMap(nextTable, this.props.schools);
+      nextTable = table.buildIndexMap(nextTable, nextProps.schools);
       break;
     }
     this.setState({
