@@ -151,7 +151,7 @@ class UploadTab extends Component {
 }
 
 UploadTab.propTypes = {
-  schools : PropTypes.array.isRequired,
+  schools : PropTypes.object.isRequired,
   current : PropTypes.array.isRequired,
   confirm : PropTypes.func
 };

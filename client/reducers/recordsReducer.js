@@ -1,5 +1,7 @@
 import * as types from '../actions/actionTypes';
+// import {List, fromJS} from 'immutable';
 import initialState from './initialState';
+// const initialState = new List();
 
 export default function recordsReducer(state = initialState.records, action) {
   switch (action.type) {
