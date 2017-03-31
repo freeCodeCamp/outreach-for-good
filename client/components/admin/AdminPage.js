@@ -110,7 +110,7 @@ class AdminPage extends React.Component {
       this.setState({table: nextTable});
       break;
     case 'toggleSortCol':
-      nextTable = table.updateSortIndex(this.state.table, data);
+      nextTable = table.updateSortCol(this.state.table, data);
       nextTable = table.updateIndexMap(nextTable,
         nextTable.get('selectedTab') == 'users'
           ? this.props.users : this.props.schools);
@@ -185,6 +185,7 @@ class AdminPage extends React.Component {
         case locAct.REMOVE_USER:
           break;
         case locAct.NEW_SCHOOL:
+          nextTable = table.clearSelectedRows(nextTable);
           nextForm = form.disableSubmitButton(nextForm);
           break;
         case locAct.REMOVE_SCHOOL:
