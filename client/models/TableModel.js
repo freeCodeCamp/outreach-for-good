@@ -5,12 +5,14 @@ export const Table = Immutable.Record({
   title         : '',
   rowHeight     : 35,
   headerHeight  : 35,
-  indexMap      : [],
-  sortDirection : locAct.SORT_ASC,
-  sortIndex     : '',
-  selectedTab   : '',
+  // relative to data indicies (not sorted with indexMap)
   selectedIndex : Immutable.List(),
   selectedData  : Immutable.List(),
+  // data indicies -> sorted-table order map
+  indexMap      : [],
+  sortDirection : locAct.SORT_ASC,
+  sortCol       : '',
+  selectedTab   : '',
   MuiPopovers   : Immutable.Map(),
   MuiDialogs    : Immutable.Map(),
   MuiAnchor     : null,
@@ -31,21 +33,21 @@ class TableModel extends Table {
       .map((x, i) => i));
   }
 
-  updateSortIndex(currentState, nextSortIndex) {
+  updateSortCol(currentState, nextSortCol) {
     let nextState = currentState.update('sortDirection', sortDir =>
-      nextSortIndex == currentState.get('sortIndex')
+      nextSortCol == currentState.get('sortCol')
       ? locAct.SORT_ASC == sortDir
         ? locAct.SORT_DESC : locAct.SORT_ASC : locAct.SORT_ASC);
-    return nextState.update('sortIndex', () => nextSortIndex);
+    return nextState.update('sortCol', () => nextSortCol);
   }
 
   updateIndexMap(currentState, data) {
-    let sortIndex = currentState.get('sortIndex');
+    let sortCol = currentState.get('sortCol');
     let sortDirection = currentState.get('sortDirection') == locAct.SORT_ASC;
     return currentState.update('indexMap', indexMap =>
       indexMap.sort((xIndex, yIndex) => {
-        let xValue = data.getIn([xIndex, sortIndex]);
-        let yValue = data.getIn([yIndex, sortIndex]);
+        let xValue = data.getIn([xIndex, sortCol]);
+        let yValue = data.getIn([yIndex, sortCol]);
         return xValue > yValue
           ? sortDirection ? 1 : -1
           : sortDirection ? -1 : 1;
@@ -56,20 +58,22 @@ class TableModel extends Table {
   /**
    * Row Select and Highlighting
    */
-  getSelectedIndex(currentState) {
-    let indexMap = currentState.get('indexMap');
-    return indexMap.length > 0
-     ? currentState.get('selectedIndex').map(index => indexMap.indexOf(index))
-     : currentState.get('selectedIndex');
-  }
-
-  toggleSelectedRowIndex(currentState, index) {
-    let target = currentState.get('selectedIndex').indexOf(index);
+  toggleSelectedRowIndex(currentState, mappedIndex) {
+    let target = this.selectionToMappedIndicies(currentState).indexOf(mappedIndex);
     if(target == -1) {
+      let index = currentState.get('indexMap')[mappedIndex];
       return currentState.update('selectedIndex', i => i.push(index));
     } else {
       return currentState.update('selectedIndex', i => i.splice(target, 1));
     }
+  }
+
+  // Returns `selectedIndex` mapped to table sort order
+  selectionToMappedIndicies(currentState) {
+    let indexMap = currentState.get('indexMap');
+    return currentState
+      .get('selectedIndex').map(index =>
+        indexMap.indexOf(index));
   }
 
   // Return data stored in selected rows
