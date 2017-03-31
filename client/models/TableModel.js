@@ -99,26 +99,13 @@ class TableModel extends Table {
     return currentState.update('MuiPopovers', i => i.clear().merge(popoverValues));
   }
 
-  updateSortIndex(currentState, nextSortIndex) {
-    let nextState = currentState.update('sortDirection', sortDir =>
-      nextSortIndex == currentState.get('sortIndex')
-      ? locAct.SORT_ASC == sortDir
-        ? locAct.SORT_DESC : locAct.SORT_ASC : locAct.SORT_ASC);
-    return nextState.update('sortIndex', () => nextSortIndex);
+  togglePopovers(currentState, popoverValue) {
+    return currentState.update('MuiPopovers', iMap =>
+      iMap.update(popoverValue, state => !state));
   }
 
-  updateIndexMap(currentState, data) {
-    let sortIndex = currentState.get('sortIndex');
-    let sortDirection = currentState.get('sortDirection') == locAct.SORT_ASC;
-    return currentState.update('indexMap', indexMap =>
-      indexMap.sort((xIndex, yIndex) => {
-        let xValue = data.getIn([xIndex, sortIndex]);
-        let yValue = data.getIn([yIndex, sortIndex]);
-        return xValue > yValue
-          ? sortDirection ? 1 : -1
-          : sortDirection ? -1 : 1;
-      })
-    );
+  resetPopovers(currentState) {
+    return currentState.update('MuiPopovers', iMap => iMap.map(() => false));
   }
 
   // Set anchor element for <Popover> menu
