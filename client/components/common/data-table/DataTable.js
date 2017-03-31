@@ -22,6 +22,8 @@ const DataTable = ({page, table, data, ...props}) => {
    */
   const selectedRows = table.selectionToMappedIndicies(table);
 
+  const filtered = true;
+
   const isRowSelected = index =>
     selectedRows.includes(index) ? 'selected-row' : '';
 
@@ -31,6 +33,10 @@ const DataTable = ({page, table, data, ...props}) => {
 
   function tableSortHandler(event) {
     props.clickHandler('toggleSortCol', event.target.id);
+  }
+
+  function tableFilterHandler(event) {
+    console.log(event.target.id, event.target.value)
   }
 
   /**
@@ -117,7 +123,9 @@ const DataTable = ({page, table, data, ...props}) => {
       <Paper className="display-paper">
         <Table
           rowHeight={table.get('rowHeight') || 30}
-          headerHeight={table.get('headerHeight') || 30}
+          headerHeight={filtered
+            ? table.get('filterHeaderHeight') || 60
+            : table.get('headerHeight') || 30}
           rowsCount={data.size}
           width={props.view.width}
           maxHeight={props.view.height}
@@ -129,11 +137,13 @@ const DataTable = ({page, table, data, ...props}) => {
           <Column
             header={
               <DataTableHeader
+                filter={filtered}
+                filterHandler={tableFilterHandler}
                 id={col.id}
-                title={col.title}
                 sortCol={table.get('sortCol')}
                 sortDir={table.get('sortDirection')}
                 sortHandler={tableSortHandler}
+                title={col.title}
               />
               }
             cell={
