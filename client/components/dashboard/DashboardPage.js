@@ -30,33 +30,33 @@ class DashboardPage extends React.Component {
     this.tabHandler = this.tabHandler.bind(this);
   }
 
-  componentWillReceiveProps() {
+  componentWillReceiveProps(nextProps) {
     let nextTable = this.state.table;
     switch (nextTable.get('selectedTab')) {
     case 'court':
       nextTable = table.updateSortCol(nextTable, '');
-      nextTable = table.buildIndexMap(nextTable, this.props.absenceRecords);
+      nextTable = table.buildIndexMap(nextTable, nextProps.absenceRecords);
       break;
     case 'home':
       nextTable = table.updateSortCol(nextTable, '');
-      nextTable = table.buildIndexMap(nextTable, this.props.absenceRecords);
+      nextTable = table.buildIndexMap(nextTable, nextProps.absenceRecords);
       break;
     case 'letter':
       nextTable = table.updateSortCol(nextTable, '');
-      nextTable = table.buildIndexMap(nextTable, this.props.absenceRecords);
+      nextTable = table.buildIndexMap(nextTable, nextProps.absenceRecords);
       break;
     case 'phone':
       nextTable = table.updateSortCol(nextTable, '');
-      nextTable = table.buildIndexMap(nextTable, this.props.absenceRecords);
+      nextTable = table.buildIndexMap(nextTable, nextProps.absenceRecords);
       break;
     case 'sst':
       nextTable = table.updateSortCol(nextTable, '');
-      nextTable = table.buildIndexMap(nextTable, this.props.absenceRecords);
+      nextTable = table.buildIndexMap(nextTable, nextProps.absenceRecords);
       break;
     case 'student':
       nextTable = table.setSelectedTab(table, 'student');
       nextTable = table.updateSortCol(nextTable, '');
-      nextTable = table.buildIndexMap(nextTable, this.props.absenceRecords);
+      nextTable = table.buildIndexMap(nextTable, nextProps.absenceRecords);
       break;
     }
     this.setState({
