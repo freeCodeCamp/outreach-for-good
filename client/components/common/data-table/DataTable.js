@@ -20,7 +20,7 @@ const DataTable = ({page, table, data, ...props}) => {
    * DataTable Handler
    *   - Catch events from the table and send to parent component
    */
-  const selectedRows = table.getSelectedIndex(table);
+  const selectedRows = table.selectionToMappedIndicies(table);
 
   const isRowSelected = index =>
     selectedRows.includes(index) ? 'selected-row' : '';
@@ -131,7 +131,7 @@ const DataTable = ({page, table, data, ...props}) => {
               <DataTableHeader
                 id={col.id}
                 title={col.title}
-                sortCol={table.get('sortIndex')}
+                sortCol={table.get('sortCol')}
                 sortDir={table.get('sortDirection')}
                 sortHandler={tableSortHandler}
               />

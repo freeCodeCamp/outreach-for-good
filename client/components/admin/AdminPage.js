@@ -35,11 +35,11 @@ class AdminPage extends React.Component {
     let nextTable = this.state.table;
     switch (nextTable.get('selectedTab')) {
     case 'users':
-      nextTable = table.updateSortIndex(nextTable, '');
+      nextTable = table.updateSortCol(nextTable, '');
       nextTable = table.buildIndexMap(nextTable, this.props.users);
       break;
     case 'schools':
-      nextTable = table.updateSortIndex(nextTable, '');
+      nextTable = table.updateSortCol(nextTable, '');
       nextTable = table.buildIndexMap(nextTable, this.props.schools);
       break;
     }
@@ -106,11 +106,12 @@ class AdminPage extends React.Component {
      *   - Apply a filter
      */
     case 'toggleSelected':
+    console.log('toggling')
       nextTable = table.toggleSelectedRowIndex(this.state.table, data);
       this.setState({table: nextTable});
       break;
     case 'toggleSortCol':
-      nextTable = table.updateSortIndex(this.state.table, data);
+      nextTable = table.updateSortCol(this.state.table, data);
       nextTable = table.updateIndexMap(nextTable,
         nextTable.get('selectedTab') == 'users'
           ? this.props.users : this.props.schools);
