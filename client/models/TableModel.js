@@ -56,6 +56,13 @@ class TableModel extends Table {
   /**
    * Row Select and Highlighting
    */
+  getSelectedIndex(currentState) {
+    let indexMap = currentState.get('indexMap');
+    return indexMap.length > 0
+     ? currentState.get('selectedIndex').map(index => indexMap.indexOf(index))
+     : currentState.get('selectedIndex');
+  }
+
   toggleSelectedRowIndex(currentState, index) {
     let target = currentState.get('selectedIndex').indexOf(index);
     if(target == -1) {
