@@ -35,11 +35,11 @@ class AdminPage extends React.Component {
     let nextTable = this.state.table;
     switch (nextTable.get('selectedTab')) {
     case 'users':
-      nextTable = table.updateSortIndex(nextTable, '');
+      nextTable = table.updateSortCol(nextTable, '');
       nextTable = table.buildIndexMap(nextTable, nextProps.users);
       break;
     case 'schools':
-      nextTable = table.updateSortIndex(nextTable, '');
+      nextTable = table.updateSortCol(nextTable, '');
       nextTable = table.buildIndexMap(nextTable, nextProps.schools);
       break;
     }
