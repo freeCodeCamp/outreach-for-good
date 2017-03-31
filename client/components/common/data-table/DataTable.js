@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react';
-import { Table, Column, Cell } from 'fixed-data-table-2';
+import { Table, Column } from 'fixed-data-table-2';
 import DataTableHeader from './DataTableHeader';
 import DataTableRow from './DataTableRow';
 
@@ -16,22 +16,19 @@ import MenuItem from 'material-ui/MenuItem';
 import Dialog from 'material-ui/Dialog';
 
 const DataTable = ({page, table, data, ...props}) => {
-  // Highlight selected rows and handle row clicks
-  let row = {
-    selected : table.get('selectedIndex'),
-    isSelected(index) {
-      return row.selected.includes(index)
-        ? 'selected-row' : '';
-    },
-    toggleSelected(event, index) {
-      props.clickHandler('toggleSelected', index);
-    }
-  };
-
   /**
    * DataTable Handler
    *   - Catch events from the table and send to parent component
    */
+  const selectedRows = table.getSelectedIndex(table);
+
+  const isRowSelected = index =>
+    selectedRows.includes(index) ? 'selected-row' : '';
+
+  function rowToggleSelected(event, index) {
+    props.clickHandler('toggleSelected', index);
+  }
+
   function tableSortHandler(event) {
     props.clickHandler('toggleSortCol', event.target.id);
   }
@@ -70,7 +67,7 @@ const DataTable = ({page, table, data, ...props}) => {
                 secondary={button.get('secondary') || false}
                 backgroundColor={button.get('backgroundColor')}
                 style={{marginLeft: '10px'}}
-                disabled={row.selected.size == 0 && button.get('disabled')}
+                disabled={selectedRows.size == 0 && button.get('disabled')}
                 onClick={buttonHandler}
               />
               {button.get('menu').open
@@ -124,8 +121,8 @@ const DataTable = ({page, table, data, ...props}) => {
           rowsCount={data.size}
           width={props.view.width}
           maxHeight={props.view.height}
-          onRowClick={row.toggleSelected}
-          rowClassNameGetter={row.isSelected}
+          onRowClick={rowToggleSelected}
+          rowClassNameGetter={isRowSelected}
         >
         {page.columns && page.columns
           .map(col =>
