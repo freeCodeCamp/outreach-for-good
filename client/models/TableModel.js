@@ -76,6 +76,10 @@ class TableModel extends Table {
         indexMap.indexOf(index));
   }
 
+  clearSelectedRows(currentState) {
+    return currentState.update('selectedIndex', i => i.clear());
+  }
+
   // Return data stored in selected rows
   setSelectedRowData(currentState, data) {
     return currentState.update('selectedData', i => i.clear().merge(data));

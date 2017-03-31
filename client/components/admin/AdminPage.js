@@ -106,7 +106,6 @@ class AdminPage extends React.Component {
      *   - Apply a filter
      */
     case 'toggleSelected':
-    console.log('toggling')
       nextTable = table.toggleSelectedRowIndex(this.state.table, data);
       this.setState({table: nextTable});
       break;
@@ -186,6 +185,7 @@ class AdminPage extends React.Component {
         case locAct.REMOVE_USER:
           break;
         case locAct.NEW_SCHOOL:
+          nextTable = table.clearSelectedRows(nextTable);
           nextForm = form.disableSubmitButton(nextForm);
           break;
         case locAct.REMOVE_SCHOOL:
