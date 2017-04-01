@@ -16,7 +16,7 @@ class App extends Component {
         <div className="viewport">
           {this.props.session.token && <Header/>}
           <section className="main-body">
-            {this.props.session.token && <Sidebar/>}
+            {this.props.session.token && <Sidebar route={this.props.location.pathname} />}
             <section id="main-view">
               <div id={this.props.session.token ? 'main-content' : 'login-content'}>
                 {this.props.children}
@@ -32,7 +32,8 @@ class App extends Component {
 
 App.propTypes = {
   children : PropTypes.object.isRequired,
-  session  : PropTypes.object.isRequired
+  session  : PropTypes.object.isRequired,
+  location : PropTypes.object.isRequired
 };
 
 function mapStateToProps(state) {

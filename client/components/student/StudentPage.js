@@ -8,7 +8,6 @@ import Checkbox from 'material-ui/Checkbox';
 import Paper from 'material-ui/Paper';
 
 class StudentPage extends Component {
-
   componentWillMount() {
     this.props.actions.getStudent(this.props.params.studentId);
     this.props.actions.getStudentRecords(this.props.params.studentId);
@@ -19,12 +18,13 @@ class StudentPage extends Component {
     this.props.actions.unmountStudent();
   }
 
+
   render() {
     let student = this.props.student.student;
     return (
       <div className="student-page">
-        <div className="info">
-          <Paper className="col-data" zDepth={1}>
+        <Paper className="info" zDepth={1}>
+          <div className="col-data">
             <h1>{student.lastName}, {student.firstName} <small>Grade: {student.grade}</small></h1>
             <p>Student ID: (#{student.studentId})</p>
             <Checkbox
@@ -39,14 +39,11 @@ class StudentPage extends Component {
               label="Withdrawn:"
               checked={student.withdrawn}
             />
-          </Paper>
-          <Paper className="col-attendance" zDepth={1}>
+          </div>
+          <div className="col-attendance">
             <StudentAbsenceRecordTable records={this.props.student.records} />
-          </Paper>
-          <br/>
-          <br/>
-          <br/>
-        </div>
+          </div>
+        </Paper>
         <div className="tabs">
           <StudentTabs />
         </div>

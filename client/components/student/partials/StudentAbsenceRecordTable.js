@@ -19,8 +19,8 @@ const StudentAbsenceRecordTable = props =>
     </TableHeader>
     <TableBody
       displayRowCheckbox={false}>
-      {props.records.map(record =>
-        <TableRow>
+      {props.records.map((record, i) =>
+        <TableRow key={i}>
           <TableRowColumn>{new Date(record.date).toDateString()}</TableRowColumn>
           <TableRowColumn>{record.entry.present}</TableRowColumn>
           <TableRowColumn>{record.entry.tardies}</TableRowColumn>
