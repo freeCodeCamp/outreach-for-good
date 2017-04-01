@@ -12,12 +12,11 @@ class StudentPage extends Component {
     this.props.actions.getStudent(this.props.params.studentId);
     this.props.actions.getStudentRecords(this.props.params.studentId);
   }
-
-  componentWillUnmount() {
-    console.log('unmount student');
-    this.props.actions.unmountStudent();
-  }
-
+  //
+  // componentWillUnmount() {
+  //   console.log('unmount student');
+  //   this.props.actions.unmountStudent();
+  // }
 
   render() {
     let student = this.props.student.student;
@@ -29,15 +28,15 @@ class StudentPage extends Component {
             <p>Student ID: (#{student.studentId})</p>
             <Checkbox
               label="IEP:"
-              checked={student.iep}
+              defaultChecked={student.iep}
             />
             <Checkbox
               label="CFA:"
-              checked={student.cfa}
+              defaultChecked={student.cfa}
             />
             <Checkbox
               label="Withdrawn:"
-              checked={student.withdrawn}
+              defaultChecked={student.withdrawn}
             />
           </div>
           <div className="col-attendance">
