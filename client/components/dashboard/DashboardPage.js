@@ -34,28 +34,28 @@ class DashboardPage extends React.Component {
     let nextTable = this.state.table;
     switch (nextTable.get('selectedTab')) {
     case 'court':
-      nextTable = table.updateSortIndex(nextTable, '');
+      nextTable = table.updateSortCol(nextTable, '');
       nextTable = table.buildIndexMap(nextTable, nextProps.absenceRecords);
       break;
     case 'home':
-      nextTable = table.updateSortIndex(nextTable, '');
+      nextTable = table.updateSortCol(nextTable, '');
       nextTable = table.buildIndexMap(nextTable, nextProps.absenceRecords);
       break;
     case 'letter':
-      nextTable = table.updateSortIndex(nextTable, '');
+      nextTable = table.updateSortCol(nextTable, '');
       nextTable = table.buildIndexMap(nextTable, nextProps.absenceRecords);
       break;
     case 'phone':
-      nextTable = table.updateSortIndex(nextTable, '');
+      nextTable = table.updateSortCol(nextTable, '');
       nextTable = table.buildIndexMap(nextTable, nextProps.absenceRecords);
       break;
     case 'sst':
-      nextTable = table.updateSortIndex(nextTable, '');
+      nextTable = table.updateSortCol(nextTable, '');
       nextTable = table.buildIndexMap(nextTable, nextProps.absenceRecords);
       break;
     case 'student':
       nextTable = table.setSelectedTab(table, 'student');
-      nextTable = table.updateSortIndex(nextTable, '');
+      nextTable = table.updateSortCol(nextTable, '');
       nextTable = table.buildIndexMap(nextTable, nextProps.absenceRecords);
       break;
     }
@@ -111,7 +111,7 @@ class DashboardPage extends React.Component {
       this.setState({table: nextTable});
       break;
     case 'toggleSortCol':
-      nextTable = table.updateSortIndex(this.state.table, data);
+      nextTable = table.updateSortCol(this.state.table, data);
       nextTable = table.updateIndexMap(nextTable, this.props.absenceRecords);
       this.setState({table: nextTable});
       break;
