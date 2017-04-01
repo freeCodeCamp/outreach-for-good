@@ -99,7 +99,7 @@ class RecordsPage extends Component {
               width  : this.props.containerWidth - 20,
               height : this.props.containerHeight - 48 - 80
             }}
-            table={this.state.table}
+            // table={this.state.table}
             fetchSchoolRecordList={this.props.absActions.fetchSchoolRecordList}
             absenceRecordsList={this.props.absenceRecords.list}
             schools={this.props.schools}
