@@ -4,25 +4,27 @@ import RaisedButtonModel from '../../../models/RaisedButtonModel';
 import {Link} from 'react-router';
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
-// import TableModel from '../../../models/TableModel';
+import TableModel from '../../../models/TableModel';
 import StudentRecords from './StudentRecords';
 import Paper from 'material-ui/Paper';
 
-// const table = new TableModel();
+const table = new TableModel();
 
 class ManageTab extends Component {
   constructor(props) {
     super(props);
 
+    // this.props.fetchSchoolRecordList(props.schools[0]._id);
+    let nextTable = this.initializeTable(props.schools.get(0).get('_id'));
     this.state = {
-      // table,
+      table          : nextTable,
       selectedSchool : null,
       selectedRecord : null
     };
 
     this.changeSchool = this.changeSchool.bind(this);
     this.clickRow = this.clickRow.bind(this);
-    // this.initializeTable = this.initializeTable.bind(this);
+    this.initializeTable = this.initializeTable.bind(this);
   }
 
   componentDidMount() {
@@ -31,16 +33,16 @@ class ManageTab extends Component {
 
     this.setState({ selectedSchool });
   }
-  //
-  // componentWillReceiveProps(nextProps) {
-  //   let nextTable = this.state.table;
-  //   nextTable = table.updateSortIndex(nextTable, '');
-  //   nextTable = table.buildIndexMap(nextTable, nextProps.absenceRecords);
-  //
-  //   this.setState({
-  //     table : nextTable
-  //   });
-  // }
+
+  componentWillReceiveProps(nextProps) {
+    let nextTable = this.state.table;
+    // nextTable = table.updateSortIndex(nextTable, '');
+    nextTable = table.buildIndexMap(nextTable, nextProps.absenceRecordsList);
+
+    this.setState({
+      table : nextTable
+    });
+  }
 
 
   changeSchool(e, i, selectedSchool) {
@@ -71,12 +73,13 @@ class ManageTab extends Component {
     this.setState({ selectedRecord });
   }
 
-  // initializeTable() {
-  //   let nextTable;
-  //
-  //   nextTable = table.setSelectedTab(table, 'manage');
-  //   return nextTable;
-  // }
+  initializeTable(schoolId) {
+    let nextTable;
+    console.log(schoolId);
+    this.props.fetchSchoolRecordList(schoolId);
+    nextTable = table.setSelectedTab(table, 'manage');
+    return nextTable;
+  }
 
   render() {
     const selectedSchoolName = this.state.selectedSchool ? this.state.selectedSchool.get('name') : '';
@@ -135,6 +138,7 @@ class ManageTab extends Component {
         </SelectField>
         {selectedSchoolName
           && <DataTable
+            table={this.state.table}
             page={page}
             data={this.props.absenceRecordsList}
             clickHandler={this.clickRow}
@@ -145,11 +149,11 @@ class ManageTab extends Component {
           className="record-data"
           zDepth={2}>
             <StudentRecords
-              title="Created Students"
+              title="Created Students:"
               students={this.state.selectedRecord.createdStudents}
             />
             <StudentRecords
-              title="New Missing Students"
+              title="New Missing Students:"
               students={this.state.selectedRecord.newMissingStudents}
             />
           </Paper>}
