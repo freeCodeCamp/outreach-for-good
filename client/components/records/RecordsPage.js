@@ -24,21 +24,19 @@ class RecordsPage extends Component {
     };
 
     this.initializeTable = this.initializeTable.bind(this);
-    this.manageTabClick = this.manageTabClick.bind(this);
     this.changeTab = this.changeTab.bind(this);
     this.confirm = this.confirm.bind(this);
-    this.manageRecord = this.manageRecord.bind(this);
   }
-
-  componentWillReceiveProps(nextProps) {
-    let nextTable = this.state.table;
-    nextTable = table.updateSortIndex(nextTable, '');
-    nextTable = table.buildIndexMap(nextTable, nextProps.absenceRecords);
-
-    this.setState({
-      table : nextTable
-    });
-  }
+  //
+  // componentWillReceiveProps(nextProps) {
+  //   let nextTable = this.state.table;
+  //   nextTable = table.updateSortIndex(nextTable, '');
+  //   nextTable = table.buildIndexMap(nextTable, nextProps.absenceRecords);
+  //
+  //   this.setState({
+  //     table : nextTable
+  //   });
+  // }
 
   /**
    * Initialize Data Table
@@ -51,7 +49,7 @@ class RecordsPage extends Component {
     //this fetches the school records list for the manage tab
     //currently hardcoded in
     //need to work out the loading order to resolve without errors
-    let schoolId = '58dbbc071f99bcb70a9d0958';
+    let schoolId = '58dd23785550df6c1435c7f5';
     this.props.absActions.fetchSchoolRecordList(schoolId);
 
     nextTable = table.setSelectedTab(table, 'manage');
@@ -62,6 +60,9 @@ class RecordsPage extends Component {
     //TODO relook at these
     //which of these is unneeded
     this.props.schoolActions.getAllSchools();
+
+    //fetch current records FIX THIS
+    // this.props.absActions.fetchRecords();
     this.props.recordsActions.getCurrentRecord();
   }
 
@@ -72,16 +73,6 @@ class RecordsPage extends Component {
 
   changeTab(tab) {
     this.setState({ currentTab: tab });
-  }
-
-  manageRecord(schoolId) {
-    console.log('record list changed');
-    this.props.recordsActions.getSchoolRecordList(schoolId);
-  }
-
-  manageTabClick(action, data, event) {
-    let manageRecords = this.props.absenceRecords.get(data).get('entries');
-    this.setState({ manageRecords });
   }
 
   render() {
@@ -108,11 +99,11 @@ class RecordsPage extends Component {
               width  : this.props.containerWidth - 20,
               height : this.props.containerHeight - 48 - 80
             }}
-            records={this.props.absenceRecords}
             table={this.state.table}
+            fetchSchoolRecordList={this.props.absActions.fetchSchoolRecordList}
+            absenceRecordsList={this.props.absenceRecords.list}
             schools={this.props.schools}
-            manageRecords={this.state.manageRecords}
-            clickHandler={this.manageTabClick}
+            // manageRecords={this.state.manageRecords}
           />
         </Tab>
       </Tabs>

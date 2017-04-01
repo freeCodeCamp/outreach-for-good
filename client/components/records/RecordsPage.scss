@@ -36,3 +36,18 @@
     }
   }
 }
+.manage-tab {
+  .select-school {
+    margin: 30px;
+    width: 50%;
+  }
+  .record-data{
+    margin: 0 10px;
+    padding: 10px;
+    .column {
+      display: inline-block;
+      vertical-align: top;
+      width: 50%;
+    }
+  }
+}

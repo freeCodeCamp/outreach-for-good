@@ -11,10 +11,14 @@ export default (state = initialState, action) => {
   // Received users from fetchRecordsList()
   case types.LOAD_ABSENCE_RECORD_SUCCESS:
     return fromJS(action.absenceRecords)
-      .map(record => new AbsenceRecord(record));
+        .map(record => new AbsenceRecord(record));
+
   case types.LOAD_SCHOOL_RECORD_LIST_SUCCESS:
-    return fromJS(action.recordList)
-      .map(recordList => new AbsenceRecordListModel(recordList));
+    return {
+      ...state,
+      list : fromJS(action.recordList)
+        .map(recordList => new AbsenceRecordListModel(recordList))
+    };
   default:
     return state;
   }
