@@ -34,7 +34,7 @@ class ManageTab extends Component {
     this.setState({ selectedSchool });
   }
 
-  componentWillReceiveProps(nextProps) {
+  componentDidReceiveProps(nextProps) {
     let nextTable = this.state.table;
     // nextTable = table.updateSortIndex(nextTable, '');
     nextTable = table.buildIndexMap(nextTable, nextProps.absenceRecordsList);
