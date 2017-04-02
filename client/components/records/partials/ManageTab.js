@@ -7,6 +7,7 @@ import MenuItem from 'material-ui/MenuItem';
 import TableModel from '../../../models/TableModel';
 import StudentRecords from './StudentRecords';
 import Paper from 'material-ui/Paper';
+import DeleteDialog from './DeleteDialog';
 
 const table = new TableModel();
 
@@ -14,68 +15,66 @@ class ManageTab extends Component {
   constructor(props) {
     super(props);
 
-    // this.props.fetchSchoolRecordList(props.schools[0]._id);
-    let nextTable = this.initializeTable(props.schools.get(0).get('_id'));
     this.state = {
-      table          : nextTable,
       selectedSchool : null,
-      selectedRecord : null
+      selectedRecord : null,
+      dialogOpen     : false,
     };
 
     this.changeSchool = this.changeSchool.bind(this);
-    this.clickRow = this.clickRow.bind(this);
-    this.initializeTable = this.initializeTable.bind(this);
+    this.clickHandler = this.clickHandler.bind(this);
+    this.closeDialog = this.closeDialog.bind(this);
+    this.removeRecord = this.removeRecord.bind(this);
   }
 
-  componentDidMount() {
-    let selectedSchool = this.props.schools[0];
-    // let nextTable = this.initializeTable();
-
-    this.setState({ selectedSchool });
-  }
-
-  componentDidReceiveProps(nextProps) {
-    let nextTable = this.state.table;
-    // nextTable = table.updateSortIndex(nextTable, '');
-    nextTable = table.buildIndexMap(nextTable, nextProps.absenceRecordsList);
+  /**
+   * Updates the data table with selected school
+   */
+  changeSchool(e, i, selectedSchool) {
+    let nextTable = this.initializeTable(selectedSchool.get('_id'));
 
     this.setState({
-      table : nextTable
+      selectedSchool,
+      selectedRecord : null,
+      table          : nextTable
     });
   }
 
-
-  changeSchool(e, i, selectedSchool) {
-    console.log(selectedSchool._id);
-    this.props.fetchSchoolRecordList(selectedSchool._id);
-    this.setState({ selectedSchool, selectedRecord: null });
+  /**
+   * Handles the clicks on the datatable
+   */
+  clickHandler(action, data) {
+    switch (action) {
+    case 'toggleSortCol': {
+      break;
+    }
+    default: {
+      switch (data) {
+      case 'deleteRecord': {
+        this.setState({ dialogOpen: !this.state.dialogOpen });
+        break;
+      }
+      default: {
+        this._displayRecord(data);
+      }
+      }
+    }
+    }
   }
 
-  clickRow(action, data) {
-    console.log('row clicked: ', action, data);
-    let selectedRecord = {};
-    // selectedRecord.updated = this.props.absenceRecordsList
-    //   .get(data)
-    //   .get('updated')
-    //   .map(entry => entry.get('_id'));
+  removeRecord() {
+    let recordId = this.props.absenceRecordsList.get(0).get('recordId');
+    this.props.removeRecord(recordId);
+    this.closeDialog();
+    this.changeSchool(null, null, this.state.selectedSchool);
+  }
 
-    selectedRecord.newMissingStudents = this.props.absenceRecordsList
-      .get(data)
-      .get('newMissingStudents')
-      // .map(entry => entry.get('_id'));
-      .map(entry => <Link to={`/student/${entry.get('_id')}`}>{entry.firstName} {entry.lastName}</Link>);
-
-    selectedRecord.createdStudents = this.props.absenceRecordsList
-      .get(data)
-      .get('createdStudents')
-      .map(entry => <Link to={`/student/${entry.get('_id')}`}>{`${entry.get('firstName')} ${entry.get('lastName')}`}</Link>);
-
-    this.setState({ selectedRecord });
+  closeDialog() {
+    this.setState({ dialogOpen: false });
   }
 
   initializeTable(schoolId) {
     let nextTable;
-    console.log(schoolId);
     this.props.fetchSchoolRecordList(schoolId);
     nextTable = table.setSelectedTab(table, 'manage');
     return nextTable;
@@ -84,14 +83,11 @@ class ManageTab extends Component {
   render() {
     const selectedSchoolName = this.state.selectedSchool ? this.state.selectedSchool.get('name') : '';
 
-    const tempClick = () => {
-      console.log('clicked');
-    };
-
     const buttons = [
       new RaisedButtonModel({
         label    : 'Delete Record',
-        actionID : tempClick
+        actionID : 'deleteRecord',
+        disabled : false
       })
     ];
 
@@ -141,7 +137,7 @@ class ManageTab extends Component {
             table={this.state.table}
             page={page}
             data={this.props.absenceRecordsList}
-            clickHandler={this.clickRow}
+            clickHandler={this.clickHandler}
             {...this.props}
           />}
         {this.state.selectedRecord
@@ -157,14 +153,41 @@ class ManageTab extends Component {
               students={this.state.selectedRecord.newMissingStudents}
             />
           </Paper>}
+        <DeleteDialog
+          dialogOpen={this.state.dialogOpen}
+          closeDialog={this.closeDialog}
+          removeRecord={this.removeRecord}
+        />
       </div>
     );
+  }
+
+  /**
+   * Display record is used when clicking on a row to display students
+   */
+  _displayRecord(record) {
+    console.log('row clicked: ', record);
+    let selectedRecord = {};
+
+    selectedRecord.newMissingStudents = this.props.absenceRecordsList
+      .get(record)
+      .get('newMissingStudents')
+      // .map(entry => entry.get('_id'));
+      .map((entry, i) => <Link key={i} to={`/student/${entry.get('_id')}`}>{entry.firstName} {entry.lastName}</Link>);
+
+    selectedRecord.createdStudents = this.props.absenceRecordsList
+      .get(record)
+      .get('createdStudents')
+      .map((entry, i) => <Link key={i} to={`/student/${entry.get('_id')}`}>{`${entry.get('firstName')} ${entry.get('lastName')}`}</Link>);
+
+    this.setState({ selectedRecord });
   }
 }
 
 ManageTab.propTypes = {
-  absenceRecordsList : PropTypes.object,
-  manageRecords      : PropTypes.object
+  absenceRecordsList    : PropTypes.object,
+  manageRecords         : PropTypes.object,
+  fetchSchoolRecordList : PropTypes.func
 };
 
 export default ManageTab;

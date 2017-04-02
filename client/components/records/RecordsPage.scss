@@ -51,3 +51,9 @@
     }
   }
 }
+
+$alertred: #f2dede;
+.alert {
+  color: #a94442;
+  background-color: $alertred;
+}
