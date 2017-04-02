@@ -1,6 +1,6 @@
 import * as types from './actionTypes';
 import { validate } from './sessionActions';
-import AbsenceRecordsApi from '../api/AbsenceRecordsAltApi';
+import AbsenceRecordsApi from '../api/AbsenceRecordsApi';
 
 export function loadRecordsSuccess(absenceRecords) {
   return {type: types.LOAD_ABSENCE_RECORD_SUCCESS, absenceRecords};

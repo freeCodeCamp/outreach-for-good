@@ -2,6 +2,7 @@ import React, {Component, PropTypes} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import * as sessionActions from '../actions/sessionActions';
+import {getAllSchools} from '../actions/schoolActions';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import muiTheme from '../styles/muiTheme.js';
 import Header from './common/Header';
@@ -10,6 +11,10 @@ import Footer from './common/Footer';
 
 
 class App extends Component {
+  componentWillMount() {
+    this.props.getAllSchools();
+  }
+
   render() {
     return (
       <MuiThemeProvider muiTheme={muiTheme}>
@@ -31,9 +36,10 @@ class App extends Component {
 }
 
 App.propTypes = {
-  children : PropTypes.object.isRequired,
-  session  : PropTypes.object.isRequired,
-  location : PropTypes.object.isRequired
+  children      : PropTypes.object.isRequired,
+  session       : PropTypes.object.isRequired,
+  location      : PropTypes.object.isRequired,
+  getAllSchools : PropTypes.func.isRequired
 };
 
 function mapStateToProps(state) {
@@ -44,7 +50,8 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    actions : bindActionCreators(sessionActions, dispatch)
+    actions       : bindActionCreators(sessionActions, dispatch),
+    getAllSchools : bindActionCreators(getAllSchools, dispatch)
   };
 }
 

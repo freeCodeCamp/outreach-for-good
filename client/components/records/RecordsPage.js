@@ -1,85 +1,43 @@
 import React, {Component, PropTypes} from 'react';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
-import * as recordsActions from '../../actions/recordsActions';
-import * as schoolActions from '../../actions/schoolActions';
+import {fetchRecords, changeTab} from '../../actions/recordsActions';
 import {Tabs, Tab} from 'material-ui/Tabs';
 import UploadTab from './partials/UploadTab';
 import ManageTab from './partials/ManageTab';
 import Dimensions from 'react-dimensions';
-import TableModel from '../../models/TableModel';
-import * as absAct from '../../actions/absenceRecordActions';
-
-const table = new TableModel();
+import {
+  fetchSchoolRecordList,
+  addRecord,
+  removeRecord} from '../../actions/absenceRecordActions';
+// import * as absRecActions from '../../actions/absenceRecordActions';
 
 class RecordsPage extends Component {
   constructor(props, context) {
     super(props, context);
 
-    let nextTable = this.initializeTable();
-    this.state = {
-      table         : nextTable,
-      currentTab    : 'upload',
-      manageRecords : props.absenceRecords
-    };
-
-    this.initializeTable = this.initializeTable.bind(this);
     this.changeTab = this.changeTab.bind(this);
-    this.confirm = this.confirm.bind(this);
-  }
-  //
-  // componentWillReceiveProps(nextProps) {
-  //   let nextTable = this.state.table;
-  //   nextTable = table.updateSortIndex(nextTable, '');
-  //   nextTable = table.buildIndexMap(nextTable, nextProps.absenceRecords);
-  //
-  //   this.setState({
-  //     table : nextTable
-  //   });
-  // }
-
-  /**
-   * Initialize Data Table
-   *   - Retrieve and configure data for table
-   *   - Set default state for 'action' variables
-   */
-  initializeTable() {
-    let nextTable;
-
-    //this fetches the school records list for the manage tab
-    //currently hardcoded in
-    //need to work out the loading order to resolve without errors
-    let schoolId = '58dd23785550df6c1435c7f5';
-    this.props.absActions.fetchSchoolRecordList(schoolId);
-
-    nextTable = table.setSelectedTab(table, 'manage');
-    return nextTable;
+    // this.confirm = this.confirm.bind(this);
   }
 
   componentWillMount() {
-    //TODO relook at these
-    //which of these is unneeded
-    this.props.schoolActions.getAllSchools();
-
-    //fetch current records FIX THIS
-    // this.props.absActions.fetchRecords();
-    this.props.recordsActions.getCurrentRecord();
+    this.props.action.fetchRecords();
   }
 
-  confirm(record, date) {
-    record.date = date;
-    this.props.recordsActions.postRecord(record);
-  }
+  // confirm(record, date) {
+  //   record.date = date;
+  //   this.props.recordsActions.postRecord(record);
+  // }
 
   changeTab(tab) {
-    this.setState({ currentTab: tab });
+    this.props.action.changeTab(tab);
   }
 
   render() {
     return (
       <Tabs
         style={{width: this.props.containerWidth}}
-        value={this.state.currentTab}
+        value={this.props.records.view.currentTab}
         onChange={this.changeTab}
         >
         <Tab
@@ -87,8 +45,10 @@ class RecordsPage extends Component {
           value="upload">
           <UploadTab
             confirm={this.confirm}
-            current={this.props.records.current}
+            currentRecord={this.props.records.current}
+            absenceRecords={this.props.absenceRecords}
             schools={this.props.schools}
+            addRecord={this.props.action.addRecord}
           />
         </Tab>
         <Tab
@@ -99,11 +59,10 @@ class RecordsPage extends Component {
               width  : this.props.containerWidth - 20,
               height : this.props.containerHeight - 48 - 80
             }}
-            // table={this.state.table}
-            fetchSchoolRecordList={this.props.absActions.fetchSchoolRecordList}
-            absenceRecordsList={this.props.absenceRecords.list}
+            fetchSchoolRecordList={this.props.action.fetchSchoolRecordList}
+            absenceRecordsList={this.props.absenceRecords}
             schools={this.props.schools}
-            // manageRecords={this.state.manageRecords}
+            removeRecord={this.props.action.removeRecord}
           />
         </Tab>
       </Tabs>
@@ -112,9 +71,7 @@ class RecordsPage extends Component {
 }
 
 RecordsPage.propTypes = {
-  schoolActions  : PropTypes.object.isRequired,
-  recordsActions : PropTypes.object.isRequired,
-  records        : PropTypes.object.isRequired
+  records : PropTypes.object.isRequired
 };
 
 function mapStateToProps(state) {
@@ -128,9 +85,15 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    absActions     : bindActionCreators(absAct, dispatch),
-    recordsActions : bindActionCreators(recordsActions, dispatch),
-    schoolActions  : bindActionCreators(schoolActions, dispatch)
+    action : bindActionCreators({
+      fetchRecords,
+      changeTab,
+      fetchSchoolRecordList,
+      addRecord,
+      removeRecord
+    }, dispatch)
+    // absRecActions : bindActionCreators(absRecActions, dispatch),
+    // fetchRecords  : bindActionCreators(fetchRecords, dispatch)
   };
 }
 

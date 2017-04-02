@@ -14,11 +14,8 @@ export default (state = initialState, action) => {
         .map(record => new AbsenceRecord(record));
 
   case types.LOAD_SCHOOL_RECORD_LIST_SUCCESS:
-    return {
-      ...state,
-      list : fromJS(action.recordList)
-        .map(recordList => new AbsenceRecordListModel(recordList))
-    };
+    return fromJS(action.recordList)
+        .map(recordList => new AbsenceRecordListModel(recordList));
   default:
     return state;
   }
