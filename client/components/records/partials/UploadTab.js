@@ -6,20 +6,19 @@ import DatePicker from 'material-ui/DatePicker';
 import AbsenceRecordsTable from './AbsenceRecordsTable';
 import Snackbar from 'material-ui/Snackbar';
 import Dropzone from 'react-dropzone';
-import ParsePDF from './UploadService';
+import UploadService from './UploadService';
 
 class UploadTab extends Component {
   constructor() {
     super();
 
     this.state = {
-      loadingState         : 'determinate',
-      loadingValue         : 0,
-      record               : null,
-      school               : {},
-      recordResults        : false,
-      date                 : new Date(),
-      recordResultsMessage : ''
+      loadingState  : 'determinate',
+      loadingValue  : 0,
+      record        : null,
+      recordResults : false,
+      date          : new Date(),
+      snackBar      : ''
     };
 
     this.confirm = this.confirm.bind(this);
@@ -30,63 +29,59 @@ class UploadTab extends Component {
     this.closeSnackbar = this.closeSnackbar.bind(this);
   }
 
-  changeSchool(e, i, school) {
-    this.setState({ school });
+  /**
+   * Fires when the school select is changed
+   */
+  changeSchool(e, i, selectedSchool) {
+    this.setState({ selectedSchool });
   }
 
+  /**
+   * Fires when a file is dropped into the dropzone
+   */
   changeFile(accepted) {
-    this.setState({ loadingState: 'indeterminate', loadingValue: null });
-    if(accepted) {
-      let currentSchool = this.state.school;
-      let currentRecord = this.props.current.filter(current =>
-        current._id === currentSchool._id
-      )[0];
-      ParsePDF(currentSchool, currentRecord, accepted[0])
-      .then(record => {
-        console.log(record);
-        let message = '';
-        if(record.creates) {
-          message += `New records: ${record.creates.length}.`;
-        }
-        if(record.updates) {
-          message += ` Updated records: ${record.updates.length}.`;
-        }
-        if(record.missingEntries.length) {
-          message += ` Missing Records: ${record.missingEntries.length}.`;
-        }
-        if(record.newMissingStudents.length) {
-          message += `New Missing Students: ${record.newMissingStudents.length}.`;
-        }
+    if(accepted && this.state.selectedSchool) {
+      let school = this.state.selectedSchool.toJS();
+      let previousRecord = this.props.currentRecord
+        .filter(record => record.school._id === school._id)[0];
 
-        this.setState({
-          record,
-          recordResults        : true,
-          recordResultsMessage : message,
-          loadingState         : 'determinate',
-          loadingValue         : 100
-        });
+      let uploadService = new UploadService(school, previousRecord, accepted[0]);
+
+      uploadService.getRecord().then(({ record, message }) => {
+        this.setState({ record, snackBar: message });
       });
     }
   }
 
+  /**
+   * Fires when the date is changed
+   */
   changeDate(e, date) {
     this.setState({ date });
   }
 
+  /**
+   * Action to post absence record
+   */
   confirm() {
-    this.props.confirm(this.state.record, this.state.date);
+    let record = this.state.record;
+    record.date = this.state.date;
+    this.props.addRecord(record);
     this.cancel();
   }
 
+  /**
+   * Removes the parsed record
+   */
   cancel() {
     this.setState({ record: null, loadingValue: 0, loadingState: 'determinate' });
   }
 
+  /**
+   * closes the snackbar message
+   */
   closeSnackbar() {
-    this.setState({
-      recordResults        : false,
-      recordResultsMessage : ''
-    });
+    this.setState({ snackBar: '' });
   }
 
   render() {
@@ -96,7 +91,7 @@ class UploadTab extends Component {
           <div className="column">
             <SelectField
               floatingLabelText="Select a school..."
-              value={this.state.school}
+              value={this.state.selectedSchool}
               onChange={this.changeSchool}
               fullWidth
               >
@@ -118,13 +113,14 @@ class UploadTab extends Component {
             />
           </div>
           <div className="column">
-            <Dropzone
+            {this.state.selectedSchool
+              && <Dropzone
               onDrop={this.changeFile}
               multiple={false}
               accept="application/pdf"
               className="dropzone">
               <h2>Click here or drop a PDF into this field</h2>
-            </Dropzone>
+            </Dropzone>}
           </div>
         </div>
         {this.state.loadingValue > 0
@@ -140,9 +136,9 @@ class UploadTab extends Component {
             uploadTab
           />}
         <Snackbar
-          open={this.state.recordResults}
-          message={this.state.recordResultsMessage}
-          autoHideDuration={3000}
+          open={!!this.state.snackBar}
+          message={this.state.snackBar}
+          autoHideDuration={6000}
           onRequestClose={this.closeSnackbar}
         />
       </div>
@@ -151,8 +147,7 @@ class UploadTab extends Component {
 }
 
 UploadTab.propTypes = {
-  schools : PropTypes.array.isRequired,
-  current : PropTypes.array.isRequired,
+  schools : PropTypes.object.isRequired,
   confirm : PropTypes.func
 };
 
