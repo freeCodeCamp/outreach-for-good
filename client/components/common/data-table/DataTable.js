@@ -22,8 +22,6 @@ const DataTable = ({page, table, data, ...props}) => {
    */
   const selectedRows = table.selectionToMappedIndicies(table);
 
-  const filtered = true;
-
   const isRowSelected = index =>
     selectedRows.includes(index) ? 'selected-row' : '';
 
@@ -36,15 +34,7 @@ const DataTable = ({page, table, data, ...props}) => {
   }
 
   function tableFilterHandler(event) {
-    console.log(event.target.id, event.target.value)
-  }
-
-  /**
-   * DataTable Handler
-   *   - Catch events from the table and send to parent component
-   */
-  function tableSortHandler(event) {
-    props.clickHandler('toggleSortCol', event.target.id);
+    props.clickHandler('changeFilterCol', event.target.id, event.target.value);
   }
 
   /**
@@ -131,10 +121,10 @@ const DataTable = ({page, table, data, ...props}) => {
       <Paper className="display-paper">
         <Table
           rowHeight={table.get('rowHeight') || 30}
-          headerHeight={filtered
+          headerHeight={table.get('filterEnabled')
             ? table.get('filterHeaderHeight') || 60
             : table.get('headerHeight') || 30}
-          rowsCount={data.size}
+          rowsCount={table.get('indexMap').length}
           width={props.view.width}
           maxHeight={props.view.height}
           onRowClick={rowToggleSelected}
@@ -145,7 +135,7 @@ const DataTable = ({page, table, data, ...props}) => {
           <Column
             header={
               <DataTableHeader
-                filter={filtered}
+                filter={table.get('filterEnabled')}
                 filterHandler={tableFilterHandler}
                 id={col.id}
                 sortCol={table.get('sortCol')}

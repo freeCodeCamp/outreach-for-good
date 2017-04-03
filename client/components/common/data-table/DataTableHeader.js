@@ -19,13 +19,13 @@ const DataTableHeader = ({id, title, sortCol, sortDir, sortHandler,
         {title}
         {sortCol == id && sortDir ? sortDir === locAct.SORT_DESC ? '↓' : '↑' : ''}
       </a>
-      <input
+      {filter && <input
         type='text'
         id={`filter-${id}`}
         style={{width: '100%'}}
         onChange={filterHandler}
         placeholder='filter'
-      />
+      />}
     </Cell>
   );
 };
