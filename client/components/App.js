@@ -11,10 +11,6 @@ import Footer from './common/Footer';
 
 
 class App extends Component {
-  componentWillMount() {
-    this.props.getAllSchools();
-  }
-
   render() {
     return (
       <MuiThemeProvider muiTheme={muiTheme}>
