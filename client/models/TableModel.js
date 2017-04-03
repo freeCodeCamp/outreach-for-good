@@ -2,6 +2,7 @@ import Immutable from 'immutable';
 import * as locAct from '../components/common/data-table/localActions';
 
 export const Table = Immutable.Record({
+  selectedTab   : '',
   title         : '',
   rowHeight     : 35,
   headerHeight  : 35,
@@ -12,7 +13,10 @@ export const Table = Immutable.Record({
   indexMap      : [],
   sortDirection : locAct.SORT_ASC,
   sortCol       : '',
-  selectedTab   : '',
+  filterEnabled : false,
+  // {data_id: filter_value, ...}
+  filterBy      : Immutable.Map(),
+  // used to display MaterialUI Components
   MuiPopovers   : Immutable.Map(),
   MuiDialogs    : Immutable.Map(),
   MuiAnchor     : null,
@@ -41,7 +45,7 @@ class TableModel extends Table {
     return nextState.update('sortCol', () => nextSortCol);
   }
 
-  updateIndexMap(currentState, data) {
+  sortIndexMap(currentState, data) {
     let sortCol = currentState.get('sortCol');
     let sortDirection = currentState.get('sortDirection') == locAct.SORT_ASC;
     return currentState.update('indexMap', indexMap =>
@@ -53,6 +57,34 @@ class TableModel extends Table {
           : sortDirection ? -1 : 1;
       })
     );
+  }
+
+  /**
+   * Filter table by column
+   */
+  updateFilterBy(currentState, data, id, filter) {
+    return this.filterIndexMap(
+      currentState.update('filterBy', filterBy =>
+        filterBy.set(id, filter)), data);
+  }
+
+  // Enhancement: change filter algo based on adding or removing chars
+  filterIndexMap(currentState, data) {
+    let nextState = this.buildIndexMap(currentState, data);
+    let filterBy = nextState.get('filterBy');
+    return nextState.update('indexMap', indexMap => {
+      filterBy.forEach((v, k) => {
+        indexMap = indexMap.filter(e =>
+          data.getIn([e, k]).toString()
+          .toLowerCase()
+          .indexOf(v) !== -1);
+      });
+      return indexMap;
+    });
+  }
+
+  enableFiltering(currentState) {
+    return currentState.set('filterEnabled', true);
   }
 
   /**
