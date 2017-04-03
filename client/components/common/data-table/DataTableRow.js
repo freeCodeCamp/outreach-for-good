@@ -5,7 +5,6 @@ import { List } from 'immutable';
 
 const DataTableRow = ({rowIndex, indexMap, data, col, ...props}) =>
     <Cell {...props}>
-      {/*console.log('Data: ', indexMap, rowIndex, col)*/}
       {indexMap.length > 0
         ? data.get(indexMap[rowIndex]).get(col)
         : data.get(rowIndex).get(col)}

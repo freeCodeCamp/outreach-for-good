@@ -10,11 +10,11 @@ const AbsenceRecordListModel = Immutable.Record({
 });
 
 class AbsenceRecordList extends AbsenceRecordListModel {
-  constructor(record) {
-    super(record);
-    record.date = new Date(record.date).toDateString();
-    return record;
-  }
+  // constructor(record) {
+  //   super(record);
+  //   record.date = new Date(record.date).toDateString();
+  //   return record;
+  // }
 }
 
 export default AbsenceRecordList;
