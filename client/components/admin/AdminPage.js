@@ -100,7 +100,7 @@ class AdminPage extends React.Component {
       break;
 
     /**
-     * DataTable Click Handler
+     * DataTable Click / Filter Handler
      *   - Select / de-select a table row
      *   - Sort by a column
      *   - Apply a filter
@@ -111,9 +111,17 @@ class AdminPage extends React.Component {
       break;
     case 'toggleSortCol':
       nextTable = table.updateSortCol(this.state.table, data);
-      nextTable = table.updateIndexMap(nextTable,
+      nextTable = table.sortIndexMap(nextTable,
         nextTable.get('selectedTab') == 'users'
           ? this.props.users : this.props.schools);
+      this.setState({table: nextTable});
+      break;
+    case 'changeFilterCol':
+      console.log(data.substr(7), event);
+      let tabData = this.state.table.get('selectedTab') == 'users'
+          ? this.props.users : this.props.schools;
+      nextTable = table.updateFilterBy(this.state.table, tabData, data.substr(7), event);
+      nextTable = table.sortIndexMap(nextTable, tabData);
       this.setState({table: nextTable});
       break;
 

@@ -112,7 +112,7 @@ class DashboardPage extends React.Component {
       break;
     case 'toggleSortCol':
       nextTable = table.updateSortCol(this.state.table, data);
-      nextTable = table.updateIndexMap(nextTable, this.props.absenceRecords);
+      nextTable = table.sortIndexMap(nextTable, this.props.absenceRecords);
       this.setState({table: nextTable});
       break;
     }

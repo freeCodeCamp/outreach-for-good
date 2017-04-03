@@ -57,3 +57,5 @@ This version is currently under development.
   * Prevent users from deleting themselves
   * User photo in left-most column
   * Sort when clicking header
+* TableModel
+  * filter algorithm adjustment

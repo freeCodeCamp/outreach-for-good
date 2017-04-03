@@ -36,15 +36,7 @@ const DataTable = ({page, table, data, ...props}) => {
   }
 
   function tableFilterHandler(event) {
-    console.log(event.target.id, event.target.value)
-  }
-
-  /**
-   * DataTable Handler
-   *   - Catch events from the table and send to parent component
-   */
-  function tableSortHandler(event) {
-    props.clickHandler('toggleSortCol', event.target.id);
+    props.clickHandler('changeFilterCol', event.target.id, event.target.value);
   }
 
   /**
@@ -134,7 +126,7 @@ const DataTable = ({page, table, data, ...props}) => {
           headerHeight={filtered
             ? table.get('filterHeaderHeight') || 60
             : table.get('headerHeight') || 30}
-          rowsCount={data.size}
+          rowsCount={table.get('indexMap').length}
           width={props.view.width}
           maxHeight={props.view.height}
           onRowClick={rowToggleSelected}
