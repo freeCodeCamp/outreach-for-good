@@ -54,7 +54,6 @@ export function fetchRecordsList() {
  *   - untested
  */
 export function fetchSchoolRecordList(schoolId) {
-  console.log('school record list');
   return function(dispatch) {
     return AbsenceRecordsApi.fetchSchoolRecordList(schoolId).then(recordList =>
       dispatch({

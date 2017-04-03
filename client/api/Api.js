@@ -62,5 +62,51 @@ class Api {
   static fetchRequest(method = 'GET', url, body) {
     console.log(method, url, body);
   }
+
+  static getAPI(url) {
+    let request = new Request(url, {
+      method  : 'GET',
+      headers : this.requestHeaders()
+    });
+
+    return fetch(request)
+      .then(response => this.parseResponse(response))
+      .catch(error => this.handleError(error));
+  }
+
+  static postAPI(url, body) {
+    let request = new Request(url, {
+      method  : 'POST',
+      headers : this.requestHeaders(),
+      body    : this.requestBody(body)
+    });
+
+    return fetch(request)
+      .then(response => this.parseResponse(response))
+      .catch(error => this.handleError(error));
+  }
+
+  static putAPI(url, body) {
+    let request = new Request(url, {
+      method  : 'PUT',
+      headers : this.requestHeaders(),
+      body    : this.requestBody(body)
+    });
+
+    return fetch(request)
+      .then(response => this.parseResponse(response))
+      .catch(error => this.handleError(error));
+  }
+
+  static deleteAPI(url) {
+    let request = new Request(url, {
+      method  : 'DELETE',
+      headers : this.requestHeaders()
+    });
+
+    return fetch(request)
+      .then(response => this.parseResponse(response))
+      .catch(error => this.handleError(error));
+  }
 }
 export default Api;
