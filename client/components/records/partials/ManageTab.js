@@ -92,6 +92,26 @@ class ManageTab extends Component {
     this.setState({ dialogOpen: false });
   }
 
+  /**
+  * Display record is used when clicking on a row to display students
+  */
+  _displayRecord(record) {
+    console.log('row clicked: ', record);
+    let selectedRecord = {};
+
+    selectedRecord.newMissingStudents = this.props.absenceRecordsList
+    .get(record)
+    .get('newMissingStudents')
+    // .map(entry => entry.get('_id'));
+    .map((entry, i) => <Link key={i} to={`/student/${entry.get('_id')}`}>{entry.firstName} {entry.lastName}</Link>);
+
+    selectedRecord.createdStudents = this.props.absenceRecordsList
+    .get(record)
+    .get('createdStudents')
+    .map((entry, i) => <Link key={i} to={`/student/${entry.get('_id')}`}>{`${entry.get('firstName')} ${entry.get('lastName')}`}</Link>);
+
+    this.setState({ selectedRecord });
+  }
 
   render() {
     const selectedSchoolName = this.state.selectedSchool ? this.state.selectedSchool.get('name') : '';
@@ -117,6 +137,8 @@ class ManageTab extends Component {
       }],
       buttons
     };
+
+
     return (
       <div className="manage-tab">
         <SelectField
@@ -163,32 +185,14 @@ class ManageTab extends Component {
     );
   }
 
-  /**
-   * Display record is used when clicking on a row to display students
-   */
-  _displayRecord(record) {
-    console.log('row clicked: ', record);
-    let selectedRecord = {};
-
-    selectedRecord.newMissingStudents = this.props.absenceRecordsList
-      .get(record)
-      .get('newMissingStudents')
-      // .map(entry => entry.get('_id'));
-      .map((entry, i) => <Link key={i} to={`/student/${entry.get('_id')}`}>{entry.firstName} {entry.lastName}</Link>);
-
-    selectedRecord.createdStudents = this.props.absenceRecordsList
-      .get(record)
-      .get('createdStudents')
-      .map((entry, i) => <Link key={i} to={`/student/${entry.get('_id')}`}>{`${entry.get('firstName')} ${entry.get('lastName')}`}</Link>);
-
-    this.setState({ selectedRecord });
-  }
 }
 
 ManageTab.propTypes = {
   absenceRecordsList    : PropTypes.object,
   manageRecords         : PropTypes.object,
-  fetchSchoolRecordList : PropTypes.func
+  fetchSchoolRecordList : PropTypes.func,
+  removeRecord          : PropTypes.func,
+  schools               : PropTypes.object
 };
 
 export default ManageTab;

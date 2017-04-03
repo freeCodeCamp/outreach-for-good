@@ -4,9 +4,9 @@ import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
 import DatePicker from 'material-ui/DatePicker';
 import AbsenceRecordsTable from './AbsenceRecordsTable';
-import Snackbar from 'material-ui/Snackbar';
 import Dropzone from 'react-dropzone';
 import UploadService from './UploadService';
+import ResponseSnackbar from '../../common/ResponseSnackbar';
 
 class UploadTab extends Component {
   constructor() {
@@ -135,20 +135,20 @@ class UploadTab extends Component {
             record={this.state.record}
             uploadTab
           />}
-        <Snackbar
-          open={!!this.state.snackBar}
+        <ResponseSnackbar
           message={this.state.snackBar}
-          autoHideDuration={6000}
-          onRequestClose={this.closeSnackbar}
-        />
+          closeSnackbar={this.closeSnackbar}
+          type="success" />
       </div>
     );
   }
 }
 
 UploadTab.propTypes = {
-  schools : PropTypes.object.isRequired,
-  confirm : PropTypes.func
+  schools       : PropTypes.object.isRequired,
+  confirm       : PropTypes.func,
+  addRecord     : PropTypes.func,
+  currentRecord : PropTypes.array
 };
 
 export default UploadTab;
