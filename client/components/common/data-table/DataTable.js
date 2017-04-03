@@ -22,8 +22,6 @@ const DataTable = ({page, table, data, ...props}) => {
    */
   const selectedRows = table.selectionToMappedIndicies(table);
 
-  const filtered = true;
-
   const isRowSelected = index =>
     selectedRows.includes(index) ? 'selected-row' : '';
 
@@ -123,7 +121,7 @@ const DataTable = ({page, table, data, ...props}) => {
       <Paper className="display-paper">
         <Table
           rowHeight={table.get('rowHeight') || 30}
-          headerHeight={filtered
+          headerHeight={table.get('filterEnabled')
             ? table.get('filterHeaderHeight') || 60
             : table.get('headerHeight') || 30}
           rowsCount={table.get('indexMap').length}
@@ -137,7 +135,7 @@ const DataTable = ({page, table, data, ...props}) => {
           <Column
             header={
               <DataTableHeader
-                filter={filtered}
+                filter={table.get('filterEnabled')}
                 filterHandler={tableFilterHandler}
                 id={col.id}
                 sortCol={table.get('sortCol')}

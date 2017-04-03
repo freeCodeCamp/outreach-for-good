@@ -13,6 +13,7 @@ export const Table = Immutable.Record({
   indexMap      : [],
   sortDirection : locAct.SORT_ASC,
   sortCol       : '',
+  filterEnabled : false,
   // {data_id: filter_value, ...}
   filterBy      : Immutable.Map(),
   // used to display MaterialUI Components
@@ -74,12 +75,16 @@ class TableModel extends Table {
     return nextState.update('indexMap', indexMap => {
       filterBy.forEach((v, k) => {
         indexMap = indexMap.filter(e =>
-          data.getIn([e, k]).toLowerCase()
+          data.getIn([e, k]).toString()
+          .toLowerCase()
           .indexOf(v) !== -1);
       });
-      console.log('im', indexMap)
       return indexMap;
     });
+  }
+
+  enableFiltering(currentState) {
+    return currentState.set('filterEnabled', true);
   }
 
   /**

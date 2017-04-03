@@ -117,7 +117,7 @@ class AdminPage extends React.Component {
       this.setState({table: nextTable});
       break;
     case 'changeFilterCol':
-      console.log(data.substr(7), event);
+      //console.log(data.substr(7), event);
       let tabData = this.state.table.get('selectedTab') == 'users'
           ? this.props.users : this.props.schools;
       nextTable = table.updateFilterBy(this.state.table, tabData, data.substr(7), event);
