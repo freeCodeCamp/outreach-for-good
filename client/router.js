@@ -24,8 +24,8 @@ class RTRouter extends React.Component {
 
     // Configure routes here as this solves a problem with hot loading where
     // the routes are recreated each time.
-    this.routes = (
-      <Route path="/" component={App}>
+    this.routes
+      = <Route path="/" component={App}>
         <IndexRoute component={LoginPage}/>
         <Route path="/login" component={LoginPage} />
         <Route path="/about" component={AboutPage} onEnter={this.authorize} />
@@ -36,11 +36,11 @@ class RTRouter extends React.Component {
           <Route path="/school/reports/at-risk" component={SchoolReportsPage}/>
           <Route path="/school/settings" component={SchoolSettingsPage}/>
         </Route>
-        <Route path="/student/:studentId" component={StudentPage} onEnter={this.authorize} />
+        <Route path="/student/:studentId(/:tab)" component={StudentPage} onEnter={this.authorize} />
         <Route path="/users" component={UsersPage} onEnter={this.authorize} />
         <Route path="/visualization" component={VisualizationPage} onEnter={this.authorize} />
       </Route>
-    );
+    ;
   }
 
   authorize(nextState, replace) {
@@ -51,7 +51,7 @@ class RTRouter extends React.Component {
           state    : { nextPathname: nextState.location.pathname }
         });
       } else {
-        console.log('router validate')
+        console.log('router validate');
         this.props.actions.validate();
       }
     }

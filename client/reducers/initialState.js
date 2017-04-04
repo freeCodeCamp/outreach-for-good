@@ -14,18 +14,5 @@ export default {
       expand  : false,
       popover : false
     }
-  },
-  absenceRecords : [],
-  records        : {
-    schools : [],
-    current : [],
-    list    : []
-  },
-  student : {
-    student       : {},
-    records       : [],
-    interventions : [],
-    outreaches    : [],
-    notes         : []
   }
 };

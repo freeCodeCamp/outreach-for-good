@@ -2,15 +2,21 @@ import Immutable from 'immutable';
 import * as locAct from '../components/common/data-table/localActions';
 
 export const Table = Immutable.Record({
+  selectedTab   : '',
   title         : '',
   rowHeight     : 35,
   headerHeight  : 35,
-  indexMap      : [],
-  sortDirection : locAct.SORT_ASC,
-  sortIndex     : '',
-  selectedTab   : '',
+  // relative to data indicies (not sorted with indexMap)
   selectedIndex : Immutable.List(),
   selectedData  : Immutable.List(),
+  // data indicies -> sorted-table order map
+  indexMap      : [],
+  sortDirection : locAct.SORT_ASC,
+  sortCol       : '',
+  filterEnabled : false,
+  // {data_id: filter_value, ...}
+  filterBy      : Immutable.Map(),
+  // used to display MaterialUI Components
   MuiPopovers   : Immutable.Map(),
   MuiDialogs    : Immutable.Map(),
   MuiAnchor     : null,
@@ -31,21 +37,21 @@ class TableModel extends Table {
       .map((x, i) => i));
   }
 
-  updateSortIndex(currentState, nextSortIndex) {
+  updateSortCol(currentState, nextSortCol) {
     let nextState = currentState.update('sortDirection', sortDir =>
-      nextSortIndex == currentState.get('sortIndex')
+      nextSortCol == currentState.get('sortCol')
       ? locAct.SORT_ASC == sortDir
         ? locAct.SORT_DESC : locAct.SORT_ASC : locAct.SORT_ASC);
-    return nextState.update('sortIndex', () => nextSortIndex);
+    return nextState.update('sortCol', () => nextSortCol);
   }
 
-  updateIndexMap(currentState, data) {
-    let sortIndex = currentState.get('sortIndex');
+  sortIndexMap(currentState, data) {
+    let sortCol = currentState.get('sortCol');
     let sortDirection = currentState.get('sortDirection') == locAct.SORT_ASC;
     return currentState.update('indexMap', indexMap =>
       indexMap.sort((xIndex, yIndex) => {
-        let xValue = data.getIn([xIndex, sortIndex]);
-        let yValue = data.getIn([yIndex, sortIndex]);
+        let xValue = data.getIn([xIndex, sortCol]);
+        let yValue = data.getIn([yIndex, sortCol]);
         return xValue > yValue
           ? sortDirection ? 1 : -1
           : sortDirection ? -1 : 1;
@@ -54,15 +60,57 @@ class TableModel extends Table {
   }
 
   /**
+   * Filter table by column
+   */
+  updateFilterBy(currentState, data, id, filter) {
+    return this.filterIndexMap(
+      currentState.update('filterBy', filterBy =>
+        filterBy.set(id, filter)), data);
+  }
+
+  // Enhancement: change filter algo based on adding or removing chars
+  filterIndexMap(currentState, data) {
+    let nextState = this.buildIndexMap(currentState, data);
+    let filterBy = nextState.get('filterBy');
+    return nextState.update('indexMap', indexMap => {
+      filterBy.forEach((v, k) => {
+        let searchString = v.toString().toLowerCase();
+        indexMap = indexMap.filter(e =>
+          data.getIn([e, k]).toString()
+          .toLowerCase()
+          .indexOf(searchString) !== -1);
+      });
+      return indexMap;
+    });
+  }
+
+  enableFiltering(currentState) {
+    return currentState.set('filterEnabled', true);
+  }
+
+  /**
    * Row Select and Highlighting
    */
-  toggleSelectedRowIndex(currentState, index) {
-    let target = currentState.get('selectedIndex').indexOf(index);
+  toggleSelectedRowIndex(currentState, mappedIndex) {
+    let target = this.selectionToMappedIndicies(currentState).indexOf(mappedIndex);
     if(target == -1) {
+      let index = currentState.get('indexMap')[mappedIndex];
       return currentState.update('selectedIndex', i => i.push(index));
     } else {
       return currentState.update('selectedIndex', i => i.splice(target, 1));
     }
+  }
+
+  // Returns `selectedIndex` mapped to table sort order
+  selectionToMappedIndicies(currentState) {
+    let indexMap = currentState.get('indexMap');
+    return currentState
+      .get('selectedIndex').map(index =>
+        indexMap.indexOf(index));
+  }
+
+  clearSelectedRows(currentState) {
+    return currentState.update('selectedIndex', i => i.clear());
   }
 
   // Return data stored in selected rows

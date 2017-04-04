@@ -1,25 +1,23 @@
 import * as types from '../actions/actionTypes';
-import initialState from './initialState';
+// import {List, fromJS} from 'immutable';
+// import initialState from './initialState';
+// const initialState = new List();
 
-export default function recordsReducer(state = initialState.records, action) {
+const initialState = {
+  view : {
+    currentTab : 'upload'
+  },
+  current : []
+};
+export default function recordsReducer(state = initialState, action) {
   switch (action.type) {
-  case types.CONFIRM_RECORD: {
+  case 'CHANGE_TAB': {
+    console.log(action.currentTab);
     return {
       ...state,
-      absenceRecords : [...state.absenceRecords, action.payload]
-    };
-  }
-  case types.FETCH_SCHOOLS_SUCCESS: {
-    let schools = action.schools;
-    return {
-      ...state,
-      schools
-    };
-  }
-  case types.FETCH_SCHOOL_RECORD_LIST: {
-    return {
-      ...state,
-      list : action.recordsList
+      view : {
+        currentTab : action.currentTab
+      }
     };
   }
   case types.FETCH_CURRENT_RECORD_SUCCESS: {
@@ -29,14 +27,10 @@ export default function recordsReducer(state = initialState.records, action) {
       current
     };
   }
-  case types.FETCH_RECORD_LIST_SUCCESS: {
-    let list = action.records;
-    return {
-      ...state,
-      list
-    };
+  case 'ADD_RECORD_SUCCESS': {
+    return {...state};
   }
-  case types.POST_RECORD_SUCCESS: {
+  case 'REMOVE_RECORD_SUCCESS': {
     return {...state};
   }
   default: {
