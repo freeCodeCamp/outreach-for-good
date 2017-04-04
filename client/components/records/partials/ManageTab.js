@@ -16,6 +16,7 @@ class ManageTab extends Component {
     super(props);
 
     this.state = {
+      // table,
       selectedSchool : null,
       selectedRecord : null,
       dialogOpen     : false,
@@ -25,13 +26,31 @@ class ManageTab extends Component {
     this.clickHandler = this.clickHandler.bind(this);
     this.closeDialog = this.closeDialog.bind(this);
     this.removeRecord = this.removeRecord.bind(this);
+    this.initializeTable = this.initializeTable.bind(this);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if(this.state.selectedSchool) {
+      let schoolId = this.state.selectedSchool.get('_id');
+      let nextTable = this.initializeTable(schoolId);
+      nextTable = table.buildIndexMap(nextTable, nextProps.absenceRecordsList);
+
+      this.setState({ table: nextTable });
+    }
+  }
+
+  initializeTable(schoolId) {
+    this.props.fetchSchoolRecordList(schoolId);
+    let nextTable = table.setSelectedTab(table, 'manage');
+    return nextTable;
   }
 
   /**
    * Updates the data table with selected school
    */
   changeSchool(e, i, selectedSchool) {
-    let nextTable = this.initializeTable(selectedSchool.get('_id'));
+    let schoolId = selectedSchool.get('_id');
+    let nextTable = this.initializeTable(schoolId);
 
     this.setState({
       selectedSchool,
@@ -73,11 +92,25 @@ class ManageTab extends Component {
     this.setState({ dialogOpen: false });
   }
 
-  initializeTable(schoolId) {
-    let nextTable;
-    this.props.fetchSchoolRecordList(schoolId);
-    nextTable = table.setSelectedTab(table, 'manage');
-    return nextTable;
+  /**
+  * Display record is used when clicking on a row to display students
+  */
+  _displayRecord(record) {
+    console.log('row clicked: ', record);
+    let selectedRecord = {};
+
+    selectedRecord.newMissingStudents = this.props.absenceRecordsList
+    .get(record)
+    .get('newMissingStudents')
+    // .map(entry => entry.get('_id'));
+    .map((entry, i) => <Link key={i} to={`/student/${entry.get('_id')}`}>{entry.firstName} {entry.lastName}</Link>);
+
+    selectedRecord.createdStudents = this.props.absenceRecordsList
+    .get(record)
+    .get('createdStudents')
+    .map((entry, i) => <Link key={i} to={`/student/${entry.get('_id')}`}>{`${entry.get('firstName')} ${entry.get('lastName')}`}</Link>);
+
+    this.setState({ selectedRecord });
   }
 
   render() {
@@ -101,21 +134,11 @@ class ManageTab extends Component {
         title    : 'School Year',
         id       : 'schoolYear',
         flexGrow : 1
-      }, {
-        title    : 'Updated',
-        id       : 'updated.size',
-        flexGrow : 1
-      }, {
-        title    : 'Created Students',
-        id       : 'createdStudents.size',
-        flexGrow : 1
-      }, {
-        title    : 'New Missing Students',
-        id       : 'newMissingStudents.size',
-        flexGrow : 1
       }],
       buttons
     };
+
+
     return (
       <div className="manage-tab">
         <SelectField
@@ -162,32 +185,14 @@ class ManageTab extends Component {
     );
   }
 
-  /**
-   * Display record is used when clicking on a row to display students
-   */
-  _displayRecord(record) {
-    console.log('row clicked: ', record);
-    let selectedRecord = {};
-
-    selectedRecord.newMissingStudents = this.props.absenceRecordsList
-      .get(record)
-      .get('newMissingStudents')
-      // .map(entry => entry.get('_id'));
-      .map((entry, i) => <Link key={i} to={`/student/${entry.get('_id')}`}>{entry.firstName} {entry.lastName}</Link>);
-
-    selectedRecord.createdStudents = this.props.absenceRecordsList
-      .get(record)
-      .get('createdStudents')
-      .map((entry, i) => <Link key={i} to={`/student/${entry.get('_id')}`}>{`${entry.get('firstName')} ${entry.get('lastName')}`}</Link>);
-
-    this.setState({ selectedRecord });
-  }
 }
 
 ManageTab.propTypes = {
   absenceRecordsList    : PropTypes.object,
   manageRecords         : PropTypes.object,
-  fetchSchoolRecordList : PropTypes.func
+  fetchSchoolRecordList : PropTypes.func,
+  removeRecord          : PropTypes.func,
+  schools               : PropTypes.object
 };
 
 export default ManageTab;

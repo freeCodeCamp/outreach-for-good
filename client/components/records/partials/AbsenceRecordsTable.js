@@ -84,7 +84,7 @@ class AbsenceRecordsTable extends Component {
         </div>
       ;
     }
-    console.log(this.props.record);
+
     return (
       <div className="display-container">
         {buttons}

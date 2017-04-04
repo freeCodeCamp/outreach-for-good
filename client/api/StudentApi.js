@@ -1,109 +1,119 @@
+/**
+ * Description of the routes associated with the student api
+ *
+ * /api/students
+ *
+ * GET /
+ * GET /outreach-counts
+ * GET /intervention-summary
+ * GET /outreach-summary
+ * GET /:studentId
+ * PUT /:studentId/iep
+ * PUT /:studentId/cfa
+ * PUT /:studentId/withdrawn
+ * PUT /:field **NEEDS TO UPDATE INTERVENTION TYPES**
+ *
+ * /api/students/:studentId/interventions
+ *
+ * GET /
+ * POST /
+ * PUT /:interventionId/archived
+ * DELETE /:interventionId
+ * POST /:interventionId/note
+ *
+ * /api/students/:studentId/notes
+ *
+ * GET /
+ * GET /:noteId
+ * POST /
+ * PUT /:noteId
+ * DELETE /:noteId
+ *
+ * /api/students/:studentId/outreaches
+ *
+ * GET /
+ * POST /:outreachId/note
+ * PUT /:outreachId/action
+ *
+ */
 import Api from './Api';
 
 class StudentApi extends Api {
   /**
-   * Fetch a student from the database
-   */
-  static getStudent(studentId) {
-    let request = new Request(`/api/students/${studentId}`, {
-      method  : 'GET',
-      headers : this.requestHeaders()
-    });
-    return fetch(request)
-      .then(resp => this.parseResponse(resp))
-      .catch(err => this.handleError(err));
-  }
-
-  /**
-   * Get the absence records for a specific student
-   */
-  static getStudentRecords(studentId) {
-    let headers = this.requestHeaders();
-    let request = new Request(`/api/absence-records/students/${studentId}`, {
-      method : 'GET',
-      headers
-    });
-    return fetch(request)
-      .then(res => this.parseResponse(res))
-      .catch(err => this.handleError(err));
-  }
-
-  /**
-   * Get outreach counts
-   */
+  * Get outreach counts
+  */
   static getOutreachCounts() {
-    let request = new Request('/api/student/outreach-counts', {
-      method  : 'GET',
-      headers : this.requestHeaders()
-    });
-    return fetch(request)
-      .then(outreachCounts => this.parseResponse(outreachCounts))
-      .catch(err => this.handleError(err));
+    return this.getAPI('/api/student/outreach-counts');
   }
 
   /**
-   * Get intervention summary
-   */
+  * Get intervention summary
+  */
   static getInterventionSummary() {
-    let request = new Request('/api/student/intervention-summary', {
-      method  : 'GET',
-      headers : this.requestHeaders()
-    });
-    return fetch(request)
-      .then(interventionSummary => this.parseResponse(interventionSummary))
-      .catch(err => this.handleError(err));
+    return this.getAPI('/api/student/intervention-summary');
   }
 
   /**
   * Get outreach summary
   */
   static getOutreachSummary() {
-    let request = new Request('/api/student/outreach-summary', {
-      method  : 'GET',
-      headers : this.requestHeaders()
-    });
-    return fetch(request)
-    .then(outreachSummary => this.parseResponse(outreachSummary))
-    .catch(err => this.handleError(err));
+    return this.getAPI('/api/student/outreach-summary');
+  }
+
+  /**
+   * Fetch a student from the database
+   */
+  static getStudent(studentId) {
+    return this.getAPI(`/api/students/${studentId}`);
+  }
+
+  /**
+   * Get the absence records for a specific student
+   */
+  static getStudentRecords(studentId) {
+    return this.getAPI(`/api/absence-records/students/${studentId}`);
   }
 
   /**
    * Get interventions for a student from the student id
    */
   static getStudentInterventions(studentId) {
-    let request = new Request(`/api/student/${studentId}/interventions`, {
-      method  : 'GET',
-      headers : this.requestHeaders()
-    });
-    return fetch(request)
-      .then(interventions => this.parseResponse(interventions))
-      .catch(err => this.handleError(err));
+    return this.getAPI(`/api/student/${studentId}/interventions`);
   }
 
   /**
    * Get outreaches for a student from the student id
    */
   static getStudentOutreaches(studentId) {
-    let request = new Request(`/api/student/${studentId}/outreaches`, {
-      method  : 'GET',
-      headers : this.requestHeaders()
-    });
-    return fetch(request)
-      .then(outreaches => this.parseResponse(outreaches))
-      .catch(err => this.handleError(err));
+    return this.getAPI(`/api/student/${studentId}/outreaches`);
   }
 
   /**
    * Get notes for a student from the student id
    */
   static getStudentNotes(studentId) {
-    let request = new Request(`/api/student/${studentId}/notes`, {
-      method  : 'GET',
-      headers : this.requestHeaders()
-    });
-    return fetch(request)
-      .then(notes => this.parseResponse(notes))
-      .catch(err => this.handleError(err));
+    return this.getAPI(`/api/student/${studentId}/notes`);
+  }
+
+  /**
+   * Change iep status of student
+   */
+  static putStudentIep(studentId, iep) {
+    return this.putAPI(`/api/students/${studentId}/iep`, iep);
+  }
+
+  /**
+   * Change cfa status of student
+   */
+  static putStudentCfa(studentId, cfa) {
+    return this.putAPI(`/api/students/${studentId}/cfa`, cfa);
+  }
+
+  /**
+   * Change withdrawn status of student
+   */
+  static putStudentWithdrawn(studentId, withdrawn) {
+    return this.putAPI(`/api/students/${studentId}/withdrawn`, withdrawn);
   }
 
 }

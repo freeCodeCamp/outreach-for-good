@@ -10,24 +10,17 @@ import {
   fetchSchoolRecordList,
   addRecord,
   removeRecord} from '../../actions/absenceRecordActions';
-// import * as absRecActions from '../../actions/absenceRecordActions';
 
 class RecordsPage extends Component {
   constructor(props, context) {
     super(props, context);
 
     this.changeTab = this.changeTab.bind(this);
-    // this.confirm = this.confirm.bind(this);
   }
 
   componentWillMount() {
     this.props.action.fetchRecords();
   }
-
-  // confirm(record, date) {
-  //   record.date = date;
-  //   this.props.recordsActions.postRecord(record);
-  // }
 
   changeTab(tab) {
     this.props.action.changeTab(tab);
