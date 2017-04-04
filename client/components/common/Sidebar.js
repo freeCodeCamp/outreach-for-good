@@ -63,6 +63,7 @@ class Sidebar extends Component {
 }
 
 Sidebar.propTypes = {
+  route   : PropTypes.string.isRequired,
   session : PropTypes.object.isRequired,
   sidebar : PropTypes.object.isRequired
 };
@@ -71,8 +72,7 @@ function mapStateToProps(state) {
   //console.log('Sidebar: ', state);
   return {
     session : state.session.me,
-    sidebar : state.view.sidebar,
-    student : state.student
+    sidebar : state.view.sidebar
   };
 }
 
