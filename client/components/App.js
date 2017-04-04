@@ -2,6 +2,7 @@ import React, {Component, PropTypes} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import * as sessionActions from '../actions/sessionActions';
+import {getAllSchools} from '../actions/schoolActions';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import muiTheme from '../styles/muiTheme.js';
 import Header from './common/Header';
@@ -16,7 +17,7 @@ class App extends Component {
         <div className="viewport">
           {this.props.session.token && <Header/>}
           <section className="main-body">
-            {this.props.session.token && <Sidebar/>}
+            {this.props.session.token && <Sidebar route={this.props.location.pathname} />}
             <section id="main-view">
               <div id={this.props.session.token ? 'main-content' : 'login-content'}>
                 {this.props.children}
@@ -31,8 +32,10 @@ class App extends Component {
 }
 
 App.propTypes = {
-  children : PropTypes.object.isRequired,
-  session  : PropTypes.object.isRequired
+  children      : PropTypes.object.isRequired,
+  session       : PropTypes.object.isRequired,
+  location      : PropTypes.object.isRequired,
+  getAllSchools : PropTypes.func.isRequired
 };
 
 function mapStateToProps(state) {
@@ -43,7 +46,8 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    actions : bindActionCreators(sessionActions, dispatch)
+    actions       : bindActionCreators(sessionActions, dispatch),
+    getAllSchools : bindActionCreators(getAllSchools, dispatch)
   };
 }
 

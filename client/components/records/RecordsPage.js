@@ -1,48 +1,36 @@
 import React, {Component, PropTypes} from 'react';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
-import * as recordsActions from '../../actions/recordsActions';
-import * as schoolActions from '../../actions/schoolActions';
+import {fetchRecords, changeTab} from '../../actions/recordsActions';
 import {Tabs, Tab} from 'material-ui/Tabs';
-import UploadTab from './components/UploadTab';
-import ManageTab from './components/ManageTab';
+import UploadTab from './partials/UploadTab';
+import ManageTab from './partials/ManageTab';
+import Dimensions from 'react-dimensions';
+import {
+  fetchSchoolRecordList,
+  addRecord,
+  removeRecord} from '../../actions/absenceRecordActions';
 
 class RecordsPage extends Component {
-  constructor() {
-    super();
-
-    this.state = {
-      currentTab : 'upload'
-    };
+  constructor(props, context) {
+    super(props, context);
 
     this.changeTab = this.changeTab.bind(this);
-    this.confirm = this.confirm.bind(this);
-    this.manageRecord = this.manageRecord.bind(this);
   }
 
   componentWillMount() {
-    this.props.schoolActions.getAllSchools();
-    this.props.recordsActions.getCurrentRecord();
-  }
-
-  confirm(record, date) {
-    record.date = date;
-    this.props.recordsActions.postRecord(record);
+    this.props.action.fetchRecords();
   }
 
   changeTab(tab) {
-    this.setState({ currentTab: tab });
-  }
-
-  manageRecord(schoolId) {
-    console.log('record list changed');
-    this.props.recordsActions.getSchoolRecordList(schoolId);
+    this.props.action.changeTab(tab);
   }
 
   render() {
     return (
       <Tabs
-        value={this.state.currentTab}
+        style={{width: this.props.containerWidth}}
+        value={this.props.records.view.currentTab}
         onChange={this.changeTab}
         >
         <Tab
@@ -50,17 +38,24 @@ class RecordsPage extends Component {
           value="upload">
           <UploadTab
             confirm={this.confirm}
-            current={this.props.records.current}
+            currentRecord={this.props.records.current}
+            absenceRecords={this.props.absenceRecords}
             schools={this.props.schools}
+            addRecord={this.props.action.addRecord}
           />
         </Tab>
         <Tab
           label="Manage"
           value="manage">
           <ManageTab
+            view={{
+              width  : this.props.containerWidth - 20,
+              height : this.props.containerHeight - 48 - 80
+            }}
+            fetchSchoolRecordList={this.props.action.fetchSchoolRecordList}
+            absenceRecordsList={this.props.absenceRecords}
             schools={this.props.schools}
-            manageRecord={this.manageRecord}
-            records={this.props.records.list}
+            removeRecord={this.props.action.removeRecord}
           />
         </Tab>
       </Tabs>
@@ -69,24 +64,30 @@ class RecordsPage extends Component {
 }
 
 RecordsPage.propTypes = {
-  schoolActions  : PropTypes.object.isRequired,
-  recordsActions : PropTypes.object.isRequired,
-  records        : PropTypes.object.isRequired
+  records : PropTypes.object.isRequired
 };
 
 function mapStateToProps(state) {
   return {
-    session : state.session,
-    records : state.records,
-    schools : state.schools
+    absenceRecords : state.absenceRecords,
+    session        : state.session,
+    records        : state.records,
+    schools        : state.schools
   };
 }
 
 function mapDispatchToProps(dispatch) {
   return {
-    recordsActions : bindActionCreators(recordsActions, dispatch),
-    schoolActions  : bindActionCreators(schoolActions, dispatch)
+    action : bindActionCreators({
+      fetchRecords,
+      changeTab,
+      fetchSchoolRecordList,
+      addRecord,
+      removeRecord
+    }, dispatch)
+    // absRecActions : bindActionCreators(absRecActions, dispatch),
+    // fetchRecords  : bindActionCreators(fetchRecords, dispatch)
   };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(RecordsPage);
+export default connect(mapStateToProps, mapDispatchToProps)(Dimensions({elementResize: true})(RecordsPage));

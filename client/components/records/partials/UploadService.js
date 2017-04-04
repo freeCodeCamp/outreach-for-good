@@ -1,6 +1,78 @@
 import PDFJS from 'pdfjs-dist';
 import _ from 'lodash';
 
+/**
+ * Class constructor to parse the pdf file and return records and messages
+ */
+export default class UploadService {
+  constructor(school, previousRecord, file) {
+    this.school = school;
+    this.previousRecord = previousRecord;
+    this.file = file;
+  }
+
+  getRecord() {
+    let promise = new Promise((resolve, reject) => {
+      this._readFile(this.file, response => {
+        PDFJS.getDocument(response.target.result)
+          .then(pdf => {
+            //handle multiple page pdfs
+            let pages = [];
+            for(let i = 0; i < pdf.numPages; i++) {
+              pages.push(i);
+            }
+            return Promise.all(pages.map(pageNumber => pdf.getPage(pageNumber + 1).then(page => page.getTextContent().then(textContent => textContent.items.map(item => item.str)))));
+          })
+          .then(allPages => {
+            let items = [].concat.apply([], allPages);
+
+            try {
+              let partial = parse(items);
+              let record = completeRecord(this.school, this.previousRecord, partial);
+              let message = this._getMessage(record);
+
+              resolve({ record, message });
+            } catch(err) {
+              reject(err);
+            }
+          }, err => reject(err));
+      });
+    });
+    return promise;
+  }
+
+  _readFile(file, resultsCallback) {
+    let reader = new FileReader();
+    reader.onload = resultsCallback;
+    reader.readAsArrayBuffer(file);
+  }
+
+  _getMessage(record) {
+    let message = [];
+    if(typeof record.creates !== 'undefined') {
+      message.push(`${record.creates.length} students created.`);
+    }
+
+    if(typeof record.updates !== 'undefined') {
+      message.push(`${record.updates.length} students updated.`);
+    }
+
+    if(typeof record.missingEntries !== 'undefined') {
+      message.push(`${record.missingEntries.length} students missing from entry.`);
+    }
+
+    if(typeof record.newMissingStudents !== 'undefined') {
+      message.push(`${record.newMissingStudents.length} new missing students.`);
+    }
+
+    return message.join('. ');
+  }
+}
+/**
+ * Private methods used by the PDFParser class below
+ * Needs documentation
+ */
+
 function groupByType(students, idKeys) {
   return _.groupBy(students, function(student) {
     return student.student.studentId in idKeys ? 'updates' : 'creates';
@@ -140,46 +212,4 @@ function parse(items) {
   } else {
     throw new Error('No students found in your PDF. Try a different file.');
   }
-}
-
-export default function ParsePDF(school, previousRecord, file) {
-  let promise = new Promise((resolve, reject) => {
-    if(file) {
-      let reader = new FileReader();
-      reader.onload = () => {
-        PDFJS.getDocument(reader.result).then(function(pdf) {
-          var pages = [];
-          for(var i = 0; i < pdf.numPages; i++) {
-            pages.push(i);
-          }
-          Promise.all(pages.map(function(pageNumber) {
-            return pdf.getPage(pageNumber + 1).then(function(page) {
-              return page.getTextContent().then(function(textContent) {
-                return textContent.items.map(function(item) {
-                  return item.str;
-                });
-              });
-            });
-          })).then(function(allPages) {
-            var items = [].concat.apply([], allPages);
-
-            try {
-              let partial = parse(items);
-              let complete = completeRecord(school, previousRecord, partial);
-              resolve(complete);
-            } catch(e) {
-              // PDF data format error.
-              reject(e);
-            }
-          }, function(err) {
-            // Parsing error.
-            reject({error: err});
-          });
-        });
-      };
-      reader.readAsArrayBuffer(file);
-    }
-  });
-
-  return promise;
 }

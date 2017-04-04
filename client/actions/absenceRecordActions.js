@@ -1,6 +1,6 @@
 import * as types from './actionTypes';
 import { validate } from './sessionActions';
-import AbsenceRecordsApi from '../api/AbsenceRecordsAltApi';
+import AbsenceRecordsApi from '../api/AbsenceRecordsApi';
 
 export function loadRecordsSuccess(absenceRecords) {
   return {type: types.LOAD_ABSENCE_RECORD_SUCCESS, absenceRecords};
@@ -55,8 +55,11 @@ export function fetchRecordsList() {
  */
 export function fetchSchoolRecordList(schoolId) {
   return function(dispatch) {
-    return AbsenceRecordsApi.fetchSchoolRecordList(schoolId).then(res =>
-      dispatch(loadRecordsSuccess(res))
+    return AbsenceRecordsApi.fetchSchoolRecordList(schoolId).then(recordList =>
+      dispatch({
+        type : types.LOAD_SCHOOL_RECORD_LIST_SUCCESS,
+        recordList
+      })
     )
     .catch(err => handleError(err, dispatch));
   };
