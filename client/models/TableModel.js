@@ -74,10 +74,11 @@ class TableModel extends Table {
     let filterBy = nextState.get('filterBy');
     return nextState.update('indexMap', indexMap => {
       filterBy.forEach((v, k) => {
+        let searchString = v.toString().toLowerCase();
         indexMap = indexMap.filter(e =>
           data.getIn([e, k]).toString()
           .toLowerCase()
-          .indexOf(v) !== -1);
+          .indexOf(searchString) !== -1);
       });
       return indexMap;
     });
