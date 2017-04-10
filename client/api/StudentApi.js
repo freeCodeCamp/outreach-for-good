@@ -43,21 +43,21 @@ class StudentApi extends Api {
   * Get outreach counts
   */
   static getOutreachCounts() {
-    return this.getAPI('/api/student/outreach-counts');
+    return this.getAPI('/api/students/outreach-counts');
   }
 
   /**
   * Get intervention summary
   */
   static getInterventionSummary() {
-    return this.getAPI('/api/student/intervention-summary');
+    return this.getAPI('/api/students/intervention-summary');
   }
 
   /**
   * Get outreach summary
   */
   static getOutreachSummary() {
-    return this.getAPI('/api/student/outreach-summary');
+    return this.getAPI('/api/students/outreach-summary');
   }
 
   /**
@@ -78,21 +78,21 @@ class StudentApi extends Api {
    * Get interventions for a student from the student id
    */
   static getStudentInterventions(studentId) {
-    return this.getAPI(`/api/student/${studentId}/interventions`);
+    return this.getAPI(`/api/students/${studentId}/interventions`);
   }
 
   /**
    * Get outreaches for a student from the student id
    */
   static getStudentOutreaches(studentId) {
-    return this.getAPI(`/api/student/${studentId}/outreaches`);
+    return this.getAPI(`/api/students/${studentId}/outreaches`);
   }
 
   /**
    * Get notes for a student from the student id
    */
   static getStudentNotes(studentId) {
-    return this.getAPI(`/api/student/${studentId}/notes`);
+    return this.getAPI(`/api/students/${studentId}/notes`);
   }
 
   /**
