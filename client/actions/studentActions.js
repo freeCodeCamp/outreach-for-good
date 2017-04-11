@@ -49,6 +49,14 @@ export function getStudentInterventions(studentId) {
     }));
 }
 
+export function postStudentIntervention(studentId, body) {
+  return dispatch => StudentApi.postStudentIntervention(studentId, body)
+    .then(intervention => dispatch({
+      type : 'POST_INTERVENTION_SUCCESS',
+      intervention
+    }));
+}
+
 export function getStudentOutreaches(studentId) {
   return dispatch => StudentApi.getStudentOutreaches(studentId)
     .then(outreaches => dispatch({
@@ -63,6 +71,15 @@ export function getStudentNotes(studentId) {
       type : types.GET_STUDENT_NOTES_SUCCESS,
       notes
     }));
+}
+
+export function postStudentNote(studentId, body) {
+  return dispatch => StudentApi.postStudentNote(studentId, body)
+    .then(() => StudentApi.getStudentNotes(studentId)
+    .then(notes => dispatch({
+      type : types.GET_STUDENT_NOTES_SUCCESS,
+      notes
+    })));
 }
 
 export function unmountStudent() {

@@ -116,6 +116,10 @@ class StudentApi extends Api {
     return this.putAPI(`/api/students/${studentId}/withdrawn`, withdrawn);
   }
 
+  static postStudentNote(studentId, note) {
+    return this.postAPI(`/api/students/${studentId}/notes`, note);
+  }
+
 }
 
 

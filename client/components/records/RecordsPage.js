@@ -6,6 +6,7 @@ import {Tabs, Tab} from 'material-ui/Tabs';
 import UploadTab from './partials/UploadTab';
 import ManageTab from './partials/ManageTab';
 import Dimensions from 'react-dimensions';
+import { getAllSchools } from '../../actions/schoolActions';
 import {
   fetchSchoolRecordList,
   addRecord,
@@ -19,11 +20,12 @@ class RecordsPage extends Component {
   }
 
   componentWillMount() {
-    this.props.action.fetchRecords();
+    this.props.actions.fetchRecords();
+    this.props.actions.getAllSchools();
   }
 
   changeTab(tab) {
-    this.props.action.changeTab(tab);
+    this.props.actions.changeTab(tab);
   }
 
   render() {
@@ -41,7 +43,7 @@ class RecordsPage extends Component {
             currentRecord={this.props.records.current}
             absenceRecords={this.props.absenceRecords}
             schools={this.props.schools}
-            addRecord={this.props.action.addRecord}
+            addRecord={this.props.actions.addRecord}
           />
         </Tab>
         <Tab
@@ -52,10 +54,10 @@ class RecordsPage extends Component {
               width  : this.props.containerWidth - 20,
               height : this.props.containerHeight - 48 - 80
             }}
-            fetchSchoolRecordList={this.props.action.fetchSchoolRecordList}
+            fetchSchoolRecordList={this.props.actions.fetchSchoolRecordList}
             absenceRecordsList={this.props.absenceRecords}
             schools={this.props.schools}
-            removeRecord={this.props.action.removeRecord}
+            removeRecord={this.props.actions.removeRecord}
           />
         </Tab>
       </Tabs>
@@ -64,7 +66,10 @@ class RecordsPage extends Component {
 }
 
 RecordsPage.propTypes = {
-  records : PropTypes.object.isRequired
+  schools        : PropTypes.object.isRequired,
+  absenceRecords : PropTypes.object.isRequired,
+  actions        : PropTypes.object.isRequired,
+  records        : PropTypes.object.isRequired
 };
 
 function mapStateToProps(state) {
@@ -78,12 +83,13 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    action : bindActionCreators({
+    actions : bindActionCreators({
       fetchRecords,
       changeTab,
       fetchSchoolRecordList,
       addRecord,
-      removeRecord
+      removeRecord,
+      getAllSchools
     }, dispatch)
     // absRecActions : bindActionCreators(absRecActions, dispatch),
     // fetchRecords  : bindActionCreators(fetchRecords, dispatch)
