@@ -7,6 +7,7 @@ import session from './sessionReducer';
 import student from './studentReducer';
 import users from './userReducer';
 import view from './viewReducer';
+import visualization from './visualizationReducer';
 
 // ES6 short-hand property name (users: users)
 const rootReducer = combineReducers({
@@ -17,7 +18,8 @@ const rootReducer = combineReducers({
   schools,
   session,
   student,
-  users
+  users,
+  visualization
 });
 
 export default rootReducer;
