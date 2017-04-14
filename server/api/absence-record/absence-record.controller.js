@@ -22,6 +22,7 @@ exports.validateCreate = function(req, res, next) {
     .findOne({school: req.school.id})
     .sort({date: -1})
     .exec(function(err, record) {
+      if(err) throw new Error('Absence record controller error');
       if(!record) return next();
       // Validate data is not stale by matching previousRecordId.
       if(record.id !== req.body.previousRecordId) {
@@ -96,7 +97,7 @@ exports.create = function(req, res) {
     _.forEach(createdStudents, function(student, index) {
       newEntries[index].student = student._id;
     });
-    var combinedEntries = [].concat.apply(newEntries, existingEntries);
+    var combinedEntries = [].concat.apply(newEntries, existingEntries);   // eslint-disable-line prefer-reflect
     // Outreaches for entries are update with student and added to outreaches.
     _.forEach(combinedEntries, function(entry) {
       _.forEach(entry.outreaches, function(outreach) {

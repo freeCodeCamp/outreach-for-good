@@ -83,7 +83,7 @@ exports.hasRole = function(roleRequired) {
     .use(exports.isAuthenticated())
     .use(function(req, res, next) {
       if(meetsRoleRequirements(req.user.role, roleRequired)) {
-        next();
+        return next();
       } else {
         res.status(403).json({reason: roleMsg(req.user.role, roleRequired)});
       }
