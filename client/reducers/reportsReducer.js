@@ -6,6 +6,7 @@ import {List, fromJS, Record} from 'immutable';
 const initialState = {
   atRisk              : new List(),
   chronic             : new List(),
+  outreachCounts      : new List(),
   outreachSummary     : new List(),
   interventionSummary : new List()
 };
@@ -23,6 +24,13 @@ export default function reportsReducer(state = initialState, action) {
     return {
       ...state,
       chronic : fromJS(action.chronic)
+        .map(student => new Record(student))
+    };
+  }
+  case 'OUTREACH_COUNT_SUCCESS': {
+    return {
+      ...state,
+      outreachCounts : fromJS(action.outreachCounts)
         .map(student => new Record(student))
     };
   }

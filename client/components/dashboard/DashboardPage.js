@@ -6,6 +6,7 @@ import Dimensions from 'react-dimensions';
 
 import * as usrAct from '../../actions/userActions';
 import * as absAct from '../../actions/absenceRecordActions';
+import * as repAct from '../../actions/reportsActions';
 import TableModel from '../../models/TableModel';
 
 import CourtTab from './CourtTab';
@@ -90,6 +91,7 @@ class DashboardPage extends React.Component {
       break;
     case 'student':
       this.props.absAct.fetchRecordsList();
+      this.props.repAct.getOutreachCounts('withdrawn=false');
       nextTable = table.setSelectedTab(table, 'student');
       break;
     }
@@ -211,6 +213,7 @@ class DashboardPage extends React.Component {
 
 DashboardPage.propTypes = {
   absAct          : PropTypes.object.isRequired,
+  repAct          : PropTypes.object.isRequired,
   usrAct          : PropTypes.object.isRequired,
   absenceRecords  : PropTypes.object.isRequired,
   containerWidth  : PropTypes.number.isRequired,
@@ -226,6 +229,7 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
   return {
     absAct : bindActionCreators(absAct, dispatch),
+    repAct : bindActionCreators(repAct, dispatch),
     usrAct : bindActionCreators(usrAct, dispatch)
   };
 }

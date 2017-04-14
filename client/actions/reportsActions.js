@@ -17,6 +17,14 @@ export function getChronicallyAbsent() {
     }));
 }
 
+export function getOutreachCounts(querystring = '') {
+  return dispatch => StudentApi.getOutreachCounts(querystring)
+    .then(outreachCount => dispatch({
+      type : 'OUTREACH_COUNT_SUCCESS',
+      outreachCount
+    }));
+}
+
 export function getOutreachSummary() {
   return dispatch => StudentApi.getOutreachSummary()
     .then(outreachSummary => dispatch({
