@@ -44,7 +44,7 @@ function deleteCreatedStudents(students) {
 }
 
 AbsenceRecordSchema.pre('remove', function(next) {
-  var self = this;
+  var self = this;  // eslint-disable-line no-invalid-this, consistent-this
   Outreach.find({record: self._id}).remove()
   .exec()
   .then(function() {
