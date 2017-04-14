@@ -158,17 +158,18 @@ const UsersTab = ({users, schools, ...props}) => {
     buttons
   };
   return (
-    <div>
-      <DataTable
-        page={page}
-        data={users.map(iMap =>  // eslint-disable-line no-confusing-arrow
-          iMap.assignment
-          ? iMap.update('assignment', id => id.get('name'))
-          : iMap
-        )}
-        {...props}
-      />
-    </div>
+    props.table.get('selectedTab') == 'users'
+    && <div>
+        <DataTable
+          page={page}
+          data={users.map(iMap =>
+            iMap.assignment
+            ? iMap.update('assignment', id => id.get('name'))
+            : iMap
+          )}
+          {...props}
+        />
+      </div>
   );
 };
 

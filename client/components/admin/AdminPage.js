@@ -31,9 +31,20 @@ class AdminPage extends React.Component {
     this.tabHandler = this.tabHandler.bind(this);
   }
 
-  componentWillReceiveProps() {
+  componentWillReceiveProps(nextProps) {
+    let nextTable = this.state.table;
+    switch (nextTable.get('selectedTab')) {
+    case 'users':
+      nextTable = table.updateSortCol(nextTable, '');
+      nextTable = table.buildIndexMap(nextTable, nextProps.users);
+      break;
+    case 'schools':
+      nextTable = table.updateSortCol(nextTable, '');
+      nextTable = table.buildIndexMap(nextTable, nextProps.schools);
+      break;
+    }
     this.setState({
-      table : this.state.table,
+      table : nextTable,
       form  : this.state.form
     });
   }
@@ -88,9 +99,29 @@ class AdminPage extends React.Component {
       this.setState({table: nextTable});
       break;
 
-    // Clicked (select/de-select) a table row
+    /**
+     * DataTable Click / Filter Handler
+     *   - Select / de-select a table row
+     *   - Sort by a column
+     *   - Apply a filter
+     */
     case 'toggleSelected':
       nextTable = table.toggleSelectedRowIndex(this.state.table, data);
+      this.setState({table: nextTable});
+      break;
+    case 'toggleSortCol':
+      nextTable = table.updateSortCol(this.state.table, data);
+      nextTable = table.sortIndexMap(nextTable,
+        nextTable.get('selectedTab') == 'users'
+          ? this.props.users : this.props.schools);
+      this.setState({table: nextTable});
+      break;
+    case 'changeFilterCol':
+      //console.log(data.substr(7), event);
+      let tabData = this.state.table.get('selectedTab') == 'users'
+          ? this.props.users : this.props.schools;
+      nextTable = table.updateFilterBy(this.state.table, tabData, data.substr(7), event);
+      nextTable = table.sortIndexMap(nextTable, tabData);
       this.setState({table: nextTable});
       break;
 
@@ -162,6 +193,7 @@ class AdminPage extends React.Component {
         case locAct.REMOVE_USER:
           break;
         case locAct.NEW_SCHOOL:
+          nextTable = table.clearSelectedRows(nextTable);
           nextForm = form.disableSubmitButton(nextForm);
           break;
         case locAct.REMOVE_SCHOOL:

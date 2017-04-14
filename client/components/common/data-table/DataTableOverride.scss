@@ -18,3 +18,49 @@
 .dialog-body {
   padding-bottom: 0px !important;
 }
+
+
+// Custom CSS, not overrides
+
+.datatable-header {
+
+  & a, & a:hover {
+    width: 100%;
+    display: block;
+    color: #000000;
+    text-decoration: none;
+    user-select: none;
+      -moz-user-select: none; /* Firefox */
+      -ms-user-select: none; /* Internet Explorer */
+      -khtml-user-select: none; /* KHTML browsers (e.g. Konqueror) */
+      -webkit-user-select: none; /* Chrome, Safari, and Opera */
+      -webkit-touch-callout: none; /* Disable Android and iOS callouts*/
+  }
+  
+}
+
+.filter-header {
+  & div {
+    padding: 0px;
+    margin: 0px;
+  }
+  & input {
+    position: absolute;
+    bottom: 0px;
+    height: 25px;
+    font-size: 13px;
+    color: #333333;
+    font-weight: 300;
+    border-top: 1px solid #d3d3d3;
+    border-left: 0px;
+    border-right: 0px;
+    border-bottom: 0px;
+    padding: 0px 5px;
+    margin: 0px;
+  }
+
+  & a, & a:hover {
+    padding-left: 10px;
+    padding-bottom: 20px;
+  }
+}

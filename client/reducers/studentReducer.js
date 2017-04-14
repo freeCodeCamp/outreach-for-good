@@ -1,7 +1,14 @@
 import * as types from '../actions/actionTypes';
-import initialState from './initialState';
 
-export default function studentReducer(state = initialState.student, action) {
+const initialState = {
+  student       : {},
+  records       : [],
+  interventions : [],
+  outreaches    : [],
+  notes         : []
+};
+
+export default function studentReducer(state = initialState, action) {
   switch (action.type) {
   case types.GET_STUDENT_SUCCESS: {
     return {
@@ -33,6 +40,12 @@ export default function studentReducer(state = initialState.student, action) {
       notes : action.notes
     };
   }
+  // case 'POST_NOTE_SUCCESS': {
+  //   return {
+  //     ...state,
+  //     notes : [...state.notes, action.notes]
+  //   };
+  // }
   case types.UNMOUNT_STUDENT: {
     let record = {};
     return {

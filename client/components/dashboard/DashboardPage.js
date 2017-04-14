@@ -30,10 +30,38 @@ class DashboardPage extends React.Component {
     this.tabHandler = this.tabHandler.bind(this);
   }
 
-  componentWillReceiveProps() {
+  componentWillReceiveProps(nextProps) {
+    let nextTable = this.state.table;
+    switch (nextTable.get('selectedTab')) {
+    case 'court':
+      nextTable = table.updateSortCol(nextTable, '');
+      nextTable = table.buildIndexMap(nextTable, nextProps.absenceRecords);
+      break;
+    case 'home':
+      nextTable = table.updateSortCol(nextTable, '');
+      nextTable = table.buildIndexMap(nextTable, nextProps.absenceRecords);
+      break;
+    case 'letter':
+      nextTable = table.updateSortCol(nextTable, '');
+      nextTable = table.buildIndexMap(nextTable, nextProps.absenceRecords);
+      break;
+    case 'phone':
+      nextTable = table.updateSortCol(nextTable, '');
+      nextTable = table.buildIndexMap(nextTable, nextProps.absenceRecords);
+      break;
+    case 'sst':
+      nextTable = table.updateSortCol(nextTable, '');
+      nextTable = table.buildIndexMap(nextTable, nextProps.absenceRecords);
+      break;
+    case 'student':
+      nextTable = table.setSelectedTab(table, 'student');
+      nextTable = table.updateSortCol(nextTable, '');
+      nextTable = table.buildIndexMap(nextTable, nextProps.absenceRecords);
+      break;
+    }
+    nextTable = table.enableFiltering(nextTable);
     this.setState({
-      table : this.state.table,
-      form  : this.state.form
+      table : nextTable
     });
   }
 
@@ -65,10 +93,39 @@ class DashboardPage extends React.Component {
       nextTable = table.setSelectedTab(table, 'student');
       break;
     }
+    nextTable = table.enableFiltering(nextTable);
     return nextTable;
   }
 
   clickHandler(action, data, event) {
+    let nextTable;
+    let nextForm;
+    switch (action) {
+
+    /**
+     * DataTable Click Handler
+     *   - Select / de-select a table row
+     *   - Sort by a column
+     *   - Apply a filter
+     */
+    case 'toggleSelected':
+      nextTable = table.toggleSelectedRowIndex(this.state.table, data);
+      this.setState({table: nextTable});
+      break;
+    case 'toggleSortCol':
+      nextTable = table.updateSortCol(this.state.table, data);
+      nextTable = table.sortIndexMap(nextTable, this.props.absenceRecords);
+      this.setState({table: nextTable});
+      break;
+    case 'changeFilterCol':
+      //console.log(data.substr(7), event);
+      let tabData = this.state.table.get('selectedTab') == 'users'
+          ? this.props.absenceRecords : this.props.absenceRecords;
+      nextTable = table.updateFilterBy(this.state.table, tabData, data.substr(7), event);
+      nextTable = table.sortIndexMap(nextTable, tabData);
+      this.setState({table: nextTable});
+      break;
+    }
   }
 
   // Handle user changing main tabs

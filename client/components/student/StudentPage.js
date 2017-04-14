@@ -1,55 +1,133 @@
 import React, {Component, PropTypes} from 'react';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
-import * as studentActions from '../../actions/studentActions';
-import StudentTabs from './partials/StudentTabs';
-import StudentAbsenceRecordTable from './partials/StudentAbsenceRecordTable';
+import {Tabs, Tab} from 'material-ui/Tabs';
 import Checkbox from 'material-ui/Checkbox';
 import Paper from 'material-ui/Paper';
 
-class StudentPage extends Component {
+//import the partials used in this component
+import StudentAbsenceRecordTable from './partials/StudentAbsenceRecordTable';
+import StudentDialog from './partials/StudentDialog';
+import Outreaches from './partials/Outreaches';
+import Interventions from './partials/Interventions';
+import Notes from './partials/Notes';
+import Summary from './partials/Summary';
 
-  componentWillMount() {
-    this.props.actions.getStudent(this.props.params.studentId);
-    this.props.actions.getStudentRecords(this.props.params.studentId);
+//import just the student actions used in this component
+import {
+  getStudent,
+  getStudentRecords,
+  getStudentOutreaches,
+  getStudentNotes,
+  getStudentInterventions,
+  postStudentNote,
+} from '../../actions/studentActions';
+
+class StudentPage extends Component {
+  constructor(props) {
+    super(props);
+
+    this.studentId = props.params.studentId;
+
+    //identify which tab is open when you browse this route
+    // console.log(props.params.tab);
+
+    this.state = {
+      currentTab : 'outreaches',
+      dialogOpen : false
+    };
+
+    this.changeTab = this.changeTab.bind(this);
+    this.dialogOpen = this.dialogOpen.bind(this);
+    this.dialogClose = this.dialogClose.bind(this);
+
+    this.postNote = this.postNote.bind(this);
+    this.editNote = this.editNote.bind(this);
   }
 
-  componentWillUnmount() {
-    console.log('unmount student');
-    this.props.actions.unmountStudent();
+  componentWillMount() {
+    this.props.actions.getStudent(this.studentId);
+    this.props.actions.getStudentRecords(this.studentId);
+    this.props.actions.getStudentOutreaches(this.studentId);
+    this.props.actions.getStudentInterventions(this.studentId);
+    this.props.actions.getStudentNotes(this.studentId);
+  }
+
+  changeTab(currentTab) {
+    this.setState({ currentTab });
+  }
+
+  dialogOpen(e) {
+    console.log(e);
+    this.setState({ dialogOpen: true });
+  }
+
+  dialogClose() {
+    this.setState({ dialogOpen: false });
+  }
+
+  postNote(e) {
+    e.preventDefault();
+    let note = { note: e.target[0].value };
+    this.props.actions.postStudentNote(this.studentId, note);
+  }
+
+  editNote(e) {
+    console.log('Edit the note:', e);
   }
 
   render() {
     let student = this.props.student.student;
     return (
       <div className="student-page">
-        <div className="info">
-          <Paper className="col-data" zDepth={1}>
+        <Paper className="info" zDepth={1}>
+          <div className="col-data">
             <h1>{student.lastName}, {student.firstName} <small>Grade: {student.grade}</small></h1>
             <p>Student ID: (#{student.studentId})</p>
             <Checkbox
               label="IEP:"
-              checked={student.iep}
+              defaultChecked={student.iep}
             />
             <Checkbox
               label="CFA:"
-              checked={student.cfa}
+              defaultChecked={student.cfa}
             />
             <Checkbox
               label="Withdrawn:"
-              checked={student.withdrawn}
+              defaultChecked={student.withdrawn}
             />
-          </Paper>
-          <Paper className="col-attendance" zDepth={1}>
-            <StudentAbsenceRecordTable records={this.props.student.records} />
-          </Paper>
-          <br/>
-          <br/>
-          <br/>
-        </div>
+          </div>
+          <div className="col-attendance">
+            <StudentAbsenceRecordTable
+              records={this.props.student.records} />
+          </div>
+        </Paper>
         <div className="tabs">
-          <StudentTabs />
+          <Tabs>
+            <Tab label="Outreaches">
+              <Outreaches
+                outreaches={this.props.student.outreaches} />
+            </Tab>
+            <Tab label="Interventions">
+              <Interventions
+                postIntervention={this.props.actions.postStudentIntervention}
+                interventions={this.props.student.interventions} />
+            </Tab>
+            <Tab label="Notes">
+              <Notes
+                postNote={this.postNote}
+                editNote={this.editNote}
+                notes={this.props.student.notes} />
+            </Tab>
+            <Tab label="Summary">
+              <Summary />
+            </Tab>
+          </Tabs>
         </div>
+        <StudentDialog
+          dialogOpen={this.state.dialogOpen}
+          dialogClose={this.dialogClose}
+        />
       </div>
     );
   }
@@ -69,7 +147,14 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    actions : bindActionCreators(studentActions, dispatch)
+    actions : bindActionCreators({
+      getStudent,
+      getStudentRecords,
+      getStudentOutreaches,
+      getStudentInterventions,
+      getStudentNotes,
+      postStudentNote
+    }, dispatch)
   };
 }
 export default connect(mapStateToProps, mapDispatchToProps)(StudentPage);

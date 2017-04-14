@@ -16,7 +16,7 @@ const app = express();
 
 // Add Sentry.io request and error handler middleware
 if(env.raven_dsn) {
-  debug('Sentry.io reporting enabled')
+  debug('Sentry.io reporting enabled');
   raven.config(env.raven_dsn).install();
   app.use(raven.requestHandler());
   app.use(raven.errorHandler());

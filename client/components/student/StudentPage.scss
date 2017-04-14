@@ -1,22 +1,15 @@
 .student-page {
   padding: 10px;
-
   .info {
-    margin-bottom: 10px;
-    [class*='col-'] {
-      float: left;
-      width: 49.5%;
-      height: 220px;
-      padding: 10px;
-      margin-right: 1%;
-      &:last-of-type {
-        margin-right: 0;
-      }
+    padding: 10px;
+    .col-data {
+      display: inline-block;
+      width: 35%;
+      vertical-align: top;
     }
-    &:after {
-      content: '';
-      display: table;
-      clear: both;
+    .col-attendance {
+      display: inline-block;
+      width: 65%;
     }
   }
 }
