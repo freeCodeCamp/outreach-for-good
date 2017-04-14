@@ -5,7 +5,7 @@ import { getAllSchools } from '../../actions/schoolActions';
 import { getCombined, getSchoolComparison } from '../../actions/visualizationActions';
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
-import {ResponsiveContainer, PieChart, Pie, Tooltip} from 'recharts';
+import {ResponsiveContainer, PieChart, Pie, Cell, Tooltip, Legend} from 'recharts';
 
 class VisualizationPage extends Component {
 
@@ -35,6 +35,7 @@ class VisualizationPage extends Component {
   }
 
   render() {
+    const COLORS = ['#c3a435', '#5049ba', '#b43b3b'];
     return (
       <div className="visualization-container">
         <SelectField
@@ -52,23 +53,39 @@ class VisualizationPage extends Component {
               value="combined"
               primaryText="Combined" />
         </SelectField>
-        <ResponsiveContainer width="40%">
-          <PieChart>
-            <Pie
-              data={this.props.visualization.cfa}
-              fill="#8884d8"
-              label />
-            <Tooltip/>
-          </PieChart>
-        </ResponsiveContainer>
-        <ResponsiveContainer width="40%">
-          <PieChart>
-            <Pie
-              data={this.props.visualization.non}
-              fill="#82ca9d" />
-            <Tooltip/>
-          </PieChart>
-        </ResponsiveContainer>
+        <div className="grid">
+          <div className="grid-cell">
+            <ResponsiveContainer>
+              <PieChart>
+                <Pie
+                  data={this.props.visualization.cfa}
+                  fill="#8884d8"
+                  label>
+                  {this.props.visualization.cfa
+                    && this.props.visualization.cfa.map((entry, i) =>
+                    <Cell key={i} fill={COLORS[i % COLORS.length]} />)}
+                </Pie>
+                <Tooltip/>
+                <Legend />
+              </PieChart>
+            </ResponsiveContainer>
+          </div>
+          <div className="grid-cell">
+            <ResponsiveContainer>
+              <PieChart>
+                <Pie
+                  data={this.props.visualization.non}
+                  fill="#82ca9d">
+                  {this.props.visualization.non
+                    && this.props.visualization.non.map((entry, i) =>
+                    <Cell key={i} fill={COLORS[i % COLORS.length]} />)}
+                </Pie>
+                <Tooltip/>
+                <Legend />
+              </PieChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
       </div>
     );
   }
