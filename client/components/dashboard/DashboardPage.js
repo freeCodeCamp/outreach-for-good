@@ -4,9 +4,9 @@ import {connect} from 'react-redux';
 import {Tabs, Tab} from 'material-ui/Tabs';
 import Dimensions from 'react-dimensions';
 
-import * as usrAct from '../../actions/userActions';
 import * as absAct from '../../actions/absenceRecordActions';
 import * as repAct from '../../actions/reportsActions';
+import * as usrAct from '../../actions/userActions';
 import TableModel from '../../models/TableModel';
 import Report from '../../models/ReportModel';
 

@@ -10,11 +10,7 @@ const initialState = new Report();
 export default function reportsReducer(state = initialState, action) {
   switch (action.type) {
   case 'AT_RISK_SUCCESS': {
-    return {
-      ...state,
-      atRisk : fromJS(action.atRisk)
-        .map(student => new Record(student))
-    };
+    return initialState.setAtRisk(state, action.atRisk);
   }
   case 'CHRONICALLY_ABSENT_SUCCESS': {
     return {

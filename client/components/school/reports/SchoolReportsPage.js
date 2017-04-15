@@ -4,7 +4,7 @@ import {connect} from 'react-redux';
 import {Tabs, Tab} from 'material-ui/Tabs';
 import Dimensions from 'react-dimensions';
 
-import * as reportsActions from '../../../actions/reportsActions';
+import * as repAct from '../../../actions/reportsActions';
 import TableModel from '../../../models/TableModel';
 
 import AtRiskTab from './partials/AtRiskTab';
@@ -31,10 +31,10 @@ class SchoolReportsPage extends Component {
   }
 
   componentWillMount() {
-    this.props.actions.getCurrentAtRisk();
-    this.props.actions.getChronicallyAbsent();
-    this.props.actions.getInterventionSummary();
-    this.props.actions.getOutreachSummary();
+    this.props.repAct.getCurrentAtRisk();
+    this.props.repAct.getChronicallyAbsent();
+    this.props.repAct.getInterventionSummary();
+    this.props.repAct.getOutreachSummary();
   }
 
   componentWillReceiveProps(nextProps) {
@@ -183,19 +183,23 @@ class SchoolReportsPage extends Component {
 }
 
 SchoolReportsPage.propTypes = {
-  reports : PropTypes.object.isRequired,
-  actions : PropTypes.object.isRequired
+  repAct          : PropTypes.object.isRequired,
+  absenceRecords  : PropTypes.object.isRequired,
+  reports         : PropTypes.object.isRequired,
+  containerWidth  : PropTypes.number.isRequired,
+  containerHeight : PropTypes.number.isRequired
 };
 
 function mapStateToProps(state) {
   return {
-    reports : state.reports
+    absenceRecords : state.absenceRecords,
+    reports        : state.reports
   };
 }
 
 function mapDispatchToProps(dispatch) {
   return {
-    actions : bindActionCreators(reportsActions, dispatch)
+    repAct : bindActionCreators(repAct, dispatch)
   };
 }
 
