@@ -19,9 +19,9 @@ export function getChronicallyAbsent() {
 
 export function getOutreachCounts(querystring = '') {
   return dispatch => StudentApi.getOutreachCounts(querystring)
-    .then(outreachCount => dispatch({
+    .then(outreachCounts => dispatch({
       type : 'OUTREACH_COUNT_SUCCESS',
-      outreachCount
+      outreachCounts
     }));
 }
 

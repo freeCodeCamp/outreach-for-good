@@ -3,13 +3,9 @@ import {List, fromJS, Record} from 'immutable';
 // import initialState from './initialState';
 // const initialState = new List();
 
-const initialState = {
-  atRisk              : new List(),
-  chronic             : new List(),
-  outreachCounts      : new List(),
-  outreachSummary     : new List(),
-  interventionSummary : new List()
-};
+import Report from '../models/ReportModel';
+
+const initialState = new Report();
 
 export default function reportsReducer(state = initialState, action) {
   switch (action.type) {
@@ -28,11 +24,7 @@ export default function reportsReducer(state = initialState, action) {
     };
   }
   case 'OUTREACH_COUNT_SUCCESS': {
-    return {
-      ...state,
-      outreachCounts : fromJS(action.outreachCounts)
-        .map(student => new Record(student))
-    };
+    return initialState.setOutreachCounts(state, action.outreachCounts);
   }
   case 'OUTREACH_SUMMARY_SUCCESS': {
     return {
