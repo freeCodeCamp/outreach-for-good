@@ -13,11 +13,7 @@ export default function reportsReducer(state = initialState, action) {
     return initialState.setAtRisk(state, action.atRisk);
   }
   case 'CHRONICALLY_ABSENT_SUCCESS': {
-    return {
-      ...state,
-      chronic : fromJS(action.chronic)
-        .map(student => new Record(student))
-    };
+    return initialState.setChronic(state, action.chronic);
   }
   case 'OUTREACH_COUNT_SUCCESS': {
     return initialState.setOutreachCounts(state, action.outreachCounts);

@@ -32,9 +32,9 @@ class SchoolReportsPage extends Component {
 
   componentWillMount() {
     this.props.repAct.getCurrentAtRisk();
-    this.props.repAct.getChronicallyAbsent();
-    this.props.repAct.getInterventionSummary();
-    this.props.repAct.getOutreachSummary();
+    // this.props.repAct.getChronicallyAbsent();
+    // this.props.repAct.getInterventionSummary();
+    // this.props.repAct.getOutreachSummary();
   }
 
   componentWillReceiveProps(nextProps) {
