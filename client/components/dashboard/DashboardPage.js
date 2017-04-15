@@ -164,9 +164,10 @@ class DashboardPage extends React.Component {
           />
         </Tab>
         <Tab label={
-          this.props.reports && <Badge
+          this.props.reports.get('outreachCounts').get('PhoneCall')
+          && <Badge
             badgeContent={this.props.reports
-              .get('outreachCounts').get('PhoneCall')}
+              .get('outreachCounts').get('PhoneCall') || ''}
             badgeStyle={badgeStyle}
             secondary
           >
@@ -185,9 +186,10 @@ class DashboardPage extends React.Component {
           />
         </Tab>
         <Tab label={
-          this.props.reports && <Badge
+          this.props.reports.get('outreachCounts').get('LetterSent')
+          && <Badge
             badgeContent={this.props.reports
-              .get('outreachCounts').get('LetterSent')}
+              .get('outreachCounts').get('LetterSent') || ''}
             badgeStyle={badgeStyle}
             secondary
           >
@@ -206,9 +208,10 @@ class DashboardPage extends React.Component {
           />
         </Tab>
         <Tab label={
-          this.props.reports && <Badge
+          this.props.reports.get('outreachCounts').get('HomeVisit')
+          && <Badge
             badgeContent={this.props.reports
-              .get('outreachCounts').get('HomeVisit')}
+              .get('outreachCounts').get('HomeVisit') || ''}
             badgeStyle={badgeStyle}
             secondary
           >
@@ -227,9 +230,10 @@ class DashboardPage extends React.Component {
           />
         </Tab>
         <Tab label={
-          this.props.reports && <Badge
+          this.props.reports.get('outreachCounts').get('SSTReferral')
+          && <Badge
             badgeContent={this.props.reports
-              .get('outreachCounts').get('SSTReferral')}
+              .get('outreachCounts').get('SSTReferral') || ''}
             badgeStyle={badgeStyle}
             secondary
           >
@@ -248,9 +252,10 @@ class DashboardPage extends React.Component {
           />
         </Tab>
         <Tab label={
-          this.props.reports && <Badge
+          this.props.reports.get('outreachCounts').get('CourtReferral')
+          && <Badge
             badgeContent={this.props.reports
-              .get('outreachCounts').get('CourtReferral')}
+              .get('outreachCounts').get('CourtReferral') || ''}
             badgeStyle={badgeStyle}
             secondary
           >
