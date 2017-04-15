@@ -8,6 +8,7 @@ import * as usrAct from '../../actions/userActions';
 import * as absAct from '../../actions/absenceRecordActions';
 import * as repAct from '../../actions/reportsActions';
 import TableModel from '../../models/TableModel';
+import Report from '../../models/ReportModel';
 
 import CourtTab from './CourtTab';
 import HomeTab from './HomeTab';
@@ -16,7 +17,18 @@ import PhoneTab from './PhoneTab';
 import SstTab from './SstTab';
 import StudentTab from './StudentTab';
 
+import Badge from 'material-ui/Badge';
+
 const table = new TableModel();
+const badgeStyle = {
+  top          : 15,
+  right        : -10,
+  height       : 20,
+  borderRadius : 6,
+  width        : 'auto',
+  paddingRight : 4,
+  paddingLeft  : 4,
+};
 
 class DashboardPage extends React.Component {
   constructor(props, context) {
@@ -101,7 +113,7 @@ class DashboardPage extends React.Component {
 
   clickHandler(action, data, event) {
     let nextTable;
-    let nextForm;
+    //let nextForm;
     switch (action) {
 
     /**
@@ -151,7 +163,17 @@ class DashboardPage extends React.Component {
             clickHandler = {this.clickHandler}
           />
         </Tab>
-        <Tab label={<i className="fa fa-phone fa-2x" />}>
+        <Tab label={
+          this.props.reports && <Badge
+            badgeContent={this.props.reports
+              .get('outreachCounts').get('PhoneCall')}
+            badgeStyle={badgeStyle}
+            secondary
+          >
+            <i className="fa fa-phone fa-2x" />
+          </Badge>
+          || <i className="fa fa-phone fa-2x" />
+          }>
           <PhoneTab
             view = {{
               width  : this.props.containerWidth - 20,
@@ -162,7 +184,17 @@ class DashboardPage extends React.Component {
             clickHandler = {this.clickHandler}
           />
         </Tab>
-        <Tab label={<i className="fa fa-envelope fa-2x" />}>
+        <Tab label={
+          this.props.reports && <Badge
+            badgeContent={this.props.reports
+              .get('outreachCounts').get('LetterSent')}
+            badgeStyle={badgeStyle}
+            secondary
+          >
+            <i className="fa fa-envelope fa-2x" />
+          </Badge>
+          || <i className="fa fa-envelope fa-2x" />
+          }>
           <LetterTab
             view = {{
               width  : this.props.containerWidth - 20,
@@ -173,7 +205,17 @@ class DashboardPage extends React.Component {
             clickHandler = {this.clickHandler}
           />
         </Tab>
-        <Tab label={<i className="fa fa-home fa-2x" />}>
+        <Tab label={
+          this.props.reports && <Badge
+            badgeContent={this.props.reports
+              .get('outreachCounts').get('HomeVisit')}
+            badgeStyle={badgeStyle}
+            secondary
+          >
+            <i className="fa fa-home fa-2x" />
+          </Badge>
+          || <i className="fa fa-home fa-2x" />
+          }>
           <HomeTab
             view = {{
               width  : this.props.containerWidth - 20,
@@ -184,7 +226,17 @@ class DashboardPage extends React.Component {
             clickHandler = {this.clickHandler}
           />
         </Tab>
-        <Tab label={<i className="fa fa-support fa-2x" />}>
+        <Tab label={
+          this.props.reports && <Badge
+            badgeContent={this.props.reports
+              .get('outreachCounts').get('SSTReferral')}
+            badgeStyle={badgeStyle}
+            secondary
+          >
+            <i className="fa fa-support fa-2x" />
+          </Badge>
+          || <i className="fa fa-support fa-2x" />
+          }>
           <SstTab
             view = {{
               width  : this.props.containerWidth - 20,
@@ -195,7 +247,17 @@ class DashboardPage extends React.Component {
             clickHandler = {this.clickHandler}
           />
         </Tab>
-        <Tab label={<i className="fa fa-gavel fa-2x" />}>
+        <Tab label={
+          this.props.reports && <Badge
+            badgeContent={this.props.reports
+              .get('outreachCounts').get('CourtReferral')}
+            badgeStyle={badgeStyle}
+            secondary
+          >
+            <i className="fa fa-gavel fa-2x" />
+          </Badge>
+          || <i className="fa fa-gavel fa-2x" />
+          }>
           <CourtTab
             view = {{
               width  : this.props.containerWidth - 20,
@@ -217,12 +279,14 @@ DashboardPage.propTypes = {
   usrAct          : PropTypes.object.isRequired,
   absenceRecords  : PropTypes.object.isRequired,
   containerWidth  : PropTypes.number.isRequired,
-  containerHeight : PropTypes.number.isRequired
+  containerHeight : PropTypes.number.isRequired,
+  reports         : PropTypes.instanceOf(Report)
 };
 
 function mapStateToProps(state) {
   return {
-    absenceRecords : state.absenceRecords
+    absenceRecords : state.absenceRecords,
+    reports        : state.reports,
   };
 }
 
