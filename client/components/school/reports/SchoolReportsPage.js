@@ -20,6 +20,7 @@ class SchoolReportsPage extends Component {
     super(props);
 
     // Register Initial Component State
+    this.state = { table };
     let nextTable = this.initializeTable('atRisk');
     this.state = { table: nextTable };
 
@@ -60,8 +61,9 @@ class SchoolReportsPage extends Component {
    *   - Set default state for 'action' variables
    */
   initializeTable(currentTab) {
-    let nextTable;
-    nextTable = table.setSelectedTab(table, currentTab);
+    let nextTable = this.state.table || table;
+    nextTable = table.setSelectedTab(nextTable, currentTab);
+    //this.props.repAct.initializeReports();
     switch (currentTab) {
     case 'atRisk':
       this.props.repAct.getCurrentAtRisk();
@@ -76,7 +78,6 @@ class SchoolReportsPage extends Component {
       this.props.repAct.getInterventionSummary();
       break;
     }
-    nextTable = table.setSelectedTab(table, currentTab);
 //    nextTable = table.enableFiltering(nextTable);
     return nextTable;
   }
