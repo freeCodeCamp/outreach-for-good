@@ -145,7 +145,7 @@ const DataTable = ({page, table, data, ...props}) => {
               />
               }
             cell={
-              <DataTableRow
+              data && <DataTableRow
                 indexMap={table.get('indexMap')}
                 data={data}
                 col={col.id}

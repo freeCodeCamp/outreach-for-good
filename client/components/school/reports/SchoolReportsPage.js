@@ -119,7 +119,7 @@ class SchoolReportsPage extends Component {
   }
 
   // Handle user changing main tabs
-  tabHandler(tab) {
+  tabHandler(data) {
     this.clickHandler('changeTabs', data);
   }
 
@@ -132,9 +132,13 @@ class SchoolReportsPage extends Component {
     return (
       <Tabs
         style={{width: this.props.containerWidth}}
-        onChange={this.tabHandler}
+        value={this.state.table.get('selectedTab')}
       >
-        <Tab label="At Risk">
+        <Tab
+          label="At Risk"
+          onActive={this.tabHandler}
+          value='atRisk'
+        >
           <AtRiskTab
             view={view}
             atRisk={this.props.reports.atRisk}
@@ -142,7 +146,11 @@ class SchoolReportsPage extends Component {
             clickHandler = {this.clickHandler}
           />
         </Tab>
-        <Tab label="Chronically Absent">
+        <Tab
+          label="Chronically Absent"
+          onActive={this.tabHandler}
+          value='chronicallyAbsent'
+        >
           <ChronicallyAbsentTab
             view={view}
             chronic={this.props.reports.chronicAbsent}
@@ -150,7 +158,11 @@ class SchoolReportsPage extends Component {
             clickHandler = {this.clickHandler}
           />
         </Tab>
-        <Tab label="Outreaches">
+        <Tab
+          label="Outreaches"
+          onActive={this.tabHandler}
+          value='outreaches'
+        >
           <OutreachesTab
             view = {view}
             outreaches = {this.props.reports.outreachSummary}
@@ -158,7 +170,11 @@ class SchoolReportsPage extends Component {
             clickHandler = {this.clickHandler}
           />
         </Tab>
-        <Tab label="Interventions">
+        <Tab
+          label="Interventions"
+          onActive={this.tabHandler}
+          value='interventions'
+        >
           <InterventionsTab
             view={view}
             interventions = {this.props.reports.interventionSummary}
