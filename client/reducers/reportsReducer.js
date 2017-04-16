@@ -1,8 +1,3 @@
-// import * as types from '../actions/actionTypes';
-import {List, fromJS, Record} from 'immutable';
-// import initialState from './initialState';
-// const initialState = new List();
-
 import Report from '../models/ReportModel';
 
 const initialState = new Report();
@@ -19,18 +14,10 @@ export default function reportsReducer(state = initialState, action) {
     return initialState.setOutreachCounts(state, action.outreachCounts);
   }
   case 'OUTREACH_SUMMARY_SUCCESS': {
-    return {
-      ...state,
-      outreachSummary : fromJS(action.outreachSummary)
-        .map(student => new Record(student))
-    };
+    return initialState.setOutreachSummary(state, action.outreachSummary);
   }
   case 'INTERVENTION_SUMMARY_SUCCESS': {
-    return {
-      ...state,
-      interventionSummary : fromJS(action.interventionSummary)
-        .map(student => new Record(student))
-    };
+    return initialState.setInterventionSummary(state, action.interventionSummary);
   }
   default: {
     return state;

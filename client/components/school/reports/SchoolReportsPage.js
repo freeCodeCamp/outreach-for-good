@@ -21,7 +21,7 @@ class SchoolReportsPage extends Component {
     // Register Initial Component State
     // let nextTable = this.initializeTable('atRisk');
     this.state = {
-      // table : nextTable,
+      table : table,
       tab : 'atRisk'
     };
 
@@ -32,9 +32,9 @@ class SchoolReportsPage extends Component {
 
   componentWillMount() {
     this.props.repAct.getCurrentAtRisk();
-    // this.props.repAct.getChronicallyAbsent();
-    // this.props.repAct.getInterventionSummary();
-    // this.props.repAct.getOutreachSummary();
+    this.props.repAct.getChronicallyAbsent();
+    this.props.repAct.getInterventionSummary();
+    this.props.repAct.getOutreachSummary();
   }
 
   componentWillReceiveProps(nextProps) {
@@ -146,18 +146,18 @@ class SchoolReportsPage extends Component {
         onChange={this.tabHandler}
       >
         <Tab label="At Risk">
-          {this.state.table
-            && <AtRiskTab
+          <AtRiskTab
             view={view}
             atRisk={this.props.reports.atRisk}
             table = {this.state.table}
-            clickHandler = {this.clickHandler} />}
+            clickHandler = {this.clickHandler}
+          />
         </Tab>
         <Tab label="Chronically Absent">
           {this.state.table
             && <ChronicallyAbsentTab
             view={view}
-            chronic={this.props.reports.chronic}
+            chronic={this.props.reports.chronicAbsent}
             table = {this.state.table}
             clickHandler = {this.clickHandler} />}
         </Tab>

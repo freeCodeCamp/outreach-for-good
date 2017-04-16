@@ -1,5 +1,7 @@
 import Immutable from 'immutable';
 import AbsenceRecord from './AbsenceRecordModel';
+import InterventionSummary from './InterventionSummaryModel';
+import OutreachSummary from './OutreachSummaryModel';
 
 const ReportModel = Immutable.Record({
   atRisk              : Immutable.List(),
@@ -31,12 +33,30 @@ class Report extends ReportModel {
   /**
    * Convert array of objects, to flattened Immutable Map
    */
+  setInterventionSummary(currentState, interventionSummary) {
+    return currentState.update('interventionSummary', i =>
+      i.clear().merge(Immutable.fromJS(interventionSummary)
+        .map(record => new InterventionSummary(record)))
+    );
+  }
+  /**
+   * Convert array of objects, to flattened Immutable Map
+   */
   setOutreachCounts(currentState, outreachCounts) {
     let countMap = {};
     outreachCounts.forEach(i => {
       countMap[i._id.replace(/ /g, '')] = i.count;
     });
     return currentState.update('outreachCounts', i => i.clear().merge(countMap));
+  }
+  /**
+   * Convert array of objects, to flattened Immutable Map
+   */
+  setOutreachSummary(currentState, outreachSummary) {
+    return currentState.update('outreachSummary', i =>
+      i.clear().merge(Immutable.fromJS(outreachSummary)
+        .map(record => new OutreachSummary(record)))
+    );
   }
 }
 
