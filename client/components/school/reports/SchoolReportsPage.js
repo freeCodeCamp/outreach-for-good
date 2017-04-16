@@ -1,6 +1,7 @@
 import React, {Component, PropTypes} from 'react';
 import { bindActionCreators } from 'redux';
 import {connect} from 'react-redux';
+import { List } from 'immutable';
 import {Tabs, Tab} from 'material-ui/Tabs';
 import Dimensions from 'react-dimensions';
 
@@ -19,46 +20,31 @@ class SchoolReportsPage extends Component {
     super(props);
 
     // Register Initial Component State
-    // let nextTable = this.initializeTable('atRisk');
-    this.state = {
-      table : table,
-      tab : 'atRisk'
-    };
+    let nextTable = this.initializeTable('atRisk');
+    this.state = { table: nextTable };
 
     this.initializeTable = this.initializeTable.bind(this);
     this.clickHandler = this.clickHandler.bind(this);
     this.tabHandler = this.tabHandler.bind(this);
   }
 
-  componentWillMount() {
-    this.props.repAct.getCurrentAtRisk();
-    this.props.repAct.getChronicallyAbsent();
-    this.props.repAct.getInterventionSummary();
-    this.props.repAct.getOutreachSummary();
-  }
-
   componentWillReceiveProps(nextProps) {
-    let nextTable;
-
-    switch (this.state.tab) {
+    let nextTable = this.state.table;
+    switch (nextTable.get('selectedTab')) {
     case 'atRisk':
-      nextTable = this.initializeTable(this.state.tab);
-      // nextTable = table.updateSortCol(nextTable, '');
-      // nextTable = table.buildIndexMap(nextTable, nextProps.reports.atRisk);
+      nextTable = table.updateSortCol(nextTable, '');
+      nextTable = table.buildIndexMap(nextTable, nextProps.reports.atRisk);
       break;
     case 'chronicallyAbsent':
-      nextTable = this.initializeTable(this.state.tab);
-      // nextTable = table.updateSortCol(nextTable, '');
+      nextTable = table.updateSortCol(nextTable, '');
       nextTable = table.buildIndexMap(nextTable, nextProps.reports.chronic);
       break;
     case 'outreaches':
-      nextTable = this.initializeTable(this.state.tab);
-      // nextTable = table.updateSortCol(nextTable, '');
+      nextTable = table.updateSortCol(nextTable, '');
       nextTable = table.buildIndexMap(nextTable, nextProps.reports.outreachSummary);
       break;
     case 'interventions':
-      nextTable = this.initializeTable(this.state.tab);
-      // nextTable = table.updateSortCol(nextTable, '');
+      nextTable = table.updateSortCol(nextTable, '');
       nextTable = table.buildIndexMap(nextTable, nextProps.reports.interventionSummary);
       break;
     }
@@ -76,32 +62,35 @@ class SchoolReportsPage extends Component {
   initializeTable(currentTab) {
     let nextTable;
     nextTable = table.setSelectedTab(table, currentTab);
-    // switch (currentTab) {
-    // case 'atRisk':
-    //   console.log('at risk');
-    //   this.props.actions.getCurrentAtRisk();
-    //   // nextTable = table.setSelectedTab(table, 'atRisk');
-    //   break;
-    // case 'chronicallyAbsent':
-    //   this.props.actions.getChronicallyAbsent();
-    //   nextTable = table.setSelectedTab(table, 'chronicallyAbsent');
-    //   break;
-    // case 'outreaches':
-    //   this.props.actions.getOutreachSummary();
-    //   nextTable = table.setSelectedTab(table, 'outreaches');
-    //   break;
-    // case 'interventions':
-    //   this.props.actions.getInterventionSummary();
-    //   nextTable = table.setSelectedTab(table, 'interventions');
-    //   break;
-    // }
-    // nextTable = table.enableFiltering(nextTable);
+    switch (currentTab) {
+    case 'atRisk':
+      this.props.repAct.getCurrentAtRisk();
+      break;
+    case 'chronicallyAbsent':
+      this.props.repAct.getChronicallyAbsent();
+      break;
+    case 'outreaches':
+      this.props.repAct.getOutreachSummary();
+      break;
+    case 'interventions':
+      this.props.repAct.getInterventionSummary();
+      break;
+    }
+    nextTable = table.setSelectedTab(table, currentTab);
+//    nextTable = table.enableFiltering(nextTable);
     return nextTable;
   }
 
   clickHandler(action, data, event) {
     let nextTable;
     switch (action) {
+
+    // Clicked a main tab
+    case 'changeTabs':
+      nextTable = this.initializeTable(data.props.value);
+      this.setState({table: nextTable});
+      break;
+
 
     /**
      * DataTable Click Handler
@@ -131,7 +120,7 @@ class SchoolReportsPage extends Component {
 
   // Handle user changing main tabs
   tabHandler(tab) {
-    this.setState({ tab });
+    this.clickHandler('changeTabs', data);
   }
 
   render() {
@@ -154,28 +143,28 @@ class SchoolReportsPage extends Component {
           />
         </Tab>
         <Tab label="Chronically Absent">
-          {this.state.table
-            && <ChronicallyAbsentTab
+          <ChronicallyAbsentTab
             view={view}
             chronic={this.props.reports.chronicAbsent}
             table = {this.state.table}
-            clickHandler = {this.clickHandler} />}
+            clickHandler = {this.clickHandler}
+          />
         </Tab>
         <Tab label="Outreaches">
-          {this.state.table
-            && <OutreachesTab
+          <OutreachesTab
             view = {view}
             outreaches = {this.props.reports.outreachSummary}
             table = {this.state.table}
-            clickHandler = {this.clickHandler} />}
+            clickHandler = {this.clickHandler}
+          />
         </Tab>
         <Tab label="Interventions">
-          {this.state.table
-            && <InterventionsTab
+          <InterventionsTab
             view={view}
             interventions = {this.props.reports.interventionSummary}
             table = {this.state.table}
-            clickHandler = {this.clickHandler} />}
+            clickHandler = {this.clickHandler}
+          />
         </Tab>
       </Tabs>
     );
