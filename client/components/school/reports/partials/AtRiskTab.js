@@ -1,5 +1,6 @@
 import React, {PropTypes} from 'react';
 import DataTable from '../../../common/data-table/DataTable';
+import { List } from 'immutable';
 import RaisedButtonModel from '../../../../models/RaisedButtonModel';
 
 const AtRiskTab = ({atRisk, ...props}) => {
@@ -100,7 +101,7 @@ const AtRiskTab = ({atRisk, ...props}) => {
 
 AtRiskTab.propTypes = {
   view   : PropTypes.object.isRequired,
-  atRisk : PropTypes.object,
+  atRisk : PropTypes.instanceOf(List).isRequired,
 };
 
 export default AtRiskTab;

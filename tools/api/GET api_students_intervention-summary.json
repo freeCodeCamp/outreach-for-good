@@ -1,0 +1,18 @@
+[
+  {
+    "school": {
+      "_id": "58e2c38be2284f844752f316",
+      "name": "School A"
+    },
+    "student": {
+      "_id": "58e2c38ce2284f844752f31b",
+      "studentId": "sid003",
+      "lastName": "Arnold",
+      "firstName": "Gavin",
+      "withdrawn": false,
+      "cfa": true,
+      "iep": false
+    },
+    "type": "One Intervention"
+  }
+]

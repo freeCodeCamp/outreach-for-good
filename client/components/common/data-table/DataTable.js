@@ -130,7 +130,8 @@ const DataTable = ({page, table, data, ...props}) => {
           onRowClick={rowToggleSelected}
           rowClassNameGetter={isRowSelected}
         >
-        {page.columns && page.columns
+        {console.log('Debugging race condition: ', data.size)}
+        {data.size ? page.columns && page.columns
           .map(col =>
           <Column
             header={
@@ -155,7 +156,7 @@ const DataTable = ({page, table, data, ...props}) => {
             key={col.id}
             width={col.width || 200}
           />
-          )}
+          ) : <Column />}
           {/*console.log('Debugging race condition: ', data.toJS())*/}
         </Table>
       </Paper>

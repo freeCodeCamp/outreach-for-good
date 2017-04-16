@@ -32,6 +32,7 @@ if(env.env == 'development') {
 
   wpServer.listen(env.webpackPort, 'localhost', function() {
     debug('  🌎  Webpack server listening on %d, in %s mode', env.webpackPort, app.get('env'));
+    debug('DeprecationWarning: loaderUtils.parseQuery() - caused by babel, fixed in v7.0');
   });
 }
 
