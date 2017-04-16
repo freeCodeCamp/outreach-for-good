@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react';
-import { Table, Column } from 'fixed-data-table-2';
+import { Table, Column, Cell } from 'fixed-data-table-2';
 import DataTableHeader from './DataTableHeader';
 import DataTableRow from './DataTableRow';
 
@@ -130,8 +130,7 @@ const DataTable = ({page, table, data, ...props}) => {
           onRowClick={rowToggleSelected}
           rowClassNameGetter={isRowSelected}
         >
-        {console.log('Debugging race condition: ', data.size)}
-        {data.size ? page.columns && page.columns
+        {page.columns && page.columns
           .map(col =>
           <Column
             header={
@@ -146,17 +145,17 @@ const DataTable = ({page, table, data, ...props}) => {
               />
               }
             cell={
-              <DataTableRow
+              data && data.size ? <DataTableRow
                 indexMap={table.get('indexMap')}
                 data={data}
                 col={col.id}
-              />}
+              /> : <Cell>Loading...</Cell>}
             fixed={col.fixed}
             flexGrow={col.flexGrow}
             key={col.id}
             width={col.width || 200}
           />
-          ) : <Column />}
+          )}
           {/*console.log('Debugging race condition: ', data.toJS())*/}
         </Table>
       </Paper>
