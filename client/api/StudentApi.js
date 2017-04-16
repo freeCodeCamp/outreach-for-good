@@ -6,7 +6,7 @@
  * GET /
  * GET /outreach-counts
  * GET /intervention-summary
- * GET /outreach-summary
+ * GET /outreach-summary{?withdrawn=false}
  * GET /:studentId
  * PUT /:studentId/iep
  * PUT /:studentId/cfa
@@ -42,8 +42,8 @@ class StudentApi extends Api {
   /**
   * Get outreach counts
   */
-  static getOutreachCounts() {
-    return this.getAPI('/api/students/outreach-counts');
+  static getOutreachCounts(querystring = '') {
+    return this.getAPI(`/api/students/outreach-counts?${querystring}`);
   }
 
   /**
