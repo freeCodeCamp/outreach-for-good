@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react';
-import { Table, Column } from 'fixed-data-table-2';
+import { Table, Column, Cell } from 'fixed-data-table-2';
 import DataTableHeader from './DataTableHeader';
 import DataTableRow from './DataTableRow';
 
@@ -146,11 +146,11 @@ const DataTable = ({page, table, data, ...props}) => {
               />
               }
             cell={
-              <DataTableRow
+              data && data.size ? <DataTableRow
                 indexMap={table.get('indexMap')}
                 data={data}
                 col={col.id}
-              />}
+              /> : <Cell>Loading...</Cell>}
             fixed={col.fixed}
             flexGrow={col.flexGrow}
             key={col.id}

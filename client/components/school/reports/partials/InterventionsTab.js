@@ -6,19 +6,23 @@ const InterventionsTab = ({interventions, ...props}) => {
     title   : 'Interventions',
     columns : [{
       title    : 'School',
-      id       : 'school',
+      id       : 'school.name',
       flexGrow : 1
     }, {
       title    : 'Last Name',
-      id       : 'lastName',
+      id       : 'student.lastName',
       flexGrow : 1
     }, {
       title    : 'First Name',
-      id       : 'firstName',
+      id       : 'student.firstName',
       flexGrow : 1
     }, {
-      title : 'Actions',
-      id    : 'action',
+      title    : 'Student ID',
+      id       : 'student.studentId',
+      flexGrow : 1
+    }, {
+      title : 'Type',
+      id    : 'type',
       width : 100
     }]
   };

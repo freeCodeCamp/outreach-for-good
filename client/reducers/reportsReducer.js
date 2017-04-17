@@ -4,6 +4,9 @@ const initialState = new Report();
 
 export default function reportsReducer(state = initialState, action) {
   switch (action.type) {
+  case 'RESET_REPORTS': {
+    return initialState;
+  }
   case 'AT_RISK_SUCCESS': {
     return initialState.setAtRisk(state, action.atRisk);
   }

@@ -1,7 +1,6 @@
 import React, {Component, PropTypes} from 'react';
 import { bindActionCreators } from 'redux';
-import {connect} from 'react-redux';
-import { List } from 'immutable';
+import { connect } from 'react-redux';
 import {Tabs, Tab} from 'material-ui/Tabs';
 import Dimensions from 'react-dimensions';
 
@@ -20,50 +19,81 @@ class SchoolReportsPage extends Component {
     super(props);
 
     // Register Initial Component State
-    this.state = { table };
-    let nextTable = this.initializeTable('atRisk');
-    this.state = { table: nextTable };
+    let nextTable = table.setSelectedTab(table, 'atRisk');
+    this.state = { table: nextTable, loading: true };
 
-    this.initializeTable = this.initializeTable.bind(this);
+    this.retrieveData = this.retrieveData.bind(this);
     this.clickHandler = this.clickHandler.bind(this);
     this.tabHandler = this.tabHandler.bind(this);
   }
 
+  componentDidMount() {
+    //console.log('did mount');
+    this.retrieveData('atRisk');
+  }
+
   componentWillReceiveProps(nextProps) {
+    //console.log('will receive props ', nextProps);
     let nextTable = this.state.table;
+    let dataLoaded = false;
     switch (nextTable.get('selectedTab')) {
     case 'atRisk':
-      nextTable = table.updateSortCol(nextTable, '');
-      nextTable = table.buildIndexMap(nextTable, nextProps.reports.atRisk);
+      if(nextProps.reports.atRisk.size) {
+        //console.log('Got It!!! ', nextProps.reports.atRisk.size);
+        dataLoaded = true;
+        nextTable = table.updateSortCol(nextTable, '');
+        nextTable = table.buildIndexMap(nextTable, nextProps.reports.atRisk);
+      }
       break;
     case 'chronicallyAbsent':
-      nextTable = table.updateSortCol(nextTable, '');
-      nextTable = table.buildIndexMap(nextTable, nextProps.reports.chronic);
+      if(nextProps.reports.chronicAbsent.size) {
+        //console.log('Got It!!! ', nextProps.reports.chronicAbsent.size);
+        dataLoaded = true;
+        nextTable = table.updateSortCol(nextTable, '');
+        nextTable = table.buildIndexMap(nextTable, nextProps.reports.chronicAbsent);
+      }
       break;
     case 'outreaches':
-      nextTable = table.updateSortCol(nextTable, '');
-      nextTable = table.buildIndexMap(nextTable, nextProps.reports.outreachSummary);
+      if(nextProps.reports.outreachSummary.size) {
+        //console.log('Got It!!! ', nextProps.reports.outreachSummary.size);
+        dataLoaded = true;
+        nextTable = table.updateSortCol(nextTable, '');
+        nextTable = table.buildIndexMap(nextTable, nextProps.reports.outreachSummary);
+      }
       break;
     case 'interventions':
-      nextTable = table.updateSortCol(nextTable, '');
-      nextTable = table.buildIndexMap(nextTable, nextProps.reports.interventionSummary);
+      if(nextProps.reports.interventionSummary.size) {
+        //console.log('Got It!!!', nextProps.reports.interventionSummary.size);
+        dataLoaded = true;
+        nextTable = table.updateSortCol(nextTable, '');
+        nextTable = table.buildIndexMap(nextTable, nextProps.reports.interventionSummary);
+      }
       break;
     }
+    if(this.state.loading && dataLoaded) {
+      //console.log('and set state');
+      this.setState({table: nextTable, loading: false});
+    }
     // nextTable = table.enableFiltering(nextTable);
-    this.setState({
-      table : nextTable
-    });
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    //console.log('did update: ', prevState);
+    let selectedTab = this.state.table.get('selectedTab');
+    if(prevState.table.get('selectedTab') != selectedTab) {
+      this.retrieveData(selectedTab);
+    }
   }
 
   /**
-   * Initialize Data Table
+   * Perform API call to Retrieve Data
    *   - Retrieve and configure data for table
    *   - Set default state for 'action' variables
    */
-  initializeTable(currentTab) {
-    let nextTable = this.state.table || table;
-    nextTable = table.setSelectedTab(nextTable, currentTab);
-    //this.props.repAct.initializeReports();
+  retrieveData(currentTab) {
+    //console.log('gettin the data: ', currentTab);
+//    let nextTable = this.state.table || table;
+    this.props.repAct.resetReports();
     switch (currentTab) {
     case 'atRisk':
       this.props.repAct.getCurrentAtRisk();
@@ -79,7 +109,7 @@ class SchoolReportsPage extends Component {
       break;
     }
 //    nextTable = table.enableFiltering(nextTable);
-    return nextTable;
+    //return nextTable;
   }
 
   clickHandler(action, data, event) {
@@ -88,8 +118,8 @@ class SchoolReportsPage extends Component {
 
     // Clicked a main tab
     case 'changeTabs':
-      nextTable = this.initializeTable(data.props.value);
-      this.setState({table: nextTable});
+      nextTable = table.setSelectedTab(this.state.table, data.props.value);
+      this.setState({table: nextTable, loading: true});
       break;
 
 
@@ -154,7 +184,7 @@ class SchoolReportsPage extends Component {
         >
           <ChronicallyAbsentTab
             view={view}
-            chronic={this.props.reports.chronicAbsent}
+            chronicAbsent={this.props.reports.chronicAbsent}
             table = {this.state.table}
             clickHandler = {this.clickHandler}
           />
