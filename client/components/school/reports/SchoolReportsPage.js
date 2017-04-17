@@ -20,16 +20,22 @@ class SchoolReportsPage extends Component {
     super(props);
 
     // Register Initial Component State
-    this.state = { table };
-    let nextTable = this.initializeTable('atRisk');
-    this.state = { table: nextTable };
+    let nextTable = table.setSelectedTab(table, 'atRisk');
+    this.state = { table: nextTable, loading: true };
 
-    this.initializeTable = this.initializeTable.bind(this);
+    this.retrieveData = this.retrieveData.bind(this);
     this.clickHandler = this.clickHandler.bind(this);
     this.tabHandler = this.tabHandler.bind(this);
   }
 
+  componentDidMount() {
+    console.log('did mount')
+    let nextTable = this.retrieveData('atRisk');
+    this.state = { table: nextTable, loading: true };
+  }
+
   componentWillReceiveProps(nextProps) {
+    console.log('will receive props ', nextProps)
     let nextTable = this.state.table;
     switch (nextTable.get('selectedTab')) {
     case 'atRisk':
@@ -49,33 +55,41 @@ class SchoolReportsPage extends Component {
       nextTable = table.buildIndexMap(nextTable, nextProps.reports.interventionSummary);
       break;
     }
+    nextTable = this.retrieveData(nextTable.get('selectedTab'));
     // nextTable = table.enableFiltering(nextTable);
     this.setState({
-      table : nextTable
+      table   : nextTable,
+      loading : false
     });
   }
 
+  componentDidUpdate(prevProps, prevState) {
+    console.log('did update: ', prevState);
+    let nextTable = this.retrieveData(this.state.table.get('selectedTab'));
+    this.state = { table: nextTable, loading: true };
+  }
+
   /**
-   * Initialize Data Table
+   * Perform API call to Retrieve Data
    *   - Retrieve and configure data for table
    *   - Set default state for 'action' variables
    */
-  initializeTable(currentTab) {
+  retrieveData(currentTab) {
+    console.log('gettin the data: ', currentTab);
     let nextTable = this.state.table || table;
-    nextTable = table.setSelectedTab(nextTable, currentTab);
     //this.props.repAct.initializeReports();
     switch (currentTab) {
     case 'atRisk':
-      this.props.repAct.getCurrentAtRisk();
+      //this.props.repAct.getCurrentAtRisk();
       break;
     case 'chronicallyAbsent':
-      this.props.repAct.getChronicallyAbsent();
+      //this.props.repAct.getChronicallyAbsent();
       break;
     case 'outreaches':
-      this.props.repAct.getOutreachSummary();
+      //this.props.repAct.getOutreachSummary();
       break;
     case 'interventions':
-      this.props.repAct.getInterventionSummary();
+      //this.props.repAct.getInterventionSummary();
       break;
     }
 //    nextTable = table.enableFiltering(nextTable);
@@ -88,7 +102,7 @@ class SchoolReportsPage extends Component {
 
     // Clicked a main tab
     case 'changeTabs':
-      nextTable = this.initializeTable(data.props.value);
+      nextTable = table.setSelectedTab(this.state.table, data.props.value);
       this.setState({table: nextTable});
       break;
 
