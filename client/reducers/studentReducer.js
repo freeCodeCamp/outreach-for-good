@@ -40,6 +40,12 @@ export default function studentReducer(state = initialState, action) {
       notes : action.notes
     };
   }
+  // case 'POST_NOTE_SUCCESS': {
+  //   return {
+  //     ...state,
+  //     notes : [...state.notes, action.notes]
+  //   };
+  // }
   case types.UNMOUNT_STUDENT: {
     let record = {};
     return {

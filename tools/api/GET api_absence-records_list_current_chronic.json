@@ -1,0 +1,1892 @@
+[
+  {
+    "recordId": "58e2c3d0e2284f844752f7f3",
+    "date": "2017-04-03T21:50:43.116Z",
+    "school": {
+      "_id": "58e2c38be2284f844752f316",
+      "name": "School A"
+    },
+    "entry": {
+      "absences": 20,
+      "tardies": 0,
+      "present": 0,
+      "enrolled": 20,
+      "tardiesDelta": 0,
+      "absencesDelta": 20,
+      "student": "58e2c3cfe2284f844752f7a4",
+      "_id": "58e2c3d0e2284f844752f842"
+    },
+    "student": {
+      "_id": "58e2c3cfe2284f844752f7a4",
+      "lastName": "L1151",
+      "firstName": "F1151",
+      "studentId": "10001151",
+      "withdrawn": false,
+      "cfa": false,
+      "iep": false
+    }
+  },
+  {
+    "recordId": "58e2c3d0e2284f844752f7f3",
+    "date": "2017-04-03T21:50:43.116Z",
+    "school": {
+      "_id": "58e2c38be2284f844752f316",
+      "name": "School A"
+    },
+    "entry": {
+      "absences": 20,
+      "tardies": 0,
+      "present": 0,
+      "enrolled": 20,
+      "tardiesDelta": 0,
+      "absencesDelta": 20,
+      "student": "58e2c3cfe2284f844752f72b",
+      "_id": "58e2c3d0e2284f844752f8bb"
+    },
+    "student": {
+      "_id": "58e2c3cfe2284f844752f72b",
+      "lastName": "L1030",
+      "firstName": "F1030",
+      "studentId": "10001030",
+      "withdrawn": false,
+      "cfa": false,
+      "iep": false
+    }
+  },
+  {
+    "recordId": "58e2c3d0e2284f844752f7f3",
+    "date": "2017-04-03T21:50:43.116Z",
+    "school": {
+      "_id": "58e2c38be2284f844752f316",
+      "name": "School A"
+    },
+    "entry": {
+      "absences": 20,
+      "tardies": 0,
+      "present": 0,
+      "enrolled": 20,
+      "tardiesDelta": 0,
+      "absencesDelta": 20,
+      "student": "58e2c3cfe2284f844752f70f",
+      "_id": "58e2c3d0e2284f844752f8d7"
+    },
+    "student": {
+      "_id": "58e2c3cfe2284f844752f70f",
+      "lastName": "L1002",
+      "firstName": "F1002",
+      "studentId": "10001002",
+      "withdrawn": false,
+      "cfa": false,
+      "iep": false
+    }
+  },
+  {
+    "recordId": "58e2c3d0e2284f844752f7f3",
+    "date": "2017-04-03T21:50:43.116Z",
+    "school": {
+      "_id": "58e2c38be2284f844752f316",
+      "name": "School A"
+    },
+    "entry": {
+      "absences": 20,
+      "tardies": 0,
+      "present": 0,
+      "enrolled": 20,
+      "tardiesDelta": 0,
+      "absencesDelta": 20,
+      "student": "58e2c3cfe2284f844752f704",
+      "_id": "58e2c3d0e2284f844752f8e2"
+    },
+    "student": {
+      "_id": "58e2c3cfe2284f844752f704",
+      "lastName": "L991",
+      "firstName": "F991",
+      "studentId": "10000991",
+      "withdrawn": false,
+      "cfa": false,
+      "iep": false
+    }
+  },
+  {
+    "recordId": "58e2c3d0e2284f844752f7f3",
+    "date": "2017-04-03T21:50:43.116Z",
+    "school": {
+      "_id": "58e2c38be2284f844752f316",
+      "name": "School A"
+    },
+    "entry": {
+      "absences": 20,
+      "tardies": 0,
+      "present": 0,
+      "enrolled": 20,
+      "tardiesDelta": 0,
+      "absencesDelta": 20,
+      "student": "58e2c3cfe2284f844752f6f2",
+      "_id": "58e2c3d0e2284f844752f8f4"
+    },
+    "student": {
+      "_id": "58e2c3cfe2284f844752f6f2",
+      "lastName": "L973",
+      "firstName": "F973",
+      "studentId": "10000973",
+      "withdrawn": false,
+      "cfa": false,
+      "iep": false
+    }
+  },
+  {
+    "recordId": "58e2c3d0e2284f844752f7f3",
+    "date": "2017-04-03T21:50:43.116Z",
+    "school": {
+      "_id": "58e2c38be2284f844752f316",
+      "name": "School A"
+    },
+    "entry": {
+      "absences": 20,
+      "tardies": 0,
+      "present": 0,
+      "enrolled": 20,
+      "tardiesDelta": 0,
+      "absencesDelta": 20,
+      "student": "58e2c3cfe2284f844752f7b3",
+      "_id": "58e2c3d0e2284f844752f833"
+    },
+    "student": {
+      "_id": "58e2c3cfe2284f844752f7b3",
+      "lastName": "L1166",
+      "firstName": "F1166",
+      "studentId": "10001166",
+      "withdrawn": false,
+      "cfa": false,
+      "iep": false
+    }
+  },
+  {
+    "recordId": "58e2c3d0e2284f844752f7f3",
+    "date": "2017-04-03T21:50:43.116Z",
+    "school": {
+      "_id": "58e2c38be2284f844752f316",
+      "name": "School A"
+    },
+    "entry": {
+      "absences": 20,
+      "tardies": 0,
+      "present": 0,
+      "enrolled": 20,
+      "tardiesDelta": 0,
+      "absencesDelta": 20,
+      "student": "58e2c3cfe2284f844752f643",
+      "_id": "58e2c3d0e2284f844752f9a3"
+    },
+    "student": {
+      "_id": "58e2c3cfe2284f844752f643",
+      "lastName": "L798",
+      "firstName": "F798",
+      "studentId": "10000798",
+      "withdrawn": false,
+      "cfa": false,
+      "iep": false
+    }
+  },
+  {
+    "recordId": "58e2c3d0e2284f844752f7f3",
+    "date": "2017-04-03T21:50:43.116Z",
+    "school": {
+      "_id": "58e2c38be2284f844752f316",
+      "name": "School A"
+    },
+    "entry": {
+      "absences": 20,
+      "tardies": 0,
+      "present": 0,
+      "enrolled": 20,
+      "tardiesDelta": 0,
+      "absencesDelta": 20,
+      "student": "58e2c3cfe2284f844752f7cc",
+      "_id": "58e2c3d0e2284f844752f81a"
+    },
+    "student": {
+      "_id": "58e2c3cfe2284f844752f7cc",
+      "lastName": "L1191",
+      "firstName": "F1191",
+      "studentId": "10001191",
+      "withdrawn": false,
+      "cfa": false,
+      "iep": false
+    }
+  },
+  {
+    "recordId": "58e2c3d0e2284f844752f7f3",
+    "date": "2017-04-03T21:50:43.116Z",
+    "school": {
+      "_id": "58e2c38be2284f844752f316",
+      "name": "School A"
+    },
+    "entry": {
+      "absences": 20,
+      "tardies": 0,
+      "present": 0,
+      "enrolled": 20,
+      "tardiesDelta": 0,
+      "absencesDelta": 20,
+      "student": "58e2c3cfe2284f844752f638",
+      "_id": "58e2c3d0e2284f844752f9ae"
+    },
+    "student": {
+      "_id": "58e2c3cfe2284f844752f638",
+      "lastName": "L787",
+      "firstName": "F787",
+      "studentId": "10000787",
+      "withdrawn": false,
+      "cfa": false,
+      "iep": false
+    }
+  },
+  {
+    "recordId": "58e2c3d0e2284f844752f7f3",
+    "date": "2017-04-03T21:50:43.116Z",
+    "school": {
+      "_id": "58e2c38be2284f844752f316",
+      "name": "School A"
+    },
+    "entry": {
+      "absences": 20,
+      "tardies": 0,
+      "present": 0,
+      "enrolled": 20,
+      "tardiesDelta": 0,
+      "absencesDelta": 20,
+      "student": "58e2c3cfe2284f844752f62e",
+      "_id": "58e2c3d0e2284f844752f9b8"
+    },
+    "student": {
+      "_id": "58e2c3cfe2284f844752f62e",
+      "lastName": "L777",
+      "firstName": "F777",
+      "studentId": "10000777",
+      "withdrawn": false,
+      "cfa": false,
+      "iep": false
+    }
+  },
+  {
+    "recordId": "58e2c3d0e2284f844752f7f3",
+    "date": "2017-04-03T21:50:43.116Z",
+    "school": {
+      "_id": "58e2c38be2284f844752f316",
+      "name": "School A"
+    },
+    "entry": {
+      "absences": 20,
+      "tardies": 0,
+      "present": 0,
+      "enrolled": 20,
+      "tardiesDelta": 0,
+      "absencesDelta": 20,
+      "student": "58e2c3cfe2284f844752f71d",
+      "_id": "58e2c3d0e2284f844752f8c9"
+    },
+    "student": {
+      "_id": "58e2c3cfe2284f844752f71d",
+      "lastName": "L1016",
+      "firstName": "F1016",
+      "studentId": "10001016",
+      "withdrawn": false,
+      "cfa": false,
+      "iep": false
+    }
+  },
+  {
+    "recordId": "58e2c3d0e2284f844752f7f3",
+    "date": "2017-04-03T21:50:43.116Z",
+    "school": {
+      "_id": "58e2c38be2284f844752f316",
+      "name": "School A"
+    },
+    "entry": {
+      "absences": 20,
+      "tardies": 0,
+      "present": 0,
+      "enrolled": 20,
+      "tardiesDelta": 0,
+      "absencesDelta": 20,
+      "student": "58e2c3cfe2284f844752f616",
+      "_id": "58e2c3d0e2284f844752f9d0"
+    },
+    "student": {
+      "_id": "58e2c3cfe2284f844752f616",
+      "lastName": "L753",
+      "firstName": "F753",
+      "studentId": "10000753",
+      "withdrawn": false,
+      "cfa": false,
+      "iep": false
+    }
+  },
+  {
+    "recordId": "58e2c3d0e2284f844752f7f3",
+    "date": "2017-04-03T21:50:43.116Z",
+    "school": {
+      "_id": "58e2c38be2284f844752f316",
+      "name": "School A"
+    },
+    "entry": {
+      "absences": 20,
+      "tardies": 0,
+      "present": 0,
+      "enrolled": 20,
+      "tardiesDelta": 0,
+      "absencesDelta": 20,
+      "student": "58e2c3cfe2284f844752f5e7",
+      "_id": "58e2c3d0e2284f844752f9ff"
+    },
+    "student": {
+      "_id": "58e2c3cfe2284f844752f5e7",
+      "lastName": "L706",
+      "firstName": "F706",
+      "studentId": "10000706",
+      "withdrawn": false,
+      "cfa": false,
+      "iep": false
+    }
+  },
+  {
+    "recordId": "58e2c3d0e2284f844752f7f3",
+    "date": "2017-04-03T21:50:43.116Z",
+    "school": {
+      "_id": "58e2c38be2284f844752f316",
+      "name": "School A"
+    },
+    "entry": {
+      "absences": 20,
+      "tardies": 0,
+      "present": 0,
+      "enrolled": 20,
+      "tardiesDelta": 0,
+      "absencesDelta": 20,
+      "student": "58e2c3cfe2284f844752f5ca",
+      "_id": "58e2c3d0e2284f844752fa1c"
+    },
+    "student": {
+      "_id": "58e2c3cfe2284f844752f5ca",
+      "lastName": "L677",
+      "firstName": "F677",
+      "studentId": "10000677",
+      "withdrawn": false,
+      "cfa": false,
+      "iep": false
+    }
+  },
+  {
+    "recordId": "58e2c3d0e2284f844752f7f3",
+    "date": "2017-04-03T21:50:43.116Z",
+    "school": {
+      "_id": "58e2c38be2284f844752f316",
+      "name": "School A"
+    },
+    "entry": {
+      "absences": 20,
+      "tardies": 0,
+      "present": 0,
+      "enrolled": 20,
+      "tardiesDelta": 0,
+      "absencesDelta": 20,
+      "student": "58e2c3cfe2284f844752f78e",
+      "_id": "58e2c3d0e2284f844752f858"
+    },
+    "student": {
+      "_id": "58e2c3cfe2284f844752f78e",
+      "lastName": "L1129",
+      "firstName": "F1129",
+      "studentId": "10001129",
+      "withdrawn": false,
+      "cfa": false,
+      "iep": false
+    }
+  },
+  {
+    "recordId": "58e2c3d0e2284f844752f7f3",
+    "date": "2017-04-03T21:50:43.116Z",
+    "school": {
+      "_id": "58e2c38be2284f844752f316",
+      "name": "School A"
+    },
+    "entry": {
+      "absences": 20,
+      "tardies": 0,
+      "present": 0,
+      "enrolled": 20,
+      "tardiesDelta": 0,
+      "absencesDelta": 20,
+      "student": "58e2c3cfe2284f844752f569",
+      "_id": "58e2c3d0e2284f844752fa7d"
+    },
+    "student": {
+      "_id": "58e2c3cfe2284f844752f569",
+      "lastName": "L580",
+      "firstName": "F580",
+      "studentId": "10000580",
+      "withdrawn": false,
+      "cfa": false,
+      "iep": false
+    }
+  },
+  {
+    "recordId": "58e2c3d0e2284f844752f7f3",
+    "date": "2017-04-03T21:50:43.116Z",
+    "school": {
+      "_id": "58e2c38be2284f844752f316",
+      "name": "School A"
+    },
+    "entry": {
+      "absences": 20,
+      "tardies": 0,
+      "present": 0,
+      "enrolled": 20,
+      "tardiesDelta": 0,
+      "absencesDelta": 20,
+      "student": "58e2c3cfe2284f844752f559",
+      "_id": "58e2c3d0e2284f844752fa8d"
+    },
+    "student": {
+      "_id": "58e2c3cfe2284f844752f559",
+      "lastName": "L564",
+      "firstName": "F564",
+      "studentId": "10000564",
+      "withdrawn": false,
+      "cfa": false,
+      "iep": false
+    }
+  },
+  {
+    "recordId": "58e2c3d0e2284f844752f7f3",
+    "date": "2017-04-03T21:50:43.116Z",
+    "school": {
+      "_id": "58e2c38be2284f844752f316",
+      "name": "School A"
+    },
+    "entry": {
+      "absences": 20,
+      "tardies": 0,
+      "present": 0,
+      "enrolled": 20,
+      "tardiesDelta": 0,
+      "absencesDelta": 20,
+      "student": "58e2c3cfe2284f844752f554",
+      "_id": "58e2c3d0e2284f844752fa92"
+    },
+    "student": {
+      "_id": "58e2c3cfe2284f844752f554",
+      "lastName": "L559",
+      "firstName": "F559",
+      "studentId": "10000559",
+      "withdrawn": false,
+      "cfa": false,
+      "iep": false
+    }
+  },
+  {
+    "recordId": "58e2c3d0e2284f844752f7f3",
+    "date": "2017-04-03T21:50:43.116Z",
+    "school": {
+      "_id": "58e2c38be2284f844752f316",
+      "name": "School A"
+    },
+    "entry": {
+      "absences": 20,
+      "tardies": 0,
+      "present": 0,
+      "enrolled": 20,
+      "tardiesDelta": 0,
+      "absencesDelta": 20,
+      "student": "58e2c3cfe2284f844752f6bc",
+      "_id": "58e2c3d0e2284f844752f92a"
+    },
+    "student": {
+      "_id": "58e2c3cfe2284f844752f6bc",
+      "lastName": "L919",
+      "firstName": "F919",
+      "studentId": "10000919",
+      "withdrawn": false,
+      "cfa": false,
+      "iep": false
+    }
+  },
+  {
+    "recordId": "58e2c3d0e2284f844752f7f3",
+    "date": "2017-04-03T21:50:43.116Z",
+    "school": {
+      "_id": "58e2c38be2284f844752f316",
+      "name": "School A"
+    },
+    "entry": {
+      "absences": 20,
+      "tardies": 0,
+      "present": 0,
+      "enrolled": 20,
+      "tardiesDelta": 0,
+      "absencesDelta": 20,
+      "student": "58e2c3cfe2284f844752f53c",
+      "_id": "58e2c3d0e2284f844752faaa"
+    },
+    "student": {
+      "_id": "58e2c3cfe2284f844752f53c",
+      "lastName": "L535",
+      "firstName": "F535",
+      "studentId": "10000535",
+      "withdrawn": false,
+      "cfa": false,
+      "iep": false
+    }
+  },
+  {
+    "recordId": "58e2c3d0e2284f844752f7f3",
+    "date": "2017-04-03T21:50:43.116Z",
+    "school": {
+      "_id": "58e2c38be2284f844752f316",
+      "name": "School A"
+    },
+    "entry": {
+      "absences": 20,
+      "tardies": 0,
+      "present": 0,
+      "enrolled": 20,
+      "tardiesDelta": 0,
+      "absencesDelta": 20,
+      "student": "58e2c3cfe2284f844752f662",
+      "_id": "58e2c3d0e2284f844752f984"
+    },
+    "student": {
+      "_id": "58e2c3cfe2284f844752f662",
+      "lastName": "L829",
+      "firstName": "F829",
+      "studentId": "10000829",
+      "withdrawn": false,
+      "cfa": false,
+      "iep": false
+    }
+  },
+  {
+    "recordId": "58e2c3d0e2284f844752f7f3",
+    "date": "2017-04-03T21:50:43.116Z",
+    "school": {
+      "_id": "58e2c38be2284f844752f316",
+      "name": "School A"
+    },
+    "entry": {
+      "absences": 20,
+      "tardies": 0,
+      "present": 0,
+      "enrolled": 20,
+      "tardiesDelta": 0,
+      "absencesDelta": 20,
+      "student": "58e2c3cfe2284f844752f72a",
+      "_id": "58e2c3d0e2284f844752f8bc"
+    },
+    "student": {
+      "_id": "58e2c3cfe2284f844752f72a",
+      "lastName": "L1029",
+      "firstName": "F1029",
+      "studentId": "10001029",
+      "withdrawn": false,
+      "cfa": false,
+      "iep": false
+    }
+  },
+  {
+    "recordId": "58e2c3d0e2284f844752f7f3",
+    "date": "2017-04-03T21:50:43.116Z",
+    "school": {
+      "_id": "58e2c38be2284f844752f316",
+      "name": "School A"
+    },
+    "entry": {
+      "absences": 20,
+      "tardies": 0,
+      "present": 0,
+      "enrolled": 20,
+      "tardiesDelta": 0,
+      "absencesDelta": 20,
+      "student": "58e2c3cfe2284f844752f7f2",
+      "_id": "58e2c3d0e2284f844752f7f4"
+    },
+    "student": {
+      "_id": "58e2c3cfe2284f844752f7f2",
+      "lastName": "L1229",
+      "firstName": "F1229",
+      "studentId": "10001229",
+      "withdrawn": false,
+      "cfa": false,
+      "iep": false
+    }
+  },
+  {
+    "recordId": "58e2c3d0e2284f844752f7f3",
+    "date": "2017-04-03T21:50:43.116Z",
+    "school": {
+      "_id": "58e2c38be2284f844752f316",
+      "name": "School A"
+    },
+    "entry": {
+      "absences": 20,
+      "tardies": 0,
+      "present": 0,
+      "enrolled": 20,
+      "tardiesDelta": 0,
+      "absencesDelta": 20,
+      "student": "58e2c3cfe2284f844752f50c",
+      "_id": "58e2c3d0e2284f844752fada"
+    },
+    "student": {
+      "_id": "58e2c3cfe2284f844752f50c",
+      "lastName": "L487",
+      "firstName": "F487",
+      "studentId": "10000487",
+      "withdrawn": false,
+      "cfa": false,
+      "iep": false
+    }
+  },
+  {
+    "recordId": "58e2c3d0e2284f844752f7f3",
+    "date": "2017-04-03T21:50:43.116Z",
+    "school": {
+      "_id": "58e2c38be2284f844752f316",
+      "name": "School A"
+    },
+    "entry": {
+      "absences": 20,
+      "tardies": 0,
+      "present": 0,
+      "enrolled": 20,
+      "tardiesDelta": 0,
+      "absencesDelta": 20,
+      "student": "58e2c3cfe2284f844752f73a",
+      "_id": "58e2c3d0e2284f844752f8ac"
+    },
+    "student": {
+      "_id": "58e2c3cfe2284f844752f73a",
+      "lastName": "L1045",
+      "firstName": "F1045",
+      "studentId": "10001045",
+      "withdrawn": false,
+      "cfa": false,
+      "iep": false
+    }
+  },
+  {
+    "recordId": "58e2c3d0e2284f844752f7f3",
+    "date": "2017-04-03T21:50:43.116Z",
+    "school": {
+      "_id": "58e2c38be2284f844752f316",
+      "name": "School A"
+    },
+    "entry": {
+      "absences": 20,
+      "tardies": 0,
+      "present": 0,
+      "enrolled": 20,
+      "tardiesDelta": 0,
+      "absencesDelta": 20,
+      "student": "58e2c3cfe2284f844752f4e5",
+      "_id": "58e2c3d0e2284f844752fb01"
+    },
+    "student": {
+      "_id": "58e2c3cfe2284f844752f4e5",
+      "lastName": "L448",
+      "firstName": "F448",
+      "studentId": "10000448",
+      "withdrawn": false,
+      "cfa": false,
+      "iep": false
+    }
+  },
+  {
+    "recordId": "58e2c3d0e2284f844752f7f3",
+    "date": "2017-04-03T21:50:43.116Z",
+    "school": {
+      "_id": "58e2c38be2284f844752f316",
+      "name": "School A"
+    },
+    "entry": {
+      "absences": 20,
+      "tardies": 0,
+      "present": 0,
+      "enrolled": 20,
+      "tardiesDelta": 0,
+      "absencesDelta": 20,
+      "student": "58e2c3cfe2284f844752f4e0",
+      "_id": "58e2c3d0e2284f844752fb06"
+    },
+    "student": {
+      "_id": "58e2c3cfe2284f844752f4e0",
+      "lastName": "L443",
+      "firstName": "F443",
+      "studentId": "10000443",
+      "withdrawn": false,
+      "cfa": false,
+      "iep": false
+    }
+  },
+  {
+    "recordId": "58e2c3d0e2284f844752f7f3",
+    "date": "2017-04-03T21:50:43.116Z",
+    "school": {
+      "_id": "58e2c38be2284f844752f316",
+      "name": "School A"
+    },
+    "entry": {
+      "absences": 20,
+      "tardies": 0,
+      "present": 0,
+      "enrolled": 20,
+      "tardiesDelta": 0,
+      "absencesDelta": 20,
+      "student": "58e2c3cfe2284f844752f4cd",
+      "_id": "58e2c3d0e2284f844752fb19"
+    },
+    "student": {
+      "_id": "58e2c3cfe2284f844752f4cd",
+      "lastName": "L424",
+      "firstName": "F424",
+      "studentId": "10000424",
+      "withdrawn": false,
+      "cfa": false,
+      "iep": false
+    }
+  },
+  {
+    "recordId": "58e2c3d0e2284f844752f7f3",
+    "date": "2017-04-03T21:50:43.116Z",
+    "school": {
+      "_id": "58e2c38be2284f844752f316",
+      "name": "School A"
+    },
+    "entry": {
+      "absences": 20,
+      "tardies": 0,
+      "present": 0,
+      "enrolled": 20,
+      "tardiesDelta": 0,
+      "absencesDelta": 20,
+      "student": "58e2c3cfe2284f844752f7e0",
+      "_id": "58e2c3d0e2284f844752f806"
+    },
+    "student": {
+      "_id": "58e2c3cfe2284f844752f7e0",
+      "lastName": "L1211",
+      "firstName": "F1211",
+      "studentId": "10001211",
+      "withdrawn": false,
+      "cfa": false,
+      "iep": false
+    }
+  },
+  {
+    "recordId": "58e2c3d0e2284f844752f7f3",
+    "date": "2017-04-03T21:50:43.116Z",
+    "school": {
+      "_id": "58e2c38be2284f844752f316",
+      "name": "School A"
+    },
+    "entry": {
+      "absences": 20,
+      "tardies": 0,
+      "present": 0,
+      "enrolled": 20,
+      "tardiesDelta": 0,
+      "absencesDelta": 20,
+      "student": "58e2c3cfe2284f844752f5a3",
+      "_id": "58e2c3d0e2284f844752fa43"
+    },
+    "student": {
+      "_id": "58e2c3cfe2284f844752f5a3",
+      "lastName": "L638",
+      "firstName": "F638",
+      "studentId": "10000638",
+      "withdrawn": false,
+      "cfa": false,
+      "iep": false
+    }
+  },
+  {
+    "recordId": "58e2c3d0e2284f844752f7f3",
+    "date": "2017-04-03T21:50:43.116Z",
+    "school": {
+      "_id": "58e2c38be2284f844752f316",
+      "name": "School A"
+    },
+    "entry": {
+      "absences": 20,
+      "tardies": 0,
+      "present": 0,
+      "enrolled": 20,
+      "tardiesDelta": 0,
+      "absencesDelta": 20,
+      "student": "58e2c3cfe2284f844752f6e6",
+      "_id": "58e2c3d0e2284f844752f900"
+    },
+    "student": {
+      "_id": "58e2c3cfe2284f844752f6e6",
+      "lastName": "L961",
+      "firstName": "F961",
+      "studentId": "10000961",
+      "withdrawn": false,
+      "cfa": false,
+      "iep": false
+    }
+  },
+  {
+    "recordId": "58e2c3d0e2284f844752f7f3",
+    "date": "2017-04-03T21:50:43.116Z",
+    "school": {
+      "_id": "58e2c38be2284f844752f316",
+      "name": "School A"
+    },
+    "entry": {
+      "absences": 20,
+      "tardies": 0,
+      "present": 0,
+      "enrolled": 20,
+      "tardiesDelta": 0,
+      "absencesDelta": 20,
+      "student": "58e2c3cfe2284f844752f488",
+      "_id": "58e2c3d0e2284f844752fb5e"
+    },
+    "student": {
+      "_id": "58e2c3cfe2284f844752f488",
+      "lastName": "L355",
+      "firstName": "F355",
+      "studentId": "10000355",
+      "withdrawn": false,
+      "cfa": false,
+      "iep": false
+    }
+  },
+  {
+    "recordId": "58e2c3d0e2284f844752f7f3",
+    "date": "2017-04-03T21:50:43.116Z",
+    "school": {
+      "_id": "58e2c38be2284f844752f316",
+      "name": "School A"
+    },
+    "entry": {
+      "absences": 20,
+      "tardies": 0,
+      "present": 0,
+      "enrolled": 20,
+      "tardiesDelta": 0,
+      "absencesDelta": 20,
+      "student": "58e2c3cfe2284f844752f473",
+      "_id": "58e2c3d0e2284f844752fb73"
+    },
+    "student": {
+      "_id": "58e2c3cfe2284f844752f473",
+      "lastName": "L334",
+      "firstName": "F334",
+      "studentId": "10000334",
+      "withdrawn": false,
+      "cfa": false,
+      "iep": false
+    }
+  },
+  {
+    "recordId": "58e2c3d0e2284f844752f7f3",
+    "date": "2017-04-03T21:50:43.116Z",
+    "school": {
+      "_id": "58e2c38be2284f844752f316",
+      "name": "School A"
+    },
+    "entry": {
+      "absences": 20,
+      "tardies": 0,
+      "present": 0,
+      "enrolled": 20,
+      "tardiesDelta": 0,
+      "absencesDelta": 20,
+      "student": "58e2c3cfe2284f844752f46d",
+      "_id": "58e2c3d0e2284f844752fb79"
+    },
+    "student": {
+      "_id": "58e2c3cfe2284f844752f46d",
+      "lastName": "L328",
+      "firstName": "F328",
+      "studentId": "10000328",
+      "withdrawn": false,
+      "cfa": false,
+      "iep": false
+    }
+  },
+  {
+    "recordId": "58e2c3d0e2284f844752f7f3",
+    "date": "2017-04-03T21:50:43.116Z",
+    "school": {
+      "_id": "58e2c38be2284f844752f316",
+      "name": "School A"
+    },
+    "entry": {
+      "absences": 20,
+      "tardies": 0,
+      "present": 0,
+      "enrolled": 20,
+      "tardiesDelta": 0,
+      "absencesDelta": 20,
+      "student": "58e2c3cfe2284f844752f7a2",
+      "_id": "58e2c3d0e2284f844752f844"
+    },
+    "student": {
+      "_id": "58e2c3cfe2284f844752f7a2",
+      "lastName": "L1149",
+      "firstName": "F1149",
+      "studentId": "10001149",
+      "withdrawn": false,
+      "cfa": false,
+      "iep": false
+    }
+  },
+  {
+    "recordId": "58e2c3d0e2284f844752f7f3",
+    "date": "2017-04-03T21:50:43.116Z",
+    "school": {
+      "_id": "58e2c38be2284f844752f316",
+      "name": "School A"
+    },
+    "entry": {
+      "absences": 20,
+      "tardies": 0,
+      "present": 0,
+      "enrolled": 20,
+      "tardiesDelta": 0,
+      "absencesDelta": 20,
+      "student": "58e2c3cfe2284f844752f4fc",
+      "_id": "58e2c3d0e2284f844752faea"
+    },
+    "student": {
+      "_id": "58e2c3cfe2284f844752f4fc",
+      "lastName": "L471",
+      "firstName": "F471",
+      "studentId": "10000471",
+      "withdrawn": false,
+      "cfa": false,
+      "iep": false
+    }
+  },
+  {
+    "recordId": "58e2c3d0e2284f844752f7f3",
+    "date": "2017-04-03T21:50:43.116Z",
+    "school": {
+      "_id": "58e2c38be2284f844752f316",
+      "name": "School A"
+    },
+    "entry": {
+      "absences": 20,
+      "tardies": 0,
+      "present": 0,
+      "enrolled": 20,
+      "tardiesDelta": 0,
+      "absencesDelta": 20,
+      "student": "58e2c3cfe2284f844752f448",
+      "_id": "58e2c3d0e2284f844752fb9e"
+    },
+    "student": {
+      "_id": "58e2c3cfe2284f844752f448",
+      "lastName": "L291",
+      "firstName": "F291",
+      "studentId": "10000291",
+      "withdrawn": false,
+      "cfa": false,
+      "iep": false
+    }
+  },
+  {
+    "recordId": "58e2c3d0e2284f844752f7f3",
+    "date": "2017-04-03T21:50:43.116Z",
+    "school": {
+      "_id": "58e2c38be2284f844752f316",
+      "name": "School A"
+    },
+    "entry": {
+      "absences": 20,
+      "tardies": 0,
+      "present": 0,
+      "enrolled": 20,
+      "tardiesDelta": 0,
+      "absencesDelta": 20,
+      "student": "58e2c3cfe2284f844752f63f",
+      "_id": "58e2c3d0e2284f844752f9a7"
+    },
+    "student": {
+      "_id": "58e2c3cfe2284f844752f63f",
+      "lastName": "L794",
+      "firstName": "F794",
+      "studentId": "10000794",
+      "withdrawn": false,
+      "cfa": false,
+      "iep": false
+    }
+  },
+  {
+    "recordId": "58e2c3d0e2284f844752f7f3",
+    "date": "2017-04-03T21:50:43.116Z",
+    "school": {
+      "_id": "58e2c38be2284f844752f316",
+      "name": "School A"
+    },
+    "entry": {
+      "absences": 20,
+      "tardies": 0,
+      "present": 0,
+      "enrolled": 20,
+      "tardiesDelta": 0,
+      "absencesDelta": 20,
+      "student": "58e2c3cfe2284f844752f56e",
+      "_id": "58e2c3d0e2284f844752fa78"
+    },
+    "student": {
+      "_id": "58e2c3cfe2284f844752f56e",
+      "lastName": "L585",
+      "firstName": "F585",
+      "studentId": "10000585",
+      "withdrawn": false,
+      "cfa": false,
+      "iep": false
+    }
+  },
+  {
+    "recordId": "58e2c3d0e2284f844752f7f3",
+    "date": "2017-04-03T21:50:43.116Z",
+    "school": {
+      "_id": "58e2c38be2284f844752f316",
+      "name": "School A"
+    },
+    "entry": {
+      "absences": 20,
+      "tardies": 0,
+      "present": 0,
+      "enrolled": 20,
+      "tardiesDelta": 0,
+      "absencesDelta": 20,
+      "student": "58e2c3cfe2284f844752f423",
+      "_id": "58e2c3d0e2284f844752fbc3"
+    },
+    "student": {
+      "_id": "58e2c3cfe2284f844752f423",
+      "lastName": "L254",
+      "firstName": "F254",
+      "studentId": "10000254",
+      "withdrawn": false,
+      "cfa": false,
+      "iep": false
+    }
+  },
+  {
+    "recordId": "58e2c3d0e2284f844752f7f3",
+    "date": "2017-04-03T21:50:43.116Z",
+    "school": {
+      "_id": "58e2c38be2284f844752f316",
+      "name": "School A"
+    },
+    "entry": {
+      "absences": 20,
+      "tardies": 0,
+      "present": 0,
+      "enrolled": 20,
+      "tardiesDelta": 0,
+      "absencesDelta": 20,
+      "student": "58e2c3cfe2284f844752f413",
+      "_id": "58e2c3d0e2284f844752fbd3"
+    },
+    "student": {
+      "_id": "58e2c3cfe2284f844752f413",
+      "lastName": "L238",
+      "firstName": "F238",
+      "studentId": "10000238",
+      "withdrawn": false,
+      "cfa": false,
+      "iep": false
+    }
+  },
+  {
+    "recordId": "58e2c3d0e2284f844752f7f3",
+    "date": "2017-04-03T21:50:43.116Z",
+    "school": {
+      "_id": "58e2c38be2284f844752f316",
+      "name": "School A"
+    },
+    "entry": {
+      "absences": 20,
+      "tardies": 0,
+      "present": 0,
+      "enrolled": 20,
+      "tardiesDelta": 0,
+      "absencesDelta": 20,
+      "student": "58e2c3cfe2284f844752f46e",
+      "_id": "58e2c3d0e2284f844752fb78"
+    },
+    "student": {
+      "_id": "58e2c3cfe2284f844752f46e",
+      "lastName": "L329",
+      "firstName": "F329",
+      "studentId": "10000329",
+      "withdrawn": false,
+      "cfa": false,
+      "iep": false
+    }
+  },
+  {
+    "recordId": "58e2c3d0e2284f844752f7f3",
+    "date": "2017-04-03T21:50:43.116Z",
+    "school": {
+      "_id": "58e2c38be2284f844752f316",
+      "name": "School A"
+    },
+    "entry": {
+      "absences": 20,
+      "tardies": 0,
+      "present": 0,
+      "enrolled": 20,
+      "tardiesDelta": 0,
+      "absencesDelta": 20,
+      "student": "58e2c3cfe2284f844752f5ad",
+      "_id": "58e2c3d0e2284f844752fa39"
+    },
+    "student": {
+      "_id": "58e2c3cfe2284f844752f5ad",
+      "lastName": "L648",
+      "firstName": "F648",
+      "studentId": "10000648",
+      "withdrawn": false,
+      "cfa": false,
+      "iep": false
+    }
+  },
+  {
+    "recordId": "58e2c3d0e2284f844752f7f3",
+    "date": "2017-04-03T21:50:43.116Z",
+    "school": {
+      "_id": "58e2c38be2284f844752f316",
+      "name": "School A"
+    },
+    "entry": {
+      "absences": 20,
+      "tardies": 0,
+      "present": 0,
+      "enrolled": 20,
+      "tardiesDelta": 0,
+      "absencesDelta": 20,
+      "student": "58e2c3cfe2284f844752f3f8",
+      "_id": "58e2c3d0e2284f844752fbee"
+    },
+    "student": {
+      "_id": "58e2c3cfe2284f844752f3f8",
+      "lastName": "L211",
+      "firstName": "F211",
+      "studentId": "10000211",
+      "withdrawn": false,
+      "cfa": false,
+      "iep": false
+    }
+  },
+  {
+    "recordId": "58e2c3d0e2284f844752f7f3",
+    "date": "2017-04-03T21:50:43.116Z",
+    "school": {
+      "_id": "58e2c38be2284f844752f316",
+      "name": "School A"
+    },
+    "entry": {
+      "absences": 20,
+      "tardies": 0,
+      "present": 0,
+      "enrolled": 20,
+      "tardiesDelta": 0,
+      "absencesDelta": 20,
+      "student": "58e2c3cfe2284f844752f63c",
+      "_id": "58e2c3d0e2284f844752f9aa"
+    },
+    "student": {
+      "_id": "58e2c3cfe2284f844752f63c",
+      "lastName": "L791",
+      "firstName": "F791",
+      "studentId": "10000791",
+      "withdrawn": false,
+      "cfa": false,
+      "iep": false
+    }
+  },
+  {
+    "recordId": "58e2c3d0e2284f844752f7f3",
+    "date": "2017-04-03T21:50:43.116Z",
+    "school": {
+      "_id": "58e2c38be2284f844752f316",
+      "name": "School A"
+    },
+    "entry": {
+      "absences": 20,
+      "tardies": 0,
+      "present": 0,
+      "enrolled": 20,
+      "tardiesDelta": 0,
+      "absencesDelta": 20,
+      "student": "58e2c3cfe2284f844752f53e",
+      "_id": "58e2c3d0e2284f844752faa8"
+    },
+    "student": {
+      "_id": "58e2c3cfe2284f844752f53e",
+      "lastName": "L537",
+      "firstName": "F537",
+      "studentId": "10000537",
+      "withdrawn": false,
+      "cfa": false,
+      "iep": false
+    }
+  },
+  {
+    "recordId": "58e2c3d0e2284f844752f7f3",
+    "date": "2017-04-03T21:50:43.116Z",
+    "school": {
+      "_id": "58e2c38be2284f844752f316",
+      "name": "School A"
+    },
+    "entry": {
+      "absences": 20,
+      "tardies": 0,
+      "present": 0,
+      "enrolled": 20,
+      "tardiesDelta": 0,
+      "absencesDelta": 20,
+      "student": "58e2c3cfe2284f844752f3e8",
+      "_id": "58e2c3d0e2284f844752fbfe"
+    },
+    "student": {
+      "_id": "58e2c3cfe2284f844752f3e8",
+      "lastName": "L195",
+      "firstName": "F195",
+      "studentId": "10000195",
+      "withdrawn": false,
+      "cfa": false,
+      "iep": false
+    }
+  },
+  {
+    "recordId": "58e2c3d0e2284f844752f7f3",
+    "date": "2017-04-03T21:50:43.116Z",
+    "school": {
+      "_id": "58e2c38be2284f844752f316",
+      "name": "School A"
+    },
+    "entry": {
+      "absences": 20,
+      "tardies": 0,
+      "present": 0,
+      "enrolled": 20,
+      "tardiesDelta": 0,
+      "absencesDelta": 20,
+      "student": "58e2c3cfe2284f844752f3e5",
+      "_id": "58e2c3d0e2284f844752fc01"
+    },
+    "student": {
+      "_id": "58e2c3cfe2284f844752f3e5",
+      "lastName": "L192",
+      "firstName": "F192",
+      "studentId": "10000192",
+      "withdrawn": false,
+      "cfa": false,
+      "iep": false
+    }
+  },
+  {
+    "recordId": "58e2c3d0e2284f844752f7f3",
+    "date": "2017-04-03T21:50:43.116Z",
+    "school": {
+      "_id": "58e2c38be2284f844752f316",
+      "name": "School A"
+    },
+    "entry": {
+      "absences": 20,
+      "tardies": 0,
+      "present": 0,
+      "enrolled": 20,
+      "tardiesDelta": 0,
+      "absencesDelta": 20,
+      "student": "58e2c3cfe2284f844752f3e3",
+      "_id": "58e2c3d0e2284f844752fc03"
+    },
+    "student": {
+      "_id": "58e2c3cfe2284f844752f3e3",
+      "lastName": "L190",
+      "firstName": "F190",
+      "studentId": "10000190",
+      "withdrawn": false,
+      "cfa": false,
+      "iep": false
+    }
+  },
+  {
+    "recordId": "58e2c3d0e2284f844752f7f3",
+    "date": "2017-04-03T21:50:43.116Z",
+    "school": {
+      "_id": "58e2c38be2284f844752f316",
+      "name": "School A"
+    },
+    "entry": {
+      "absences": 20,
+      "tardies": 0,
+      "present": 0,
+      "enrolled": 20,
+      "tardiesDelta": 0,
+      "absencesDelta": 20,
+      "student": "58e2c3cfe2284f844752f3da",
+      "_id": "58e2c3d0e2284f844752fc0c"
+    },
+    "student": {
+      "_id": "58e2c3cfe2284f844752f3da",
+      "lastName": "L181",
+      "firstName": "F181",
+      "studentId": "10000181",
+      "withdrawn": false,
+      "cfa": false,
+      "iep": false
+    }
+  },
+  {
+    "recordId": "58e2c3d0e2284f844752f7f3",
+    "date": "2017-04-03T21:50:43.116Z",
+    "school": {
+      "_id": "58e2c38be2284f844752f316",
+      "name": "School A"
+    },
+    "entry": {
+      "absences": 20,
+      "tardies": 0,
+      "present": 0,
+      "enrolled": 20,
+      "tardiesDelta": 0,
+      "absencesDelta": 20,
+      "student": "58e2c3cfe2284f844752f3d8",
+      "_id": "58e2c3d0e2284f844752fc0e"
+    },
+    "student": {
+      "_id": "58e2c3cfe2284f844752f3d8",
+      "lastName": "L179",
+      "firstName": "F179",
+      "studentId": "10000179",
+      "withdrawn": false,
+      "cfa": false,
+      "iep": false
+    }
+  },
+  {
+    "recordId": "58e2c3d0e2284f844752f7f3",
+    "date": "2017-04-03T21:50:43.116Z",
+    "school": {
+      "_id": "58e2c38be2284f844752f316",
+      "name": "School A"
+    },
+    "entry": {
+      "absences": 20,
+      "tardies": 0,
+      "present": 0,
+      "enrolled": 20,
+      "tardiesDelta": 0,
+      "absencesDelta": 20,
+      "student": "58e2c3cfe2284f844752f499",
+      "_id": "58e2c3d0e2284f844752fb4d"
+    },
+    "student": {
+      "_id": "58e2c3cfe2284f844752f499",
+      "lastName": "L372",
+      "firstName": "F372",
+      "studentId": "10000372",
+      "withdrawn": false,
+      "cfa": false,
+      "iep": false
+    }
+  },
+  {
+    "recordId": "58e2c3d0e2284f844752f7f3",
+    "date": "2017-04-03T21:50:43.116Z",
+    "school": {
+      "_id": "58e2c38be2284f844752f316",
+      "name": "School A"
+    },
+    "entry": {
+      "absences": 20,
+      "tardies": 0,
+      "present": 0,
+      "enrolled": 20,
+      "tardiesDelta": 0,
+      "absencesDelta": 20,
+      "student": "58e2c3cfe2284f844752f3d2",
+      "_id": "58e2c3d0e2284f844752fc14"
+    },
+    "student": {
+      "_id": "58e2c3cfe2284f844752f3d2",
+      "lastName": "L173",
+      "firstName": "F173",
+      "studentId": "10000173",
+      "withdrawn": false,
+      "cfa": false,
+      "iep": false
+    }
+  },
+  {
+    "recordId": "58e2c3d0e2284f844752f7f3",
+    "date": "2017-04-03T21:50:43.116Z",
+    "school": {
+      "_id": "58e2c38be2284f844752f316",
+      "name": "School A"
+    },
+    "entry": {
+      "absences": 20,
+      "tardies": 0,
+      "present": 0,
+      "enrolled": 20,
+      "tardiesDelta": 0,
+      "absencesDelta": 20,
+      "student": "58e2c3cfe2284f844752f762",
+      "_id": "58e2c3d0e2284f844752f884"
+    },
+    "student": {
+      "_id": "58e2c3cfe2284f844752f762",
+      "lastName": "L1085",
+      "firstName": "F1085",
+      "studentId": "10001085",
+      "withdrawn": false,
+      "cfa": false,
+      "iep": false
+    }
+  },
+  {
+    "recordId": "58e2c3d0e2284f844752f7f3",
+    "date": "2017-04-03T21:50:43.116Z",
+    "school": {
+      "_id": "58e2c38be2284f844752f316",
+      "name": "School A"
+    },
+    "entry": {
+      "absences": 20,
+      "tardies": 0,
+      "present": 0,
+      "enrolled": 20,
+      "tardiesDelta": 0,
+      "absencesDelta": 20,
+      "student": "58e2c3cfe2284f844752f641",
+      "_id": "58e2c3d0e2284f844752f9a5"
+    },
+    "student": {
+      "_id": "58e2c3cfe2284f844752f641",
+      "lastName": "L796",
+      "firstName": "F796",
+      "studentId": "10000796",
+      "withdrawn": false,
+      "cfa": false,
+      "iep": false
+    }
+  },
+  {
+    "recordId": "58e2c3d0e2284f844752f7f3",
+    "date": "2017-04-03T21:50:43.116Z",
+    "school": {
+      "_id": "58e2c38be2284f844752f316",
+      "name": "School A"
+    },
+    "entry": {
+      "absences": 20,
+      "tardies": 0,
+      "present": 0,
+      "enrolled": 20,
+      "tardiesDelta": 0,
+      "absencesDelta": 20,
+      "student": "58e2c3cfe2284f844752f4ce",
+      "_id": "58e2c3d0e2284f844752fb18"
+    },
+    "student": {
+      "_id": "58e2c3cfe2284f844752f4ce",
+      "lastName": "L425",
+      "firstName": "F425",
+      "studentId": "10000425",
+      "withdrawn": false,
+      "cfa": false,
+      "iep": false
+    }
+  },
+  {
+    "recordId": "58e2c3d0e2284f844752f7f3",
+    "date": "2017-04-03T21:50:43.116Z",
+    "school": {
+      "_id": "58e2c38be2284f844752f316",
+      "name": "School A"
+    },
+    "entry": {
+      "absences": 20,
+      "tardies": 0,
+      "present": 0,
+      "enrolled": 20,
+      "tardiesDelta": 0,
+      "absencesDelta": 20,
+      "student": "58e2c3cfe2284f844752f6da",
+      "_id": "58e2c3d0e2284f844752f90c"
+    },
+    "student": {
+      "_id": "58e2c3cfe2284f844752f6da",
+      "lastName": "L949",
+      "firstName": "F949",
+      "studentId": "10000949",
+      "withdrawn": false,
+      "cfa": false,
+      "iep": false
+    }
+  },
+  {
+    "recordId": "58e2c3d0e2284f844752f7f3",
+    "date": "2017-04-03T21:50:43.116Z",
+    "school": {
+      "_id": "58e2c38be2284f844752f316",
+      "name": "School A"
+    },
+    "entry": {
+      "absences": 20,
+      "tardies": 0,
+      "present": 0,
+      "enrolled": 20,
+      "tardiesDelta": 0,
+      "absencesDelta": 20,
+      "student": "58e2c3cfe2284f844752f39f",
+      "_id": "58e2c3d0e2284f844752fc47"
+    },
+    "student": {
+      "_id": "58e2c3cfe2284f844752f39f",
+      "lastName": "L122",
+      "firstName": "F122",
+      "studentId": "10000122",
+      "withdrawn": false,
+      "cfa": false,
+      "iep": false
+    }
+  },
+  {
+    "recordId": "58e2c3d0e2284f844752f7f3",
+    "date": "2017-04-03T21:50:43.116Z",
+    "school": {
+      "_id": "58e2c38be2284f844752f316",
+      "name": "School A"
+    },
+    "entry": {
+      "absences": 20,
+      "tardies": 0,
+      "present": 0,
+      "enrolled": 20,
+      "tardiesDelta": 0,
+      "absencesDelta": 20,
+      "student": "58e2c3cfe2284f844752f388",
+      "_id": "58e2c3d0e2284f844752fc5e"
+    },
+    "student": {
+      "_id": "58e2c3cfe2284f844752f388",
+      "lastName": "L99",
+      "firstName": "F99",
+      "studentId": "10000099",
+      "withdrawn": false,
+      "cfa": false,
+      "iep": false
+    }
+  },
+  {
+    "recordId": "58e2c3d0e2284f844752f7f3",
+    "date": "2017-04-03T21:50:43.116Z",
+    "school": {
+      "_id": "58e2c38be2284f844752f316",
+      "name": "School A"
+    },
+    "entry": {
+      "absences": 20,
+      "tardies": 0,
+      "present": 0,
+      "enrolled": 20,
+      "tardiesDelta": 0,
+      "absencesDelta": 20,
+      "student": "58e2c3cfe2284f844752f4fd",
+      "_id": "58e2c3d0e2284f844752fae9"
+    },
+    "student": {
+      "_id": "58e2c3cfe2284f844752f4fd",
+      "lastName": "L472",
+      "firstName": "F472",
+      "studentId": "10000472",
+      "withdrawn": false,
+      "cfa": false,
+      "iep": false
+    }
+  },
+  {
+    "recordId": "58e2c3d0e2284f844752f7f3",
+    "date": "2017-04-03T21:50:43.116Z",
+    "school": {
+      "_id": "58e2c38be2284f844752f316",
+      "name": "School A"
+    },
+    "entry": {
+      "absences": 20,
+      "tardies": 0,
+      "present": 0,
+      "enrolled": 20,
+      "tardiesDelta": 0,
+      "absencesDelta": 20,
+      "student": "58e2c3cfe2284f844752f773",
+      "_id": "58e2c3d0e2284f844752f873"
+    },
+    "student": {
+      "_id": "58e2c3cfe2284f844752f773",
+      "lastName": "L1102",
+      "firstName": "F1102",
+      "studentId": "10001102",
+      "withdrawn": false,
+      "cfa": false,
+      "iep": false
+    }
+  },
+  {
+    "recordId": "58e2c3d0e2284f844752f7f3",
+    "date": "2017-04-03T21:50:43.116Z",
+    "school": {
+      "_id": "58e2c38be2284f844752f316",
+      "name": "School A"
+    },
+    "entry": {
+      "absences": 20,
+      "tardies": 0,
+      "present": 0,
+      "enrolled": 20,
+      "tardiesDelta": 0,
+      "absencesDelta": 20,
+      "student": "58e2c3cfe2284f844752f36c",
+      "_id": "58e2c3d0e2284f844752fc7a"
+    },
+    "student": {
+      "_id": "58e2c3cfe2284f844752f36c",
+      "lastName": "L71",
+      "firstName": "F71",
+      "studentId": "10000071",
+      "withdrawn": false,
+      "cfa": false,
+      "iep": false
+    }
+  },
+  {
+    "recordId": "58e2c3d0e2284f844752f7f3",
+    "date": "2017-04-03T21:50:43.116Z",
+    "school": {
+      "_id": "58e2c38be2284f844752f316",
+      "name": "School A"
+    },
+    "entry": {
+      "absences": 20,
+      "tardies": 0,
+      "present": 0,
+      "enrolled": 20,
+      "tardiesDelta": 0,
+      "absencesDelta": 20,
+      "student": "58e2c3cfe2284f844752f45c",
+      "_id": "58e2c3d0e2284f844752fb8a"
+    },
+    "student": {
+      "_id": "58e2c3cfe2284f844752f45c",
+      "lastName": "L311",
+      "firstName": "F311",
+      "studentId": "10000311",
+      "withdrawn": false,
+      "cfa": false,
+      "iep": false
+    }
+  },
+  {
+    "recordId": "58e2c3d0e2284f844752f7f3",
+    "date": "2017-04-03T21:50:43.116Z",
+    "school": {
+      "_id": "58e2c38be2284f844752f316",
+      "name": "School A"
+    },
+    "entry": {
+      "absences": 20,
+      "tardies": 0,
+      "present": 0,
+      "enrolled": 20,
+      "tardiesDelta": 0,
+      "absencesDelta": 20,
+      "student": "58e2c3cfe2284f844752f349",
+      "_id": "58e2c3d0e2284f844752fc9d"
+    },
+    "student": {
+      "_id": "58e2c3cfe2284f844752f349",
+      "lastName": "L36",
+      "firstName": "F36",
+      "studentId": "10000036",
+      "withdrawn": false,
+      "cfa": false,
+      "iep": false
+    }
+  },
+  {
+    "recordId": "58e2c3d0e2284f844752f7f3",
+    "date": "2017-04-03T21:50:43.116Z",
+    "school": {
+      "_id": "58e2c38be2284f844752f316",
+      "name": "School A"
+    },
+    "entry": {
+      "absences": 20,
+      "tardies": 0,
+      "present": 0,
+      "enrolled": 20,
+      "tardiesDelta": 0,
+      "absencesDelta": 20,
+      "student": "58e2c3cfe2284f844752f399",
+      "_id": "58e2c3d0e2284f844752fc4d"
+    },
+    "student": {
+      "_id": "58e2c3cfe2284f844752f399",
+      "lastName": "L116",
+      "firstName": "F116",
+      "studentId": "10000116",
+      "withdrawn": false,
+      "cfa": false,
+      "iep": false
+    }
+  },
+  {
+    "recordId": "58e2c3d0e2284f844752f7f3",
+    "date": "2017-04-03T21:50:43.116Z",
+    "school": {
+      "_id": "58e2c38be2284f844752f316",
+      "name": "School A"
+    },
+    "entry": {
+      "absences": 20,
+      "tardies": 0,
+      "present": 0,
+      "enrolled": 20,
+      "tardiesDelta": 0,
+      "absencesDelta": 20,
+      "student": "58e2c3cfe2284f844752f33e",
+      "_id": "58e2c3d0e2284f844752fca8"
+    },
+    "student": {
+      "_id": "58e2c3cfe2284f844752f33e",
+      "lastName": "L25",
+      "firstName": "F25",
+      "studentId": "10000025",
+      "withdrawn": false,
+      "cfa": false,
+      "iep": false
+    }
+  },
+  {
+    "recordId": "58e2c3d0e2284f844752f7f3",
+    "date": "2017-04-03T21:50:43.116Z",
+    "school": {
+      "_id": "58e2c38be2284f844752f316",
+      "name": "School A"
+    },
+    "entry": {
+      "absences": 20,
+      "tardies": 0,
+      "present": 0,
+      "enrolled": 20,
+      "tardiesDelta": 0,
+      "absencesDelta": 20,
+      "student": "58e2c3cfe2284f844752f339",
+      "_id": "58e2c3d0e2284f844752fcad"
+    },
+    "student": {
+      "_id": "58e2c3cfe2284f844752f339",
+      "lastName": "L20",
+      "firstName": "F20",
+      "studentId": "10000020",
+      "withdrawn": false,
+      "cfa": false,
+      "iep": false
+    }
+  },
+  {
+    "recordId": "58e2c3d0e2284f844752f7f3",
+    "date": "2017-04-03T21:50:43.116Z",
+    "school": {
+      "_id": "58e2c38be2284f844752f316",
+      "name": "School A"
+    },
+    "entry": {
+      "absences": 20,
+      "tardies": 0,
+      "present": 0,
+      "enrolled": 20,
+      "tardiesDelta": 0,
+      "absencesDelta": 20,
+      "student": "58e2c3cfe2284f844752f34a",
+      "_id": "58e2c3d0e2284f844752fc9c"
+    },
+    "student": {
+      "_id": "58e2c3cfe2284f844752f34a",
+      "lastName": "L37",
+      "firstName": "F37",
+      "studentId": "10000037",
+      "withdrawn": false,
+      "cfa": false,
+      "iep": false
+    }
+  },
+  {
+    "recordId": "58e2c3d0e2284f844752f7f3",
+    "date": "2017-04-03T21:50:43.116Z",
+    "school": {
+      "_id": "58e2c38be2284f844752f316",
+      "name": "School A"
+    },
+    "entry": {
+      "absences": 20,
+      "tardies": 0,
+      "present": 0,
+      "enrolled": 20,
+      "tardiesDelta": 0,
+      "absencesDelta": 20,
+      "student": "58e2c3cfe2284f844752f6b8",
+      "_id": "58e2c3d0e2284f844752f92e"
+    },
+    "student": {
+      "_id": "58e2c3cfe2284f844752f6b8",
+      "lastName": "L915",
+      "firstName": "F915",
+      "studentId": "10000915",
+      "withdrawn": false,
+      "cfa": false,
+      "iep": false
+    }
+  },
+  {
+    "recordId": "58e2c3d0e2284f844752f7f3",
+    "date": "2017-04-03T21:50:43.116Z",
+    "school": {
+      "_id": "58e2c38be2284f844752f316",
+      "name": "School A"
+    },
+    "entry": {
+      "absences": 20,
+      "tardies": 0,
+      "present": 0,
+      "enrolled": 20,
+      "tardiesDelta": 0,
+      "absencesDelta": 20,
+      "student": "58e2c3cfe2284f844752f533",
+      "_id": "58e2c3d0e2284f844752fab3"
+    },
+    "student": {
+      "_id": "58e2c3cfe2284f844752f533",
+      "lastName": "L526",
+      "firstName": "F526",
+      "studentId": "10000526",
+      "withdrawn": false,
+      "cfa": false,
+      "iep": false
+    }
+  }
+]

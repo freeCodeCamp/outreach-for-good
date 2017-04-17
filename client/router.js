@@ -32,10 +32,8 @@ class RTRouter extends React.Component {
         <Route path="/admin" component={AdminPage} onEnter={this.authorize} />
         <Route path="/dashboard" component={DashboardPage} onEnter={this.authorize} />
         <Route path="/records" component={RecordsPage} onEnter={this.authorize} />
-        <Route path="/school" component={SchoolReportsPage} onEnter={this.authorize} >
-          <Route path="/school/reports/at-risk" component={SchoolReportsPage}/>
-          <Route path="/school/settings" component={SchoolSettingsPage}/>
-        </Route>
+        <Route path="/school/reports" component={SchoolReportsPage} onEnter={this.authorize} />
+        <Route path="/school/settings" component={SchoolSettingsPage} onEnter={this.authorize} />
         <Route path="/student/:studentId(/:tab)" component={StudentPage} onEnter={this.authorize} />
         <Route path="/users" component={UsersPage} onEnter={this.authorize} />
         <Route path="/visualization" component={VisualizationPage} onEnter={this.authorize} />

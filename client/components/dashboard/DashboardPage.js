@@ -4,9 +4,11 @@ import {connect} from 'react-redux';
 import {Tabs, Tab} from 'material-ui/Tabs';
 import Dimensions from 'react-dimensions';
 
-import * as usrAct from '../../actions/userActions';
 import * as absAct from '../../actions/absenceRecordActions';
+import * as repAct from '../../actions/reportsActions';
+import * as usrAct from '../../actions/userActions';
 import TableModel from '../../models/TableModel';
+import Report from '../../models/ReportModel';
 
 import CourtTab from './CourtTab';
 import HomeTab from './HomeTab';
@@ -15,7 +17,18 @@ import PhoneTab from './PhoneTab';
 import SstTab from './SstTab';
 import StudentTab from './StudentTab';
 
+import Badge from 'material-ui/Badge';
+
 const table = new TableModel();
+const badgeStyle = {
+  top          : 15,
+  right        : -10,
+  height       : 20,
+  borderRadius : 6,
+  width        : 'auto',
+  paddingRight : 4,
+  paddingLeft  : 4,
+};
 
 class DashboardPage extends React.Component {
   constructor(props, context) {
@@ -90,6 +103,7 @@ class DashboardPage extends React.Component {
       break;
     case 'student':
       this.props.absAct.fetchRecordsList();
+      this.props.repAct.getOutreachCounts('withdrawn=false');
       nextTable = table.setSelectedTab(table, 'student');
       break;
     }
@@ -99,7 +113,7 @@ class DashboardPage extends React.Component {
 
   clickHandler(action, data, event) {
     let nextTable;
-    let nextForm;
+    //let nextForm;
     switch (action) {
 
     /**
@@ -149,7 +163,18 @@ class DashboardPage extends React.Component {
             clickHandler = {this.clickHandler}
           />
         </Tab>
-        <Tab label={<i className="fa fa-phone fa-2x" />}>
+        <Tab label={
+          this.props.reports.get('outreachCounts').get('PhoneCall')
+          && <Badge
+            badgeContent={this.props.reports
+              .get('outreachCounts').get('PhoneCall') || ''}
+            badgeStyle={badgeStyle}
+            secondary
+          >
+            <i className="fa fa-phone fa-2x" />
+          </Badge>
+          || <i className="fa fa-phone fa-2x" />
+          }>
           <PhoneTab
             view = {{
               width  : this.props.containerWidth - 20,
@@ -160,7 +185,18 @@ class DashboardPage extends React.Component {
             clickHandler = {this.clickHandler}
           />
         </Tab>
-        <Tab label={<i className="fa fa-envelope fa-2x" />}>
+        <Tab label={
+          this.props.reports.get('outreachCounts').get('LetterSent')
+          && <Badge
+            badgeContent={this.props.reports
+              .get('outreachCounts').get('LetterSent') || ''}
+            badgeStyle={badgeStyle}
+            secondary
+          >
+            <i className="fa fa-envelope fa-2x" />
+          </Badge>
+          || <i className="fa fa-envelope fa-2x" />
+          }>
           <LetterTab
             view = {{
               width  : this.props.containerWidth - 20,
@@ -171,7 +207,18 @@ class DashboardPage extends React.Component {
             clickHandler = {this.clickHandler}
           />
         </Tab>
-        <Tab label={<i className="fa fa-home fa-2x" />}>
+        <Tab label={
+          this.props.reports.get('outreachCounts').get('HomeVisit')
+          && <Badge
+            badgeContent={this.props.reports
+              .get('outreachCounts').get('HomeVisit') || ''}
+            badgeStyle={badgeStyle}
+            secondary
+          >
+            <i className="fa fa-home fa-2x" />
+          </Badge>
+          || <i className="fa fa-home fa-2x" />
+          }>
           <HomeTab
             view = {{
               width  : this.props.containerWidth - 20,
@@ -182,7 +229,18 @@ class DashboardPage extends React.Component {
             clickHandler = {this.clickHandler}
           />
         </Tab>
-        <Tab label={<i className="fa fa-support fa-2x" />}>
+        <Tab label={
+          this.props.reports.get('outreachCounts').get('SSTReferral')
+          && <Badge
+            badgeContent={this.props.reports
+              .get('outreachCounts').get('SSTReferral') || ''}
+            badgeStyle={badgeStyle}
+            secondary
+          >
+            <i className="fa fa-support fa-2x" />
+          </Badge>
+          || <i className="fa fa-support fa-2x" />
+          }>
           <SstTab
             view = {{
               width  : this.props.containerWidth - 20,
@@ -193,7 +251,18 @@ class DashboardPage extends React.Component {
             clickHandler = {this.clickHandler}
           />
         </Tab>
-        <Tab label={<i className="fa fa-gavel fa-2x" />}>
+        <Tab label={
+          this.props.reports.get('outreachCounts').get('CourtReferral')
+          && <Badge
+            badgeContent={this.props.reports
+              .get('outreachCounts').get('CourtReferral') || ''}
+            badgeStyle={badgeStyle}
+            secondary
+          >
+            <i className="fa fa-gavel fa-2x" />
+          </Badge>
+          || <i className="fa fa-gavel fa-2x" />
+          }>
           <CourtTab
             view = {{
               width  : this.props.containerWidth - 20,
@@ -211,21 +280,25 @@ class DashboardPage extends React.Component {
 
 DashboardPage.propTypes = {
   absAct          : PropTypes.object.isRequired,
+  repAct          : PropTypes.object.isRequired,
   usrAct          : PropTypes.object.isRequired,
   absenceRecords  : PropTypes.object.isRequired,
   containerWidth  : PropTypes.number.isRequired,
-  containerHeight : PropTypes.number.isRequired
+  containerHeight : PropTypes.number.isRequired,
+  reports         : PropTypes.instanceOf(Report)
 };
 
 function mapStateToProps(state) {
   return {
-    absenceRecords : state.absenceRecords
+    absenceRecords : state.absenceRecords,
+    reports        : state.reports,
   };
 }
 
 function mapDispatchToProps(dispatch) {
   return {
     absAct : bindActionCreators(absAct, dispatch),
+    repAct : bindActionCreators(repAct, dispatch),
     usrAct : bindActionCreators(usrAct, dispatch)
   };
 }

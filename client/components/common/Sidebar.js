@@ -32,7 +32,7 @@ class Sidebar extends Component {
           <span className="fa-stack fa-lg pull-left"><i className="fa fa-stack-1x fa-file" /></span>
           Records
         </Link></li>}
-        <li><Link to="/school/reports/at-risk" activeClassName="active">
+        <li><Link to="/school/reports" activeClassName="active">
           <span className="fa-stack fa-lg pull-left"><i className="fa fa-stack-1x fa-graduation-cap" /></span>
           School Reports
         </Link></li>
