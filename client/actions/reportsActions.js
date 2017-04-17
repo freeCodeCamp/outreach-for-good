@@ -2,9 +2,9 @@ import * as types from './actionTypes';
 import AbsenceRecordsApi from '../api/AbsenceRecordsApi';
 import StudentApi from '../api/StudentApi';
 
-// export function initializeReports() {
-//   return {type: types.INITIALIZE_REPORTS};
-// }
+export function resetReports() {
+  return {type: types.RESET_REPORTS};
+}
 
 export function getCurrentAtRisk() {
   return dispatch => AbsenceRecordsApi.fetchRecordsListAtRisk()
