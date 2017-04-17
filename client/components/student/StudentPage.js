@@ -4,8 +4,6 @@ import {connect} from 'react-redux';
 import {Tabs, Tab} from 'material-ui/Tabs';
 import Checkbox from 'material-ui/Checkbox';
 import Paper from 'material-ui/Paper';
-import StudentDialog from './partials/StudentDialog';
-import Notes from './partials/Notes';
 
 //import the partials used in this component
 import StudentAbsenceRecordTable from './partials/StudentAbsenceRecordTable';
