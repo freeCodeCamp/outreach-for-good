@@ -48,6 +48,7 @@ exports.cfaComparison = function(req, res) {
     });
   }
   AbsenceRecord.aggregate(pipeline, function(err, results) {
+    if(err) throw new Error('Error in absence record visualization');
     AbsenceRecord.populate(results, {
       path   : 'student',
       model  : 'Student',

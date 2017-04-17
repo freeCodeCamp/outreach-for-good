@@ -72,11 +72,13 @@ AbsenceRecord.remove().exec().then(function() {
     studentId: 'sid001',
     lastName: 'Graham',
     firstName: 'Brandon',
+    cfa: true,
     school: schoolA._id
   }, {
     studentId: 'sid002',
     lastName: 'Simpson',
     firstName: 'Dan',
+    cfa: true,
     school: schoolA._id
   }, {
     studentId: 'sid003',
