@@ -5,22 +5,37 @@ const OutreachesTab = ({outreaches, ...props}) => {
   const page = {
     title   : 'Outreaches',
     columns : [{
-      title    : 'School',
-      id       : 'school',
-      flexGrow : 1
-    }, {
       title    : 'Last Name',
-      id       : 'lastName',
-      flexGrow : 1
+      id       : 'student.lastName',
+      width    : 125,
+      flexGrow : 1,
+      fixed    : true
     }, {
       title    : 'First Name',
-      id       : 'firstName',
+      id       : 'student.firstName',
+      width    : 125,
       flexGrow : 1
     }, {
-      title : 'Actions',
-      id    : 'action',
-      width : 100
-    }]
+      title    : 'School',
+      id       : 'school.name',
+      width    : 125,
+      flexGrow : 1
+    }, {
+      title    : 'Student ID',
+      id       : 'student.studentId',
+      width    : 90,
+      flexGrow : 1
+    }, {
+      title    : 'IEP',
+      id       : 'student.iep',
+      width    : 50,
+      flexGrow : 1
+    }, {
+      title    : 'CFA',
+      id       : 'student.cfa',
+      width    : 50,
+      flexGrow : 1
+    }],
   };
 
   return (

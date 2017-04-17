@@ -1,7 +1,6 @@
 import React, {Component, PropTypes} from 'react';
 import { bindActionCreators } from 'redux';
-import {connect} from 'react-redux';
-import { List } from 'immutable';
+import { connect } from 'react-redux';
 import {Tabs, Tab} from 'material-ui/Tabs';
 import Dimensions from 'react-dimensions';
 
@@ -29,44 +28,61 @@ class SchoolReportsPage extends Component {
   }
 
   componentDidMount() {
-    console.log('did mount')
-    let nextTable = this.retrieveData('atRisk');
-    this.state = { table: nextTable, loading: true };
+    //console.log('did mount');
+    this.retrieveData('atRisk');
   }
 
   componentWillReceiveProps(nextProps) {
-    console.log('will receive props ', nextProps)
+    //console.log('will receive props ', nextProps);
     let nextTable = this.state.table;
+    let dataLoaded = false;
     switch (nextTable.get('selectedTab')) {
     case 'atRisk':
-      nextTable = table.updateSortCol(nextTable, '');
-      nextTable = table.buildIndexMap(nextTable, nextProps.reports.atRisk);
+      if(nextProps.reports.atRisk.size) {
+        //console.log('Got It!!! ', nextProps.reports.atRisk.size);
+        dataLoaded = true;
+        nextTable = table.updateSortCol(nextTable, '');
+        nextTable = table.buildIndexMap(nextTable, nextProps.reports.atRisk);
+      }
       break;
     case 'chronicallyAbsent':
-      nextTable = table.updateSortCol(nextTable, '');
-      nextTable = table.buildIndexMap(nextTable, nextProps.reports.chronic);
+      if(nextProps.reports.chronicAbsent.size) {
+        //console.log('Got It!!! ', nextProps.reports.chronicAbsent.size);
+        dataLoaded = true;
+        nextTable = table.updateSortCol(nextTable, '');
+        nextTable = table.buildIndexMap(nextTable, nextProps.reports.chronicAbsent);
+      }
       break;
     case 'outreaches':
-      nextTable = table.updateSortCol(nextTable, '');
-      nextTable = table.buildIndexMap(nextTable, nextProps.reports.outreachSummary);
+      if(nextProps.reports.outreachSummary.size) {
+        //console.log('Got It!!! ', nextProps.reports.outreachSummary.size);
+        dataLoaded = true;
+        nextTable = table.updateSortCol(nextTable, '');
+        nextTable = table.buildIndexMap(nextTable, nextProps.reports.outreachSummary);
+      }
       break;
     case 'interventions':
-      nextTable = table.updateSortCol(nextTable, '');
-      nextTable = table.buildIndexMap(nextTable, nextProps.reports.interventionSummary);
+      if(nextProps.reports.interventionSummary.size) {
+        //console.log('Got It!!!', nextProps.reports.interventionSummary.size);
+        dataLoaded = true;
+        nextTable = table.updateSortCol(nextTable, '');
+        nextTable = table.buildIndexMap(nextTable, nextProps.reports.interventionSummary);
+      }
       break;
     }
-    nextTable = this.retrieveData(nextTable.get('selectedTab'));
+    if(this.state.loading && dataLoaded) {
+      //console.log('and set state');
+      this.setState({table: nextTable, loading: false});
+    }
     // nextTable = table.enableFiltering(nextTable);
-    this.setState({
-      table   : nextTable,
-      loading : false
-    });
   }
 
   componentDidUpdate(prevProps, prevState) {
-    console.log('did update: ', prevState);
-    let nextTable = this.retrieveData(this.state.table.get('selectedTab'));
-    this.state = { table: nextTable, loading: true };
+    //console.log('did update: ', prevState);
+    let selectedTab = this.state.table.get('selectedTab');
+    if(prevState.table.get('selectedTab') != selectedTab) {
+      this.retrieveData(selectedTab);
+    }
   }
 
   /**
@@ -75,25 +91,25 @@ class SchoolReportsPage extends Component {
    *   - Set default state for 'action' variables
    */
   retrieveData(currentTab) {
-    console.log('gettin the data: ', currentTab);
-    let nextTable = this.state.table || table;
-    //this.props.repAct.initializeReports();
+    //console.log('gettin the data: ', currentTab);
+//    let nextTable = this.state.table || table;
+    this.props.repAct.resetReports();
     switch (currentTab) {
     case 'atRisk':
-      //this.props.repAct.getCurrentAtRisk();
+      this.props.repAct.getCurrentAtRisk();
       break;
     case 'chronicallyAbsent':
-      //this.props.repAct.getChronicallyAbsent();
+      this.props.repAct.getChronicallyAbsent();
       break;
     case 'outreaches':
-      //this.props.repAct.getOutreachSummary();
+      this.props.repAct.getOutreachSummary();
       break;
     case 'interventions':
-      //this.props.repAct.getInterventionSummary();
+      this.props.repAct.getInterventionSummary();
       break;
     }
 //    nextTable = table.enableFiltering(nextTable);
-    return nextTable;
+    //return nextTable;
   }
 
   clickHandler(action, data, event) {
@@ -103,7 +119,7 @@ class SchoolReportsPage extends Component {
     // Clicked a main tab
     case 'changeTabs':
       nextTable = table.setSelectedTab(this.state.table, data.props.value);
-      this.setState({table: nextTable});
+      this.setState({table: nextTable, loading: true});
       break;
 
 
@@ -168,7 +184,7 @@ class SchoolReportsPage extends Component {
         >
           <ChronicallyAbsentTab
             view={view}
-            chronic={this.props.reports.chronicAbsent}
+            chronicAbsent={this.props.reports.chronicAbsent}
             table = {this.state.table}
             clickHandler = {this.clickHandler}
           />

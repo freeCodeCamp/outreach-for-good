@@ -2,7 +2,7 @@ import React, {PropTypes} from 'react';
 import DataTable from '../../../common/data-table/DataTable';
 import RaisedButtonModel from '../../../../models/RaisedButtonModel';
 
-const ChronicallyAbsentTab = ({chronic, ...props}) => {
+const ChronicallyAbsentTab = ({chronicAbsent, ...props}) => {
   const page = {
     title   : 'Chronically Absent Students',
     columns : [{
@@ -92,15 +92,15 @@ const ChronicallyAbsentTab = ({chronic, ...props}) => {
   return (
     <DataTable
       page = {page}
-      data = {chronic}
+      data = {chronicAbsent}
       {...props}
     />
   );
 };
 
 ChronicallyAbsentTab.propTypes = {
-  view    : PropTypes.object.isRequired,
-  chronic : PropTypes.object,
+  view          : PropTypes.object.isRequired,
+  chronicAbsent : PropTypes.object,
 };
 
 export default ChronicallyAbsentTab;
