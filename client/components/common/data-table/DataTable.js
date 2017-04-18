@@ -124,7 +124,8 @@ const DataTable = ({page, table, data, ...props}) => {
           headerHeight={table.get('filterEnabled')
             ? table.get('filterHeaderHeight') || 60
             : table.get('headerHeight') || 30}
-          rowsCount={table.get('indexMap').length}
+          rowsCount={props.loaded
+            ? table.get('indexMap').length : 1}
           width={props.view.width || 100}
           maxHeight={props.view.height}
           onRowClick={rowToggleSelected}
@@ -153,7 +154,7 @@ const DataTable = ({page, table, data, ...props}) => {
                 col={col.id}
               />
               : <Cell className="cell-loading">
-                  Loading...
+                  <i className="fa fa-refresh fa-spin" />
                   {/*<i className="fa fa-refresh fa-spin" />*/}
                 </Cell>
               }
