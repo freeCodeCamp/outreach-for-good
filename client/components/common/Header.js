@@ -1,8 +1,8 @@
 import React, { PropTypes, Component } from 'react';
 import { bindActionCreators } from 'redux';
 import {connect} from 'react-redux';
-import * as viewActions from '../../actions/viewActions';
-import * as sessionActions from '../../actions/sessionActions';
+import * as viewActions from '../../modules/viewReducer';
+import * as sessionActions from '../../modules/sessionReducer';
 import {browserHistory} from 'react-router';
 
 import AppBar from 'material-ui/AppBar';

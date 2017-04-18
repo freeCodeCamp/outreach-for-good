@@ -1,16 +1,16 @@
 import React, {Component, PropTypes} from 'react';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
-import {fetchRecords, changeTab} from '../../actions/recordsActions';
+import {fetchRecords, changeTab} from '../../modules/recordsReducer';
 import {Tabs, Tab} from 'material-ui/Tabs';
 import UploadTab from './partials/UploadTab';
 import ManageTab from './partials/ManageTab';
 import Dimensions from 'react-dimensions';
-import { getAllSchools } from '../../actions/schoolActions';
+import { getAllSchools } from '../../modules/schoolReducer';
 import {
   fetchSchoolRecordList,
   addRecord,
-  removeRecord} from '../../actions/absenceRecordActions';
+  removeRecord} from '../../modules/absenceRecordReducer';
 
 class RecordsPage extends Component {
   constructor(props, context) {

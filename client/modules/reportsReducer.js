@@ -1,6 +1,6 @@
 import Report from '../models/ReportModel';
-import AbsenceRecordsApi from '../api/AbsenceRecordsApi';
-import StudentApi from '../api/StudentApi';
+import AbsenceRecordsApi from './api/AbsenceRecordsApi';
+import StudentApi from './api/StudentApi';
 
 //ACTIONS
 const RESET_REPORTS = 'RESET_REPORTS';

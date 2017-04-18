@@ -1,7 +1,7 @@
 import React, {PropTypes} from 'react';
 import { bindActionCreators } from 'redux';
 import {connect} from 'react-redux';
-import * as authActions from './actions/sessionActions';
+import * as authActions from './modules/sessionReducer';
 import {Router, Route, IndexRoute} from 'react-router';
 import App from './components/App';
 import AboutPage from './components/about/AboutPage';

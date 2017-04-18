@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import {Tabs, Tab} from 'material-ui/Tabs';
 import Dimensions from 'react-dimensions';
 
-import * as repAct from '../../../actions/reportsActions';
+import * as repAct from '../../../modules/reportsReducer';
 import TableModel from '../../../models/TableModel';
 
 import AtRiskTab from './partials/AtRiskTab';
