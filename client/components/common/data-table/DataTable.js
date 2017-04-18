@@ -125,13 +125,13 @@ const DataTable = ({page, table, data, ...props}) => {
             ? table.get('filterHeaderHeight') || 60
             : table.get('headerHeight') || 30}
           rowsCount={table.get('indexMap').length}
-          width={props.view.width}
+          width={props.view.width || 100}
           maxHeight={props.view.height}
           onRowClick={rowToggleSelected}
           rowClassNameGetter={isRowSelected}
         >
-        {console.log('Debugging race condition: ', data.size)}
-        {data.size ? page.columns && page.columns
+        {/*console.log('Debugging race condition: ', data.size)*/}
+        {page.columns && page.columns
           .map(col =>
           <Column
             header={
@@ -146,17 +146,23 @@ const DataTable = ({page, table, data, ...props}) => {
               />
               }
             cell={
-              data && data.size ? <DataTableRow
+              props.loaded
+              ? <DataTableRow
                 indexMap={table.get('indexMap')}
                 data={data}
                 col={col.id}
-              /> : <Cell>Loading...</Cell>}
+              />
+              : <Cell className="cell-loading">
+                  Loading...
+                  {/*<i className="fa fa-refresh fa-spin" />*/}
+                </Cell>
+              }
             fixed={col.fixed}
             flexGrow={col.flexGrow}
             key={col.id}
             width={col.width || 200}
           />
-          ) : <Column />}
+          )}
           {/*console.log('Debugging race condition: ', data.toJS())*/}
         </Table>
       </Paper>
@@ -169,6 +175,7 @@ DataTable.propTypes = {
   page         : PropTypes.object.isRequired,
   table        : PropTypes.instanceOf(TableModel).isRequired,
   data         : PropTypes.instanceOf(List).isRequired,
+  loaded       : PropTypes.bool,
   selectedRows : PropTypes.object
 };
 

@@ -20,7 +20,7 @@ class SchoolReportsPage extends Component {
 
     // Register Initial Component State
     let nextTable = table.setSelectedTab(table, 'atRisk');
-    this.state = { table: nextTable, loading: true };
+    this.state = { table: nextTable, loaded: false };
 
     this.retrieveData = this.retrieveData.bind(this);
     this.clickHandler = this.clickHandler.bind(this);
@@ -38,7 +38,7 @@ class SchoolReportsPage extends Component {
     let dataLoaded = false;
     switch (nextTable.get('selectedTab')) {
     case 'atRisk':
-      if(nextProps.reports.atRisk.size) {
+      if(nextProps.reports.atRisk.size && !this.state.loaded) {
         //console.log('Got It!!! ', nextProps.reports.atRisk.size);
         dataLoaded = true;
         nextTable = table.updateSortCol(nextTable, '');
@@ -46,7 +46,7 @@ class SchoolReportsPage extends Component {
       }
       break;
     case 'chronicallyAbsent':
-      if(nextProps.reports.chronicAbsent.size) {
+      if(nextProps.reports.chronicAbsent.size && !this.state.loaded) {
         //console.log('Got It!!! ', nextProps.reports.chronicAbsent.size);
         dataLoaded = true;
         nextTable = table.updateSortCol(nextTable, '');
@@ -54,7 +54,7 @@ class SchoolReportsPage extends Component {
       }
       break;
     case 'outreaches':
-      if(nextProps.reports.outreachSummary.size) {
+      if(nextProps.reports.outreachSummary.size && !this.state.loaded) {
         //console.log('Got It!!! ', nextProps.reports.outreachSummary.size);
         dataLoaded = true;
         nextTable = table.updateSortCol(nextTable, '');
@@ -62,7 +62,7 @@ class SchoolReportsPage extends Component {
       }
       break;
     case 'interventions':
-      if(nextProps.reports.interventionSummary.size) {
+      if(nextProps.reports.interventionSummary.size && !this.state.loaded) {
         //console.log('Got It!!!', nextProps.reports.interventionSummary.size);
         dataLoaded = true;
         nextTable = table.updateSortCol(nextTable, '');
@@ -70,9 +70,8 @@ class SchoolReportsPage extends Component {
       }
       break;
     }
-    if(this.state.loading && dataLoaded) {
-      //console.log('and set state');
-      this.setState({table: nextTable, loading: false});
+    if(dataLoaded) {
+      this.setState({table: nextTable, loaded: true});
     }
     // nextTable = table.enableFiltering(nextTable);
   }
@@ -119,7 +118,7 @@ class SchoolReportsPage extends Component {
     // Clicked a main tab
     case 'changeTabs':
       nextTable = table.setSelectedTab(this.state.table, data.props.value);
-      this.setState({table: nextTable, loading: true});
+      this.setState({table: nextTable, loaded: false});
       break;
 
 
@@ -174,6 +173,7 @@ class SchoolReportsPage extends Component {
             view={view}
             atRisk={this.props.reports.atRisk}
             table = {this.state.table}
+            loaded = {this.state.loaded}
             clickHandler = {this.clickHandler}
           />
         </Tab>
@@ -186,6 +186,7 @@ class SchoolReportsPage extends Component {
             view={view}
             chronicAbsent={this.props.reports.chronicAbsent}
             table = {this.state.table}
+            loaded = {this.state.loaded}
             clickHandler = {this.clickHandler}
           />
         </Tab>
@@ -198,6 +199,7 @@ class SchoolReportsPage extends Component {
             view = {view}
             outreaches = {this.props.reports.outreachSummary}
             table = {this.state.table}
+            loaded = {this.state.loaded}
             clickHandler = {this.clickHandler}
           />
         </Tab>
@@ -210,6 +212,7 @@ class SchoolReportsPage extends Component {
             view={view}
             interventions = {this.props.reports.interventionSummary}
             table = {this.state.table}
+            loaded = {this.state.loaded}
             clickHandler = {this.clickHandler}
           />
         </Tab>
