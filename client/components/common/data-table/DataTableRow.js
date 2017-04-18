@@ -5,12 +5,12 @@ import { List } from 'immutable';
 
 const DataTableRow = ({rowIndex, indexMap, data, col, ...props}) =>
     <Cell {...props}>
-      {indexMap.length > 0
+      {(indexMap.length > 0 && data && data.size)
         ? data.get(indexMap[rowIndex]).get(col)
-        : data.get(rowIndex).get(col)}
+        : ''}
     </Cell>
+          //data.get(rowIndex).get(col)
   ;
-
 DataTableRow.propTypes = {
   rowIndex : PropTypes.number,
   indexMap : PropTypes.array.isRequired,
