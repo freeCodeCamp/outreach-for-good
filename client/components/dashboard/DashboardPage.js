@@ -113,20 +113,25 @@ class DashboardPage extends React.Component {
    *   - Set default state for 'action' variables
    */
   retrieveData(currentTab) {
-    this.props.repAct.getOutreachCounts('withdrawn=false');
     switch (currentTab) {
     case 'court':
+      this.props.absAct.fetchRecordsListQuery('type=Court+Referral');
       break;
     case 'home':
+      this.props.absAct.fetchRecordsListQuery('type=Home+Visit');
       break;
     case 'letter':
+      this.props.absAct.fetchRecordsListQuery('type=Letter+Sent');
       break;
     case 'phone':
+      this.props.absAct.fetchRecordsListQuery('type=Phone+Call');
       break;
     case 'sst':
+      this.props.absAct.fetchRecordsListQuery('type=SST+Referral');
       break;
     case 'student':
       this.props.absAct.fetchRecordsList();
+      this.props.repAct.getOutreachCounts('withdrawn=false');
       break;
     }
     //nextTable = table.enableFiltering(nextTable);
@@ -178,8 +183,13 @@ class DashboardPage extends React.Component {
     return (
       <Tabs
         style={{width: this.props.containerWidth}}
+        value={this.state.table.get('selectedTab')}
       >
-        <Tab label={<i className="fa fa-child fa-2x" />}>
+        <Tab
+          label={<i className="fa fa-child fa-2x" />}
+          onActive={this.tabHandler}
+          value='student'
+        >
           <StudentTab
             view = {{
               width  : this.props.containerWidth - 20,
@@ -202,7 +212,10 @@ class DashboardPage extends React.Component {
             <i className="fa fa-phone fa-2x" />
           </Badge>
           || <i className="fa fa-phone fa-2x" />
-          }>
+          }
+          onActive={this.tabHandler}
+          value='phone'
+        >
           <PhoneTab
             view = {{
               width  : this.props.containerWidth - 20,
@@ -225,7 +238,10 @@ class DashboardPage extends React.Component {
             <i className="fa fa-envelope fa-2x" />
           </Badge>
           || <i className="fa fa-envelope fa-2x" />
-          }>
+          }
+          onActive={this.tabHandler}
+          value='letter'
+        >
           <LetterTab
             view = {{
               width  : this.props.containerWidth - 20,
@@ -248,7 +264,10 @@ class DashboardPage extends React.Component {
             <i className="fa fa-home fa-2x" />
           </Badge>
           || <i className="fa fa-home fa-2x" />
-          }>
+          }
+          onActive={this.tabHandler}
+          value='home'
+        >
           <HomeTab
             view = {{
               width  : this.props.containerWidth - 20,
@@ -271,7 +290,10 @@ class DashboardPage extends React.Component {
             <i className="fa fa-support fa-2x" />
           </Badge>
           || <i className="fa fa-support fa-2x" />
-          }>
+          }
+          onActive={this.tabHandler}
+          value='sst'
+        >
           <SstTab
             view = {{
               width  : this.props.containerWidth - 20,
@@ -294,7 +316,10 @@ class DashboardPage extends React.Component {
             <i className="fa fa-gavel fa-2x" />
           </Badge>
           || <i className="fa fa-gavel fa-2x" />
-          }>
+          }
+          onActive={this.tabHandler}
+          value='court'
+        >
           <CourtTab
             view = {{
               width  : this.props.containerWidth - 20,
