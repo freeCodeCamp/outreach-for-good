@@ -21,53 +21,85 @@ class AdminPage extends React.Component {
     super(props, context);
 
     // Register Initial Component State
-    let nextTable = this.initializeTable('users');
-    this.state = Object.assign({ table: nextTable }, {form});
+    let nextTable = table.setSelectedTab(table, 'users');
+    nextTable = this.initClickActions(nextTable);
+    this.state = {
+      table  : nextTable,
+      loaded : false,
+      form
+    };
 
-    this.initializeTable = this.initializeTable.bind(this);
+    this.retrieveData = this.retrieveData.bind(this);
+    this.initClickActions = this.initClickActions.bind(this);
     this.clickHandler = this.clickHandler.bind(this);
     this.getSelectedRowData = this.getSelectedRowData.bind(this);
     this.getSchoolId = this.getSchoolId.bind(this);
     this.tabHandler = this.tabHandler.bind(this);
   }
 
+  componentDidMount() {
+    this.retrieveData('users');
+  }
+
   componentWillReceiveProps(nextProps) {
     let nextTable = this.state.table;
+    let dataLoaded = false;
     switch (nextTable.get('selectedTab')) {
     case 'users':
-      nextTable = table.updateSortCol(nextTable, '');
-      nextTable = table.buildIndexMap(nextTable, nextProps.users);
+      if(nextProps.users.size) {
+        //console.log('Got It!!! ', nextProps.users.size);
+        dataLoaded = true;
+        nextTable = table.updateSortCol(nextTable, '');
+        nextTable = table.buildIndexMap(nextTable, nextProps.users);
+      }
       break;
     case 'schools':
-      nextTable = table.updateSortCol(nextTable, '');
-      nextTable = table.buildIndexMap(nextTable, nextProps.schools);
+      if(nextProps.schools.size) {
+        //console.log('Got It!!! ', nextProps.schools.size);
+        dataLoaded = true;
+        nextTable = table.updateSortCol(nextTable, '');
+        nextTable = table.buildIndexMap(nextTable, nextProps.schools);
+      }
       break;
     }
-    this.setState({
-      table : nextTable,
-      form  : this.state.form
-    });
+    if(!this.state.loaded && dataLoaded) {
+      //console.log('setstate');
+      this.setState({
+        table  : nextTable,
+        loaded : true,
+        form   : this.state.form
+      });
+    }
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    let selectedTab = this.state.table.get('selectedTab');
+    if(prevState.table.get('selectedTab') != selectedTab) {
+      this.retrieveData(selectedTab);
+    }
   }
 
   /**
-   * Initialize Data Table
+   * Perform API call to Retrieve Data
    *   - Retrieve and configure data for table
    *   - Set default state for 'action' variables
    */
-  initializeTable(currentTab) {
-    let nextTable;
+  retrieveData(currentTab) {
     switch (currentTab) {
     case 'users':
       this.props.usrAct.getAllUsers();
       this.props.schAct.getAllSchools();
-      nextTable = table.setSelectedTab(table, 'users');
       break;
     case 'schools':
       this.props.schAct.getAllSchools();
-      nextTable = table.setSelectedTab(table, 'schools');
       break;
     }
-    // All tabs initialize on section-load
+  }
+
+  /**
+   * Initialize Click Actions (on tab change)
+   */
+  initClickActions(nextTable) {
     nextTable = table.addPopovers(nextTable, {
       [locAct.EDIT] : false
     });
@@ -78,7 +110,6 @@ class AdminPage extends React.Component {
       [locAct.NEW_SCHOOL]    : false,
       [locAct.REMOVE_SCHOOL] : false
     });
-
     return nextTable;
   }
 
@@ -95,8 +126,9 @@ class AdminPage extends React.Component {
 
     // Clicked a main tab
     case 'changeTabs':
-      nextTable = this.initializeTable(data.props.value);
-      this.setState({table: nextTable});
+      nextTable = table.setSelectedTab(this.state.table, data.props.value);
+      nextTable = this.initClickActions(nextTable);
+      this.setState({table: nextTable, loaded: false});
       break;
 
     /**
@@ -303,6 +335,7 @@ class AdminPage extends React.Component {
             schools = {this.props.schools}
             table = {this.state.table}
             form = {this.state.form}
+            loaded = {this.state.loaded}
             clickHandler = {this.clickHandler}
           />
         </Tab>
@@ -319,6 +352,7 @@ class AdminPage extends React.Component {
             schools = {this.props.schools}
             table = {this.state.table}
             form = {this.state.form}
+            loaded = {this.state.loaded}
             clickHandler = {this.clickHandler}
           />
         </Tab>
