@@ -4,9 +4,9 @@ import {connect} from 'react-redux';
 import {Tabs, Tab} from 'material-ui/Tabs';
 import Dimensions from 'react-dimensions';
 
-import * as absAct from '../../actions/absenceRecordActions';
-import * as repAct from '../../actions/reportsActions';
-import * as usrAct from '../../actions/userActions';
+import * as absAct from '../../modules/absenceRecordReducer';
+import * as repAct from '../../modules/reportsReducer';
+import * as usrAct from '../../modules/userReducer';
 import TableModel from '../../models/TableModel';
 import Report from '../../models/ReportModel';
 
@@ -35,86 +35,113 @@ class DashboardPage extends React.Component {
     super(props, context);
 
     // Register Initial Component State
-    let nextTable = this.initializeTable('student');
-    this.state = Object.assign({ table: nextTable });
+    let nextTable = table.setSelectedTab(table, 'student');
+    this.state = { table: nextTable, loaded: false };
 
-    this.initializeTable = this.initializeTable.bind(this);
+    this.retrieveData = this.retrieveData.bind(this);
     this.clickHandler = this.clickHandler.bind(this);
     this.tabHandler = this.tabHandler.bind(this);
   }
 
+  componentDidMount() {
+    this.retrieveData('student');
+  }
+
   componentWillReceiveProps(nextProps) {
     let nextTable = this.state.table;
+    let dataLoaded = false;
     switch (nextTable.get('selectedTab')) {
     case 'court':
-      nextTable = table.updateSortCol(nextTable, '');
-      nextTable = table.buildIndexMap(nextTable, nextProps.absenceRecords);
+      if(nextProps.absenceRecords.size && !this.state.loaded) {
+        dataLoaded = true;
+        nextTable = table.updateSortCol(nextTable, '');
+        nextTable = table.buildIndexMap(nextTable, nextProps.absenceRecords);
+      }
       break;
     case 'home':
-      nextTable = table.updateSortCol(nextTable, '');
-      nextTable = table.buildIndexMap(nextTable, nextProps.absenceRecords);
+      if(nextProps.absenceRecords.size && !this.state.loaded) {
+        dataLoaded = true;
+        nextTable = table.updateSortCol(nextTable, '');
+        nextTable = table.buildIndexMap(nextTable, nextProps.absenceRecords);
+      }
       break;
     case 'letter':
-      nextTable = table.updateSortCol(nextTable, '');
-      nextTable = table.buildIndexMap(nextTable, nextProps.absenceRecords);
+      if(nextProps.absenceRecords.size && !this.state.loaded) {
+        dataLoaded = true;
+        nextTable = table.updateSortCol(nextTable, '');
+        nextTable = table.buildIndexMap(nextTable, nextProps.absenceRecords);
+      }
       break;
     case 'phone':
-      nextTable = table.updateSortCol(nextTable, '');
-      nextTable = table.buildIndexMap(nextTable, nextProps.absenceRecords);
+      if(nextProps.absenceRecords.size && !this.state.loaded) {
+        dataLoaded = true;
+        nextTable = table.updateSortCol(nextTable, '');
+        nextTable = table.buildIndexMap(nextTable, nextProps.absenceRecords);
+      }
       break;
     case 'sst':
-      nextTable = table.updateSortCol(nextTable, '');
-      nextTable = table.buildIndexMap(nextTable, nextProps.absenceRecords);
+      if(nextProps.absenceRecords.size && !this.state.loaded) {
+        dataLoaded = true;
+        nextTable = table.updateSortCol(nextTable, '');
+        nextTable = table.buildIndexMap(nextTable, nextProps.absenceRecords);
+      }
       break;
     case 'student':
-      nextTable = table.setSelectedTab(table, 'student');
-      nextTable = table.updateSortCol(nextTable, '');
-      nextTable = table.buildIndexMap(nextTable, nextProps.absenceRecords);
+      if(nextProps.absenceRecords.size && !this.state.loaded) {
+        dataLoaded = true;
+        nextTable = table.updateSortCol(nextTable, '');
+        nextTable = table.buildIndexMap(nextTable, nextProps.absenceRecords);
+      }
       break;
     }
-    nextTable = table.enableFiltering(nextTable);
-    this.setState({
-      table : nextTable
-    });
+    if(dataLoaded) {
+      nextTable = table.enableFiltering(nextTable);
+      this.setState({table: nextTable, loaded: true});
+    }
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    let selectedTab = this.state.table.get('selectedTab');
+    if(prevState.table.get('selectedTab') != selectedTab) {
+      this.retrieveData(selectedTab);
+    }
   }
 
   /**
-   * Initialize Data Table
+   * Perform API call to Retrieve Data
    *   - Retrieve and configure data for table
    *   - Set default state for 'action' variables
    */
-  initializeTable(currentTab) {
-    let nextTable;
+  retrieveData(currentTab) {
+    this.props.repAct.getOutreachCounts('withdrawn=false');
     switch (currentTab) {
     case 'court':
-      nextTable = table.setSelectedTab(table, 'court');
       break;
     case 'home':
-      nextTable = table.setSelectedTab(table, 'home');
       break;
     case 'letter':
-      nextTable = table.setSelectedTab(table, 'letter');
       break;
     case 'phone':
-      nextTable = table.setSelectedTab(table, 'phone');
       break;
     case 'sst':
-      nextTable = table.setSelectedTab(table, 'sst');
       break;
     case 'student':
       this.props.absAct.fetchRecordsList();
-      this.props.repAct.getOutreachCounts('withdrawn=false');
-      nextTable = table.setSelectedTab(table, 'student');
       break;
     }
-    nextTable = table.enableFiltering(nextTable);
-    return nextTable;
+    //nextTable = table.enableFiltering(nextTable);
   }
 
   clickHandler(action, data, event) {
     let nextTable;
     //let nextForm;
     switch (action) {
+
+    // Clicked a main tab
+    case 'changeTabs':
+      nextTable = table.setSelectedTab(this.state.table, data.props.value);
+      this.setState({table: nextTable, loaded: false});
+      break;
 
     /**
      * DataTable Click Handler
@@ -160,6 +187,7 @@ class DashboardPage extends React.Component {
             }}
             absenceRecords = {this.props.absenceRecords}
             table = {this.state.table}
+            loaded = {this.state.loaded}
             clickHandler = {this.clickHandler}
           />
         </Tab>
@@ -182,6 +210,7 @@ class DashboardPage extends React.Component {
             }}
             absenceRecords = {this.props.absenceRecords}
             table = {this.state.table}
+            loaded = {this.state.loaded}
             clickHandler = {this.clickHandler}
           />
         </Tab>
@@ -204,6 +233,7 @@ class DashboardPage extends React.Component {
             }}
             absenceRecords = {this.props.absenceRecords}
             table = {this.state.table}
+            loaded = {this.state.loaded}
             clickHandler = {this.clickHandler}
           />
         </Tab>
@@ -226,6 +256,7 @@ class DashboardPage extends React.Component {
             }}
             absenceRecords = {this.props.absenceRecords}
             table = {this.state.table}
+            loaded = {this.state.loaded}
             clickHandler = {this.clickHandler}
           />
         </Tab>
@@ -248,6 +279,7 @@ class DashboardPage extends React.Component {
             }}
             absenceRecords = {this.props.absenceRecords}
             table = {this.state.table}
+            loaded = {this.state.loaded}
             clickHandler = {this.clickHandler}
           />
         </Tab>
@@ -270,6 +302,7 @@ class DashboardPage extends React.Component {
             }}
             absenceRecords = {this.props.absenceRecords}
             table = {this.state.table}
+            loaded = {this.state.loaded}
             clickHandler = {this.clickHandler}
           />
         </Tab>

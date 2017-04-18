@@ -1,8 +1,8 @@
 import React, {Component, PropTypes} from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import * as sessionActions from '../actions/sessionActions';
-import {getAllSchools} from '../actions/schoolActions';
+import * as sessionActions from '../modules/sessionReducer';
+import {getAllSchools} from '../modules/schoolReducer';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import muiTheme from '../styles/muiTheme.js';
 import Header from './common/Header';

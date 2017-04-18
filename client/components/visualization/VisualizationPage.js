@@ -1,8 +1,8 @@
 import React, {Component, PropTypes} from 'react';
 import { bindActionCreators } from 'redux';
 import {connect} from 'react-redux';
-import { getAllSchools } from '../../actions/schoolActions';
-import { getCombined, getSchoolComparison } from '../../actions/visualizationActions';
+import { getAllSchools } from '../../modules/schoolReducer';
+import { getCombined, getSchoolComparison } from '../../modules/visualizationReducer';
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
 import {ResponsiveContainer, PieChart, Pie, Cell, Tooltip, Legend} from 'recharts';
