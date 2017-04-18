@@ -1,21 +1,63 @@
-import * as types from './actionTypes';
-import userAPI from '../api/UsersApi';
+import userAPI from './api/UsersApi';
 import cookies from 'browser-cookies';
 import { browserHistory } from 'react-router';
 
+//ACTIONS
+const SET_TOKEN = 'SET_TOKEN';
+const SESSION_VALID = 'SESSION_VALID';
+const SESSION_CLEAR = 'SESSION_CLEAR';
+
+//REDUCER
+const initialState = {};
+
+export default function sessionReducer(state = initialState, action) {
+  switch (action.type) {
+  case SET_TOKEN:
+    //console.log('Setting Token');
+    return {
+      token : action.token,
+      me    : {
+        id    : action.me._id,
+        name  : action.me.name,
+        email : action.me.email,
+        image : action.me.google.image.url || '',
+        role  : action.me.role
+      }
+    };
+  case SESSION_VALID:
+    //console.log('Session Valid');
+    return state;
+  case SESSION_CLEAR:
+    //console.log('Logout');
+    return {
+      token : null,
+      me    : {
+        id    : null,
+        name  : null,
+        email : null,
+        image : null,
+        role  : null
+      }
+    };
+  default:
+    return state;
+  }
+}
+
+//ACTION CREATORS
 export function setToken(token, me) {
   console.log('Setting Token');
-  return {type: types.SET_TOKEN, token, me};
+  return {type: SET_TOKEN, token, me};
 }
 
 export function sessionValid() {
-  return {type: types.SESSION_VALID};
+  return {type: SESSION_VALID};
 }
 
 export function logout() {
   cookies.erase('token');
   browserHistory.push('/login');
-  return {type: types.SESSION_CLEAR};
+  return {type: SESSION_CLEAR};
 }
 
 /**

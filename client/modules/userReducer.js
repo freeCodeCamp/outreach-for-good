@@ -1,21 +1,40 @@
-import * as types from './actionTypes';
-import { validate } from './sessionActions';
-import userAPI from '../api/UsersApi';
+import { List, fromJS } from 'immutable';
+import User from '../models/UserModel';
+import {validate} from './sessionReducer';
+import UsersApi from './api/UsersApi';
 
+
+//ACTIONS
+const LOAD_USERS_SUCCESS = 'LOAD_USERS_SUCCESS';
+
+//REDUCER
+const initialState = new List();
+
+// const mergeEntities = (state, newUsers) =>
+//   state.merge(newUsers.map(user => new User(user)));
+
+export default (state = initialState, action) => {
+  switch (action.type) {
+  // Received users from getAllUsers()
+  case LOAD_USERS_SUCCESS:
+    return fromJS(action.users).map(user => new User(user));
+
+  default:
+    return state;
+  }
+};
+
+//ACTION CREATORS
 export function loadUsersSuccess(users) {
-  return {type: types.LOAD_USERS_SUCCESS, users};
+  return {type: LOAD_USERS_SUCCESS, users};
 }
-
-// Functions below handle asynchronous calls.
-// Each returns a function that accepts a dispatch.
-// These are used by redux-thunk to support asynchronous interactions.
 
 /**
  * Get my record, allowed for all registered users
  */
 export function getMyself() {
   return function(dispatch) {
-    return userAPI.getMyself().then(users =>
+    return UsersApi.getMyself().then(users =>
       dispatch(loadUsersSuccess(users))
     )
     .catch(err => handleError(err, dispatch));
@@ -25,7 +44,7 @@ export function getMyself() {
 // Not Tested
 export function getUser(userId) {
   return function(dispatch) {
-    return userAPI.getUser(userId).then(users =>
+    return UsersApi.getUser(userId).then(users =>
       dispatch(loadUsersSuccess(users))
     )
     .catch(err => handleError(err, dispatch));
@@ -37,10 +56,9 @@ export function getUser(userId) {
  */
 export function getAllUsers() {
   return function(dispatch) {
-    return userAPI.getUsers().then(res => {
+    return UsersApi.getUsers().then(res =>
       //console.log('getAllUsers API: ', res);
-      return dispatch(loadUsersSuccess(res));
-    })
+       dispatch(loadUsersSuccess(res)))
     .catch(err => handleError(err, dispatch));
   };
 }
@@ -52,7 +70,7 @@ export function getAllUsers() {
  */
 export function updateUserRole(userId, roleId) {
   return function(dispatch) {
-    let promises = userId.map(user => userAPI.updateRole(user, roleId));
+    let promises = userId.map(user => UsersApi.updateRole(user, roleId));
     return Promise.all(promises)
     .then(() => dispatch(getAllUsers()))
     .catch(err => handleError(err, dispatch));
@@ -66,7 +84,7 @@ export function updateUserRole(userId, roleId) {
  */
 export function updateUserSchool(userId, schoolId) {
   return function(dispatch) {
-    let promises = userId.map(user => userAPI.updateSchool(user, schoolId));
+    let promises = userId.map(user => UsersApi.updateSchool(user, schoolId));
     return Promise.all(promises)
     .then(() => dispatch(getAllUsers()))
     .catch(err => handleError(err, dispatch));
@@ -79,7 +97,7 @@ export function updateUserSchool(userId, schoolId) {
  */
 export function removeUser(userId) {
   return function(dispatch) {
-    let promises = userId.map(user => userAPI.removeUser(user));
+    let promises = userId.map(user => UsersApi.removeUser(user));
     return Promise.all(promises)
     .then(() => dispatch(getAllUsers()))
     .catch(err => handleError(err, dispatch));
