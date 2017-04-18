@@ -90,9 +90,9 @@ export function fetchSchoolRecordList(schoolId) {
  * Get entries for students with outreaches specified by filter.
  *   - untested
  */
-export function fetchRecordsListQuery() {
+export function fetchRecordsListQuery(querystring) {
   return function(dispatch) {
-    return AbsenceRecordsApi.fetchRecordsListQuery().then(res =>
+    return AbsenceRecordsApi.fetchRecordsListQuery(querystring).then(res =>
       dispatch(loadRecordsSuccess(res))
     )
     .catch(err => handleError(err, dispatch));

@@ -69,8 +69,8 @@ class AbsenceRecordsApi extends Api {
    * - teachers will get entries for assignment school
    * - manager+ will get entries for all schools
    */
-  static fetchRecordsListQuery() {
-    return this.getAPI('/api/absence-records/list/current/query');
+  static fetchRecordsListQuery(querystring = '') {
+    return this.getAPI(`/api/absence-records/list/current/query?${querystring}`);
   }
 
   /**
