@@ -1,15 +1,36 @@
-import * as types from './actionTypes';
-import { validate } from './sessionActions';
-import AbsenceRecordsApi from '../api/AbsenceRecordsApi';
+import { List, fromJS } from 'immutable';
+import AbsenceRecord from '../models/AbsenceRecordModel';
+import AbsenceRecordListModel from '../models/AbsenceRecordListModel';
 
+import { validate } from './sessionReducer';
+import AbsenceRecordsApi from './api/AbsenceRecordsApi';
+
+//ACTIONS
+const LOAD_ABSENCE_RECORD_SUCCESS = 'LOAD_ABSENCE_RECORD_SUCCESS';
+const LOAD_SCHOOL_RECORD_LIST_SUCCESS = 'LOAD_ABSENCE_RECORD_LIST_SUCCESS';
+
+//REDUCER
+const initialState = new List();
+
+export default (state = initialState, action) => {
+  switch (action.type) {
+  // Received users from fetchRecordsList()
+  case LOAD_ABSENCE_RECORD_SUCCESS:
+    return fromJS(action.absenceRecords)
+        .map(record => new AbsenceRecord(record));
+
+  case LOAD_SCHOOL_RECORD_LIST_SUCCESS:
+    return fromJS(action.recordList)
+        .map(recordList => new AbsenceRecordListModel(recordList));
+  default:
+    return state;
+  }
+};
+
+//ACTION CREATORS
 export function loadRecordsSuccess(absenceRecords) {
-  return {type: types.LOAD_ABSENCE_RECORD_SUCCESS, absenceRecords};
+  return {type: LOAD_ABSENCE_RECORD_SUCCESS, absenceRecords};
 }
-
-// Functions below handle asynchronous calls.
-// Each returns a function that accepts a dispatch.
-// These are used by redux-thunk to support asynchronous interactions.
-
 /**
  * Get current absence records.
  *   - untested
@@ -57,7 +78,7 @@ export function fetchSchoolRecordList(schoolId) {
   return function(dispatch) {
     return AbsenceRecordsApi.fetchSchoolRecordList(schoolId).then(recordList =>
       dispatch({
-        type : types.LOAD_SCHOOL_RECORD_LIST_SUCCESS,
+        type : LOAD_SCHOOL_RECORD_LIST_SUCCESS,
         recordList
       })
     )

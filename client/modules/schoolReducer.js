@@ -1,9 +1,31 @@
-import * as types from './actionTypes';
-import { validate } from './sessionActions';
-import schoolAPI from '../api/SchoolsApi';
+import { List, fromJS } from 'immutable';
+import School from '../models/SchoolModel';
+import SchoolsApi from '../api/SchoolsApi';
+import {validate} from './sessionReducer';
 
+//ACTIONS
+const LOAD_SCHOOLS_SUCCESS = 'LOAD_SCHOOLS_SUCCESS';
+
+
+//REDUCER
+// const mergeEntities = (state, newSchools) =>
+//   state.merge(newSchools.map(school => new School(school)));
+const initialState = new List();
+export default (state = initialState, action) => {
+  switch (action.type) {
+  // Received schools from getAllSchools()
+  case LOAD_SCHOOLS_SUCCESS:
+    //console.log('school names: ', action.schools);
+    return fromJS(action.schools).map(school => new School(school));
+
+  default:
+    return state;
+  }
+};
+
+//ACTION CREATORS
 export function loadSchoolsSuccess(schools) {
-  return {type: types.LOAD_SCHOOLS_SUCCESS, schools};
+  return {type: LOAD_SCHOOLS_SUCCESS, schools};
 }
 
 // Functions below handle asynchronous calls.
@@ -12,7 +34,7 @@ export function loadSchoolsSuccess(schools) {
 
 export function getSchoolNames() {
   return function(dispatch) {
-    return schoolAPI.getSchoolNames().then(schools => {
+    return SchoolsApi.getSchoolNames().then(schools => {
       dispatch(loadSchoolsSuccess(schools));
     })
     .catch(err => handleError(err, dispatch));
@@ -21,7 +43,7 @@ export function getSchoolNames() {
 
 export function getSchool(schoolId) {
   return function(dispatch) {
-    return schoolAPI.getSchool(schoolId).then(schools => {
+    return SchoolsApi.getSchool(schoolId).then(schools => {
       dispatch(loadSchoolsSuccess(schools));
     })
     .catch(err => handleError(err, dispatch));
@@ -30,17 +52,16 @@ export function getSchool(schoolId) {
 
 export function getAllSchools() {
   return function(dispatch) {
-    return schoolAPI.getSchools().then(res => {
+    return SchoolsApi.getSchools().then(res =>
       //console.log('getAllSchools API: ', res);
-      return dispatch(loadSchoolsSuccess(res));
-    })
+       dispatch(loadSchoolsSuccess(res)))
     .catch(err => handleError(err, dispatch));
   };
 }
 
 export function addSchool(schoolName) {
   return function(dispatch) {
-    return schoolAPI.addSchool(schoolName)
+    return SchoolsApi.addSchool(schoolName)
     .then(() => dispatch(getAllSchools()))
     .catch(err => handleError(err, dispatch));
   };
@@ -48,7 +69,7 @@ export function addSchool(schoolName) {
 
 export function removeSchool(schoolId) {
   return function(dispatch) {
-    let promises = schoolId.map(school => schoolAPI.removeSchool(school));
+    let promises = schoolId.map(school => SchoolsApi.removeSchool(school));
     return Promise.all(promises)
     .then(() => dispatch(getAllSchools()))
     .catch(err => handleError(err, dispatch));
