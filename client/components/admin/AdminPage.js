@@ -5,8 +5,8 @@ import { List } from 'immutable';
 import {Tabs, Tab} from 'material-ui/Tabs';
 import Dimensions from 'react-dimensions';
 
-import * as usrAct from '../../actions/userActions';
-import * as schAct from '../../actions/schoolActions';
+import * as usrAct from '../../modules/userReducer';
+import * as schAct from '../../modules/schoolReducer';
 import * as locAct from './localActions';
 import TableModel from '../../models/TableModel';
 import FormModel from '../../models/FormModel';

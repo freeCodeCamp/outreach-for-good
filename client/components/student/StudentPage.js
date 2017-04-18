@@ -21,7 +21,7 @@ import {
   getStudentNotes,
   getStudentInterventions,
   postStudentNote,
-} from '../../actions/studentActions';
+} from '../../modules/studentReducer';
 
 class StudentPage extends Component {
   constructor(props) {

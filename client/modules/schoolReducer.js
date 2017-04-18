@@ -1,6 +1,6 @@
 import { List, fromJS } from 'immutable';
 import School from '../models/SchoolModel';
-import SchoolsApi from '../api/SchoolsApi';
+import SchoolsApi from './api/SchoolsApi';
 import {validate} from './sessionReducer';
 
 //ACTIONS
