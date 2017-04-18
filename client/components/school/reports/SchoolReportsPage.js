@@ -90,9 +90,9 @@ class SchoolReportsPage extends Component {
    *   - Set default state for 'action' variables
    */
   retrieveData(currentTab) {
-    //console.log('gettin the data: ', currentTab);
-//    let nextTable = this.state.table || table;
+    // Clear previously loaded reports from the store
     this.props.repAct.resetReports();
+    // Call the API for new reports
     switch (currentTab) {
     case 'atRisk':
       this.props.repAct.getCurrentAtRisk();
@@ -108,7 +108,6 @@ class SchoolReportsPage extends Component {
       break;
     }
 //    nextTable = table.enableFiltering(nextTable);
-    //return nextTable;
   }
 
   clickHandler(action, data, event) {
