@@ -1,34 +1,23 @@
 /**
- * Users Tab
+ * Dashboad Page
  */
-
-// Open <Dialog>s
-export const EDIT_SCHOOL = 'EDIT_SCHOOL';
-export const EDIT_ROLE = 'EDIT_ROLE';
-export const REMOVE_USER = 'REMOVE_USER';
 
 // Open <Popover>s
+export const FILTER = 'FILTER';
 export const EDIT = 'EDIT';
 
-
-/**
- * Schools Tab
- */
-
 // Open <Dialog>s
-export const NEW_SCHOOL = 'NEW_SCHOOL';
-export const REMOVE_SCHOOL = 'REMOVE_SCHOOL';
+export const WITHDRAW_STUDENT = 'WITHDRAW_STUDENT';
+export const ENROLL_STUDENT = 'ENROLL_STUDENT';
 
-
-/**
- * Both Tabs
- */
+// General Actions
+export const IEP_ADD = 'WITHDRAW_STUDENT';
+export const IEP_REMOVE = 'ENROLL_STUDENT';
+export const CFA_ADD = 'WITHDRAW_STUDENT';
+export const CFA_REMOVE = 'ENROLL_STUDENT';
 
 // This list helps keep if-statements shorter
 export const DIALOG_LIST = [
-  'EDIT_SCHOOL',
-  'EDIT_ROLE',
-  'REMOVE_USER',
-  'NEW_SCHOOL',
-  'REMOVE_SCHOOL'
+  'WITHDRAW_STUDENT',
+  'ENROLL_STUDENT'
 ];
