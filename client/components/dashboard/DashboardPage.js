@@ -7,6 +7,7 @@ import Dimensions from 'react-dimensions';
 import * as absAct from '../../modules/absenceRecordReducer';
 import * as repAct from '../../modules/reportsReducer';
 import * as usrAct from '../../modules/userReducer';
+import * as locAct from './localActions';
 import TableModel from '../../models/TableModel';
 import Report from '../../models/ReportModel';
 
@@ -36,9 +37,11 @@ class DashboardPage extends React.Component {
 
     // Register Initial Component State
     let nextTable = table.setSelectedTab(table, 'student');
+    nextTable = this.initClickActions(nextTable);
     this.state = { table: nextTable, loaded: false };
 
     this.retrieveData = this.retrieveData.bind(this);
+    this.initClickActions = this.initClickActions.bind(this);
     this.clickHandler = this.clickHandler.bind(this);
     this.tabHandler = this.tabHandler.bind(this);
   }
@@ -137,6 +140,21 @@ class DashboardPage extends React.Component {
     //nextTable = table.enableFiltering(nextTable);
   }
 
+  /**
+   * Initialize Click Actions (on tab change)
+   */
+  initClickActions(nextTable) {
+    nextTable = table.addPopovers(nextTable, {
+      [locAct.FILTER] : false,
+      [locAct.EDIT]   : false
+    });
+    nextTable = table.addDialogs(nextTable, {
+      [locAct.WITHDRAW_STUDENT] : false,
+      [locAct.ENROLL_STUDENT]   : false
+    });
+    return nextTable;
+  }
+
   clickHandler(action, data, event) {
     let nextTable;
     //let nextForm;
@@ -145,6 +163,7 @@ class DashboardPage extends React.Component {
     // Clicked a main tab
     case 'changeTabs':
       nextTable = table.setSelectedTab(this.state.table, data.props.value);
+      nextTable = this.initClickActions(nextTable);
       this.setState({table: nextTable, loaded: false});
       break;
 
@@ -171,6 +190,29 @@ class DashboardPage extends React.Component {
       nextTable = table.sortIndexMap(nextTable, tabData);
       this.setState({table: nextTable});
       break;
+
+    /**
+     * Button / Popover Menu Click Handler
+     *   - Typically opens a <Dialog> modal or popover menu
+     *   - Initialize dialog and form field parameters
+     */
+    case 'menuClick':
+    case 'buttonClick':
+      nextTable = table.setSelectedRowData(this.state.table,
+        this.getSelectedRowData());
+      if(data == locAct.EDIT || data == locAct.FILTER) {
+        nextTable = table.togglePopovers(nextTable, data);
+        nextTable = table.setAnchor(nextTable, event.currentTarget);
+        nextTable = table.resetDialogs(nextTable);
+      }
+      this.setState({table: nextTable});
+      break; // End of: case 'menuClick' or 'buttonClick'
+
+    // Clicked away from popover menu
+    case 'popoverClose':
+      nextTable = table.resetPopovers(this.state.table);
+      this.setState({table: nextTable});
+      break;
     }
   }
 
@@ -180,6 +222,10 @@ class DashboardPage extends React.Component {
   }
 
   render() {
+    let viewport = {
+      width  : this.props.containerWidth - 20,
+      height : this.props.containerHeight - 48 - 80
+    }; // Facillitates table realtime resizing
     return (
       <Tabs
         style={{width: this.props.containerWidth}}
@@ -191,10 +237,7 @@ class DashboardPage extends React.Component {
           value='student'
         >
           <StudentTab
-            view = {{
-              width  : this.props.containerWidth - 20,
-              height : this.props.containerHeight - 48 - 80
-            }}
+            view = {viewport}
             absenceRecords = {this.props.absenceRecords}
             table = {this.state.table}
             loaded = {this.state.loaded}
@@ -217,10 +260,7 @@ class DashboardPage extends React.Component {
           value='phone'
         >
           <PhoneTab
-            view = {{
-              width  : this.props.containerWidth - 20,
-              height : this.props.containerHeight - 48 - 80
-            }}
+            view = {viewport}
             absenceRecords = {this.props.absenceRecords}
             table = {this.state.table}
             loaded = {this.state.loaded}
@@ -243,10 +283,7 @@ class DashboardPage extends React.Component {
           value='letter'
         >
           <LetterTab
-            view = {{
-              width  : this.props.containerWidth - 20,
-              height : this.props.containerHeight - 48 - 80
-            }}
+            view = {viewport}
             absenceRecords = {this.props.absenceRecords}
             table = {this.state.table}
             loaded = {this.state.loaded}
@@ -269,10 +306,7 @@ class DashboardPage extends React.Component {
           value='home'
         >
           <HomeTab
-            view = {{
-              width  : this.props.containerWidth - 20,
-              height : this.props.containerHeight - 48 - 80
-            }}
+            view = {viewport}
             absenceRecords = {this.props.absenceRecords}
             table = {this.state.table}
             loaded = {this.state.loaded}
@@ -295,10 +329,7 @@ class DashboardPage extends React.Component {
           value='sst'
         >
           <SstTab
-            view = {{
-              width  : this.props.containerWidth - 20,
-              height : this.props.containerHeight - 48 - 80
-            }}
+            view = {viewport}
             absenceRecords = {this.props.absenceRecords}
             table = {this.state.table}
             loaded = {this.state.loaded}
@@ -321,10 +352,7 @@ class DashboardPage extends React.Component {
           value='court'
         >
           <CourtTab
-            view = {{
-              width  : this.props.containerWidth - 20,
-              height : this.props.containerHeight - 48 - 80
-            }}
+            view = {viewport}
             absenceRecords = {this.props.absenceRecords}
             table = {this.state.table}
             loaded = {this.state.loaded}

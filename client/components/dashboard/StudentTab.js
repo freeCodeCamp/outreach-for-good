@@ -15,12 +15,12 @@ const StudentTab = ({absenceRecords, ...props}) => {
    *  - See RaisedButtonModel for default parameters
    */
   buttons.push(new RaisedButtonModel({
-    label    : 'IEP',
+    label    : 'Filter',
     actionID : locAct.REMOVE_USER
   }));
 
   buttons.push(new RaisedButtonModel({
-    label    : 'CFA',
+    label    : 'Edit',
     actionID : locAct.REMOVE_USER
   }));
 

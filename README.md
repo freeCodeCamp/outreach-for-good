@@ -59,3 +59,14 @@ This version is currently under development.
   * Sort when clicking header
 * TableModel
   * filter algorithm adjustment
+
+
+## To-Add
+
+* Students should not be grouped outside of their schools
+
+## To-Ask
+
+* Discuss row select responsiveness
+  * Possibly bypass react render cycles
+

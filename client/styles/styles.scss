@@ -8,12 +8,14 @@
 @import '../components/common/data-table/DataTable.scss';
 @import '../components/common/data-table/DataTableOverride.scss';
 
-@import '../components/login/LoginPage.scss';
+@import '../components/dashboard/DashboardPage.scss';
 
-@import '../components/admin/UsersTab.scss';
+@import '../components/login/LoginPage.scss';
 
 @import '../components/records/RecordsPage.scss';
 
 @import '../components/student/StudentPage.scss';
+
+@import '../components/admin/UsersTab.scss';
 
 @import '../components/visualization/VisualizationPage.scss';
