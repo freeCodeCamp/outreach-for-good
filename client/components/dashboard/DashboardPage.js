@@ -214,6 +214,13 @@ class DashboardPage extends React.Component {
       this.setState({table: nextTable});
       break;
     }
+  } // End of: clickHandler()
+
+  // Given a table-row index number, return object containing all row data
+  getSelectedRowData() {
+    return this.props.absenceRecords
+      .filter((v, i) => this.state.table.get('selectedIndex')
+      .indexOf(i) != -1);
   }
 
   // Handle user changing main tabs

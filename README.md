@@ -67,6 +67,6 @@ This version is currently under development.
 
 ## To-Ask
 
-* Discuss row select responsiveness
+* Discuss row select / button click responsiveness
   * Possibly bypass react render cycles
 

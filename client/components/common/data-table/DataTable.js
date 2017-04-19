@@ -12,6 +12,7 @@ import RaisedButton from 'material-ui/RaisedButton';
 import Popover from 'material-ui/Popover';
 import Menu from 'material-ui/Menu';
 import MenuItem from 'material-ui/MenuItem';
+import Divider from 'material-ui/Divider';
 
 import Dialog from 'material-ui/Dialog';
 
@@ -84,11 +85,13 @@ const DataTable = ({page, table, data, ...props}) => {
                 >
                   <Menu>
                     {button.get('menu').item.map((item, i) =>
-                      <MenuItem
+                      item.text == 'Divider'
+                      ? <Divider key={`menu-item-${item.text}-${i}`} />
+                      : <MenuItem
                         primaryText={item.text}
                         value={item.actionID}
                         onTouchTap={menuItemHandler}
-                        key={i}
+                        key={`menu-item-${item.text}-${i}`}
                       />
                     )}
                   </Menu>

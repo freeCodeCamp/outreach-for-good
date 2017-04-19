@@ -6,6 +6,15 @@ import * as locAct from './localActions';
 import RaisedButtonModel from '../../models/RaisedButtonModel';
 
 const StudentTab = ({absenceRecords, ...props}) => {
+/**
+ * Handler Functions
+ *   - Catch events from page elements and send to parent component
+ */
+  function buttonHandler(event) {
+    event.preventDefault();
+    props.clickHandler('dialogClick', this.value, event); // eslint-disable-line no-invalid-this
+  }
+
   let buttons = [];
 
   /**
@@ -16,19 +25,81 @@ const StudentTab = ({absenceRecords, ...props}) => {
    */
   buttons.push(new RaisedButtonModel({
     label    : 'Filter',
-    actionID : locAct.REMOVE_USER
+    actionID : locAct.FILTER,
+    menu     : {
+      open : props.table.get('MuiPopovers').get(locAct.FILTER),
+      item : [{
+        text     : 'Withdrawn Students',
+        actionID : locAct.IEP_ADD
+      }, {
+        text : 'Divider',
+      }, {
+        text     : 'All Years',
+        actionID : locAct.IEP_REMOVE
+      }, {
+        text     : '2016-2017',
+        actionID : locAct.CFA_ADD
+      }, {
+        text     : '2015-2016',
+        actionID : locAct.CFA_REMOVE
+      }]
+    }
   }));
 
   buttons.push(new RaisedButtonModel({
     label    : 'Edit',
-    actionID : locAct.REMOVE_USER
+    actionID : locAct.EDIT,
+    menu     : {
+      open : props.table.get('MuiPopovers').get(locAct.EDIT),
+      item : [{
+        text :
+          <div>
+            <i className="fa fa-plus-circle dashboard-circle-plus" />
+            &nbsp; IEP Selected
+          </div>,
+        actionID : locAct.IEP_ADD
+      }, {
+        text :
+          <div>
+            <i className="fa fa-minus-circle dashboard-circle-minus" />
+            &nbsp; IEP Selected
+          </div>,
+        actionID : locAct.IEP_REMOVE
+      }, {
+        text : 'Divider',
+      }, {
+        text :
+          <div>
+            <i className="fa fa-plus-circle dashboard-circle-plus" />
+            &nbsp; CFA Selected
+          </div>,
+        actionID : locAct.CFA_ADD
+      }, {
+        text :
+          <div>
+            <i className="fa fa-minus-circle dashboard-circle-minus" />
+            &nbsp; CFA Selected
+          </div>,
+        actionID : locAct.CFA_REMOVE
+      }, {
+        text : 'Divider',
+      }, {
+        text :
+          <div>
+            <i className="fa fa-plus-circle dashboard-circle-plus" />
+            &nbsp; Withdraw Selected
+          </div>,
+        actionID : locAct.WITHDRAW_STUDENT
+      }, {
+        text :
+          <div>
+            <i className="fa fa-minus-circle dashboard-circle-minus" />
+            &nbsp; Withdraw Selected
+          </div>,
+        actionID : locAct.ENROLL_STUDENT
+      }]
+    }
   }));
-
-  buttons.push(new RaisedButtonModel({
-    label    : 'Withdraw',
-    actionID : locAct.REMOVE_USER
-  }));
-
 
   const page = {
     title   : 'Students Dashboard',
@@ -118,6 +189,8 @@ const StudentTab = ({absenceRecords, ...props}) => {
 
 StudentTab.propTypes = {
   absenceRecords : PropTypes.instanceOf(List).isRequired,
+  table          : PropTypes.object.isRequired,
+  clickHandler   : PropTypes.func.isRequired,
 };
 
 export default StudentTab;
