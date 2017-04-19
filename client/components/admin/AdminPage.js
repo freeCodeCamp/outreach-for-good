@@ -316,6 +316,10 @@ class AdminPage extends React.Component {
   }
 
   render() {
+    let viewport = {
+      width  : this.props.containerWidth - 20,
+      height : this.props.containerHeight - 48 - 80
+    }; // Facillitates table realtime resizing
     return (
       <Tabs
         style={{width: this.props.containerWidth}}
@@ -327,10 +331,7 @@ class AdminPage extends React.Component {
           value='users'
         >
           <UsersTab
-            view = {{
-              width  : this.props.containerWidth - 20,
-              height : this.props.containerHeight - 48 - 80
-            }} // Facillitates table realtime resizing
+            view = {viewport}
             users = {this.props.users}
             schools = {this.props.schools}
             table = {this.state.table}
@@ -345,10 +346,7 @@ class AdminPage extends React.Component {
           value='schools'
         >
           <SchoolsTab
-            view = {{
-              width  : this.props.containerWidth - 20,
-              height : this.props.containerHeight - 48 - 80
-            }} // Facillitates table realtime resizing
+            view = {viewport}
             schools = {this.props.schools}
             table = {this.state.table}
             form = {this.state.form}
