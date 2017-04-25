@@ -3,9 +3,10 @@ import TextField from 'material-ui/TextField';
 
 const Triggers = ({ triggers, onChange }) =>
   <div className="trigger-list">
-    {triggers.map((trigger, i) =>
+    {triggers
+      && triggers.map((trigger, i) =>
       <TextField key={i}
-        id={`${trigger.get('type')} ${trigger.get('tier')}`}
+        id={`${i}`}
         type="number"
         value={trigger.get('absences')}
         onChange={onChange}
@@ -15,7 +16,8 @@ const Triggers = ({ triggers, onChange }) =>
 ;
 
 Triggers.propTypes = {
-  triggers : PropTypes.object
+  triggers : PropTypes.object,
+  onChange : PropTypes.func
 };
 
 export default Triggers;

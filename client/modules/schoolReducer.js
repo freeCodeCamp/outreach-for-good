@@ -6,7 +6,6 @@ import {validate} from './sessionReducer';
 //ACTIONS
 const LOAD_SCHOOLS_SUCCESS = 'LOAD_SCHOOLS_SUCCESS';
 
-
 //REDUCER
 // const mergeEntities = (state, newSchools) =>
 //   state.merge(newSchools.map(school => new School(school)));
@@ -73,6 +72,15 @@ export function removeSchool(schoolId) {
     return Promise.all(promises)
     .then(() => dispatch(getAllSchools()))
     .catch(err => handleError(err, dispatch));
+  };
+}
+
+export function changeTriggers(schoolId, triggers) {
+  return dispatch => {
+    SchoolsApi.changeTriggers(schoolId, triggers)
+      .then(() => dispatch(getAllSchools()))
+        // dispatch(loadSchoolsSuccess(schools)))
+      .catch(err => handleError(err, dispatch));
   };
 }
 
