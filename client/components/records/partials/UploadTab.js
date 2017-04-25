@@ -6,7 +6,7 @@ import DatePicker from 'material-ui/DatePicker';
 import AbsenceRecordsTable from './AbsenceRecordsTable';
 import Dropzone from 'react-dropzone';
 import UploadService from './UploadService';
-import ResponseSnackbar from '../../common/ResponseSnackbar';
+// import ResponseSnackbar from '../../common/ResponseSnackbar';
 
 class UploadTab extends Component {
   constructor() {
@@ -135,10 +135,10 @@ class UploadTab extends Component {
             record={this.state.record}
             uploadTab
           />}
-        <ResponseSnackbar
+        {/* <ResponseSnackbar
           message={this.state.snackBar}
           closeSnackbar={this.closeSnackbar}
-          type="success" />
+          type="success" /> */}
       </div>
     );
   }

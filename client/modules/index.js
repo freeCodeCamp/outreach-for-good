@@ -2,6 +2,7 @@ import { combineReducers } from 'redux';
 import absenceRecords from './absenceRecordReducer';
 import records from './recordsReducer';
 import reports from './reportsReducer';
+// import response from './responseReducer';
 import schools from './schoolReducer';
 import session from './sessionReducer';
 import student from './studentReducer';

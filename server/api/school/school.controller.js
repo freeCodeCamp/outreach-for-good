@@ -68,6 +68,7 @@ exports.create = function(req, res) {
  * restriction: 'teacher'
  */
 exports.updateTriggers = function(req, res) {
+  console.log(req.body);
   req.school.triggers = req.body.triggers;
   req.school.save(function(err) {
     if(err) return handleError(res, err);

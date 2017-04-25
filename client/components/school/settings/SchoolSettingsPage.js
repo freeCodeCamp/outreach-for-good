@@ -4,7 +4,7 @@ import {bindActionCreators} from 'redux';
 import {List} from 'immutable';
 import Triggers from './partials/Triggers';
 import SchoolSelect from '../../common/SchoolSelect';
-import {getAllSchools} from '../../../modules/schoolReducer';
+import {getAllSchools, changeTriggers} from '../../../modules/schoolReducer';
 
 class SchoolSettingsPage extends Component {
   constructor() {
@@ -23,27 +23,32 @@ class SchoolSettingsPage extends Component {
     this.props.actions.getAllSchools();
   }
 
-  componetWillRecieveProps(nextProps) {
-    this.setState({ selectedSchool: nextProps.schools[0] });
-  }
-
   changeSchool(e, i, selectedSchool) {
     this.setState({ selectedSchool });
   }
 
   changeTrigger(e, newVal) {
-    //update triggers action
-    console.log(e.target.id, newVal);
+    //this function clears the selected school
+    //there is probably a better way to use immutable
+
+    let schoolId = this.state.selectedSchool.get('_id');
+    let triggers = this.state.selectedSchool
+      .get('triggers').toJS();
+
+    triggers[e.target.id].absences = +newVal;
+
+    this.props.actions.changeTriggers(schoolId, { triggers });
   }
 
   render() {
     return (
       <div className="settings-page">
-        <SchoolSelect
+        {this.props.schools
+          && <SchoolSelect
           value={this.state.selectedSchool}
           changeSchool={this.changeSchool}
-          schools={this.props.schools}/>
-        {this.state.selectedSchool.get('triggers')
+          schools={this.props.schools}/>}
+        {this.state.selectedSchool
         && <Triggers
             onChange={this.changeTrigger}
             triggers={this.state.selectedSchool.get('triggers')}
@@ -63,7 +68,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  actions : bindActionCreators({getAllSchools}, dispatch)
+  actions : bindActionCreators({getAllSchools, changeTriggers}, dispatch)
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(SchoolSettingsPage);

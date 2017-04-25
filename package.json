@@ -46,6 +46,7 @@
     "react-dom": "^15.4.2",
     "react-dropzone": "^3.11.0",
     "react-redux": "^5.0.2",
+    "react-redux-snackbar": "^0.9.0",
     "react-router": "^3.0.2",
     "react-tap-event-plugin": "^2.0.1",
     "recharts": "^0.22.1",

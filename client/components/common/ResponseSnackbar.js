@@ -1,4 +1,6 @@
-import React, {PropTypes} from 'react';
+import React, {Component, PropTypes} from 'react';
+import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
 import Snackbar from 'material-ui/Snackbar';
 
 const snackTypes = {
@@ -12,20 +14,32 @@ const snackTypes = {
   }
 };
 
-const ResponseSnackbar = ({ message, closeSnackbar, type }) =>
-  <Snackbar
-    open={!!message}
-    message={message}
-    autoHideDuration={4000}
-    onRequestClose={closeSnackbar}
-    bodyStyle={snackTypes[type]}
-  />
-;
+class ResponseSnackbar extends Component {
+
+  render() {
+    return (
+      <Snackbar
+        open={this.props.response}
+        message="this is the snackbar message"
+        autoHideDuration={4000}
+        // onRequestClose={closeSnackbar}
+        bodyStyle={snackTypes.success}
+      />
+    );
+  }
+}
 
 ResponseSnackbar.propTypes = {
-  message       : PropTypes.string,
-  closeSnackbar : PropTypes.func,
-  type          : PropTypes.string
+  response : PropTypes.bool,
+  actions  : PropTypes.object
 };
 
-export default ResponseSnackbar;
+const mapStateToProps = state => ({
+  response : state.response
+});
+
+const mapDispatchToProps = dispatch => ({
+  actions : bindActionCreators({}, dispatch)
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(ResponseSnackbar);
