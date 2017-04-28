@@ -5,6 +5,7 @@ import * as sessionActions from '../modules/sessionReducer';
 import {getAllSchools} from '../modules/schoolReducer';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import muiTheme from '../styles/muiTheme.js';
+import SnackbarWrapper from './common/SnackbarWrapper';
 import Header from './common/Header';
 import Sidebar from './common/Sidebar';
 import Footer from './common/Footer';
@@ -14,18 +15,18 @@ class App extends Component {
   render() {
     return (
       <MuiThemeProvider muiTheme={muiTheme}>
-        <div className="viewport">
+        <SnackbarWrapper>
           {this.props.session.token && <Header/>}
           <section className="main-body">
             {this.props.session.token && <Sidebar route={this.props.location.pathname} />}
             <section id="main-view">
               <div id={this.props.session.token ? 'main-content' : 'login-content'}>
-                {this.props.children}
+                  {this.props.children}
               </div>
               {this.props.session.token && <Footer />}
             </section>
           </section>
-        </div>
+        </SnackbarWrapper>
       </MuiThemeProvider>
     );
   }
