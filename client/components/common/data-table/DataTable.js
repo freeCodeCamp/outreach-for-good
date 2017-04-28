@@ -134,7 +134,7 @@ const DataTable = ({page, table, data, ...props}) => {
           onRowClick={rowToggleSelected}
           rowClassNameGetter={isRowSelected}
         >
-        {/*console.log('Debugging race condition: ', data.size)*/}
+        {/*console.log('Debugging race condition: ', data, page.columns)*/}
         {page.columns && page.columns
           .map(col =>
           <Column
@@ -158,7 +158,6 @@ const DataTable = ({page, table, data, ...props}) => {
               />
               : <Cell className="cell-loading">
                   <i className="fa fa-refresh fa-spin" />
-                  {/*<i className="fa fa-refresh fa-spin" />*/}
                 </Cell>
               }
             fixed={col.fixed}
