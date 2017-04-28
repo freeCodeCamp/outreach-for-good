@@ -23,10 +23,8 @@ class ManageTab extends Component {
 
     this.state = {
       table,
-      selectedSchool : null,
-      selectedRecord : null,
-      dialogOpen     : false,
-      loaded         : false
+      dialogOpen : false,
+      loaded     : false
     };
 
     this.changeSchool = this.changeSchool.bind(this);
@@ -36,8 +34,10 @@ class ManageTab extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if(this.state.selectedSchool && nextProps.absenceRecords.size && !this.state.loaded) {
-      console.log('Got It!!! ', nextProps.absenceRecords.size);
+    if(this.state.selectedSchool
+      && nextProps.absenceRecords.size
+      && !this.state.loaded) {
+      // Props incoming, ToDo: verify absenceRecords changed
       let nextTable = table.updateSortCol(this.state.table, '');
       nextTable = table.buildIndexMap(nextTable, nextProps.absenceRecords);
 
