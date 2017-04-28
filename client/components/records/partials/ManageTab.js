@@ -22,7 +22,7 @@ class ManageTab extends Component {
     super(props);
 
     this.state = {
-      // table,
+      table,
       selectedSchool : null,
       selectedRecord : null,
       dialogOpen     : false,
@@ -33,15 +33,13 @@ class ManageTab extends Component {
     this.clickHandler = this.clickHandler.bind(this);
     this.closeDialog = this.closeDialog.bind(this);
     this.removeRecord = this.removeRecord.bind(this);
-    this.initializeTable = this.initializeTable.bind(this);
   }
 
   componentWillReceiveProps(nextProps) {
     if(this.state.selectedSchool && nextProps.absenceRecords.size && !this.state.loaded) {
       console.log('Got It!!! ', nextProps.absenceRecords.size);
-      //let schoolId = this.state.selectedSchool.get('_id');
-      //let nextTable = this.initializeTable(schoolId);
-      let nextTable = table.buildIndexMap(this.state.table, nextProps.absenceRecords);
+      let nextTable = table.updateSortCol(this.state.table, '');
+      nextTable = table.buildIndexMap(nextTable, nextProps.absenceRecords);
 
       this.setState({
         table  : nextTable,
@@ -50,23 +48,15 @@ class ManageTab extends Component {
     }
   }
 
-  initializeTable(schoolId) {
-    this.props.actions.fetchSchoolRecordList(schoolId);
-    let nextTable = table.setSelectedTab(table, 'manage');
-    return nextTable;
-  }
-
   /**
    * Updates the data table with selected school
    */
   changeSchool(e, i, selectedSchool) {
     let schoolId = selectedSchool.get('_id');
-    let nextTable = this.initializeTable(schoolId);
-
+    this.props.actions.fetchSchoolRecordList(schoolId);
     this.setState({
       selectedSchool,
-      selectedRecord : null,
-      table          : nextTable
+      loaded : false
     });
   }
 
@@ -125,7 +115,8 @@ class ManageTab extends Component {
   }
 
   render() {
-    const selectedSchoolName = this.state.selectedSchool ? this.state.selectedSchool.get('name') : '';
+    const selectedSchoolName = this.state.selectedSchool
+      ? this.state.selectedSchool.get('name') : '';
 
     const buttons = [
       new RaisedButtonModel({
@@ -170,9 +161,7 @@ class ManageTab extends Component {
           && <DataTable
             table={this.state.table}
             page={page}
-            data={this.props.absenceRecords.map(record => {
-              return {date: record.date, schoolYear: record.schoolYear};
-            })}
+            data={this.props.absenceRecords}
             loaded={this.state.loaded}
             clickHandler={this.clickHandler}
             {...this.props}
