@@ -8,6 +8,7 @@ const DataTableRow = ({rowIndex, indexMap, data, col, ...props}) =>
       {(indexMap.length > 0 && data && data.size)
         ? data.get(indexMap[rowIndex]).get(col)
         : ''}
+      {/*console.log('Rendering row: ', rowIndex)*/}
     </Cell>
           //data.get(rowIndex).get(col)
   ;

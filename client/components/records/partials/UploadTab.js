@@ -1,4 +1,9 @@
 import React, {Component, PropTypes} from 'react';
+import {bindActionCreators} from 'redux';
+import {connect} from 'react-redux';
+import {fetchRecords} from '../../../modules/recordsReducer';
+import { getAllSchools } from '../../../modules/schoolReducer';
+import { addRecord } from '../../../modules/absenceRecordReducer';
 import LinearProgress from 'material-ui/LinearProgress';
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
@@ -29,6 +34,11 @@ class UploadTab extends Component {
     this.closeSnackbar = this.closeSnackbar.bind(this);
   }
 
+  componentDidMount() {
+    this.props.actions.fetchRecords();
+    this.props.actions.getAllSchools();
+  }
+
   /**
    * Fires when the school select is changed
    */
@@ -42,7 +52,7 @@ class UploadTab extends Component {
   changeFile(accepted) {
     if(accepted && this.state.selectedSchool) {
       let school = this.state.selectedSchool.toJS();
-      let previousRecord = this.props.currentRecord
+      let previousRecord = this.props.records.current
         .filter(record => record.school._id === school._id)[0];
 
       let uploadService = new UploadService(school, previousRecord, accepted[0]);
@@ -66,7 +76,7 @@ class UploadTab extends Component {
   confirm() {
     let record = this.state.record;
     record.date = this.state.date;
-    this.props.addRecord(record);
+    this.props.actions.addRecord(record);
     this.cancel();
   }
 
@@ -145,10 +155,31 @@ class UploadTab extends Component {
 }
 
 UploadTab.propTypes = {
-  schools       : PropTypes.object.isRequired,
-  confirm       : PropTypes.func,
-  addRecord     : PropTypes.func,
-  currentRecord : PropTypes.array
+  schools        : PropTypes.object.isRequired,
+  addRecord      : PropTypes.func,
+  absenceRecords : PropTypes.object.isRequired,
+  actions        : PropTypes.object.isRequired,
+  records        : PropTypes.object.isRequired
 };
 
-export default UploadTab;
+function mapStateToProps(state) {
+  return {
+    absenceRecords : state.absenceRecords,
+    records        : state.records,
+    schools        : state.schools
+  };
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+    actions : bindActionCreators({
+      fetchRecords,
+      addRecord,
+      getAllSchools
+    }, dispatch)
+    // absRecActions : bindActionCreators(absRecActions, dispatch),
+    // fetchRecords  : bindActionCreators(fetchRecords, dispatch)
+  };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(UploadTab);
