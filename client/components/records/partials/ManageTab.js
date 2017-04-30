@@ -1,7 +1,13 @@
 import React, {Component, PropTypes} from 'react';
+import {bindActionCreators} from 'redux';
+import {connect} from 'react-redux';
+import {
+  fetchSchoolRecordList,
+  removeRecord} from '../../../modules/absenceRecordReducer';
 import DataTable from '../../common/data-table/DataTable';
 import RaisedButtonModel from '../../../models/RaisedButtonModel';
 import {Link} from 'react-router';
+import { List } from 'immutable';
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
 import TableModel from '../../../models/TableModel';
@@ -16,33 +22,30 @@ class ManageTab extends Component {
     super(props);
 
     this.state = {
-      // table,
-      selectedSchool : null,
-      selectedRecord : null,
-      dialogOpen     : false,
+      table,
+      dialogOpen : false,
+      loaded     : false
     };
 
     this.changeSchool = this.changeSchool.bind(this);
     this.clickHandler = this.clickHandler.bind(this);
     this.closeDialog = this.closeDialog.bind(this);
     this.removeRecord = this.removeRecord.bind(this);
-    this.initializeTable = this.initializeTable.bind(this);
   }
 
   componentWillReceiveProps(nextProps) {
-    if(this.state.selectedSchool) {
-      let schoolId = this.state.selectedSchool.get('_id');
-      let nextTable = this.initializeTable(schoolId);
-      nextTable = table.buildIndexMap(nextTable, nextProps.absenceRecordsList);
+    if(this.state.selectedSchool
+      && nextProps.absenceRecords.size
+      && !this.state.loaded) {
+      // Props incoming, ToDo: verify absenceRecords changed
+      let nextTable = table.updateSortCol(this.state.table, '');
+      nextTable = table.buildIndexMap(nextTable, nextProps.absenceRecords);
 
-      this.setState({ table: nextTable });
+      this.setState({
+        table  : nextTable,
+        loaded : true
+      });
     }
-  }
-
-  initializeTable(schoolId) {
-    this.props.fetchSchoolRecordList(schoolId);
-    let nextTable = table.setSelectedTab(table, 'manage');
-    return nextTable;
   }
 
   /**
@@ -50,12 +53,10 @@ class ManageTab extends Component {
    */
   changeSchool(e, i, selectedSchool) {
     let schoolId = selectedSchool.get('_id');
-    let nextTable = this.initializeTable(schoolId);
-
+    this.props.actions.fetchSchoolRecordList(schoolId);
     this.setState({
       selectedSchool,
-      selectedRecord : null,
-      table          : nextTable
+      loaded : false
     });
   }
 
@@ -82,8 +83,8 @@ class ManageTab extends Component {
   }
 
   removeRecord() {
-    let recordId = this.props.absenceRecordsList.get(0).get('recordId');
-    this.props.removeRecord(recordId);
+    let recordId = this.props.absenceRecords.get(0).get('recordId');
+    this.props.actions.removeRecord(recordId);
     this.closeDialog();
     this.changeSchool(null, null, this.state.selectedSchool);
   }
@@ -99,13 +100,13 @@ class ManageTab extends Component {
     console.log('row clicked: ', record);
     let selectedRecord = {};
 
-    selectedRecord.newMissingStudents = this.props.absenceRecordsList
+    selectedRecord.newMissingStudents = this.props.absenceRecords
     .get(record)
     .get('newMissingStudents')
     // .map(entry => entry.get('_id'));
     .map((entry, i) => <Link key={i} to={`/student/${entry.get('_id')}`}>{entry.firstName} {entry.lastName}</Link>);
 
-    selectedRecord.createdStudents = this.props.absenceRecordsList
+    selectedRecord.createdStudents = this.props.absenceRecords
     .get(record)
     .get('createdStudents')
     .map((entry, i) => <Link key={i} to={`/student/${entry.get('_id')}`}>{`${entry.get('firstName')} ${entry.get('lastName')}`}</Link>);
@@ -114,7 +115,8 @@ class ManageTab extends Component {
   }
 
   render() {
-    const selectedSchoolName = this.state.selectedSchool ? this.state.selectedSchool.get('name') : '';
+    const selectedSchoolName = this.state.selectedSchool
+      ? this.state.selectedSchool.get('name') : '';
 
     const buttons = [
       new RaisedButtonModel({
@@ -159,7 +161,8 @@ class ManageTab extends Component {
           && <DataTable
             table={this.state.table}
             page={page}
-            data={this.props.absenceRecordsList}
+            data={this.props.absenceRecords}
+            loaded={this.state.loaded}
             clickHandler={this.clickHandler}
             {...this.props}
           />}
@@ -188,11 +191,29 @@ class ManageTab extends Component {
 }
 
 ManageTab.propTypes = {
-  absenceRecordsList    : PropTypes.object,
-  manageRecords         : PropTypes.object,
+  actions               : PropTypes.object.isRequired,
+  absenceRecords        : PropTypes.instanceOf(List),
   fetchSchoolRecordList : PropTypes.func,
   removeRecord          : PropTypes.func,
   schools               : PropTypes.object
 };
 
-export default ManageTab;
+
+function mapStateToProps(state) {
+  return {
+    absenceRecords : state.absenceRecords,
+    schools        : state.schools
+  };
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+    actions : bindActionCreators({
+      fetchSchoolRecordList,
+      removeRecord,
+    }, dispatch)
+  };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(ManageTab);
+
