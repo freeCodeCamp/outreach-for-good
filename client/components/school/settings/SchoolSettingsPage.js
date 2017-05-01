@@ -24,10 +24,11 @@ class SchoolSettingsPage extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
+    console.log(this.props.schools);
     /**
      * When props update, if they are different open the snackbar
      */
-    if(!nextProps.schools.equals(this.props.schools)) {
+    if(!nextProps.schools.equals(this.props.schools) && this.state.selectedSchool) {
       let currentSchool = nextProps.schools
       .get(this.state.selectedSchool).get('name');
 

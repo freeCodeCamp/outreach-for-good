@@ -28,7 +28,7 @@ class SchoolReportsPage extends Component {
   }
 
   componentDidMount() {
-    //console.log('did mount');
+    // console.log('did mount');
     this.retrieveData('atRisk');
   }
 
@@ -96,7 +96,6 @@ class SchoolReportsPage extends Component {
     // Call the API for new reports
     switch (currentTab) {
     case 'atRisk':
-      console.log('at risk loaded');
       this.props.repAct.getCurrentAtRisk();
       break;
     case 'chronicallyAbsent':
