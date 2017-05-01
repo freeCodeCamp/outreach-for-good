@@ -70,6 +70,7 @@ class SchoolReportsPage extends Component {
       }
       break;
     }
+    console.log('data has been loaded');
     if(dataLoaded) {
       this.setState({table: nextTable, loaded: true});
     }
@@ -95,6 +96,7 @@ class SchoolReportsPage extends Component {
     // Call the API for new reports
     switch (currentTab) {
     case 'atRisk':
+      console.log('at risk loaded');
       this.props.repAct.getCurrentAtRisk();
       break;
     case 'chronicallyAbsent':
