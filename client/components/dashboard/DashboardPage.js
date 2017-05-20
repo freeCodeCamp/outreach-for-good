@@ -2,7 +2,7 @@ import React, {PropTypes} from 'react';
 import { bindActionCreators } from 'redux';
 import {connect} from 'react-redux';
 import {Tabs, Tab} from 'material-ui/Tabs';
-import Dimensions from 'react-dimensions';
+import Dimensions from 'react-dimensions-cjs';
 
 import * as absAct from '../../modules/absenceRecordReducer';
 import * as repAct from '../../modules/reportsReducer';
@@ -396,6 +396,6 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-//https://github.com/digidem/react-dimensions/issues/44
+//https://github.com/digidem/react-dimensions-cjs/issues/44
 export default connect(mapStateToProps, mapDispatchToProps)(
   Dimensions({elementResize: true})(DashboardPage));

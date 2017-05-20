@@ -2,7 +2,7 @@ import React, {Component, PropTypes} from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import {Tabs, Tab} from 'material-ui/Tabs';
-import Dimensions from 'react-dimensions';
+import Dimensions from 'react-dimensions-cjs';
 
 import * as repAct from '../../../modules/reportsReducer';
 import TableModel from '../../../models/TableModel';
@@ -242,6 +242,6 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-//https://github.com/digidem/react-dimensions/issues/44
+//https://github.com/digidem/react-dimensions-cjs/issues/44
 export default connect(mapStateToProps, mapDispatchToProps)(
   Dimensions({elementResize: true})(SchoolReportsPage));

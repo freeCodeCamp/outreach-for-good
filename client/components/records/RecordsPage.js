@@ -2,7 +2,7 @@ import React, {Component, PropTypes} from 'react';
 import {Tabs, Tab} from 'material-ui/Tabs';
 import UploadTab from './partials/UploadTab';
 import ManageTab from './partials/ManageTab';
-import Dimensions from 'react-dimensions';
+import Dimensions from 'react-dimensions-cjs';
 
 class RecordsPage extends Component {
   constructor(props) {
