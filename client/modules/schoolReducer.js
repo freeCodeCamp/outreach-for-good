@@ -77,8 +77,14 @@ export function removeSchool(schoolId) {
 export function changeTriggers(schoolId, triggers) {
   return dispatch => {
     SchoolsApi.changeTriggers(schoolId, triggers)
-      .then(() => dispatch(getAllSchools()))
-        // dispatch(loadSchoolsSuccess(schools)))
+      .then(school => {
+        dispatch(getAllSchools());
+        dispatch({
+          type      : 'OPEN_SNACKBAR',
+          message   : `Triggers updated for ${school.name}`,
+          snackType : 'success'
+        });
+      })
       .catch(err => handleError(err, dispatch));
   };
 }
@@ -91,6 +97,11 @@ export function handleError(err, dispatch) {
   if(status == 401) {
     return dispatch(validate());
   } else {
+    dispatch({
+      type      : 'OPEN_SNACKBAR',
+      message   : `Error: ${err.toString()}`,
+      snackType : 'error'
+    });
     throw err;
   }
 }

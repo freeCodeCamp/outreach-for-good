@@ -1,18 +1,18 @@
-import React, { PropTypes } from 'react';
+import React, {Component, PropTypes} from 'react';
 import { bindActionCreators } from 'redux';
 import Snackbar from 'material-ui/Snackbar';
 import {connect} from 'react-redux';
 
-import * as viewAct from '../../modules/viewReducer';
+import {closeSnackbar} from '../../modules/viewReducer';
 
-class SnackbarWrapper extends React.Component {
+class SnackbarWrapper extends Component {
   constructor(props, context) {
     super(props, context);
     this.handleRequestClose = this.handleRequestClose.bind(this);
   }
 
   handleRequestClose() {
-    this.props.viewAct.closeSnackbar();
+    this.props.actions.closeSnackbar();
   }
 
   render() {
@@ -27,27 +27,20 @@ class SnackbarWrapper extends React.Component {
       }
     };
     return (
-      <div className="viewport">
-        {this.props.children}
-        <Snackbar
-          open={this.props.snackbar.open}
-          message={this.props.snackbar.message}
-          autoHideDuration={this.props.snackbar.autoHideDuration}
-          onRequestClose={this.handleRequestClose}
-          bodyStyle={snackTypes[this.props.snackbar.snackType]}
-        />
-      </div>
+      <Snackbar
+        open={!!this.props.snackbar.message}
+        message={this.props.snackbar.message}
+        autoHideDuration={this.props.snackbar.autoHideDuration}
+        onRequestClose={this.handleRequestClose}
+        bodyStyle={snackTypes[this.props.snackbar.snackType]}
+      />
     );
   }
 }
 
 SnackbarWrapper.propTypes = {
-  children : React.PropTypes.oneOfType([
-    React.PropTypes.arrayOf(React.PropTypes.node),
-    React.PropTypes.node
-  ]),
   snackbar : PropTypes.object.isRequired,
-  viewAct  : PropTypes.object.isRequired
+  actions  : PropTypes.object.isRequired
 };
 
 function mapStateToProps(state) {
@@ -58,7 +51,7 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    viewAct : bindActionCreators(viewAct, dispatch)
+    actions : bindActionCreators({closeSnackbar}, dispatch)
   };
 }
 
