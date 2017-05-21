@@ -144,10 +144,23 @@ export function fetchRecordsListYear(year) {
  */
 export function addRecord(schoolId, record) {
   return function(dispatch) {
-    return AbsenceRecordsApi.addRecord(schoolId, record).then(res =>
-      dispatch(loadRecordsSuccess(res))
-    )
-    .catch(err => handleError(err, dispatch));
+    return AbsenceRecordsApi.addRecord(schoolId, record).then(res => {
+      // dispatch(loadRecordsSuccess(res))
+      console.log(res);
+      dispatch({
+        type      : 'OPEN_SNACKBAR',
+        message   : 'record added!',
+        snackType : 'success'
+      });
+    })
+    .catch(err => {
+      // handleError(err, dispatch)
+      dispatch({
+        type      : 'OPEN_SNACKBAR',
+        message   : `ERROR: ${err.toString()}`,
+        snackType : 'error'
+      });
+    });
   };
 }
 

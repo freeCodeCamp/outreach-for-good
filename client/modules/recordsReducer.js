@@ -61,9 +61,17 @@ export function fetchRecords() {
 
 export function addRecord(record) {
   return dispatch => AbsenceRecordsApi.addRecord(record)
-    .then(() => dispatch({
-      type : ADD_RECORD_SUCCESS
-    }));
+    .then(response => {
+      console.log(response);
+      dispatch({
+        type : ADD_RECORD_SUCCESS
+      });
+      dispatch({
+        type      : 'OPEN_SNACKBAR',
+        message   : 'record added success',
+        snackType : 'success'
+      });
+    });
 }
 
 export function removeRecord(record) {

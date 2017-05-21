@@ -14,18 +14,19 @@ class App extends Component {
   render() {
     return (
       <MuiThemeProvider muiTheme={muiTheme}>
-        <SnackbarWrapper>
+        <div className="viewport">
           {this.props.session.token && <Header/>}
           <section className="main-body">
             {this.props.session.token && <Sidebar route={this.props.location.pathname} />}
             <section id="main-view">
               <div id={this.props.session.token ? 'main-content' : 'login-content'}>
-                  {this.props.children}
+                {this.props.children}
+                <SnackbarWrapper />
               </div>
               {this.props.session.token && <Footer />}
             </section>
           </section>
-        </SnackbarWrapper>
+        </div>
       </MuiThemeProvider>
     );
   }
