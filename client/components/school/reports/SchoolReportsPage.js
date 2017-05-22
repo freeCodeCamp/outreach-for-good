@@ -70,7 +70,6 @@ class SchoolReportsPage extends Component {
       }
       break;
     }
-    console.log('data has been loaded');
     if(dataLoaded) {
       this.setState({table: nextTable, loaded: true});
     }
@@ -144,6 +143,12 @@ class SchoolReportsPage extends Component {
       nextTable = table.updateFilterBy(this.state.table, tabData, data.substr(7), event);
       nextTable = table.sortIndexMap(nextTable, tabData);
       this.setState({table: nextTable});
+      break;
+    case 'buttonClick':
+      console.log(event);
+      if(data === 'studentPage') {
+        console.log(event);
+      }
       break;
     }
   }

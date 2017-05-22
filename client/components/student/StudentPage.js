@@ -14,14 +14,7 @@ import Notes from './partials/Notes';
 import Summary from './partials/Summary';
 
 //import just the student actions used in this component
-import {
-  getStudent,
-  getStudentRecords,
-  getStudentOutreaches,
-  getStudentNotes,
-  getStudentInterventions,
-  postStudentNote,
-} from '../../modules/studentReducer';
+import * as studentActions from '../../modules/studentReducer';
 
 class StudentPage extends Component {
   constructor(props) {
@@ -40,6 +33,7 @@ class StudentPage extends Component {
     this.changeTab = this.changeTab.bind(this);
     this.dialogOpen = this.dialogOpen.bind(this);
     this.dialogClose = this.dialogClose.bind(this);
+    this.onCheck = this.onCheck.bind(this);
 
     this.postNote = this.postNote.bind(this);
     this.editNote = this.editNote.bind(this);
@@ -76,6 +70,24 @@ class StudentPage extends Component {
     console.log('Edit the note:', e);
   }
 
+  onCheck(e, val) {
+    console.log(e.target.name, val);
+
+    switch (e.target.name) {
+    case 'iep':
+      this.props.actions.putStudentIep(this.studentId, {iep: val});
+      break;
+    case 'cfa':
+      this.props.actions.putStudentCfa(this.studentId, {cfa: val});
+      break;
+    case 'withdrawn':
+      this.props.actions.putStudentWithdrawn(this.studentId, {withdrawn: val});
+      break;
+    }
+
+    // this.props.actions.putStuden;
+  }
+
   render() {
     let student = this.props.student.student;
     return (
@@ -86,15 +98,21 @@ class StudentPage extends Component {
             <p>Student ID: (#{student.studentId})</p>
             <Checkbox
               label="IEP:"
-              defaultChecked={student.iep}
+              name="iep"
+              onCheck={this.onCheck}
+              checked={student.iep}
             />
             <Checkbox
               label="CFA:"
-              defaultChecked={student.cfa}
+              name="cfa"
+              onCheck={this.onCheck}
+              checked={student.cfa}
             />
             <Checkbox
               label="Withdrawn:"
-              defaultChecked={student.withdrawn}
+              name="withdrawn"
+              onCheck={this.onCheck}
+              checked={student.withdrawn}
             />
           </div>
           <div className="col-attendance">
@@ -147,14 +165,7 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    actions : bindActionCreators({
-      getStudent,
-      getStudentRecords,
-      getStudentOutreaches,
-      getStudentInterventions,
-      getStudentNotes,
-      postStudentNote
-    }, dispatch)
+    actions : bindActionCreators(studentActions, dispatch)
   };
 }
 export default connect(mapStateToProps, mapDispatchToProps)(StudentPage);

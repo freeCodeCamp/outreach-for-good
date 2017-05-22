@@ -79,12 +79,8 @@ const ChronicallyAbsentTab = ({chronicAbsent, ...props}) => {
     }],
     buttons : [
       new RaisedButtonModel({
-        label    : 'Button One',
-        actionID : 'someAction'
-      }),
-      new RaisedButtonModel({
-        label    : 'Button Two',
-        actionID : 'someAction'
+        label    : 'Show Student',
+        actionID : 'showStudentPage'
       })
     ]
   };
