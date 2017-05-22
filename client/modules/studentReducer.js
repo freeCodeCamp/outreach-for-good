@@ -148,6 +148,53 @@ export function postStudentNote(studentId, body) {
     })));
 }
 
+export function putStudentIep(studentId, iep) {
+  return dispatch => StudentApi.putStudentIep(studentId, iep)
+    .then(student => {
+      dispatch({
+        type : GET_STUDENT_SUCCESS,
+        student
+      });
+      dispatch({
+        type      : 'OPEN_SNACKBAR',
+        message   : `IEP status changed to ${student.iep}`,
+        snackType : 'success'
+      });
+    });
+}
+
+export function putStudentCfa(studentId, cfa) {
+  return dispatch => StudentApi.putStudentCfa(studentId, cfa)
+    .then(student => {
+      dispatch({
+        type : GET_STUDENT_SUCCESS,
+        student
+      });
+      dispatch({
+        type      : 'OPEN_SNACKBAR',
+        message   : `CFA status changed to ${student.cfa}`,
+        snackType : 'success'
+      });
+    })
+    .catch(err => console.log(err));
+}
+
+export function putStudentWithdrawn(studentId, withdrawn) {
+  return dispatch => StudentApi.putStudentWithdrawn(studentId, withdrawn)
+    .then(student => {
+      dispatch({
+        type : GET_STUDENT_SUCCESS,
+        student
+      });
+      dispatch({
+        type      : 'OPEN_SNACKBAR',
+        message   : `Withdrawn status changed to ${student.withdrawn}`,
+        snackType : 'success'
+      });
+    })
+    .catch(err => console.log(err));
+}
+
 export function unmountStudent() {
   return {
     type : UNMOUNT_STUDENT
