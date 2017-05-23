@@ -59,24 +59,35 @@ export function fetchRecords() {
     }));
 }
 
-export function addRecord(record) {
-  return dispatch => AbsenceRecordsApi.addRecord(record)
-    .then(response => {
-      console.log(response);
-      dispatch({
-        type : ADD_RECORD_SUCCESS
-      });
-      dispatch({
-        type      : 'OPEN_SNACKBAR',
-        message   : 'record added success',
-        snackType : 'success'
-      });
-    });
-}
-
-export function removeRecord(record) {
-  return dispatch => AbsenceRecordsApi.removeRecord(record)
-    .then(() => dispatch({
-      type : REMOVE_RECORD_SUCCESS
-    }));
-}
+// export function addRecord(record) {
+//   return dispatch => AbsenceRecordsApi.addRecord(record)
+//     .then(response => {
+//       dispatch({
+//         type : ADD_RECORD_SUCCESS
+//       });
+//       dispatch({
+//         type      : 'OPEN_SNACKBAR',
+//         message   : `Record created for ${response.record.school.name} with ${response.outreaches.length} outreaches.`,
+//         snackType : 'success'
+//       });
+//     })
+//     .catch(err => dispatch({
+//       type      : 'OPEN_SNACKBAR',
+//       message   : `Error: ${err}`,
+//       snackType : 'error'
+//     }));
+// }
+//
+// export function removeRecord(record) {
+//   return dispatch => AbsenceRecordsApi.removeRecord(record)
+//     .then(() => {
+//       dispatch({
+//         type : REMOVE_RECORD_SUCCESS
+//       });
+//       dispatch({
+//         type    : 'OPEN_SNACKBAR',
+//         message : 'Record deleted.',
+//         type    : 'success'
+//       });
+//     });
+// }
