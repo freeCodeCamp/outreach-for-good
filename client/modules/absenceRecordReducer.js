@@ -3,6 +3,7 @@ import AbsenceRecord from '../models/AbsenceRecordModel';
 import AbsenceRecordListModel from '../models/AbsenceRecordListModel';
 
 import { validate } from './sessionReducer';
+import { openSnackbar } from './viewReducer';
 import AbsenceRecordsApi from './api/AbsenceRecordsApi';
 
 //ACTIONS
@@ -146,20 +147,11 @@ export function addRecord(schoolId, record) {
   return function(dispatch) {
     return AbsenceRecordsApi.addRecord(schoolId, record).then(res => {
       // dispatch(loadRecordsSuccess(res))
-      console.log(res);
-      dispatch({
-        type      : 'OPEN_SNACKBAR',
-        message   : 'record added!',
-        snackType : 'success'
-      });
+
+      dispatch(openSnackbar(`Record added for ${res.record.school.name} with ${res.outreaches.length} outreaches created.`));
     })
     .catch(err => {
-      // handleError(err, dispatch)
-      dispatch({
-        type      : 'OPEN_SNACKBAR',
-        message   : `ERROR: ${err.toString()}`,
-        snackType : 'error'
-      });
+      dispatch(openSnackbar(`ERROR: ${err.toString()}`, 'error'));
     });
   };
 }
@@ -171,9 +163,11 @@ export function addRecord(schoolId, record) {
 export function removeRecord(recordId) {
   return function(dispatch) {
     return AbsenceRecordsApi.removeRecord(recordId).then(res =>
-      dispatch(loadRecordsSuccess(res))
+      // dispatch(loadRecordsSuccess(res))
+
+      dispatch(openSnackbar(`Record deleted for ${res.record.school.name}.`))
     )
-    .catch(err => handleError(err, dispatch));
+    .catch(err => dispatch(openSnackbar(`ERROR: ${err.toString()}`, 'error')));
   };
 }
 

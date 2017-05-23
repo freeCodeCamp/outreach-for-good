@@ -45,6 +45,10 @@ class ManageTab extends Component {
         table  : nextTable,
         loaded : true
       });
+    } else {
+      this.setState({
+        selectedRecord : null
+      });
     }
   }
 
@@ -56,7 +60,8 @@ class ManageTab extends Component {
     this.props.actions.fetchSchoolRecordList(schoolId);
     this.setState({
       selectedSchool,
-      loaded : false
+      selectedRecord : null,
+      loaded         : false
     });
   }
 
@@ -216,4 +221,3 @@ function mapDispatchToProps(dispatch) {
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(ManageTab);
-
