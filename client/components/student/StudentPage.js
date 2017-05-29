@@ -55,7 +55,7 @@ class StudentPage extends Component {
   }
 
   dialogOpen(e) {
-    console.log(e);
+    //console.log(e);
     this.setState({ dialogOpen: true });
   }
 
@@ -70,7 +70,7 @@ class StudentPage extends Component {
   }
 
   editNote(e) {
-    console.log('Edit the note:', e);
+    //console.log('Edit the note:', e);
   }
 
   onCheck(e, val) {

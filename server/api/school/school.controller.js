@@ -16,7 +16,7 @@ exports.index = function(req, res) {
   if(req.user.role === 'teacher') {
     options._id = req.user.assignment;
   }
-  console.log(req.user.assignment);
+  //console.log(req.user.assignment);
   School.find(options).exec(function(err, schools) {
     if(err) return handleError(res, err);
     return res.status(200).json(schools);
@@ -68,7 +68,7 @@ exports.create = function(req, res) {
  * restriction: 'teacher'
  */
 exports.updateTriggers = function(req, res) {
-  console.log(req.body);
+  //console.log(req.body);
   req.school.triggers = req.body.triggers;
   req.school.save(function(err) {
     if(err) return handleError(res, err);

@@ -176,7 +176,7 @@ export function removeRecord(recordId) {
  */
 export function handleError(err, dispatch) {
   let status = err.status;
-  console.log('In userActions.js, handleError()', status, err);
+  //console.log('In userActions.js, handleError()', status, err);
   if(status == 401) {
     return dispatch(validate());
   } else {

@@ -145,9 +145,9 @@ class SchoolReportsPage extends Component {
       this.setState({table: nextTable});
       break;
     case 'buttonClick':
-      console.log(event);
+      //console.log(event);
       if(data === 'studentPage') {
-        console.log(event);
+        //console.log(event);
       }
       break;
     }
