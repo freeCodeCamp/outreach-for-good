@@ -1,4 +1,5 @@
 import StudentApi from './api/StudentApi';
+import {openSnackbar} from './viewReducer';
 
 
 //ACTIONS
@@ -10,6 +11,7 @@ const GET_STUDENT_RECORDS_SUCCESS = 'GET_STUDENT_RECORDS_SUCCESS';
 const GET_STUDENT_INTERVENTIONS_SUCCESS = 'GET_STUDENT_INTERVENTIONS_SUCCESS';
 const GET_STUDENT_OUTREACHES_SUCCESS = 'GET_STUDENT_OUTREACHES_SUCCESS';
 const GET_STUDENT_NOTES_SUCCESS = 'GET_STUDENT_NOTES_SUCCESS';
+
 const UNMOUNT_STUDENT = 'UNMOUNT_STUDENT';
 
 
@@ -155,12 +157,9 @@ export function putStudentIep(studentId, iep) {
         type : GET_STUDENT_SUCCESS,
         student
       });
-      dispatch({
-        type      : 'OPEN_SNACKBAR',
-        message   : `IEP status changed to ${student.iep}`,
-        snackType : 'success'
-      });
-    });
+      dispatch(openSnackbar(`IEP status changed to ${student.iep}`));
+    })
+    .catch(err => openSnackbar(`ERROR: ${err}`, 'error'));
 }
 
 export function putStudentCfa(studentId, cfa) {
@@ -170,13 +169,9 @@ export function putStudentCfa(studentId, cfa) {
         type : GET_STUDENT_SUCCESS,
         student
       });
-      dispatch({
-        type      : 'OPEN_SNACKBAR',
-        message   : `CFA status changed to ${student.cfa}`,
-        snackType : 'success'
-      });
+      dispatch(openSnackbar(`CFA status changed to ${student.cfa}`));
     })
-    .catch(err => console.log(err));
+    .catch(err => openSnackbar(`ERROR: ${err}`, 'error'));
 }
 
 export function putStudentWithdrawn(studentId, withdrawn) {
@@ -186,13 +181,18 @@ export function putStudentWithdrawn(studentId, withdrawn) {
         type : GET_STUDENT_SUCCESS,
         student
       });
-      dispatch({
-        type      : 'OPEN_SNACKBAR',
-        message   : `Withdrawn status changed to ${student.withdrawn}`,
-        snackType : 'success'
-      });
+      dispatch(openSnackbar(`Withdrawn status changed to ${student.withdrawn}`));
     })
-    .catch(err => console.log(err));
+    .catch(err => openSnackbar(`ERROR: ${err}`, 'error'));
+}
+
+export function postOutreachNote(studentId, outreachId, note) {
+  return dispatch => StudentApi.postOutreachNote(studentId, outreachId, note)
+    .then(outreach => {
+      dispatch(getStudentOutreaches(studentId));
+      dispatch(openSnackbar(`Outreach posted for ${outreach.type} ${outreach.tier}`));
+    })
+    .catch(err => openSnackbar(`ERROR: ${err}`, 'error'));
 }
 
 export function unmountStudent() {

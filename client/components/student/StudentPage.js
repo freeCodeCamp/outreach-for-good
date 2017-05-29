@@ -35,11 +35,14 @@ class StudentPage extends Component {
     this.dialogClose = this.dialogClose.bind(this);
     this.onCheck = this.onCheck.bind(this);
 
+    this.outreachNote = this.outreachNote.bind(this);
+    this.outreachAction = this.outreachAction.bind(this);
+
     this.postNote = this.postNote.bind(this);
     this.editNote = this.editNote.bind(this);
   }
 
-  componentWillMount() {
+  componentDidMount() {
     this.props.actions.getStudent(this.studentId);
     this.props.actions.getStudentRecords(this.studentId);
     this.props.actions.getStudentOutreaches(this.studentId);
@@ -71,8 +74,6 @@ class StudentPage extends Component {
   }
 
   onCheck(e, val) {
-    //console.log(e.target.name, val);
-
     switch (e.target.name) {
     case 'iep':
       this.props.actions.putStudentIep(this.studentId, {iep: val});
@@ -84,8 +85,22 @@ class StudentPage extends Component {
       this.props.actions.putStudentWithdrawn(this.studentId, {withdrawn: val});
       break;
     }
+  }
 
-    // this.props.actions.putStuden;
+  outreachNote(e) {
+    e.preventDefault();
+    let outreachId = e.target.id;
+    let note = {note: e.target.outreachNote.value};
+
+    this.props.actions.postOutreachNote(this.studentId, outreachId, note);
+  }
+
+  outreachAction(e, date) {
+    console.log(e.target.id);
+    let outreachId = e.target.id;
+    let actionDate = {actionDate: date};
+
+    this.props.actions.putOutreachAction(this.studentId, outreachId, actionDate);
   }
 
   render() {
@@ -124,7 +139,9 @@ class StudentPage extends Component {
           <Tabs>
             <Tab label="Outreaches">
               <Outreaches
-                outreaches={this.props.student.outreaches} />
+                outreaches={this.props.student.outreaches}
+                outreachAction={this.props.actions.putOutreachAction}
+                outreachNote={this.outreachNote} />
             </Tab>
             <Tab label="Interventions">
               <Interventions

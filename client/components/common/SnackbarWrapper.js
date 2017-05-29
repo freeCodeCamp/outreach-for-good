@@ -18,10 +18,12 @@ class SnackbarWrapper extends Component {
   render() {
     const snackTypes = {
       success : {
+        transform       : 'translateY(-29px)',
         backgroundColor : '#16a461',
         color           : 'white'
       },
       error : {
+        transform       : 'translateY(-29px)',
         backgroundColor : '#d9152a',
         color           : 'white'
       }

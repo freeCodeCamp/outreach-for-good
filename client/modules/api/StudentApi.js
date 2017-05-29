@@ -120,6 +120,14 @@ class StudentApi extends Api {
     return this.postAPI(`/api/students/${studentId}/notes`, note);
   }
 
+  static postOutreachNote(studentId, outreachId, note) {
+    return this.postAPI(`/api/students/${studentId}/outreaches/${outreachId}/note`, note);
+  }
+
+  static putOutreachAction(studentId, outreachId, action) {
+    return this.put(`/api/students/${studentId}/outreaches/${outreachId}/action`, action);
+  }
+
 }
 
 
