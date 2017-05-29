@@ -49,7 +49,7 @@ class RTRouter extends React.Component {
           state    : { nextPathname: nextState.location.pathname }
         });
       } else {
-        console.log('router validate');
+        //console.log('router validate');
         this.props.actions.validate();
       }
     }

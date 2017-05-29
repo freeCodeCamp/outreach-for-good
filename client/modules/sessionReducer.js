@@ -46,7 +46,7 @@ export default function sessionReducer(state = initialState, action) {
 
 //ACTION CREATORS
 export function setToken(token, me) {
-  console.log('Setting Token');
+  //console.log('Setting Token');
   return {type: SET_TOKEN, token, me};
 }
 

@@ -102,7 +102,7 @@ class ManageTab extends Component {
   * Display record is used when clicking on a row to display students
   */
   _displayRecord(record) {
-    console.log('row clicked: ', record);
+    //console.log('row clicked: ', record);
     let selectedRecord = {};
 
     selectedRecord.newMissingStudents = this.props.absenceRecords
