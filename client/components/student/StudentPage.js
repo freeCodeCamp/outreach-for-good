@@ -3,7 +3,8 @@ import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import {Tabs, Tab} from 'material-ui/Tabs';
 import Checkbox from 'material-ui/Checkbox';
-import Paper from 'material-ui/Paper';
+import FloatingActionButton from 'material-ui/FloatingActionButton';
+import ContentAdd from 'material-ui/svg-icons/content/add';
 
 //import the partials used in this component
 import StudentAbsenceRecordTable from './partials/StudentAbsenceRecordTable';
@@ -96,7 +97,6 @@ class StudentPage extends Component {
   }
 
   outreachAction(e, date) {
-    console.log(e.target.id);
     let outreachId = e.target.id;
     let actionDate = {actionDate: date};
 
@@ -107,24 +107,24 @@ class StudentPage extends Component {
     let student = this.props.student.student;
     return (
       <div className="student-page">
-        <Paper className="info" zDepth={1}>
+        <div className="info">
           <div className="col-data">
             <h1>{student.lastName}, {student.firstName} <small>Grade: {student.grade}</small></h1>
             <p>Student ID: (#{student.studentId})</p>
             <Checkbox
-              label="IEP:"
+              label="IEP"
               name="iep"
               onCheck={this.onCheck}
               checked={student.iep}
             />
             <Checkbox
-              label="CFA:"
+              label="CFA"
               name="cfa"
               onCheck={this.onCheck}
               checked={student.cfa}
             />
             <Checkbox
-              label="Withdrawn:"
+              label="Withdrawn"
               name="withdrawn"
               onCheck={this.onCheck}
               checked={student.withdrawn}
@@ -134,19 +134,29 @@ class StudentPage extends Component {
             <StudentAbsenceRecordTable
               records={this.props.student.records} />
           </div>
-        </Paper>
+        </div>
         <div className="tabs">
           <Tabs>
             <Tab label="Outreaches">
-              <Outreaches
-                outreaches={this.props.student.outreaches}
-                outreachAction={this.props.actions.putOutreachAction}
-                outreachNote={this.outreachNote} />
+              <div className="outreach-cards">
+                {this.props.student.outreaches.map((outreach, i) =>
+                  <Outreaches key={i}
+                    outreachId={outreach._id}
+                    outreachNote={this.outreachNote}
+                    outreachAction={this.outreachAction}
+                    outreach={outreach} />)}
+              </div>
             </Tab>
             <Tab label="Interventions">
-              <Interventions
-                postIntervention={this.props.actions.postStudentIntervention}
-                interventions={this.props.student.interventions} />
+              <div className="intervention-cards">
+                <Interventions
+                  postIntervention={this.props.actions.postStudentIntervention}
+                  interventions={this.props.student.interventions} />
+
+                <FloatingActionButton className="add-intervention">
+                  <ContentAdd />
+                </FloatingActionButton>
+              </div>
             </Tab>
             <Tab label="Notes">
               <Notes
