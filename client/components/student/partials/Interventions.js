@@ -2,6 +2,8 @@ import React, {PropTypes} from 'react';
 import {Card, CardHeader, CardText} from 'material-ui/Card';
 import Chip from 'material-ui/Chip';
 
+import './Interventions.scss';
+
 const cardStyle = {
   width : `${50}%`
 };

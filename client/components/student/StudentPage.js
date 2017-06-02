@@ -3,8 +3,8 @@ import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import {Tabs, Tab} from 'material-ui/Tabs';
 import Checkbox from 'material-ui/Checkbox';
-import FloatingActionButton from 'material-ui/FloatingActionButton';
-import ContentAdd from 'material-ui/svg-icons/content/add';
+import RaisedButton from 'material-ui/RaisedButton';
+import FontIcon from 'material-ui/FontIcon';
 
 //import the partials used in this component
 import StudentAbsenceRecordTable from './partials/StudentAbsenceRecordTable';
@@ -16,6 +16,8 @@ import Summary from './partials/Summary';
 
 //import just the student actions used in this component
 import * as studentActions from '../../modules/studentReducer';
+
+import './StudentPage.scss';
 
 class StudentPage extends Component {
   constructor(props) {
@@ -137,6 +139,9 @@ class StudentPage extends Component {
         </div>
         <div className="tabs">
           <Tabs>
+            <Tab label="Parent Info">
+              <p>parent info</p>
+            </Tab>
             <Tab label="Outreaches">
               <div className="outreach-cards">
                 {this.props.student.outreaches.map((outreach, i) =>
@@ -153,9 +158,11 @@ class StudentPage extends Component {
                   postIntervention={this.props.actions.postStudentIntervention}
                   interventions={this.props.student.interventions} />
 
-                <FloatingActionButton className="add-intervention">
-                  <ContentAdd />
-                </FloatingActionButton>
+                <RaisedButton className="add-intervention"
+                  icon={<FontIcon className="fa fa-plus" />}
+                  label="Add Intervention"
+                  onTouchTap={this.dialogOpen}
+                  primary />
               </div>
             </Tab>
             <Tab label="Notes">
@@ -165,7 +172,9 @@ class StudentPage extends Component {
                 notes={this.props.student.notes} />
             </Tab>
             <Tab label="Summary">
-              <Summary />
+              {this.props.student.student
+                && <Summary
+                student={this.props.student} />}
             </Tab>
           </Tabs>
         </div>
