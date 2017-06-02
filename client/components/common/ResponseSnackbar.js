@@ -1,45 +1,60 @@
 import React, {Component, PropTypes} from 'react';
-import {connect} from 'react-redux';
-import {bindActionCreators} from 'redux';
+import { bindActionCreators } from 'redux';
 import Snackbar from 'material-ui/Snackbar';
+import {connect} from 'react-redux';
 
-const snackTypes = {
-  success : {
-    backgroundColor : '#16a461',
-    color           : 'white'
-  },
-  error : {
-    backgroundColor : '#d9152a',
-    color           : 'white'
-  }
-};
+import {closeSnackbar} from '../../modules/viewReducer';
 
 class ResponseSnackbar extends Component {
+  constructor(props, context) {
+    super(props, context);
+    this.handleRequestClose = this.handleRequestClose.bind(this);
+  }
+
+  handleRequestClose() {
+    this.props.actions.closeSnackbar();
+  }
 
   render() {
+    const snackTypes = {
+      success : {
+        transform       : 'translateY(-29px)',
+        backgroundColor : '#16a461',
+        color           : 'white'
+      },
+      error : {
+        transform       : 'translateY(-29px)',
+        backgroundColor : '#d9152a',
+        color           : 'white'
+      }
+    };
     return (
       <Snackbar
-        open={this.props.response}
-        message="this is the snackbar message"
-        autoHideDuration={4000}
-        // onRequestClose={closeSnackbar}
-        bodyStyle={snackTypes.success}
+        open={!!this.props.snackbar.message}
+        message={this.props.snackbar.message}
+        autoHideDuration={this.props.snackbar.autoHideDuration}
+        onRequestClose={this.handleRequestClose}
+        bodyStyle={snackTypes[this.props.snackbar.snackType]}
       />
     );
   }
 }
 
 ResponseSnackbar.propTypes = {
-  response : PropTypes.bool,
-  actions  : PropTypes.object
+  snackbar : PropTypes.object.isRequired,
+  actions  : PropTypes.object.isRequired
 };
 
-const mapStateToProps = state => ({
-  response : state.response
-});
+function mapStateToProps(state) {
+  return {
+    snackbar : state.view.snackbar
+  };
+}
 
-const mapDispatchToProps = dispatch => ({
-  actions : bindActionCreators({}, dispatch)
-});
+function mapDispatchToProps(dispatch) {
+  return {
+    actions : bindActionCreators({closeSnackbar}, dispatch)
+  };
+}
 
 export default connect(mapStateToProps, mapDispatchToProps)(ResponseSnackbar);

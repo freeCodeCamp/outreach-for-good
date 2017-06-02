@@ -5,7 +5,7 @@ import * as sessionActions from '../modules/sessionReducer';
 import {getAllSchools} from '../modules/schoolReducer';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import muiTheme from '../styles/muiTheme.js';
-import SnackbarWrapper from './common/SnackbarWrapper';
+import ResponseSnackbar from './common/ResponseSnackbar';
 import Header from './common/Header';
 import Sidebar from './common/Sidebar';
 import Footer from './common/Footer';
@@ -21,7 +21,7 @@ class App extends Component {
             <section id="main-view">
               <div id={this.props.session.token ? 'main-content' : 'login-content'}>
                 {this.props.children}
-                <SnackbarWrapper />
+                <ResponseSnackbar />
               </div>
               {this.props.session.token && <Footer />}
             </section>
