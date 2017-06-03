@@ -354,6 +354,12 @@ class AdminPage extends React.Component {
             clickHandler = {this.clickHandler}
           />
         </Tab>
+        <Tab
+          label="Settings"
+          onActive={this.tabHandler}
+          value="settings">
+            interventions table will go here to create interventions
+        </Tab>
       </Tabs>
     );
   }
