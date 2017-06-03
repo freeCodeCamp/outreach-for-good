@@ -16,6 +16,7 @@ import Summary from './partials/Summary';
 
 //import just the student actions used in this component
 import * as studentActions from '../../modules/studentReducer';
+import * as settingsActions from '../../modules/settingsReducer';
 
 import './StudentPage.scss';
 
@@ -42,7 +43,6 @@ class StudentPage extends Component {
     this.outreachAction = this.outreachAction.bind(this);
 
     this.postNote = this.postNote.bind(this);
-    this.editNote = this.editNote.bind(this);
   }
 
   componentDidMount() {
@@ -51,6 +51,8 @@ class StudentPage extends Component {
     this.props.actions.getStudentOutreaches(this.studentId);
     this.props.actions.getStudentInterventions(this.studentId);
     this.props.actions.getStudentNotes(this.studentId);
+
+    this.props.settingsActions.getInterventionTypes();
   }
 
   changeTab(currentTab) {
@@ -70,10 +72,6 @@ class StudentPage extends Component {
     e.preventDefault();
     let note = { note: e.target[0].value };
     this.props.actions.postStudentNote(this.studentId, note);
-  }
-
-  editNote(e) {
-    //console.log('Edit the note:', e);
   }
 
   onCheck(e, val) {
@@ -201,7 +199,8 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    actions : bindActionCreators(studentActions, dispatch)
+    actions         : bindActionCreators(studentActions, dispatch),
+    settingsActions : bindActionCreators(settingsActions, dispatch)
   };
 }
 export default connect(mapStateToProps, mapDispatchToProps)(StudentPage);
