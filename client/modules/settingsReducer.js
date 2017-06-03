@@ -26,7 +26,6 @@ export function getInterventionTypes() {
         type : GET_INTERVENTION_TYPES_SUCCESS,
         interventionTypes
       });
-      dispatch(openSnackbar('Loaded intervention types'));
     })
     .catch(err => dispatch(openSnackbar(`ERR: ${err}`, 'error')));
 }

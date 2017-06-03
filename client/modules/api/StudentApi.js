@@ -125,7 +125,23 @@ class StudentApi extends Api {
   }
 
   static putOutreachAction(studentId, outreachId, action) {
-    return this.put(`/api/students/${studentId}/outreaches/${outreachId}/action`, action);
+    return this.putAPI(`/api/students/${studentId}/outreaches/${outreachId}/action`, action);
+  }
+
+  static postIntervention(studentId, intervention) {
+    return this.postAPI(`/api/students/${studentId}/interventions`, intervention);
+  }
+
+  static putInterventionArchive(studentId, interventionId, archived) {
+    return this.putAPI(`/api/students/${studentId}/interventions/${interventionId}/archived`, archived);
+  }
+
+  static deleteIntervention(studentId, interventionId) {
+    return this.deleteAPI(`/api/students/${studentId}/interventions/${interventionId}`);
+  }
+
+  static postInterventionNote(studentId, interventionId, note) {
+    return this.postAPI(`/api/students/${studentId}/interventions/${interventionId}/note`, note);
   }
 
 }

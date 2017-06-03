@@ -195,6 +195,38 @@ export function postOutreachNote(studentId, outreachId, note) {
     .catch(err => openSnackbar(`ERROR: ${err}`, 'error'));
 }
 
+export function postIntervention(studentId, intervention) {
+  return dispatch => StudentApi.postIntervention(studentId, intervention)
+    .then(response => {
+      const date = new Date(response.createdDate).toDateString();
+
+      dispatch(getStudentInterventions(studentId));
+      dispatch(openSnackbar(`Intervention of type '${intervention.type}' created on ${date}`));
+    })
+    .catch(err => dispatch(openSnackbar(`ERR: ${err}`, 'error')));
+}
+
+export function postInterventionNote(studentId, interventionId, note) {
+  return dispatch => StudentApi.postIntervention(studentId, interventionId, note)
+    .then(response => {
+      console.log(response);
+      dispatch(getStudentInterventions(studentId));
+      dispatch(openSnackbar('Intervention note posted'));
+    })
+    .catch(err => dispatch(openSnackbar(`ERR: ${err}`, 'error')));
+}
+
+export function deleteIntervention(studentId, interventionId) {
+  return dispatch => StudentApi.postIntervention(studentId, interventionId)
+    .then(response => {
+      console.log(response);
+      dispatch(getStudentInterventions(studentId));
+      dispatch(openSnackbar('Intervention deleted'));
+    })
+    .catch(err => dispatch(openSnackbar(`ERR: ${err}`, 'error')));
+}
+
+
 export function unmountStudent() {
   return {
     type : UNMOUNT_STUDENT

@@ -1,29 +1,42 @@
-import React from 'react';
-import {Card, CardActions, CardHeader, CardText} from 'material-ui/Card';
+import React, {PropTypes} from 'react';
+import {Card, CardHeader, CardText} from 'material-ui/Card';
 import FlatButton from 'material-ui/FlatButton';
+import ContentAdd from 'material-ui/svg-icons/content/add';
+import TextField from 'material-ui/TextField';
+import DatePicker from 'material-ui/DatePicker';
 
-const cardStyle = {
-  width : `${50}%`
-};
-const StudentCard = ({ data }) =>
-  <Card style={cardStyle}>
-    <CardHeader
-      title="Without Avatar"
-      subtitle="Subtitle"
-      actAsExpander
-      showExpandableButton
-    />
-    <CardActions>
-      <FlatButton label="Action1" />
-      <FlatButton label="Action2" />
-    </CardActions>
-    <CardText expandable>
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-      Donec mattis pretium massa. Aliquam erat volutpat. Nulla facilisi.
-      Donec vulputate interdum sollicitudin. Nunc lacinia auctor quam sed pellentesque.
-      Aliquam dui mauris, mattis quis lacus id, pellentesque lobortis odio.
-    </CardText>
-  </Card>
-;
+const StudentCard = ({ title, subtitle, cardId, notes, addNote }) =>
+<Card className="card">
+  <CardHeader
+    title={title}
+    subtitle={subtitle} />
+  <CardText>
+    <div className="notes-container">
+      <form
+        onSubmit={addNote}
+        id={cardId}>
+        <TextField
+          hintText="Add a note"
+          name="cardNote" />
+          <FlatButton
+            icon={<ContentAdd />}
+            type="submit" />
+          </form>
+          <div className="notes">
+            {notes.map((note, i) =>
+              <p key={i}>
+                <b>({new Date(note.date).toDateString()})</b>
+                &nbsp; {note.note}
+              </p>
+            )}
+          </div>
+
+    </div>
+  </CardText>
+</Card>;
+
+// StudentCard.propTypes = {
+//   outreaches : PropTypes.array
+// };
 
 export default StudentCard;

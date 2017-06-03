@@ -10,7 +10,8 @@ import FontIcon from 'material-ui/FontIcon';
 import StudentAbsenceRecordTable from './partials/StudentAbsenceRecordTable';
 import StudentDialog from './partials/StudentDialog';
 import Outreaches from './partials/Outreaches';
-import Interventions from './partials/Interventions';
+// import Interventions from './partials/Interventions';
+import StudentCard from './partials/StudentCard';
 import Notes from './partials/Notes';
 import Summary from './partials/Summary';
 
@@ -35,14 +36,20 @@ class StudentPage extends Component {
     };
 
     this.changeTab = this.changeTab.bind(this);
+
     this.dialogOpen = this.dialogOpen.bind(this);
     this.dialogClose = this.dialogClose.bind(this);
+
     this.onCheck = this.onCheck.bind(this);
 
     this.outreachNote = this.outreachNote.bind(this);
     this.outreachAction = this.outreachAction.bind(this);
 
+    this.addNote = this.addNote.bind(this);
+
     this.postNote = this.postNote.bind(this);
+
+    this.getStudentCard = this.getStudentCard.bind(this);
   }
 
   componentDidMount() {
@@ -59,8 +66,7 @@ class StudentPage extends Component {
     this.setState({ currentTab });
   }
 
-  dialogOpen(e) {
-    //console.log(e);
+  dialogOpen() {
     this.setState({ dialogOpen: true });
   }
 
@@ -88,6 +94,7 @@ class StudentPage extends Component {
     }
   }
 
+  //remove this function when you change the student card
   outreachNote(e) {
     e.preventDefault();
     let outreachId = e.target.id;
@@ -96,11 +103,32 @@ class StudentPage extends Component {
     this.props.actions.postOutreachNote(this.studentId, outreachId, note);
   }
 
+  addNote(e) {
+    e.preventDefault();
+
+    let cardId = e.target.id;
+    let note = {note: e.target.cardNote.value};
+
+    console.log(cardId, note);
+  }
+
   outreachAction(e, date) {
     let outreachId = e.target.id;
     let actionDate = {actionDate: date};
 
     this.props.actions.putOutreachAction(this.studentId, outreachId, actionDate);
+  }
+
+  getStudentCard(card, i) {
+    return (
+      <StudentCard
+        title="This is the title"
+        subtitle="subtitle"
+        cardId="card id"
+        notes={[]}
+        addNote={this.addNote}
+      />
+    );
   }
 
   render() {
@@ -152,15 +180,15 @@ class StudentPage extends Component {
             </Tab>
             <Tab label="Interventions">
               <div className="intervention-cards">
-                <Interventions
-                  postIntervention={this.props.actions.postStudentIntervention}
-                  interventions={this.props.student.interventions} />
-
                 <RaisedButton className="add-intervention"
                   icon={<FontIcon className="fa fa-plus" />}
                   label="Add Intervention"
                   onTouchTap={this.dialogOpen}
                   primary />
+
+                <div className="intervention-cards">
+                  {this.props.student.interventions.map(this.getStudentCard)}
+                </div>
               </div>
             </Tab>
             <Tab label="Notes">
@@ -176,24 +204,30 @@ class StudentPage extends Component {
             </Tab>
           </Tabs>
         </div>
+
         <StudentDialog
+          data={this.props.settings.interventionTypes}
           dialogOpen={this.state.dialogOpen}
           dialogClose={this.dialogClose}
-        />
+          dialogSubmit={this.props.actions.postIntervention}
+          student={this.props.student.student} />
+
       </div>
     );
   }
 }
 
 StudentPage.propTypes = {
-  params  : PropTypes.object,
-  student : PropTypes.object.isRequired,
-  actions : PropTypes.object.isRequired
+  params   : PropTypes.object,
+  settings : PropTypes.object,
+  student  : PropTypes.object.isRequired,
+  actions  : PropTypes.object.isRequired
 };
 
 function mapStateToProps(state) {
   return {
-    student : state.student
+    student  : state.student,
+    settings : state.settings
   };
 }
 
