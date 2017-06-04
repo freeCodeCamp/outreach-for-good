@@ -3,7 +3,6 @@ import {Card, CardHeader, CardText} from 'material-ui/Card';
 import FlatButton from 'material-ui/FlatButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
 import TextField from 'material-ui/TextField';
-import DatePicker from 'material-ui/DatePicker';
 
 const StudentCard = ({ title, subtitle, cardId, notes, addNote }) =>
 <Card className="card">

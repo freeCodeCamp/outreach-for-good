@@ -63,13 +63,11 @@ class StudentDialog extends Component {
           actions={actions}
           modal={false}
           open={this.props.dialogOpen}
-          onRequestClose={this.props.dialogClose}
-        >
+          onRequestClose={this.props.dialogClose}>
           <SelectField
             floatingLabelText="Intervention Type"
             value={this.state.value}
-            onChange={this.handleChange}
-          >
+            onChange={this.handleChange}>
             {this.getMenuItems()}
           </SelectField>
         </Dialog>

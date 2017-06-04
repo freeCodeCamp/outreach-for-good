@@ -37,11 +37,35 @@
         }
       }
     }
+
+
   }
 
   .intervention-cards {
-    text-align: center;
+
+    .cards {
+      display: flex;
+      flex-wrap: wrap;
+
+      .card {
+        flex: 1;
+        max-width: 50%;
+        margin: 5px;
+      }
+
+      .card-text-container {
+        display: flex;
+
+        .notes {
+          height: 200px;
+          max-height: 100px;
+          overflow-y: auto;
+        }
+      }
+    }
+
     .add-intervention {
+      text-align: center;
       margin: 10px auto;
     }
   }
