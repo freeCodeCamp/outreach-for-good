@@ -60,7 +60,7 @@ var SchoolSchema = new Schema({
 });
 
 SchoolSchema.pre('remove', function(next) {
-  var self = this;  // eslint-disable-line no-invalid-this, consistent-this
+  var self = this;  // eslint-disable-line babel/no-invalid-this, consistent-this
   AbsenceRecord.remove({school: self._id}).exec()
   .then(function() {
     return Student.find({school: self._id}).exec();

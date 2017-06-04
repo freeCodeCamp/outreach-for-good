@@ -59,6 +59,8 @@ This version is currently under development.
   * Sort when clicking header
 * TableModel
   * filter algorithm adjustment
+* Performance
+  * DataTable - improve row selection speed with refs
 
 
 ## To-Add

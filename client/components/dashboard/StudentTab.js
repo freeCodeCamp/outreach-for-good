@@ -13,7 +13,7 @@ const StudentTab = ({absenceRecords, ...props}) => {
  */
   function buttonHandler(event) {
     event.preventDefault();
-    props.clickHandler('dialogClick', this.value, event); // eslint-disable-line no-invalid-this
+    props.clickHandler('dialogClick', this.value, event); // eslint-disable-line babel/no-invalid-this
   }
 
   let buttons = [];
@@ -25,9 +25,11 @@ const StudentTab = ({absenceRecords, ...props}) => {
    *  - See RaisedButtonModel for default parameters
    */
   buttons.push(new RaisedButtonModel({
-    label    : 'Filter',
-    actionID : locAct.FILTER,
-    menu     : {
+    label           : 'Filter',
+    actionID        : locAct.FILTER,
+    backgroundColor : '#009d9d',
+    disabled        : false,
+    menu            : {
       open : props.table.get('MuiPopovers').get(locAct.FILTER),
       item : locDef.filterButtonMenuItems
     }

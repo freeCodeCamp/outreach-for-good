@@ -39,11 +39,6 @@ class DashboardPage extends React.Component {
     let nextTable = table.setSelectedTab(table, 'student');
     nextTable = this.initClickActions(nextTable);
     this.state = { table: nextTable, loaded: false };
-
-    this.retrieveData = this.retrieveData.bind(this);
-    this.initClickActions = this.initClickActions.bind(this);
-    this.clickHandler = this.clickHandler.bind(this);
-    this.tabHandler = this.tabHandler.bind(this);
   }
 
   componentDidMount() {
@@ -110,12 +105,24 @@ class DashboardPage extends React.Component {
     }
   }
 
+  initClickActions = nextTable => {
+    nextTable = table.addPopovers(nextTable, {
+      [locAct.FILTER] : false,
+      [locAct.EDIT]   : false
+    });
+    nextTable = table.addDialogs(nextTable, {
+      [locAct.WITHDRAW_STUDENT] : false,
+      [locAct.ENROLL_STUDENT]   : false
+    });
+    return nextTable;
+  }
+
   /**
    * Perform API call to Retrieve Data
    *   - Retrieve and configure data for table
    *   - Set default state for 'action' variables
    */
-  retrieveData(currentTab) {
+  retrieveData = currentTab => {
     switch (currentTab) {
     case 'court':
       this.props.absAct.fetchRecordsListQuery('type=Court+Referral');
@@ -140,22 +147,8 @@ class DashboardPage extends React.Component {
     //nextTable = table.enableFiltering(nextTable);
   }
 
-  /**
-   * Initialize Click Actions (on tab change)
-   */
-  initClickActions(nextTable) {
-    nextTable = table.addPopovers(nextTable, {
-      [locAct.FILTER] : false,
-      [locAct.EDIT]   : false
-    });
-    nextTable = table.addDialogs(nextTable, {
-      [locAct.WITHDRAW_STUDENT] : false,
-      [locAct.ENROLL_STUDENT]   : false
-    });
-    return nextTable;
-  }
 
-  clickHandler(action, data, event) {
+  clickHandler = (action, data, event) => {
     let nextTable;
     //let nextForm;
     switch (action) {
@@ -217,14 +210,12 @@ class DashboardPage extends React.Component {
   } // End of: clickHandler()
 
   // Given a table-row index number, return object containing all row data
-  getSelectedRowData() {
-    return this.props.absenceRecords
+  getSelectedRowData = () => this.props.absenceRecords
       .filter((v, i) => this.state.table.get('selectedIndex')
       .indexOf(i) != -1);
-  }
 
   // Handle user changing main tabs
-  tabHandler(data) {
+  tabHandler = data => {
     this.clickHandler('changeTabs', data);
   }
 

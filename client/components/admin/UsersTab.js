@@ -14,17 +14,17 @@ const UsersTab = ({users, schools, ...props}) => {
  */
   function buttonHandler(event) {
     event.preventDefault();
-    props.clickHandler('dialogClick', this.value, event); // eslint-disable-line no-invalid-this
+    props.clickHandler('dialogClick', this.value, event); // eslint-disable-line babel/no-invalid-this
   }
 
   function dropdownHandlerSchool(event, index, value) {
     event.preventDefault();
-    props.clickHandler('dropdownChange', value, locAct.EDIT_SCHOOL); // eslint-disable-line no-invalid-this
+    props.clickHandler('dropdownChange', value, locAct.EDIT_SCHOOL); // eslint-disable-line babel/no-invalid-this
   }
 
   function dropdownHandlerRole(event, index, value) {
     event.preventDefault();
-    props.clickHandler('dropdownChange', value, locAct.EDIT_ROLE); // eslint-disable-line no-invalid-this
+    props.clickHandler('dropdownChange', value, locAct.EDIT_ROLE); // eslint-disable-line babel/no-invalid-this
   }
 
   let dialogs = [];
