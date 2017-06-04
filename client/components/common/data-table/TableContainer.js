@@ -7,14 +7,10 @@ import { List } from 'immutable';
 import TableModel from '../../../models/TableModel';
 
 class TableContainer extends React.Component {
-  constructor(props) {
-    super(props);
-    this.selectedRows = this.props.table.selectionToMappedIndicies(this.props.table);
-  }
-
   shouldComponentUpdate(nextProps) {
     return this.props.data !== nextProps.data
       || this.props.table.get('indexMap') !== nextProps.table.get('indexMap')
+      || this.props.table.get('selectedIndex') !== nextProps.table.get('selectedIndex')
       || this.props.table.get('sortCol') !== nextProps.table.get('sortCol')
       || this.props.table.get('sortDirection') !== nextProps.table.get('sortDirection');
   }
@@ -25,7 +21,8 @@ class TableContainer extends React.Component {
    */
 
   isRowSelected = index =>
-    this.selectedRows.includes(index) ? 'selected-row' : '';
+    this.props.table.selectionToMappedIndicies(this.props.table).includes(index)
+    ? 'selected-row' : '';
 
   rowToggleSelected = (event, index) => {
     this.props.clickHandler('toggleSelected', index);
