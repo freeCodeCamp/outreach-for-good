@@ -14,10 +14,6 @@ import Divider from 'material-ui/Divider';
 import Dialog from 'material-ui/Dialog';
 
 class DataTable extends React.Component {
-  constructor(props) {
-    super(props);
-    this.selectedRows = this.props.table.selectionToMappedIndicies(this.props.table);
-  }
   /**
    * Handler Functions
    *   - Catch events from page elements and send to parent component
@@ -27,13 +23,13 @@ class DataTable extends React.Component {
     this.props.clickHandler('buttonClick', value, event);
   }
 
-  menuItemHandler = event => {
+  menuItemHandler = (event, value) => {
     event.preventDefault();
-    this.props.clickHandler('menuClick', this.value, event); // eslint-disable-line babel/no-invalid-this
+    this.props.clickHandler('menuClick', value, event); // eslint-disable-line babel/no-invalid-this
   }
 
   popoverClose = () => {
-    this.props.clickHandler('popoverClose', this.value); // eslint-disable-line babel/no-invalid-this
+    this.props.clickHandler('popoverClose'); // eslint-disable-line babel/no-invalid-this
   }
 
   render() {
@@ -57,7 +53,7 @@ class DataTable extends React.Component {
                   secondary={button.get('secondary') || false}
                   backgroundColor={button.get('backgroundColor')}
                   style={{marginLeft: '10px'}}
-                  disabled={this.selectedRows.size == 0 && button.get('disabled')}
+                  disabled={table.get('selectedIndex').size == 0 && button.get('disabled')}
                   onClick={e => this.buttonHandler(e, button.get('actionID') || '')} // eslint-disable-line react/jsx-no-bind
                 />
                 {button.get('menu').open
@@ -75,7 +71,7 @@ class DataTable extends React.Component {
                         : <MenuItem
                           primaryText={item.text}
                           value={item.actionID}
-                          onTouchTap={this.menuItemHandler}
+                          onTouchTap={e => this.menuItemHandler(e, item.actionID)}
                           key={`menu-item-${item.text}-${i}`}
                         />
                       )}
