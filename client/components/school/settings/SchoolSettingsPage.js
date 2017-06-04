@@ -1,4 +1,5 @@
-import React, {Component, PropTypes} from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import Triggers from './partials/Triggers';
@@ -6,7 +7,7 @@ import SchoolSelect from '../../common/SchoolSelect';
 import {getAllSchools, changeTriggers} from '../../../modules/schoolReducer';
 import {openSnackbar} from '../../../modules/viewReducer';
 
-class SchoolSettingsPage extends Component {
+class SchoolSettingsPage extends React.Component {
   constructor() {
     super();
 

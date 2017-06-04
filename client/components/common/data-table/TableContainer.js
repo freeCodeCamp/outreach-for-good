@@ -1,4 +1,5 @@
-import React, { PropTypes } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import { Table, Column, Cell } from 'fixed-data-table-2';
 import DataTableHeader from './DataTableHeader';
 import DataTableRow from './DataTableRow';

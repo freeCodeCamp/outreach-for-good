@@ -1,10 +1,11 @@
-import React, {Component, PropTypes} from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import {Tabs, Tab} from 'material-ui/Tabs';
 import UploadTab from './partials/UploadTab';
 import ManageTab from './partials/ManageTab';
 import Dimensions from 'react-dimensions-cjs';
 
-class RecordsPage extends Component {
+class RecordsPage extends React.Component {
   constructor(props) {
     super(props);
     this.state = {currentTab: 'upload'};

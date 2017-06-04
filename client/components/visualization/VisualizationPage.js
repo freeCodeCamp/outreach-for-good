@@ -1,4 +1,5 @@
-import React, {Component, PropTypes} from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import {connect} from 'react-redux';
 import { getAllSchools } from '../../modules/schoolReducer';
@@ -7,7 +8,7 @@ import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
 import {ResponsiveContainer, PieChart, Pie, Cell, Tooltip, Legend} from 'recharts';
 
-class VisualizationPage extends Component {
+class VisualizationPage extends React.Component {
 
   constructor(props) {
     super(props);
