@@ -44,16 +44,16 @@ const DataTable = ({page, table, data, ...props}) => {
    */
   function buttonHandler(event) {
     event.preventDefault();
-    props.clickHandler('buttonClick', this.value, event); // eslint-disable-line no-invalid-this
+    props.clickHandler('buttonClick', this.value, event); // eslint-disable-line babel/no-invalid-this
   }
 
   function menuItemHandler(event) {
     event.preventDefault();
-    props.clickHandler('menuClick', this.value, event); // eslint-disable-line no-invalid-this
+    props.clickHandler('menuClick', this.value, event); // eslint-disable-line babel/no-invalid-this
   }
 
   function popoverClose() {
-    props.clickHandler('popoverClose', this.value); // eslint-disable-line no-invalid-this
+    props.clickHandler('popoverClose', this.value); // eslint-disable-line babel/no-invalid-this
   }
 
   return (

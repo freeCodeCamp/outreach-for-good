@@ -40,7 +40,6 @@ class DashboardPage extends React.Component {
     nextTable = this.initClickActions(nextTable);
     this.state = { table: nextTable, loaded: false };
 
-    this.retrieveData = this.retrieveData.bind(this);
     this.initClickActions = this.initClickActions.bind(this);
     this.clickHandler = this.clickHandler.bind(this);
     this.tabHandler = this.tabHandler.bind(this);
@@ -115,7 +114,7 @@ class DashboardPage extends React.Component {
    *   - Retrieve and configure data for table
    *   - Set default state for 'action' variables
    */
-  retrieveData(currentTab) {
+  retrieveData = currentTab => {
     switch (currentTab) {
     case 'court':
       this.props.absAct.fetchRecordsListQuery('type=Court+Referral');

@@ -13,7 +13,7 @@ const PhoneTab = ({absenceRecords, ...props}) => {
  */
   function buttonHandler(event) {
     event.preventDefault();
-    props.clickHandler('dialogClick', this.value, event); // eslint-disable-line no-invalid-this
+    props.clickHandler('dialogClick', this.value, event); // eslint-disable-line babel/no-invalid-this
   }
 
   let buttons = [];

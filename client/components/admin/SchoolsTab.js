@@ -14,17 +14,17 @@ const SchoolsTab = ({schools, ...props}) => {
  */
   function buttonHandler(event) {
     event.preventDefault();
-    props.clickHandler('dialogClick', this.value, event); // eslint-disable-line no-invalid-this
+    props.clickHandler('dialogClick', this.value, event); // eslint-disable-line babel/no-invalid-this
   }
 
   function textFieldHandler(event, newValue) {
     event.preventDefault();
-    props.clickHandler('textFieldChange', newValue, event); // eslint-disable-line no-invalid-this
+    props.clickHandler('textFieldChange', newValue, event); // eslint-disable-line babel/no-invalid-this
   }
 
   function submitTextField(event) {
     event.preventDefault();
-    props.clickHandler('textFieldEnter', '', event); // eslint-disable-line no-invalid-this
+    props.clickHandler('textFieldEnter', '', event); // eslint-disable-line babel/no-invalid-this
   }
 
   /**
