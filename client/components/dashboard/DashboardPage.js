@@ -39,71 +39,11 @@ class DashboardPage extends React.Component {
     // Register Initial Component State
     let nextTable = table.setSelectedTab(table, 'student');
     nextTable = this.initClickActions(nextTable);
-    this.state = { table: nextTable, loaded: false };
+    this.state = { table: nextTable };
   }
 
   componentDidMount() {
     this.retrieveData('student');
-  }
-
-  componentWillReceiveProps(nextProps) {
-    let nextTable = this.state.table;
-    let dataLoaded = false;
-    switch (nextTable.get('selectedTab')) {
-    case 'court':
-      if(nextProps.absenceRecords.size && !this.state.loaded) {
-        dataLoaded = true;
-        nextTable = table.updateSortCol(nextTable, '');
-        nextTable = table.buildIndexMap(nextTable, nextProps.absenceRecords);
-      }
-      break;
-    case 'home':
-      if(nextProps.absenceRecords.size && !this.state.loaded) {
-        dataLoaded = true;
-        nextTable = table.updateSortCol(nextTable, '');
-        nextTable = table.buildIndexMap(nextTable, nextProps.absenceRecords);
-      }
-      break;
-    case 'letter':
-      if(nextProps.absenceRecords.size && !this.state.loaded) {
-        dataLoaded = true;
-        nextTable = table.updateSortCol(nextTable, '');
-        nextTable = table.buildIndexMap(nextTable, nextProps.absenceRecords);
-      }
-      break;
-    case 'phone':
-      if(nextProps.absenceRecords.size && !this.state.loaded) {
-        dataLoaded = true;
-        nextTable = table.updateSortCol(nextTable, '');
-        nextTable = table.buildIndexMap(nextTable, nextProps.absenceRecords);
-      }
-      break;
-    case 'sst':
-      if(nextProps.absenceRecords.size && !this.state.loaded) {
-        dataLoaded = true;
-        nextTable = table.updateSortCol(nextTable, '');
-        nextTable = table.buildIndexMap(nextTable, nextProps.absenceRecords);
-      }
-      break;
-    case 'student':
-      if(nextProps.absenceRecords.size && !this.state.loaded) {
-        dataLoaded = true;
-        nextTable = table.updateSortCol(nextTable, '');
-        nextTable = table.buildIndexMap(nextTable, nextProps.absenceRecords);
-      }
-      break;
-    }
-    if(dataLoaded) {
-      nextTable = table.enableFiltering(nextTable);
-      this.setState({table: nextTable, loaded: true});
-    }
-  }
-
-  componentDidUpdate(prevProps, prevState) {
-    let selectedTab = this.state.table.get('selectedTab');
-    if(prevState.table.get('selectedTab') != selectedTab) {
-      this.retrieveData(selectedTab);
-    }
   }
 
   initClickActions = nextTable => {
@@ -124,28 +64,37 @@ class DashboardPage extends React.Component {
    *   - Set default state for 'action' variables
    */
   retrieveData = currentTab => {
+    let loadingPromise;
     switch (currentTab) {
     case 'court':
-      this.props.absAct.fetchRecordsListQuery('type=Court+Referral');
+      loadingPromise = this.props.absAct.fetchRecordsListQuery('type=Court+Referral');
       break;
     case 'home':
-      this.props.absAct.fetchRecordsListQuery('type=Home+Visit');
+      loadingPromise = this.props.absAct.fetchRecordsListQuery('type=Home+Visit');
       break;
     case 'letter':
-      this.props.absAct.fetchRecordsListQuery('type=Letter+Sent');
+      loadingPromise = this.props.absAct.fetchRecordsListQuery('type=Letter+Sent');
       break;
     case 'phone':
-      this.props.absAct.fetchRecordsListQuery('type=Phone+Call');
+      loadingPromise = this.props.absAct.fetchRecordsListQuery('type=Phone+Call');
       break;
     case 'sst':
-      this.props.absAct.fetchRecordsListQuery('type=SST+Referral');
+      loadingPromise = this.props.absAct.fetchRecordsListQuery('type=SST+Referral');
       break;
     case 'student':
-      this.props.absAct.fetchRecordsList();
+      loadingPromise = this.props.absAct.fetchRecordsList();
       this.props.repAct.getOutreachCounts('withdrawn=false');
       break;
     }
-    //nextTable = table.enableFiltering(nextTable);
+    loadingPromise.then(() => this.updateDataTable());
+    this.setState({loadResolved: false});
+  }
+
+  updateDataTable = () => {
+    let nextTable = table.updateSortCol(this.state.table, '');
+    nextTable = table.buildIndexMap(nextTable, this.props.absenceRecords);
+    nextTable = table.enableFiltering(nextTable);
+    this.setState({table: nextTable, loadResolved: true});
   }
 
 
@@ -153,14 +102,10 @@ class DashboardPage extends React.Component {
     let nextTable;
     //let nextForm;
     switch (action) {
-
     // Clicked a main tab
     case 'changeTabs':
-      nextTable = table.setSelectedTab(this.state.table, data.props.value);
-      nextTable = this.initClickActions(nextTable);
-      this.setState({table: nextTable, loaded: false});
+      this.handleChangeTabs(nextTable, data);
       break;
-
     /**
      * DataTable Click Handler
      *   - Select / de-select a table row
@@ -168,23 +113,14 @@ class DashboardPage extends React.Component {
      *   - Apply a filter
      */
     case 'toggleSelected':
-      nextTable = table.toggleSelectedRowIndex(this.state.table, data);
-      this.setState({table: nextTable});
+      this.handleToggleSelectedRow(nextTable, data);
       break;
     case 'toggleSortCol':
-      nextTable = table.updateSortCol(this.state.table, data);
-      nextTable = table.sortIndexMap(nextTable, this.props.absenceRecords);
-      this.setState({table: nextTable});
+      this.handleToggleSortCol(nextTable, data);
       break;
     case 'changeFilterCol':
-      //console.log(data.substr(7), event);
-      let tabData = this.state.table.get('selectedTab') == 'users'
-          ? this.props.absenceRecords : this.props.absenceRecords;
-      nextTable = table.updateFilterBy(this.state.table, tabData, data.substr(7), event);
-      nextTable = table.sortIndexMap(nextTable, tabData);
-      this.setState({table: nextTable});
+      this.handleChangeColFilter(nextTable, data, event);
       break;
-
     /**
      * Button / Popover Menu Click Handler
      *   - Typically opens a <Dialog> modal or popover menu
@@ -192,23 +128,57 @@ class DashboardPage extends React.Component {
      */
     case 'menuClick':
     case 'buttonClick':
-      nextTable = table.setSelectedRowData(this.state.table,
-        this.getSelectedRowData());
-      if(data == locAct.EDIT || data == locAct.FILTER) {
-        nextTable = table.togglePopovers(nextTable, data);
-        nextTable = table.setAnchor(nextTable, event.currentTarget);
-        nextTable = table.resetDialogs(nextTable);
-      }
-      this.setState({table: nextTable});
+      this.handleInterfaceButtonClick(nextTable, data, event);
       break; // End of: case 'menuClick' or 'buttonClick'
-
     // Clicked away from popover menu
     case 'popoverClose':
-      nextTable = table.resetPopovers(this.state.table);
-      this.setState({table: nextTable});
+      this.handleClosePopover(nextTable);
       break;
     }
   } // End of: clickHandler()
+
+  handleChangeTabs = (nextTable, data) => {
+    nextTable = table.setSelectedTab(this.state.table, data.props.value);
+    nextTable = this.initClickActions(nextTable);
+    this.retrieveData(data.props.value);
+    this.setState({table: nextTable});
+  }
+
+  handleToggleSelectedRow = (nextTable, data) => {
+    nextTable = table.toggleSelectedRowIndex(this.state.table, data);
+    this.setState({table: nextTable});
+  }
+
+  handleToggleSortCol = (nextTable, data) => {
+    nextTable = table.updateSortCol(this.state.table, data);
+    nextTable = table.sortIndexMap(nextTable, this.props.absenceRecords);
+    this.setState({table: nextTable});
+  }
+
+  handleChangeColFilter = (nextTable, data, event) => {
+    //console.log(data.substr(7), event);
+    let tabData = this.state.table.get('selectedTab') == 'users'
+        ? this.props.absenceRecords : this.props.absenceRecords;
+    nextTable = table.updateFilterBy(this.state.table, tabData, data.substr(7), event);
+    nextTable = table.sortIndexMap(nextTable, tabData);
+    this.setState({table: nextTable});
+  }
+
+  handleInterfaceButtonClick = (nextTable, data, event) => {
+    nextTable = table.setSelectedRowData(this.state.table,
+      this.getSelectedRowData());
+    if(data == locAct.EDIT || data == locAct.FILTER) {
+      nextTable = table.togglePopovers(nextTable, data);
+      nextTable = table.setAnchor(nextTable, event.currentTarget);
+      nextTable = table.resetDialogs(nextTable);
+    }
+    this.setState({table: nextTable});
+  }
+
+  handleClosePopover = nextTable => {
+    nextTable = table.resetPopovers(this.state.table);
+    this.setState({table: nextTable});
+  }
 
   // Given a table-row index number, return object containing all row data
   getSelectedRowData = () => this.props.absenceRecords
@@ -239,7 +209,7 @@ class DashboardPage extends React.Component {
             view = {viewport}
             absenceRecords = {this.props.absenceRecords}
             table = {this.state.table}
-            loaded = {this.state.loaded}
+            loaded = {this.state.loadResolved}
             clickHandler = {this.clickHandler}
           />
         </Tab>
@@ -262,7 +232,7 @@ class DashboardPage extends React.Component {
             view = {viewport}
             absenceRecords = {this.props.absenceRecords}
             table = {this.state.table}
-            loaded = {this.state.loaded}
+            loaded = {this.state.loadResolved}
             clickHandler = {this.clickHandler}
           />
         </Tab>
@@ -285,7 +255,7 @@ class DashboardPage extends React.Component {
             view = {viewport}
             absenceRecords = {this.props.absenceRecords}
             table = {this.state.table}
-            loaded = {this.state.loaded}
+            loaded = {this.state.loadResolved}
             clickHandler = {this.clickHandler}
           />
         </Tab>
@@ -308,7 +278,7 @@ class DashboardPage extends React.Component {
             view = {viewport}
             absenceRecords = {this.props.absenceRecords}
             table = {this.state.table}
-            loaded = {this.state.loaded}
+            loaded = {this.state.loadResolved}
             clickHandler = {this.clickHandler}
           />
         </Tab>
@@ -331,7 +301,7 @@ class DashboardPage extends React.Component {
             view = {viewport}
             absenceRecords = {this.props.absenceRecords}
             table = {this.state.table}
-            loaded = {this.state.loaded}
+            loaded = {this.state.loadResolved}
             clickHandler = {this.clickHandler}
           />
         </Tab>
@@ -354,7 +324,7 @@ class DashboardPage extends React.Component {
             view = {viewport}
             absenceRecords = {this.props.absenceRecords}
             table = {this.state.table}
-            loaded = {this.state.loaded}
+            loaded = {this.state.loadResolved}
             clickHandler = {this.clickHandler}
           />
         </Tab>

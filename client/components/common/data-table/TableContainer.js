@@ -9,7 +9,9 @@ import TableModel from '../../../models/TableModel';
 
 class TableContainer extends React.Component {
   shouldComponentUpdate(nextProps) {
+    //console.log(nextProps.table.get('indexMap'), nextProps.data);
     return this.props.data !== nextProps.data
+      || this.props.loaded !== nextProps.loaded
       || this.props.table.get('indexMap') !== nextProps.table.get('indexMap')
       || this.props.table.get('selectedIndex') !== nextProps.table.get('selectedIndex')
       || this.props.table.get('sortCol') !== nextProps.table.get('sortCol')
