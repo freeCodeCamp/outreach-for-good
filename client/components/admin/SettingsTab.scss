@@ -1,0 +1,12 @@
+.settings-tab {
+  margin: 10px;
+
+  .controls {
+    display: flex;
+    justify-content: space-between;
+    h3 {
+      flex: 1;
+      margin-left: 10px;
+    }
+  }
+}
