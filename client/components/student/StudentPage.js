@@ -108,8 +108,9 @@ class StudentPage extends Component {
 
     let cardId = e.target.id;
     let note = {note: e.target.cardNote.value};
-
     console.log(cardId, note);
+
+    this.props.actions.postInterventionNote(this.studentId, cardId, note);
   }
 
   outreachAction(e, date) {
@@ -120,12 +121,13 @@ class StudentPage extends Component {
   }
 
   getStudentCard(card, i) {
+    console.log(card);
     return (
-      <StudentCard
-        title="This is the title"
-        subtitle="subtitle"
-        cardId="card id"
-        notes={[]}
+      <StudentCard key={i}
+        title={card.type}
+        subtitle={new Date(card.createdDate).toDateString()}
+        cardId={card._id}
+        notes={card.notes}
         addNote={this.addNote}
       />
     );
@@ -180,13 +182,14 @@ class StudentPage extends Component {
             </Tab>
             <Tab label="Interventions">
               <div className="intervention-cards">
-                <RaisedButton className="add-intervention"
+                <RaisedButton
+                  className="add-intervention"
                   icon={<FontIcon className="fa fa-plus" />}
                   label="Add Intervention"
                   onTouchTap={this.dialogOpen}
                   primary />
 
-                <div className="intervention-cards">
+                <div className="cards">
                   {this.props.student.interventions.map(this.getStudentCard)}
                 </div>
               </div>

@@ -12,6 +12,7 @@ import {
 } from 'material-ui/Table';
 import RaisedButton from 'material-ui/RaisedButton';
 import FontIcon from 'material-ui/FontIcon';
+
 import './SettingsTab.scss';
 
 class SettingsTab extends Component {
@@ -27,10 +28,11 @@ class SettingsTab extends Component {
       <div className="settings-tab">
         <div className="controls">
           <h3>Settings</h3>
-          <RaisedButton
+          {/* <RaisedButton
+            className="new-btn"
             icon={<FontIcon className="fa fa-plus" />}
             label="Add New Intervention Type"
-            primary />
+            primary /> */}
         </div>
         <Table>
           <TableHeader>

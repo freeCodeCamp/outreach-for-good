@@ -207,7 +207,7 @@ export function postIntervention(studentId, intervention) {
 }
 
 export function postInterventionNote(studentId, interventionId, note) {
-  return dispatch => StudentApi.postIntervention(studentId, interventionId, note)
+  return dispatch => StudentApi.postInterventionNote(studentId, interventionId, note)
     .then(response => {
       console.log(response);
       dispatch(getStudentInterventions(studentId));
@@ -217,7 +217,7 @@ export function postInterventionNote(studentId, interventionId, note) {
 }
 
 export function deleteIntervention(studentId, interventionId) {
-  return dispatch => StudentApi.postIntervention(studentId, interventionId)
+  return dispatch => StudentApi.deleteIntervention(studentId, interventionId)
     .then(response => {
       console.log(response);
       dispatch(getStudentInterventions(studentId));
