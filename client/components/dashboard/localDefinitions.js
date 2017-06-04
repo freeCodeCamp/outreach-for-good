@@ -76,18 +76,18 @@ export const absenceRecordTableColumns = [{
 
 export const filterButtonMenuItems = [{
   text     : 'Withdrawn Students',
-  actionID : locAct.IEP_ADD
+  actionID : locAct.ALL_YEARS
 }, {
   text : 'Divider',
 }, {
   text     : 'All Years',
-  actionID : locAct.IEP_REMOVE
+  actionID : locAct.ALL_YEARS
 }, {
   text     : '2016-2017',
-  actionID : locAct.CFA_ADD
+  actionID : locAct.Y2016_Y2017
 }, {
   text     : '2015-2016',
-  actionID : locAct.CFA_REMOVE
+  actionID : locAct.Y2015_Y2016
 }];
 
 export const editButtonMenuItems = [{

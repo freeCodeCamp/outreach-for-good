@@ -62,9 +62,9 @@ export function fetchStudentRecord(studentId) {
  * Get entries from current absence records.
  *   - untested
  */
-export function fetchRecordsList() {
+export function fetchRecordsList(yearFilter) {
   return function(dispatch) {
-    return AbsenceRecordsApi.fetchRecordsList().then(res =>
+    return AbsenceRecordsApi.fetchRecordsList(yearFilter).then(res =>
       dispatch(loadRecordsSuccess(res))
     )
     .catch(err => handleError(err, dispatch));
@@ -91,9 +91,9 @@ export function fetchSchoolRecordList(schoolId) {
  * Get entries for students with outreaches specified by filter.
  *   - untested
  */
-export function fetchRecordsListQuery(querystring) {
+export function fetchRecordsListQuery(querystring, yearFilter) {
   return function(dispatch) {
-    return AbsenceRecordsApi.fetchRecordsListQuery(querystring).then(res =>
+    return AbsenceRecordsApi.fetchRecordsListQuery(querystring, yearFilter).then(res =>
       dispatch(loadRecordsSuccess(res))
     )
     .catch(err => handleError(err, dispatch));

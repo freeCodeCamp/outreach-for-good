@@ -63,26 +63,26 @@ class DashboardPage extends React.Component {
    *   - Retrieve and configure data for table
    *   - Set default state for 'action' variables
    */
-  retrieveData = currentTab => {
+  retrieveData = (currentTab, yearFilter) => {
     let loadingPromise;
     switch (currentTab) {
     case 'court':
-      loadingPromise = this.props.absAct.fetchRecordsListQuery('type=Court+Referral');
+      loadingPromise = this.props.absAct.fetchRecordsListQuery('type=Court+Referral', yearFilter);
       break;
     case 'home':
-      loadingPromise = this.props.absAct.fetchRecordsListQuery('type=Home+Visit');
+      loadingPromise = this.props.absAct.fetchRecordsListQuery('type=Home+Visit', yearFilter);
       break;
     case 'letter':
-      loadingPromise = this.props.absAct.fetchRecordsListQuery('type=Letter+Sent');
+      loadingPromise = this.props.absAct.fetchRecordsListQuery('type=Letter+Sent', yearFilter);
       break;
     case 'phone':
-      loadingPromise = this.props.absAct.fetchRecordsListQuery('type=Phone+Call');
+      loadingPromise = this.props.absAct.fetchRecordsListQuery('type=Phone+Call', yearFilter);
       break;
     case 'sst':
-      loadingPromise = this.props.absAct.fetchRecordsListQuery('type=SST+Referral');
+      loadingPromise = this.props.absAct.fetchRecordsListQuery('type=SST+Referral', yearFilter);
       break;
     case 'student':
-      loadingPromise = this.props.absAct.fetchRecordsList();
+      loadingPromise = this.props.absAct.fetchRecordsList(yearFilter);
       this.props.repAct.getOutreachCounts('withdrawn=false');
       break;
     }
@@ -128,8 +128,23 @@ class DashboardPage extends React.Component {
      */
     case 'menuClick':
     case 'buttonClick':
-      this.handleInterfaceButtonClick(nextTable, data, event);
-      break; // End of: case 'menuClick' or 'buttonClick'
+      nextTable = table.setSelectedRowData(this.state.table,
+        this.getSelectedRowData());
+      if(data == locAct.EDIT || data == locAct.FILTER) {
+        this.handleDialogButtonClick(nextTable, data, event);
+      } else if(data == locAct.ALL_YEARS) {
+        this.retrieveData(nextTable.get('selectedTab'));
+        this.handleInterfaceButtonClick(nextTable, data, event);
+      } else if(data == locAct.Y2016_Y2017) {
+        this.retrieveData(nextTable.get('selectedTab'), 'year/2016-2017');
+        this.handleInterfaceButtonClick(nextTable, data, event);
+      } else if(data == locAct.Y2015_Y2016) {
+        this.retrieveData(nextTable.get('selectedTab'), 'year/2015-2016');
+        this.handleInterfaceButtonClick(nextTable, data, event);
+      } else {
+        this.handleInterfaceButtonClick(nextTable, data, event);
+      }
+      break;
     // Clicked away from popover menu
     case 'popoverClose':
       this.handleClosePopover(nextTable);
@@ -164,14 +179,15 @@ class DashboardPage extends React.Component {
     this.setState({table: nextTable});
   }
 
+  handleDialogButtonClick = (nextTable, data, event) => {
+    nextTable = table.togglePopovers(nextTable, data);
+    nextTable = table.setAnchor(nextTable, event.currentTarget);
+    nextTable = table.resetDialogs(nextTable);
+    this.setState({table: nextTable});
+  }
+
   handleInterfaceButtonClick = (nextTable, data, event) => {
-    nextTable = table.setSelectedRowData(this.state.table,
-      this.getSelectedRowData());
-    if(data == locAct.EDIT || data == locAct.FILTER) {
-      nextTable = table.togglePopovers(nextTable, data);
-      nextTable = table.setAnchor(nextTable, event.currentTarget);
-      nextTable = table.resetDialogs(nextTable);
-    }
+    nextTable = table.resetPopovers(this.state.table);
     this.setState({table: nextTable});
   }
 

@@ -61,7 +61,8 @@ This version is currently under development.
   * filter algorithm adjustment
 * Performance
   * DataTable - improve row selection speed with refs
-
+* Remove all hard-coded school years
+* does current return all or current year?
 
 ## To-Add
 

@@ -212,6 +212,7 @@ class AdminPage extends React.Component {
       nextTable = table.setSelectedRowData(this.state.table,
         this.getSelectedRowData());
       nextForm = this.state.form;
+      // Does this action open a dialog?
       if(locAct.DIALOG_LIST.indexOf(data) != -1) {
         // Initialize form state
         nextTable = table.toggleDialogs(nextTable, data);
