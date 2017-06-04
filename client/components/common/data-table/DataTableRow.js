@@ -13,16 +13,17 @@ const getColumn = (data, indexMap, rowIndex, col) => {
   }
 };
 
-const DataTableRow = ({rowIndex, indexMap, data, col, ...props}) =>
-    <Cell {...props}>
+const DataTableRow = ({rowIndex, indexMap, data, col, ...props}) => {
+  return (<Cell {...props}>
       {indexMap.length > 0 && data && data.size
         // ? data.get(indexMap[rowIndex]).get(col)
         ? getColumn(data, indexMap, rowIndex, col)
         : ''}
       {/*console.log('Rendering row: ', rowIndex)*/}
-    </Cell>
+  </Cell>);
           //data.get(rowIndex).get(col)
-  ;
+};
+
 DataTableRow.propTypes = {
   rowIndex : PropTypes.number,
   indexMap : PropTypes.array.isRequired,
