@@ -105,6 +105,18 @@ class DashboardPage extends React.Component {
     }
   }
 
+  initClickActions = nextTable => {
+    nextTable = table.addPopovers(nextTable, {
+      [locAct.FILTER] : false,
+      [locAct.EDIT]   : false
+    });
+    nextTable = table.addDialogs(nextTable, {
+      [locAct.WITHDRAW_STUDENT] : false,
+      [locAct.ENROLL_STUDENT]   : false
+    });
+    return nextTable;
+  }
+
   /**
    * Perform API call to Retrieve Data
    *   - Retrieve and configure data for table
@@ -196,18 +208,6 @@ class DashboardPage extends React.Component {
       break;
     }
   } // End of: clickHandler()
-
-  initClickActions = nextTable => {
-    nextTable = table.addPopovers(nextTable, {
-      [locAct.FILTER] : false,
-      [locAct.EDIT]   : false
-    });
-    nextTable = table.addDialogs(nextTable, {
-      [locAct.WITHDRAW_STUDENT] : false,
-      [locAct.ENROLL_STUDENT]   : false
-    });
-    return nextTable;
-  }
 
   // Given a table-row index number, return object containing all row data
   getSelectedRowData = () => this.props.absenceRecords

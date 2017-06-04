@@ -25,9 +25,11 @@ const StudentTab = ({absenceRecords, ...props}) => {
    *  - See RaisedButtonModel for default parameters
    */
   buttons.push(new RaisedButtonModel({
-    label    : 'Filter',
-    actionID : locAct.FILTER,
-    menu     : {
+    label           : 'Filter',
+    actionID        : locAct.FILTER,
+    backgroundColor : '#009d9d',
+    disabled        : false,
+    menu            : {
       open : props.table.get('MuiPopovers').get(locAct.FILTER),
       item : locDef.filterButtonMenuItems
     }
