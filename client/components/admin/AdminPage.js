@@ -11,6 +11,7 @@ import * as locAct from './localActions';
 import TableModel from '../../models/TableModel';
 import FormModel from '../../models/FormModel';
 import SchoolsTab from './SchoolsTab';
+import SettingsTab from './SettingsTab';
 import UsersTab from './UsersTab';
 
 const table = new TableModel();
@@ -358,7 +359,7 @@ class AdminPage extends React.Component {
           label="Settings"
           onActive={this.tabHandler}
           value="settings">
-            interventions table will go here to create interventions
+            <SettingsTab />
         </Tab>
       </Tabs>
     );
