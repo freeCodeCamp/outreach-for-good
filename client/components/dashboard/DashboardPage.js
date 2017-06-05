@@ -49,6 +49,18 @@ class DashboardPage extends React.Component {
     return nextTable;
   }
 
+  initClickActions = nextTable => {
+    nextTable = table.addPopovers(nextTable, {
+      [locAct.FILTER] : false,
+      [locAct.EDIT]   : false
+    });
+    nextTable = table.addDialogs(nextTable, {
+      [locAct.WITHDRAW_STUDENT] : false,
+      [locAct.ENROLL_STUDENT]   : false
+    });
+    return nextTable;
+  }
+
   /**
    * Perform API call to Retrieve Data
    *   - Retrieve and configure data for table
@@ -87,7 +99,6 @@ class DashboardPage extends React.Component {
     nextTable = table.enableFiltering(nextTable);
     this.setState({table: nextTable, loadResolved: true});
   }
-
 
   clickHandler = (action, data, event) => {
     let nextTable;
