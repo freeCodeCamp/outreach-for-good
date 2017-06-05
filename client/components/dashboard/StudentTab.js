@@ -3,9 +3,7 @@ import PropTypes from 'prop-types';
 import DataTable from '../common/data-table/DataTable';
 import { List } from 'immutable';
 
-import * as locAct from './localActions';
-import * as locDef from './localDefinitions';
-import RaisedButtonModel from '../../models/RaisedButtonModel';
+import * as locDef from './partials/localDefinitions';
 
 const StudentTab = ({absenceRecords, ...props}) => {
 /**
@@ -25,25 +23,8 @@ const StudentTab = ({absenceRecords, ...props}) => {
    *  - `actionID:` is used by parent to launch dialogs
    *  - See RaisedButtonModel for default parameters
    */
-  buttons.push(new RaisedButtonModel({
-    label           : 'Filter',
-    actionID        : locAct.FILTER,
-    backgroundColor : '#009d9d',
-    disabled        : false,
-    menu            : {
-      open : props.table.get('MuiPopovers').get(locAct.FILTER),
-      item : locDef.filterButtonMenuItems
-    }
-  }));
-
-  buttons.push(new RaisedButtonModel({
-    label    : 'Edit',
-    actionID : locAct.EDIT,
-    menu     : {
-      open : props.table.get('MuiPopovers').get(locAct.EDIT),
-      item : locDef.editButtonMenuItems
-    }
-  }));
+  buttons.push(locDef.filterButton(props));
+  buttons.push(locDef.editButton(props));
 
   const page = {
     title   : 'Students Dashboard',

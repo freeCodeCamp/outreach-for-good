@@ -1,6 +1,8 @@
 import React from 'react';
 import * as locAct from './localActions';
 
+import RaisedButtonModel from '../../../models/RaisedButtonModel';
+
 export const absenceRecordTableColumns = [{
   title    : 'Last Name',
   id       : 'student.lastName',
@@ -137,3 +139,25 @@ export const editButtonMenuItems = [{
     </div>,
   actionID : locAct.ENROLL_STUDENT
 }];
+
+export const filterButton = props =>
+  new RaisedButtonModel({
+    label           : 'Filter',
+    actionID        : locAct.FILTER,
+    backgroundColor : '#009d9d',
+    disabled        : false,
+    menu            : {
+      open : props.table.get('MuiPopovers').get(locAct.FILTER),
+      item : filterButtonMenuItems
+    }
+  });
+
+export const editButton = props =>
+  new RaisedButtonModel({
+    label    : 'Edit',
+    actionID : locAct.EDIT,
+    menu     : {
+      open : props.table.get('MuiPopovers').get(locAct.EDIT),
+      item : editButtonMenuItems
+    }
+  });

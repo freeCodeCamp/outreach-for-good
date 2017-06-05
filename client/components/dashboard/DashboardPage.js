@@ -9,7 +9,7 @@ import Dimensions from 'react-dimensions-cjs';
 import * as absAct from '../../modules/absenceRecordReducer';
 import * as repAct from '../../modules/reportsReducer';
 import * as usrAct from '../../modules/userReducer';
-import * as locAct from './localActions';
+import * as locAct from './partials/localActions';
 import TableModel from '../../models/TableModel';
 import Report from '../../models/ReportModel';
 
