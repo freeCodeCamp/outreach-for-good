@@ -1,4 +1,5 @@
-import React, {PropTypes} from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import DataTable from '../common/data-table/DataTable';
 import { List } from 'immutable';
 
@@ -14,17 +15,17 @@ const UsersTab = ({users, schools, ...props}) => {
  */
   function buttonHandler(event) {
     event.preventDefault();
-    props.clickHandler('dialogClick', this.value, event); // eslint-disable-line no-invalid-this
+    props.clickHandler('dialogClick', this.value, event); // eslint-disable-line babel/no-invalid-this
   }
 
   function dropdownHandlerSchool(event, index, value) {
     event.preventDefault();
-    props.clickHandler('dropdownChange', value, locAct.EDIT_SCHOOL); // eslint-disable-line no-invalid-this
+    props.clickHandler('dropdownChange', value, locAct.EDIT_SCHOOL); // eslint-disable-line babel/no-invalid-this
   }
 
   function dropdownHandlerRole(event, index, value) {
     event.preventDefault();
-    props.clickHandler('dropdownChange', value, locAct.EDIT_ROLE); // eslint-disable-line no-invalid-this
+    props.clickHandler('dropdownChange', value, locAct.EDIT_ROLE); // eslint-disable-line babel/no-invalid-this
   }
 
   let dialogs = [];
@@ -158,17 +159,18 @@ const UsersTab = ({users, schools, ...props}) => {
     buttons
   };
   return (
-    <div>
-      <DataTable
-        page={page}
-        data={users.map(iMap =>  // eslint-disable-line no-confusing-arrow
-          iMap.assignment
-          ? iMap.update('assignment', id => id.get('name'))
-          : iMap
-        )}
-        {...props}
-      />
-    </div>
+    props.table.get('selectedTab') == 'users'
+    && <div>
+        <DataTable
+          page={page}
+          data={users.map(iMap =>
+            iMap.assignment
+            ? iMap.update('assignment', id => id.get('name'))
+            : iMap
+          )}
+          {...props}
+        />
+      </div>
   );
 };
 

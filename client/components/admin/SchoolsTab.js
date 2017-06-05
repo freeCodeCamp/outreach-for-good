@@ -1,4 +1,5 @@
-import React, {PropTypes} from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import DataTable from '../common/data-table/DataTable';
 import { List } from 'immutable';
 
@@ -14,17 +15,17 @@ const SchoolsTab = ({schools, ...props}) => {
  */
   function buttonHandler(event) {
     event.preventDefault();
-    props.clickHandler('dialogClick', this.value, event); // eslint-disable-line no-invalid-this
+    props.clickHandler('dialogClick', this.value, event); // eslint-disable-line babel/no-invalid-this
   }
 
   function textFieldHandler(event, newValue) {
     event.preventDefault();
-    props.clickHandler('textFieldChange', newValue, event); // eslint-disable-line no-invalid-this
+    props.clickHandler('textFieldChange', newValue, event); // eslint-disable-line babel/no-invalid-this
   }
 
   function submitTextField(event) {
     event.preventDefault();
-    props.clickHandler('textFieldEnter', '', event); // eslint-disable-line no-invalid-this
+    props.clickHandler('textFieldEnter', '', event); // eslint-disable-line babel/no-invalid-this
   }
 
   /**
@@ -134,13 +135,14 @@ const SchoolsTab = ({schools, ...props}) => {
   };
 
   return (
-    <div>
-      <DataTable
-        page={page}
-        data={schools}
-        {...props}
-      />
-    </div>
+    props.table.get('selectedTab') == 'schools'
+    && <div>
+        <DataTable
+          page={page}
+          data={schools}
+          {...props}
+        />
+      </div>
   );
 };
 

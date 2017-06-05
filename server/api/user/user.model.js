@@ -1,4 +1,5 @@
 'use strict';
+/* eslint babel/no-invalid-this: 0 */
 
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;

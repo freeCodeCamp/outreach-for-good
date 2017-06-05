@@ -1,32 +1,51 @@
-import React, {PropTypes} from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import DataTable from '../common/data-table/DataTable';
+import { List } from 'immutable';
 
-const SstTab = ({schools, ...props}) => {
+import * as locDef from './partials/localDefinitions';
+
+const SstTab = ({absenceRecords, ...props}) => {
+/**
+ * Handler Functions
+ *   - Catch events from page elements and send to parent component
+ */
+  function buttonHandler(event) {
+    event.preventDefault();
+    props.clickHandler('dialogClick', this.value, event); // eslint-disable-line babel/no-invalid-this
+  }
+
+  let buttons = [];
+
+  /**
+   * Material-UI <RaisedButton> and <Popover>
+   *  - `menu:` become a <Popover> menu under button
+   *  - `actionID:` is used by parent to launch dialogs
+   *  - See RaisedButtonModel for default parameters
+   */
+  buttons.push(locDef.filterButton(props));
+  buttons.push(locDef.editButton(props));
+
+
   const page = {
     title   : 'SST Dashboard',
-    columns : [{
-      title    : 'Name',
-      id       : 'name',
-      flexGrow : 1
-    }, {
-      title : 'Actions',
-      id    : 'action',
-      width : 100
-    }]
+    columns : locDef.absenceRecordTableColumns,
+    buttons
   };
 
   return (
     <DataTable
       page={page}
-      data={schools}
+      data={absenceRecords}
       {...props}
     />
   );
 };
 
 SstTab.propTypes = {
-  view    : PropTypes.object.isRequired,
-  schools : PropTypes.object.isRequired,
+  absenceRecords : PropTypes.instanceOf(List).isRequired,
+  table          : PropTypes.object.isRequired,
+  clickHandler   : PropTypes.func.isRequired,
 };
 
 export default SstTab;

@@ -50,10 +50,27 @@ See [tools/sample-pdfs](https://github.com/freeCodeCamp/child-first-authority/tr
 
 This version is currently under development.
 
-* Upgrade babel-loader, current version causes depreciation warning 
+* Upgrade babel-loader, current version causes depreciation warning (need v7)
   * https://github.com/babel/babel-loader/pull/391
 * When session validation fails, does user stay locked-out? 
 * admin-page
   * Prevent users from deleting themselves
   * User photo in left-most column
   * Sort when clicking header
+* TableModel
+  * filter algorithm adjustment
+* Performance
+  * DataTable - improve row selection speed with refs
+* Remove all hard-coded school years
+* does current return all or current year?
+* changing tabs disables filter
+
+## To-Add
+
+* Students should not be grouped outside of their schools
+
+## To-Ask
+
+* Discuss row select / button click responsiveness
+  * Possibly bypass react render cycles
+

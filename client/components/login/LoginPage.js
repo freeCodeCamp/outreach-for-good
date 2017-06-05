@@ -1,7 +1,8 @@
-import React, {PropTypes} from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import {connect} from 'react-redux';
-import * as sessionActions from '../../actions/sessionActions';
+import * as sessionActions from '../../modules/sessionReducer';
 var cookies = require('browser-cookies');
 import {browserHistory} from 'react-router';
 

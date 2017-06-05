@@ -1,12 +1,22 @@
 import Immutable from 'immutable';
+import * as locAct from '../components/common/data-table/localActions';
 
 export const Table = Immutable.Record({
+  selectedTab   : '',
   title         : '',
   rowHeight     : 35,
   headerHeight  : 35,
-  selectedTab   : '',
+  // relative to data indicies (not sorted with indexMap)
   selectedIndex : Immutable.List(),
   selectedData  : Immutable.List(),
+  // data indicies -> sorted-table order map
+  indexMap      : [],
+  sortDirection : locAct.SORT_ASC,
+  sortCol       : '',
+  filterEnabled : false,
+  // {data_id: filter_value, ...}
+  filterBy      : Immutable.Map(),
+  // used to display MaterialUI Components
   MuiPopovers   : Immutable.Map(),
   MuiDialogs    : Immutable.Map(),
   MuiAnchor     : null,
@@ -14,12 +24,110 @@ export const Table = Immutable.Record({
 
 class TableModel extends Table {
 
-  // Set anchor element for <Popover> menu
-  setAnchor(currentState, anchor) {
-    return currentState.set('MuiAnchor', anchor);
+  setSelectedTab(currentState, name) {
+    return currentState.set('selectedTab', name);
   }
 
-  // MUI <Popover> integration
+  /**
+   * Sort table by column
+   */
+  buildIndexMap(currentState, data) {
+    return currentState.update('indexMap', () =>
+      Array(data.size).fill(0)
+      .map((x, i) => i));
+  }
+
+  updateSortCol(currentState, nextSortCol) {
+    let nextState = currentState.update('sortDirection', sortDir =>
+      nextSortCol == currentState.get('sortCol')
+      ? locAct.SORT_ASC == sortDir
+        ? locAct.SORT_DESC : locAct.SORT_ASC : locAct.SORT_ASC);
+    return nextState.update('sortCol', () => nextSortCol);
+  }
+
+  sortIndexMap(currentState, data) {
+    let sortCol = currentState.get('sortCol');
+    let sortDirection = currentState.get('sortDirection') == locAct.SORT_ASC;
+    return currentState.update('indexMap', indexMap =>
+      indexMap.sort((xIndex, yIndex) => {
+        let xValue = data.getIn([xIndex, sortCol]);
+        let yValue = data.getIn([yIndex, sortCol]);
+        return xValue > yValue
+          ? sortDirection ? 1 : -1
+          : sortDirection ? -1 : 1;
+      })
+    );
+  }
+
+  /**
+   * Filter table by column
+   */
+  updateFilterBy(currentState, data, id, filter) {
+    return this.filterIndexMap(
+      currentState.update('filterBy', filterBy =>
+        filterBy.set(id, filter)), data);
+  }
+
+  // Enhancement: change filter algo based on adding or removing chars
+  filterIndexMap(currentState, data) {
+    let nextState = this.buildIndexMap(currentState, data);
+    let filterBy = nextState.get('filterBy');
+    return nextState.update('indexMap', indexMap => {
+      filterBy.forEach((v, k) => {
+        let searchString = v.toString().toLowerCase();
+        indexMap = indexMap.filter(e =>
+          data.getIn([e, k]).toString()
+          .toLowerCase()
+          .indexOf(searchString) !== -1);
+      });
+      return indexMap;
+    });
+  }
+
+  enableFiltering(currentState) {
+    return currentState.set('filterEnabled', true);
+  }
+
+  /**
+   * Row Select and Highlighting
+   */
+  toggleSelectedRowIndex(currentState, mappedIndex) {
+    let target = this.selectionToMappedIndicies(currentState).indexOf(mappedIndex);
+    if(target == -1) {
+      let index = currentState.get('indexMap')[mappedIndex];
+      return currentState.update('selectedIndex', i => i.push(index));
+    } else {
+      return currentState.update('selectedIndex', i => i.splice(target, 1));
+    }
+  }
+
+  // Returns `selectedIndex` mapped to table sort order
+  selectionToMappedIndicies(currentState) {
+    let indexMap = currentState.get('indexMap');
+    return currentState
+      .get('selectedIndex').map(index =>
+        indexMap.indexOf(index));
+  }
+
+  clearSelectedRows(currentState) {
+    return currentState.update('selectedIndex', i => i.clear());
+  }
+
+  // Return data stored in selected rows
+  setSelectedRowData(currentState, data) {
+    return currentState.update('selectedData', i => i.clear().merge(data));
+  }
+
+  // Return string of comma seperated cell values (from selection)
+  selectedRowsToCsv(currentState, column) {
+    return currentState.get('selectedData')
+      .map(row => row[column])
+      .join(', ');
+  }
+
+  /**
+   * Material-UI <Popover>
+   */
   addPopovers(currentState, popoverValues) {
     return currentState.update('MuiPopovers', i => i.clear().merge(popoverValues));
   }
@@ -33,7 +141,14 @@ class TableModel extends Table {
     return currentState.update('MuiPopovers', iMap => iMap.map(() => false));
   }
 
-  // MUI <Dialog> integration
+  // Set anchor element for <Popover> menu
+  setAnchor(currentState, anchor) {
+    return currentState.set('MuiAnchor', anchor);
+  }
+
+  /**
+   * Material-UI <Dialog>
+   */
   addDialogs(currentState, dialogValues) {
     return currentState.update('MuiDialogs', i => i.clear().merge(dialogValues));
   }
@@ -45,32 +160,6 @@ class TableModel extends Table {
 
   resetDialogs(currentState) {
     return currentState.update('MuiDialogs', iMap => iMap.map(() => false));
-  }
-
-  setSelectedTab(currentState, name) {
-    return currentState.set('selectedTab', name);
-  }
-
-  // Facilitate user selecting table rows
-  toggleSelectedRowIndex(currentState, index) {
-    let target = currentState.get('selectedIndex').indexOf(index);
-    if(target == -1) {
-      return currentState.update('selectedIndex', i => i.push(index));
-    } else {
-      return currentState.update('selectedIndex', i => i.splice(target, 1));
-    }
-  }
-
-  // Return data stored in selected rows
-  setSelectedRowData(currentState, data) {
-    return currentState.update('selectedData', i => i.clear().merge(data));
-  }
-
-  // Return string of comma seperated cell values (from selection)
-  selectedRowsToCsv(currentState, column) {
-    return currentState.get('selectedData')
-      .map(row => row[column])
-      .join(', ');
   }
 }
 

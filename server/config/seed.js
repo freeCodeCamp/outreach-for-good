@@ -8,6 +8,7 @@
 
 var AbsenceRecord = require('../api/absence-record/absence-record.model');
 var School = require('../api/school/school.model');
+var Setting = require('../api/setting/setting.model');
 var Student = require('../api/student/student.model');
 var Outreach = require('../api/student/outreach/outreach.model');
 var Intervention = require('../api/student/intervention/intervention.model');
@@ -21,6 +22,8 @@ AbsenceRecord.remove().exec().then(function() {
   return Intervention.remove().exec();
 }).then(function() {
   return School.remove().exec();
+}).then(function() {
+  return Setting.remove().exec();
 }).then(function() {
   return Student.remove().exec();
 }).then(function() {
@@ -72,11 +75,13 @@ AbsenceRecord.remove().exec().then(function() {
     studentId: 'sid001',
     lastName: 'Graham',
     firstName: 'Brandon',
+    cfa: true,
     school: schoolA._id
   }, {
     studentId: 'sid002',
     lastName: 'Simpson',
     firstName: 'Dan',
+    cfa: true,
     school: schoolA._id
   }, {
     studentId: 'sid003',
@@ -149,6 +154,20 @@ AbsenceRecord.remove().exec().then(function() {
     }],
     createdStudents: [studentD._id, studentE._id]
   }, logCreateResults('AbsenceRecords'));
+}).then(function() {
+    return Setting.create({ intervention : {
+     types: [{
+       title: 'One Intervention',
+       description: 'A description of one intervention with more details'
+     }, {
+       title: 'Two Intervention',
+       description: 'A description of two intervention with more details'
+     }, {
+       title: 'Three Intervention',
+       description: 'A description of three intervention with more details'
+     }]
+   }}, logCreateResults('settings'));
+ }).then(function() {
 }).then(function() {
   return Student.find().populate('school').exec(function(err, students) {
     debug('Schools and Students');

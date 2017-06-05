@@ -1,22 +1,72 @@
 .student-page {
-  padding: 10px;
-
   .info {
-    margin-bottom: 10px;
-    [class*='col-'] {
-      float: left;
-      width: 49.5%;
-      height: 220px;
-      padding: 10px;
-      margin-right: 1%;
-      &:last-of-type {
-        margin-right: 0;
+    padding: 10px;
+    display: flex;
+    .col-data {
+      flex: 1;
+    }
+    .col-attendance {
+      flex: 2;
+    }
+  }
+
+  .outreach-cards {
+    display: flex;
+    flex-wrap: wrap;
+
+    .outreach-card {
+      flex: 1;
+      max-width: 50%;
+      margin: 5px;
+    }
+
+    .outreach-card-text-container {
+      display: flex;
+
+      .left-column {
+        flex: 1;
+      }
+
+      .right-column {
+        flex: 3;
+
+        .outreach-notes {
+          height: 200px;
+          max-height: 100px;
+          overflow-y: auto;
+        }
       }
     }
-    &:after {
-      content: '';
-      display: table;
-      clear: both;
+
+
+  }
+
+  .intervention-cards {
+
+    .cards {
+      display: flex;
+      flex-wrap: wrap;
+
+      .card {
+        flex: 1;
+        max-width: 50%;
+        margin: 5px;
+      }
+
+      .card-text-container {
+        display: flex;
+
+        .notes {
+          height: 200px;
+          max-height: 100px;
+          overflow-y: auto;
+        }
+      }
+    }
+
+    .add-intervention {
+      text-align: center;
+      margin: 10px auto;
     }
   }
 }

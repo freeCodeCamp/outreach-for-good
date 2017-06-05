@@ -60,21 +60,26 @@ var SchoolSchema = new Schema({
 });
 
 SchoolSchema.pre('remove', function(next) {
-  var self = this;
-  AbsenceRecord.remove({school: self._id}).exec().then(function() {
+  var self = this;  // eslint-disable-line babel/no-invalid-this, consistent-this
+  AbsenceRecord.remove({school: self._id}).exec()
+  .then(function() {
     return Student.find({school: self._id}).exec();
-  }).then(function(students) {
+  })
+  .then(function(students) {
     return Promise.all(_.map(students, function(student) {
       return student.remove();
     }));
-  }).then(function() {
+  })
+  .then(function() {
     return User
       .update({assignment: self._id}, {$unset: {assignment: 1}},
         {multi: true})
       .exec();
-  }).then(function() {
+  })
+  .then(function() {
     next();
-  }).catch(function(err) {
+  })
+  .catch(function(err) {
     return next(new Error(err));
   });
 });

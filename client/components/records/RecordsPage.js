@@ -1,65 +1,38 @@
-import React, {Component, PropTypes} from 'react';
-import {bindActionCreators} from 'redux';
-import {connect} from 'react-redux';
-import * as recordsActions from '../../actions/recordsActions';
+import React from 'react';
+import PropTypes from 'prop-types';
 import {Tabs, Tab} from 'material-ui/Tabs';
-import UploadTab from './components/UploadTab';
-import ManageTab from './components/ManageTab';
+import UploadTab from './partials/UploadTab';
+import ManageTab from './partials/ManageTab';
+import Dimensions from 'react-dimensions-cjs';
 
-class RecordsPage extends Component {
-  constructor() {
-    super();
-
-    this.state = {
-      currentTab : 'upload'
-    };
-
-    this.changeTab = this.changeTab.bind(this);
-    this.confirm = this.confirm.bind(this);
-    this.manageRecord = this.manageRecord.bind(this);
-  }
-
-  componentWillMount() {
-    this.props.actions.fetchSchools();
-    this.props.actions.fetchCurrentRecord();
-  }
-
-  confirm(record, date) {
-    record.date = date;
-    this.props.actions.postRecord(record);
-  }
-
-  changeTab(tab) {
-    this.setState({ currentTab: tab });
-  }
-
-  manageRecord(schoolId) {
-    this.props.actions.fetchRecordList(schoolId);
+class RecordsPage extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {currentTab: 'upload'};
   }
 
   render() {
     return (
       <Tabs
+        style={{width: this.props.containerWidth}}
         value={this.state.currentTab}
-        onChange={this.changeTab}
+        onChange={tab => {
+          this.setState({currentTab: tab});
+        }}
         >
         <Tab
           label="Upload"
           value="upload">
-          <UploadTab
-            changeTab={this.changeTab}
-            confirm={this.confirm}
-            current={this.props.records.current}
-            schools={this.props.records.schools}
-          />
+          <UploadTab />
         </Tab>
         <Tab
           label="Manage"
           value="manage">
           <ManageTab
-            schools={this.props.records.schools}
-            manageRecord={this.manageRecord}
-            records={this.props.records.list}
+            view={{
+              width  : this.props.containerWidth - 20,
+              height : this.props.containerHeight - 48 - 80
+            }}
           />
         </Tab>
       </Tabs>
@@ -68,21 +41,8 @@ class RecordsPage extends Component {
 }
 
 RecordsPage.propTypes = {
-  actions : PropTypes.object.isRequired,
-  records : PropTypes.object.isRequired
+  containerWidth  : PropTypes.number.isRequired,
+  containerHeight : PropTypes.number.isRequired
 };
 
-function mapStateToProps(state) {
-  return {
-    session : state.session,
-    records : state.records
-  };
-}
-
-function mapDispatchToProps(dispatch) {
-  return {
-    actions : bindActionCreators(recordsActions, dispatch)
-  };
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(RecordsPage);
+export default (Dimensions({elementResize: true})(RecordsPage));

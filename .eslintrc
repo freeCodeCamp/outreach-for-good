@@ -5,8 +5,10 @@
     "plugin:import/warnings"
   ],
   "plugins": [
+    "babel",
     "react"
   ],
+  "parser": "babel-eslint",
   "parserOptions": {
     "ecmaVersion": 6,
     "sourceType": "module",
@@ -55,6 +57,9 @@
     "react/self-closing-comp": 1,
     "react/sort-comp": 1,
     "react/wrap-multilines": 1,
+
+    //Babel
+    "babel/no-invalid-this": 1,
 
     //Possible Errors
     "comma-dangle": 0,                                          //disallow or enforce trailing commas
@@ -117,7 +122,7 @@
     "no-implicit-coercion": 0,                                  //disallow the type conversions with shorter notations
     "no-implicit-globals": 0,                                   //disallow var and named functions in global scope
     "no-implied-eval": 2,                                       //disallow use of eval()-like methods
-    "no-invalid-this": 1,                                       //disallow this keywords outside of classes or class-like objects
+    //"no-invalid-this": 1,                                       //disallow this keywords outside of classes or class-like objects
     "no-iterator": 2,                                           //disallow usage of __iterator__ property
     "no-labels": 2,                                             //disallow use of labeled statements
     "no-lone-blocks": 2,                                        //disallow unnecessary nested blocks
@@ -297,7 +302,7 @@
     "constructor-super": 2,                                     //verify calls of super() in constructors
     "generator-star-spacing": 0,                                //enforce spacing around the * in generator functions
     "no-class-assign": 2,                                       //disallow modifying variables of class declarations
-    "no-confusing-arrow": 2,                                    //disallow arrow functions where they could be confused with comparisons
+    "no-confusing-arrow": 0,                                    //disallow arrow functions where they could be confused with comparisons
     "no-const-assign": 2,                                       //disallow modifying variables that are declared using const
     "no-dupe-class-members": 2,                                 //disallow duplicate name in class members
     "no-duplicate-imports": 2,                                  //disallow duplicate module imports

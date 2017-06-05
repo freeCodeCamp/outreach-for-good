@@ -1,16 +1,18 @@
-import React, { PropTypes } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import {connect} from 'react-redux';
 import { List } from 'immutable';
 import {Tabs, Tab} from 'material-ui/Tabs';
-import Dimensions from 'react-dimensions';
+import Dimensions from 'react-dimensions-cjs';
 
-import * as usrAct from '../../actions/userActions';
-import * as schAct from '../../actions/schoolActions';
+import * as usrAct from '../../modules/userReducer';
+import * as schAct from '../../modules/schoolReducer';
 import * as locAct from './localActions';
 import TableModel from '../../models/TableModel';
 import FormModel from '../../models/FormModel';
 import SchoolsTab from './SchoolsTab';
+import SettingsTab from './SettingsTab';
 import UsersTab from './UsersTab';
 
 const table = new TableModel();
@@ -21,42 +23,85 @@ class AdminPage extends React.Component {
     super(props, context);
 
     // Register Initial Component State
-    let nextTable = this.initializeTable('users');
-    this.state = Object.assign({ table: nextTable }, {form});
+    let nextTable = table.setSelectedTab(table, 'users');
+    nextTable = this.initClickActions(nextTable);
+    this.state = {
+      table  : nextTable,
+      loaded : false,
+      form
+    };
 
-    this.initializeTable = this.initializeTable.bind(this);
+    this.retrieveData = this.retrieveData.bind(this);
+    this.initClickActions = this.initClickActions.bind(this);
     this.clickHandler = this.clickHandler.bind(this);
     this.getSelectedRowData = this.getSelectedRowData.bind(this);
     this.getSchoolId = this.getSchoolId.bind(this);
     this.tabHandler = this.tabHandler.bind(this);
   }
 
-  componentWillReceiveProps() {
-    this.setState({
-      table : this.state.table,
-      form  : this.state.form
-    });
+  componentDidMount() {
+    this.retrieveData('users');
+  }
+
+  componentWillReceiveProps(nextProps) {
+    let nextTable = this.state.table;
+    let dataLoaded = false;
+    switch (nextTable.get('selectedTab')) {
+    case 'users':
+      if(nextProps.users.size) {
+        //console.log('Got It!!! ', nextProps.users.size);
+        dataLoaded = true;
+        nextTable = table.updateSortCol(nextTable, '');
+        nextTable = table.buildIndexMap(nextTable, nextProps.users);
+      }
+      break;
+    case 'schools':
+      if(nextProps.schools.size) {
+        //console.log('Got It!!! ', nextProps.schools.size);
+        dataLoaded = true;
+        nextTable = table.updateSortCol(nextTable, '');
+        nextTable = table.buildIndexMap(nextTable, nextProps.schools);
+      }
+      break;
+    }
+    if(!this.state.loaded && dataLoaded) {
+      //console.log('setstate');
+      this.setState({
+        table  : nextTable,
+        loaded : true,
+        form   : this.state.form
+      });
+    }
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    let selectedTab = this.state.table.get('selectedTab');
+    if(prevState.table.get('selectedTab') != selectedTab) {
+      this.retrieveData(selectedTab);
+    }
   }
 
   /**
-   * Initialize Data Table
+   * Perform API call to Retrieve Data
    *   - Retrieve and configure data for table
    *   - Set default state for 'action' variables
    */
-  initializeTable(currentTab) {
-    let nextTable;
+  retrieveData(currentTab) {
     switch (currentTab) {
     case 'users':
       this.props.usrAct.getAllUsers();
       this.props.schAct.getAllSchools();
-      nextTable = table.setSelectedTab(table, 'users');
       break;
     case 'schools':
       this.props.schAct.getAllSchools();
-      nextTable = table.setSelectedTab(table, 'schools');
       break;
     }
-    // All tabs initialize on section-load
+  }
+
+  /**
+   * Initialize Click Actions (on tab change)
+   */
+  initClickActions(nextTable) {
     nextTable = table.addPopovers(nextTable, {
       [locAct.EDIT] : false
     });
@@ -67,7 +112,6 @@ class AdminPage extends React.Component {
       [locAct.NEW_SCHOOL]    : false,
       [locAct.REMOVE_SCHOOL] : false
     });
-
     return nextTable;
   }
 
@@ -84,13 +128,34 @@ class AdminPage extends React.Component {
 
     // Clicked a main tab
     case 'changeTabs':
-      nextTable = this.initializeTable(data.props.value);
-      this.setState({table: nextTable});
+      nextTable = table.setSelectedTab(this.state.table, data.props.value);
+      nextTable = this.initClickActions(nextTable);
+      this.setState({table: nextTable, loaded: false});
       break;
 
-    // Clicked (select/de-select) a table row
+    /**
+     * DataTable Click / Filter Handler
+     *   - Select / de-select a table row
+     *   - Sort by a column
+     *   - Apply a filter
+     */
     case 'toggleSelected':
       nextTable = table.toggleSelectedRowIndex(this.state.table, data);
+      this.setState({table: nextTable});
+      break;
+    case 'toggleSortCol':
+      nextTable = table.updateSortCol(this.state.table, data);
+      nextTable = table.sortIndexMap(nextTable,
+        nextTable.get('selectedTab') == 'users'
+          ? this.props.users : this.props.schools);
+      this.setState({table: nextTable});
+      break;
+    case 'changeFilterCol':
+      //console.log(data.substr(7), event);
+      let tabData = this.state.table.get('selectedTab') == 'users'
+          ? this.props.users : this.props.schools;
+      nextTable = table.updateFilterBy(this.state.table, tabData, data.substr(7), event);
+      nextTable = table.sortIndexMap(nextTable, tabData);
       this.setState({table: nextTable});
       break;
 
@@ -147,6 +212,7 @@ class AdminPage extends React.Component {
       nextTable = table.setSelectedRowData(this.state.table,
         this.getSelectedRowData());
       nextForm = this.state.form;
+      // Does this action open a dialog?
       if(locAct.DIALOG_LIST.indexOf(data) != -1) {
         // Initialize form state
         nextTable = table.toggleDialogs(nextTable, data);
@@ -162,6 +228,7 @@ class AdminPage extends React.Component {
         case locAct.REMOVE_USER:
           break;
         case locAct.NEW_SCHOOL:
+          nextTable = table.clearSelectedRows(nextTable);
           nextForm = form.disableSubmitButton(nextForm);
           break;
         case locAct.REMOVE_SCHOOL:
@@ -252,6 +319,10 @@ class AdminPage extends React.Component {
   }
 
   render() {
+    let viewport = {
+      width  : this.props.containerWidth - 20,
+      height : this.props.containerHeight - 48 - 80
+    }; // Facillitates table realtime resizing
     return (
       <Tabs
         style={{width: this.props.containerWidth}}
@@ -263,14 +334,12 @@ class AdminPage extends React.Component {
           value='users'
         >
           <UsersTab
-            view = {{
-              width  : this.props.containerWidth - 20,
-              height : this.props.containerHeight - 48 - 80
-            }} // Facillitates table realtime resizing
+            view = {viewport}
             users = {this.props.users}
             schools = {this.props.schools}
             table = {this.state.table}
             form = {this.state.form}
+            loaded = {this.state.loaded}
             clickHandler = {this.clickHandler}
           />
         </Tab>
@@ -280,15 +349,19 @@ class AdminPage extends React.Component {
           value='schools'
         >
           <SchoolsTab
-            view = {{
-              width  : this.props.containerWidth - 20,
-              height : this.props.containerHeight - 48 - 80
-            }} // Facillitates table realtime resizing
+            view = {viewport}
             schools = {this.props.schools}
             table = {this.state.table}
             form = {this.state.form}
+            loaded = {this.state.loaded}
             clickHandler = {this.clickHandler}
           />
+        </Tab>
+        <Tab
+          label="Settings"
+          onActive={this.tabHandler}
+          value="settings">
+            <SettingsTab />
         </Tab>
       </Tabs>
     );
@@ -318,6 +391,6 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-//https://github.com/digidem/react-dimensions/issues/44
+//https://github.com/digidem/react-dimensions-cjs/issues/44
 export default connect(mapStateToProps, mapDispatchToProps)(
   Dimensions({elementResize: true})(AdminPage));

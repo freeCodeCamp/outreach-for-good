@@ -1,7 +1,7 @@
-.upload-tab, .manage-tab {
+.upload-tab {
   padding: 10px;
 
-  .dropzone-container, .manage-container {
+  .dropzone-container {
     padding: 20px;
     .column {
       width: 50%;
@@ -35,4 +35,25 @@
       }
     }
   }
+}
+.manage-tab {
+  .select-school {
+    margin: 30px;
+    width: 50%;
+  }
+  .record-data{
+    margin: 0 10px;
+    padding: 10px;
+    .column {
+      display: inline-block;
+      vertical-align: top;
+      width: 50%;
+    }
+  }
+}
+
+$alertred: #f2dede;
+.alert {
+  color: #a94442;
+  background-color: $alertred;
 }

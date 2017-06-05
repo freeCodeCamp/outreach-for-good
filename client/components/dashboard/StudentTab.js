@@ -1,10 +1,20 @@
-import React, {PropTypes} from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import DataTable from '../common/data-table/DataTable';
+import { List } from 'immutable';
 
-import * as locAct from './localActions';
-import RaisedButtonModel from '../../models/RaisedButtonModel';
+import * as locDef from './partials/localDefinitions';
 
-const StudentTab = ({schools, ...props}) => {
+const StudentTab = ({absenceRecords, ...props}) => {
+/**
+ * Handler Functions
+ *   - Catch events from page elements and send to parent component
+ */
+  function buttonHandler(event) {
+    event.preventDefault();
+    props.clickHandler('dialogClick', this.value, event); // eslint-disable-line babel/no-invalid-this
+  }
+
   let buttons = [];
 
   /**
@@ -13,96 +23,28 @@ const StudentTab = ({schools, ...props}) => {
    *  - `actionID:` is used by parent to launch dialogs
    *  - See RaisedButtonModel for default parameters
    */
-  buttons.push(new RaisedButtonModel({
-    label    : 'IEP',
-    actionID : locAct.REMOVE_USER
-  }));
-
-  buttons.push(new RaisedButtonModel({
-    label    : 'CFA',
-    actionID : locAct.REMOVE_USER
-  }));
-
-  buttons.push(new RaisedButtonModel({
-    label    : 'Withdraw',
-    actionID : locAct.REMOVE_USER
-  }));
-
+  buttons.push(locDef.filterButton(props));
+  buttons.push(locDef.editButton(props));
 
   const page = {
     title   : 'Students Dashboard',
-    columns : [{
-      title    : 'School',
-      id       : 'name',
-      flexGrow : 1
-    }, {
-      title    : 'Student ID',
-      id       : 'name',
-      flexGrow : 1
-    }, {
-      title    : 'First Name',
-      id       : 'name',
-      flexGrow : 1
-    }, {
-      title    : 'Last Name',
-      id       : 'name',
-      flexGrow : 1
-    }, {
-      title    : 'Grade',
-      id       : 'name',
-      flexGrow : 1
-    }, {
-      title    : 'Absences',
-      id       : 'name',
-      flexGrow : 1
-    }, {
-      title    : 'Δ',
-      id       : 'name',
-      flexGrow : 1
-    }, {
-      title    : 'Tardies',
-      id       : 'name',
-      flexGrow : 1
-    }, {
-      title    : 'Δ',
-      id       : 'name',
-      flexGrow : 1
-    }, {
-      title    : 'Present',
-      id       : 'name',
-      flexGrow : 1
-    }, {
-      title    : 'Enrolled',
-      id       : 'name',
-      flexGrow : 1
-    }, {
-      title    : 'IEP',
-      id       : 'name',
-      flexGrow : 1
-    }, {
-      title    : 'CFA',
-      id       : 'name',
-      flexGrow : 1
-    }, {
-      title    : 'Updated',
-      id       : 'name',
-      flexGrow : 1
-    }],
+    columns : locDef.absenceRecordTableColumns,
     buttons
   };
 
   return (
     <DataTable
       page={page}
-      data={schools}
+      data={absenceRecords}
       {...props}
     />
   );
 };
 
 StudentTab.propTypes = {
-  view    : PropTypes.object.isRequired,
-  schools : PropTypes.object.isRequired,
+  absenceRecords : PropTypes.instanceOf(List).isRequired,
+  table          : PropTypes.object.isRequired,
+  clickHandler   : PropTypes.func.isRequired,
 };
 
 export default StudentTab;
