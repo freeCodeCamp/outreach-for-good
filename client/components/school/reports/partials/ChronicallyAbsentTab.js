@@ -1,4 +1,5 @@
-import React, {PropTypes} from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import DataTable from '../../../common/data-table/DataTable';
 import RaisedButtonModel from '../../../../models/RaisedButtonModel';
 

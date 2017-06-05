@@ -1,4 +1,5 @@
-import React, { PropTypes } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import { Table, Column, Cell } from 'fixed-data-table-2';
 import DataTableHeader from './DataTableHeader';
 import DataTableRow from './DataTableRow';
@@ -8,7 +9,9 @@ import TableModel from '../../../models/TableModel';
 
 class TableContainer extends React.Component {
   shouldComponentUpdate(nextProps) {
+    //console.log(nextProps.table.get('indexMap'), nextProps.data);
     return this.props.data !== nextProps.data
+      || this.props.loaded !== nextProps.loaded
       || this.props.table.get('indexMap') !== nextProps.table.get('indexMap')
       || this.props.table.get('selectedIndex') !== nextProps.table.get('selectedIndex')
       || this.props.table.get('sortCol') !== nextProps.table.get('sortCol')

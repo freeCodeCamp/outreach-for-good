@@ -1,4 +1,5 @@
-import React, { PropTypes } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import {connect} from 'react-redux';
 import { List } from 'immutable';
@@ -211,6 +212,7 @@ class AdminPage extends React.Component {
       nextTable = table.setSelectedRowData(this.state.table,
         this.getSelectedRowData());
       nextForm = this.state.form;
+      // Does this action open a dialog?
       if(locAct.DIALOG_LIST.indexOf(data) != -1) {
         // Initialize form state
         nextTable = table.toggleDialogs(nextTable, data);

@@ -1,4 +1,5 @@
-import React, { PropTypes } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import TableContainer from './TableContainer';
 
 import TableModel from '../../../models/TableModel';
@@ -12,6 +13,7 @@ import MenuItem from 'material-ui/MenuItem';
 import Divider from 'material-ui/Divider';
 
 import Dialog from 'material-ui/Dialog';
+import {openSnackbar} from '../../../modules/viewReducer';
 
 class DataTable extends React.Component {
   /**
@@ -34,6 +36,8 @@ class DataTable extends React.Component {
 
   render() {
     const {
+      data,
+      loaded,
       page,
       table
     } = this.props;
@@ -103,8 +107,19 @@ class DataTable extends React.Component {
           </div>
         </div>
         <Paper className="display-paper">
-          <TableContainer page={page} table={table} {...this.props} />
+          <TableContainer
+            data={data}
+            loaded={loaded}
+            page={page}
+            table={table}
+            {...this.props} />
         </Paper>
+        {loaded && data.size === 0
+          ? <div className="no-results-message">
+              No Matching Results
+            </div>
+          : <div />
+        }
       </div>
     );
   }

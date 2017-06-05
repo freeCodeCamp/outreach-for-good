@@ -1,6 +1,8 @@
 import React from 'react';
 import * as locAct from './localActions';
 
+import RaisedButtonModel from '../../../models/RaisedButtonModel';
+
 export const absenceRecordTableColumns = [{
   title    : 'Last Name',
   id       : 'student.lastName',
@@ -76,18 +78,18 @@ export const absenceRecordTableColumns = [{
 
 export const filterButtonMenuItems = [{
   text     : 'Withdrawn Students',
-  actionID : locAct.IEP_ADD
+  actionID : locAct.ALL_YEARS
 }, {
   text : 'Divider',
 }, {
   text     : 'All Years',
-  actionID : locAct.IEP_REMOVE
+  actionID : locAct.ALL_YEARS
 }, {
   text     : '2016-2017',
-  actionID : locAct.CFA_ADD
+  actionID : locAct.Y2016_Y2017
 }, {
   text     : '2015-2016',
-  actionID : locAct.CFA_REMOVE
+  actionID : locAct.Y2015_Y2016
 }];
 
 export const editButtonMenuItems = [{
@@ -137,3 +139,25 @@ export const editButtonMenuItems = [{
     </div>,
   actionID : locAct.ENROLL_STUDENT
 }];
+
+export const filterButton = props =>
+  new RaisedButtonModel({
+    label           : 'Filter',
+    actionID        : locAct.FILTER,
+    backgroundColor : '#009d9d',
+    disabled        : false,
+    menu            : {
+      open : props.table.get('MuiPopovers').get(locAct.FILTER),
+      item : filterButtonMenuItems
+    }
+  });
+
+export const editButton = props =>
+  new RaisedButtonModel({
+    label    : 'Edit',
+    actionID : locAct.EDIT,
+    menu     : {
+      open : props.table.get('MuiPopovers').get(locAct.EDIT),
+      item : editButtonMenuItems
+    }
+  });
