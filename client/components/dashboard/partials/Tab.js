@@ -15,37 +15,32 @@ const badgeStyle = {
   paddingLeft  : 4,
 };
 
-export default class Tab extends React.Component {
-  render() {
-    return (
-      <MuiTab label={
-        this.props.reports.get('outreachCounts').get(this.props.value)
-        && <Badge
-          badgeContent={this.props.reports
-            .get('outreachCounts').get(this.props.value) || ''}
-          badgeStyle={badgeStyle}
-          secondary
-        >
-          <i className={this.props.iconClass} />
-        </Badge>
-        || <i className={this.props.iconClass} />
-        }
-        onActive={this.props.onActive}
-        value={this.props.value}
-        buttonStyle={this.props.buttonStyle}
-        className={this.props.className}
-        icon={this.props.icon}
-        style={this.props.style}
-        index={this.props.index}
-        onTouchTap={this.props.onTouchTap}
-        selected={this.props.selected}
-        width={this.props.width}
-      >
-        {this.props.children}
-      </MuiTab>
-    );
-  }
-}
+const Tab = ({...props}) =>
+  <MuiTab label={
+    props.reports.get('outreachCounts').get(props.value)
+    && <Badge
+      badgeContent={props.reports
+        .get('outreachCounts').get(props.value) || ''}
+      badgeStyle={badgeStyle}
+      secondary
+    >
+      <i className={props.iconClass} />
+    </Badge>
+    || <i className={props.iconClass} />
+    }
+    onActive={props.onActive}
+    value={props.value}
+    buttonStyle={props.buttonStyle}
+    className={props.className}
+    icon={props.icon}
+    style={props.style}
+    index={props.index}
+    onTouchTap={props.onTouchTap}
+    selected={props.selected}
+    width={props.width}
+  >
+    {props.children}
+  </MuiTab>;
 
 Tab.propTypes = {
   children  : PropTypes.object.isRequired,
@@ -56,3 +51,5 @@ Tab.propTypes = {
 };
 
 Tab.muiName = 'Tab';
+
+export default Tab;
