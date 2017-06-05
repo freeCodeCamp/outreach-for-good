@@ -2,7 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import {connect} from 'react-redux';
-import {Tabs, Tab} from 'material-ui/Tabs';
+import {Tabs} from 'material-ui/Tabs';
+import Tab from './partials/Tab';
 import Dimensions from 'react-dimensions-cjs';
 
 import * as absAct from '../../modules/absenceRecordReducer';
@@ -19,31 +20,21 @@ import PhoneTab from './PhoneTab';
 import SstTab from './SstTab';
 import StudentTab from './StudentTab';
 
-import Badge from 'material-ui/Badge';
 
 const table = new TableModel();
-const badgeStyle = {
-  top          : 15,
-  right        : -10,
-  height       : 20,
-  borderRadius : 6,
-  width        : 'auto',
-  paddingRight : 4,
-  paddingLeft  : 4,
-};
 
 class DashboardPage extends React.Component {
   constructor(props, context) {
     super(props, context);
 
     // Register Initial Component State
-    let nextTable = table.setSelectedTab(table, 'student');
+    let nextTable = table.setSelectedTab(table, 'Student');
     nextTable = this.initClickActions(nextTable);
     this.state = { table: nextTable };
   }
 
   componentDidMount() {
-    this.retrieveData('student');
+    this.retrieveData('Student');
   }
 
   initClickActions = nextTable => {
@@ -66,22 +57,22 @@ class DashboardPage extends React.Component {
   retrieveData = (currentTab, yearFilter) => {
     let loadingPromise;
     switch (currentTab) {
-    case 'court':
+    case 'CourtReferral':
       loadingPromise = this.props.absAct.fetchRecordsListQuery('type=Court+Referral', yearFilter);
       break;
-    case 'home':
+    case 'HomeVisit':
       loadingPromise = this.props.absAct.fetchRecordsListQuery('type=Home+Visit', yearFilter);
       break;
-    case 'letter':
+    case 'LetterSent':
       loadingPromise = this.props.absAct.fetchRecordsListQuery('type=Letter+Sent', yearFilter);
       break;
-    case 'phone':
+    case 'PhoneCall':
       loadingPromise = this.props.absAct.fetchRecordsListQuery('type=Phone+Call', yearFilter);
       break;
-    case 'sst':
+    case 'SSTReferral':
       loadingPromise = this.props.absAct.fetchRecordsListQuery('type=SST+Referral', yearFilter);
       break;
-    case 'student':
+    case 'Student':
       loadingPromise = this.props.absAct.fetchRecordsList(yearFilter);
       this.props.repAct.getOutreachCounts('withdrawn=false');
       break;
@@ -186,7 +177,7 @@ class DashboardPage extends React.Component {
     this.setState({table: nextTable});
   }
 
-  handleInterfaceButtonClick = (nextTable, data, event) => {
+  handleInterfaceButtonClick = nextTable => {
     nextTable = table.resetPopovers(this.state.table);
     this.setState({table: nextTable});
   }
@@ -217,9 +208,10 @@ class DashboardPage extends React.Component {
         value={this.state.table.get('selectedTab')}
       >
         <Tab
-          label={<i className="fa fa-child fa-2x" />}
+          value='Student'
+          iconClass='fa fa-child fa-2x'
           onActive={this.tabHandler}
-          value='student'
+          {...this.props}
         >
           <StudentTab
             view = {viewport}
@@ -229,20 +221,11 @@ class DashboardPage extends React.Component {
             clickHandler = {this.clickHandler}
           />
         </Tab>
-        <Tab label={
-          this.props.reports.get('outreachCounts').get('PhoneCall')
-          && <Badge
-            badgeContent={this.props.reports
-              .get('outreachCounts').get('PhoneCall') || ''}
-            badgeStyle={badgeStyle}
-            secondary
-          >
-            <i className="fa fa-phone fa-2x" />
-          </Badge>
-          || <i className="fa fa-phone fa-2x" />
-          }
+        <Tab
+          value='PhoneCall'
+          iconClass='fa fa-phone fa-2x'
           onActive={this.tabHandler}
-          value='phone'
+          {...this.props}
         >
           <PhoneTab
             view = {viewport}
@@ -252,20 +235,11 @@ class DashboardPage extends React.Component {
             clickHandler = {this.clickHandler}
           />
         </Tab>
-        <Tab label={
-          this.props.reports.get('outreachCounts').get('LetterSent')
-          && <Badge
-            badgeContent={this.props.reports
-              .get('outreachCounts').get('LetterSent') || ''}
-            badgeStyle={badgeStyle}
-            secondary
-          >
-            <i className="fa fa-envelope fa-2x" />
-          </Badge>
-          || <i className="fa fa-envelope fa-2x" />
-          }
+        <Tab
+          value='LetterSent'
+          iconClass='fa fa-envelope fa-2x'
           onActive={this.tabHandler}
-          value='letter'
+          {...this.props}
         >
           <LetterTab
             view = {viewport}
@@ -275,20 +249,11 @@ class DashboardPage extends React.Component {
             clickHandler = {this.clickHandler}
           />
         </Tab>
-        <Tab label={
-          this.props.reports.get('outreachCounts').get('HomeVisit')
-          && <Badge
-            badgeContent={this.props.reports
-              .get('outreachCounts').get('HomeVisit') || ''}
-            badgeStyle={badgeStyle}
-            secondary
-          >
-            <i className="fa fa-home fa-2x" />
-          </Badge>
-          || <i className="fa fa-home fa-2x" />
-          }
+        <Tab
+          value='HomeVisit'
+          iconClass='fa fa-home fa-2x'
           onActive={this.tabHandler}
-          value='home'
+          {...this.props}
         >
           <HomeTab
             view = {viewport}
@@ -298,20 +263,11 @@ class DashboardPage extends React.Component {
             clickHandler = {this.clickHandler}
           />
         </Tab>
-        <Tab label={
-          this.props.reports.get('outreachCounts').get('SSTReferral')
-          && <Badge
-            badgeContent={this.props.reports
-              .get('outreachCounts').get('SSTReferral') || ''}
-            badgeStyle={badgeStyle}
-            secondary
-          >
-            <i className="fa fa-support fa-2x" />
-          </Badge>
-          || <i className="fa fa-support fa-2x" />
-          }
+        <Tab
+          value='SSTReferral'
+          iconClass='fa fa-support fa-2x'
           onActive={this.tabHandler}
-          value='sst'
+          {...this.props}
         >
           <SstTab
             view = {viewport}
@@ -321,20 +277,11 @@ class DashboardPage extends React.Component {
             clickHandler = {this.clickHandler}
           />
         </Tab>
-        <Tab label={
-          this.props.reports.get('outreachCounts').get('CourtReferral')
-          && <Badge
-            badgeContent={this.props.reports
-              .get('outreachCounts').get('CourtReferral') || ''}
-            badgeStyle={badgeStyle}
-            secondary
-          >
-            <i className="fa fa-gavel fa-2x" />
-          </Badge>
-          || <i className="fa fa-gavel fa-2x" />
-          }
+        <Tab
+          value='CourtReferral'
+          iconClass='fa fa-gavel fa-2x'
           onActive={this.tabHandler}
-          value='court'
+          {...this.props}
         >
           <CourtTab
             view = {viewport}
