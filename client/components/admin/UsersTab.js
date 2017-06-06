@@ -8,6 +8,8 @@ import DialogModel from '../../models/DialogModel';
 import DropdownModel from '../../models/DropdownModel';
 import RaisedButtonModel from '../../models/RaisedButtonModel';
 
+import './UsersTab.scss';
+
 const UsersTab = ({users, schools, ...props}) => {
 /**
  * Handler Functions
@@ -63,7 +65,7 @@ const UsersTab = ({users, schools, ...props}) => {
         { label: 'Save', click: buttonHandler, value: locAct.EDIT_SCHOOL },
       ],
       text : [<div key='0'>
-        {`Change the assigned school for 
+        {`Change the assigned school for
         ${props.table.selectedRowsToCsv(props.table, 'name')} to
         ${schoolDropdown.get('selected')}`},
         <br key='1' />
@@ -183,4 +185,3 @@ UsersTab.propTypes = {
 };
 
 export default UsersTab;
-

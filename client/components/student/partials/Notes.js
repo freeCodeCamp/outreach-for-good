@@ -7,40 +7,59 @@ import Avatar from 'material-ui/Avatar';
 
 import './Notes.scss';
 
-const styles = {
-  chip : {
-    margin : 4,
-  },
-  wrapper : {
-    display  : 'flex',
-    flexWrap : 'wrap',
-  },
-};
+const Notes = ({ studentId, cardId, cardType, notes, addNote }) => {
+  const postNote = e => {
+    e.preventDefault();
+    const note = { note: e.target.note.value };
 
-const Notes = ({ notes, postNote, editNote }) =>
-  <div className="notes">
-    <form onSubmit={postNote}>
-      <TextField
-        id="post-note-field"
-        hintText="Type your note here" />
-      <RaisedButton
-        icon={<FontIcon className="fa fa-plus" />}
-        type="submit"
-        primary />
-    </form>
-    {notes
-      && notes.map((note, i) =>
-      <div key={i} style={styles.wrapper}>
-        <Chip
-          onTouchTap={editNote}
-          style={styles.chip}>
+    switch (cardType) {
+    case 'outreach':
+      addNote(studentId, cardId, note);
+      break;
+    case 'intervention':
+      addNote(studentId, cardId, note);
+      break;
+    default:
+      addNote(studentId, note);
+      break;
+    }
 
-          <Avatar src={note.user.google.image.url} />
+    e.target.reset();
+  };
 
-          {note.user.google.displayName}: {note.note}
+  const renderNote = (note, i) => {
+    let date;
+    if(cardType === 'outreach') {
+      date = new Date(note.date).toDateString();
+    } else {
+      date = new Date(note.createdAt).toDateString();
+    }
+    return (
+      <div className="note-display" key={i}>
+        <Chip className="chip-style">
+          {date}
         </Chip>
+        <p>{note.note}</p>
       </div>
-    )}
-  </div>
-;
+    );
+  };
+
+  return (
+    <div className="notes-container">
+      <form name="postNote" onSubmit={postNote}>
+        <TextField
+          id="post-note-field"
+          name="note"
+          hintText="Type your note here" />
+        <RaisedButton
+          icon={<FontIcon className="fa fa-plus" />}
+          type="submit"
+          primary />
+      </form>
+      <div className={`note-window ${cardType ? 'card' : ''}`}>
+        {notes.map(renderNote)}
+      </div>
+    </div>
+  );
+};
 export default Notes;

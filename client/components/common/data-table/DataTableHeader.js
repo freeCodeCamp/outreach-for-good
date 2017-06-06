@@ -3,6 +3,9 @@ import PropTypes from 'prop-types';
 import * as locAct from './localActions';
 import { Cell } from 'fixed-data-table-2';
 
+import './DataTable.scss';
+import './DataTableOverride.scss';
+
 const DataTableHeader = ({id, title, sortCol, sortDir, sortHandler,
   filter, filterHandler, ...props}) => {
   function clickHandler(event) {

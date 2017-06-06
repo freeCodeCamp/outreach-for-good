@@ -8,10 +8,9 @@ import RaisedButton from 'material-ui/RaisedButton';
 import FontIcon from 'material-ui/FontIcon';
 
 //import the partials used in this component
+import Parent from './partials/Parent';
 import StudentAbsenceRecordTable from './partials/StudentAbsenceRecordTable';
 import StudentDialog from './partials/StudentDialog';
-import Outreaches from './partials/Outreaches';
-// import Interventions from './partials/Interventions';
 import StudentCard from './partials/StudentCard';
 import Notes from './partials/Notes';
 import Summary from './partials/Summary';
@@ -23,119 +22,81 @@ import * as settingsActions from '../../modules/settingsReducer';
 import './StudentPage.scss';
 
 class StudentPage extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this.studentId = props.params.studentId;
-
-    //identify which tab is open when you browse this route
-    // console.log(props.params.tab);
-
-    this.state = {
-      currentTab : 'outreaches',
-      dialogOpen : false
-    };
-
-    this.changeTab = this.changeTab.bind(this);
-
-    this.dialogOpen = this.dialogOpen.bind(this);
-    this.dialogClose = this.dialogClose.bind(this);
-
-    this.onCheck = this.onCheck.bind(this);
-
-    this.outreachNote = this.outreachNote.bind(this);
-    this.outreachAction = this.outreachAction.bind(this);
-
-    this.addNote = this.addNote.bind(this);
-
-    this.postNote = this.postNote.bind(this);
-
-    this.getStudentCard = this.getStudentCard.bind(this);
+  state = {
+    dialogOpen : false
   }
 
+
   componentDidMount() {
-    this.props.actions.getStudent(this.studentId);
-    this.props.actions.getStudentRecords(this.studentId);
-    this.props.actions.getStudentOutreaches(this.studentId);
-    this.props.actions.getStudentInterventions(this.studentId);
-    this.props.actions.getStudentNotes(this.studentId);
+    const {studentId} = this.props.params;
+    this.props.actions.getStudent(studentId);
+    this.props.actions.getStudentRecords(studentId);
+    this.props.actions.getStudentOutreaches(studentId);
+    this.props.actions.getStudentInterventions(studentId);
+    this.props.actions.getStudentNotes(studentId);
 
     this.props.settingsActions.getInterventionTypes();
   }
 
-  changeTab(currentTab) {
-    this.setState({ currentTab });
-  }
-
-  dialogOpen() {
+  dialogOpen = () => {
     this.setState({ dialogOpen: true });
   }
 
-  dialogClose() {
+  dialogClose = () => {
     this.setState({ dialogOpen: false });
   }
 
-  postNote(e) {
-    e.preventDefault();
-    let note = { note: e.target[0].value };
-    this.props.actions.postStudentNote(this.studentId, note);
-  }
+  onCheck = (e, val) => {
+    const { studentId } = this.props.params;
 
-  onCheck(e, val) {
     switch (e.target.name) {
     case 'iep':
-      this.props.actions.putStudentIep(this.studentId, {iep: val});
+      this.props.actions.putStudentIep(studentId, {iep: val});
       break;
     case 'cfa':
-      this.props.actions.putStudentCfa(this.studentId, {cfa: val});
+      this.props.actions.putStudentCfa(studentId, {cfa: val});
       break;
     case 'withdrawn':
-      this.props.actions.putStudentWithdrawn(this.studentId, {withdrawn: val});
+      this.props.actions.putStudentWithdrawn(studentId, {withdrawn: val});
       break;
     }
   }
 
   //remove this function when you change the student card
-  outreachNote(e) {
-    e.preventDefault();
-    let outreachId = e.target.id;
-    let note = {note: e.target.outreachNote.value};
-
-    this.props.actions.postOutreachNote(this.studentId, outreachId, note);
-  }
-
-  addNote(e) {
+  outreachNote = e => {
     e.preventDefault();
 
-    let cardId = e.target.id;
-    let note = {note: e.target.cardNote.value};
-    console.log(cardId, note);
+    const {studentId} = this.props.params;
 
-    this.props.actions.postInterventionNote(this.studentId, cardId, note);
+    const outreachId = e.target.id;
+    const note = {note: e.target.outreachNote.value};
+
+    this.props.actions.postOutreachNote(studentId, outreachId, note);
   }
 
-  outreachAction(e, date) {
-    let outreachId = e.target.id;
-    let actionDate = {actionDate: date};
+  postInterventionNote = e => {
+    e.preventDefault();
 
-    this.props.actions.putOutreachAction(this.studentId, outreachId, actionDate);
+    const { studentId } = this.props.params;
+    const cardId = e.target.id;
+    const note = {note: e.target.cardNote.value};
+
+    this.props.actions.postInterventionNote(studentId, cardId, note);
   }
 
-  getStudentCard(card, i) {
-    console.log(card);
-    return (
-      <StudentCard key={i}
-        title={card.type}
-        subtitle={new Date(card.createdDate).toDateString()}
-        cardId={card._id}
-        notes={card.notes}
-        addNote={this.addNote}
-      />
-    );
+  putOutreachAction = (e, date) => {
+    const { studentId } = this.props.params;
+
+    const outreachId = e.target.id;
+    const actionDate = { actionDate: date };
+
+    this.props.actions.putOutreachAction(studentId, outreachId, actionDate);
   }
+
 
   render() {
-    let student = this.props.student.student;
+    const { student, records, interventions, outreaches, notes } = this.props.student;
+
     return (
       <div className="student-page">
         <div className="info">
@@ -162,49 +123,54 @@ class StudentPage extends React.Component {
             />
           </div>
           <div className="col-attendance">
-            <StudentAbsenceRecordTable
-              records={this.props.student.records} />
+            <StudentAbsenceRecordTable records={records} />
           </div>
         </div>
         <div className="tabs">
           <Tabs>
             <Tab label="Parent Info">
-              <p>parent info</p>
+              <Parent />
             </Tab>
             <Tab label="Outreaches">
               <div className="outreach-cards">
-                {this.props.student.outreaches.map((outreach, i) =>
-                  <Outreaches key={i}
-                    outreachId={outreach._id}
-                    outreachNote={this.outreachNote}
-                    outreachAction={this.outreachAction}
-                    outreach={outreach} />)}
+                {outreaches.map((card, i) =>
+                  <StudentCard key={i}
+                    cardType="outreach"
+                    cardId={card._id}
+                    cardData={card}
+                    addNote={this.props.actions.postOutreachNote} />)}
               </div>
             </Tab>
             <Tab label="Interventions">
               <div className="intervention-cards">
-                <RaisedButton
-                  className="add-intervention"
-                  icon={<FontIcon className="fa fa-plus" />}
-                  label="Add Intervention"
-                  onTouchTap={this.dialogOpen}
-                  primary />
+                <div className="actions">
+                  <RaisedButton
+                    className="add-intervention"
+                    icon={<FontIcon className="fa fa-plus" />}
+                    label="Add Intervention"
+                    onTouchTap={this.dialogOpen}
+                    primary />
+                </div>
 
                 <div className="cards">
-                  {this.props.student.interventions.map(this.getStudentCard)}
+                  {interventions.map((card, i) =>
+                    <StudentCard key={i}
+                      cardType="intervention"
+                      cardId={card._id}
+                      cardData={card}
+                      addNote={this.props.actions.postInterventionNote} />)}
                 </div>
               </div>
             </Tab>
             <Tab label="Notes">
               <Notes
-                postNote={this.postNote}
-                editNote={this.editNote}
-                notes={this.props.student.notes} />
+                studentId={student._id}
+                addNote={this.props.actions.postStudentNote}
+                notes={notes} />
             </Tab>
             <Tab label="Summary">
-              {this.props.student.student
-                && <Summary
-                student={this.props.student} />}
+              {student
+                && <Summary student={this.props.student} />}
             </Tab>
           </Tabs>
         </div>
