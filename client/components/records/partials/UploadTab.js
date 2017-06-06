@@ -1,4 +1,5 @@
-import React, {Component, PropTypes} from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import {fetchRecords} from '../../../modules/recordsReducer';
@@ -13,7 +14,7 @@ import Dropzone from 'react-dropzone';
 import UploadService from './UploadService';
 // import ResponseSnackbar from '../../common/ResponseSnackbar';
 
-class UploadTab extends Component {
+class UploadTab extends React.Component {
   constructor() {
     super();
 

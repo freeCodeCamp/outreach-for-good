@@ -1,4 +1,5 @@
-import React, {Component, PropTypes} from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import {Tabs, Tab} from 'material-ui/Tabs';
@@ -14,7 +15,7 @@ import InterventionsTab from './partials/InterventionsTab';
 
 const table = new TableModel();
 
-class SchoolReportsPage extends Component {
+class SchoolReportsPage extends React.Component {
   constructor(props) {
     super(props);
 

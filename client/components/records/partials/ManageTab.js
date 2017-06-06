@@ -1,4 +1,5 @@
-import React, {Component, PropTypes} from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import {
@@ -17,7 +18,7 @@ import DeleteDialog from './DeleteDialog';
 
 const table = new TableModel();
 
-class ManageTab extends Component {
+class ManageTab extends React.Component {
   constructor(props) {
     super(props);
 

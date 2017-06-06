@@ -1,4 +1,5 @@
-import React, {Component, PropTypes} from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import {Tabs, Tab} from 'material-ui/Tabs';
@@ -21,7 +22,7 @@ import * as settingsActions from '../../modules/settingsReducer';
 
 import './StudentPage.scss';
 
-class StudentPage extends Component {
+class StudentPage extends React.Component {
   constructor(props) {
     super(props);
 
