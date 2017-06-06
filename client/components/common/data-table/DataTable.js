@@ -13,7 +13,9 @@ import MenuItem from 'material-ui/MenuItem';
 import Divider from 'material-ui/Divider';
 
 import Dialog from 'material-ui/Dialog';
-import {openSnackbar} from '../../../modules/viewReducer';
+
+import './DataTable.scss';
+import './DataTableOverride.scss';
 
 class DataTable extends React.Component {
   /**

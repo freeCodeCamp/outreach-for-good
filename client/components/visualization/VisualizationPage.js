@@ -8,6 +8,8 @@ import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
 import {ResponsiveContainer, PieChart, Pie, Cell, Tooltip, Legend} from 'recharts';
 
+import './VisualizationPage.scss';
+
 class VisualizationPage extends React.Component {
 
   constructor(props) {

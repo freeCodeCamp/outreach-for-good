@@ -1,3 +1,19 @@
-.notes {
+.notes-container {
   margin: 10px;
+
+  .note-window {
+    border: 1px solid black;
+    border-radius: 3px;
+    min-height: 130px;
+    &.card {
+      max-height: 130px;
+      overflow-y: auto;
+    }
+    .note-display {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      padding: 4px 0;
+    }
+  }
 }

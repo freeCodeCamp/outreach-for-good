@@ -20,6 +20,7 @@ import PhoneTab from './PhoneTab';
 import SstTab from './SstTab';
 import StudentTab from './StudentTab';
 
+import './DashboardPage.scss';
 
 const table = new TableModel();
 

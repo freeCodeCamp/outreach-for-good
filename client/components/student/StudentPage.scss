@@ -42,7 +42,10 @@
   }
 
   .intervention-cards {
-
+    .actions {
+      display: flex;
+      justify-content: center;
+    }
     .cards {
       display: flex;
       flex-wrap: wrap;
@@ -53,20 +56,6 @@
         margin: 5px;
       }
 
-      .card-text-container {
-        display: flex;
-
-        .notes {
-          height: 200px;
-          max-height: 100px;
-          overflow-y: auto;
-        }
-      }
-    }
-
-    .add-intervention {
-      text-align: center;
-      margin: 10px auto;
     }
   }
 }
