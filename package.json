@@ -11,7 +11,7 @@
     "test": "mocha --reporter progress test/testSetup.js \"client/**/*.test.js\"",
     "test:watch": "npm run test -- --watch",
     "build": "babel-node tools/build.js",
-    "heroku-prebuild": "npm install --only=dev",
+    "heroku-prebuild": "npm install",
     "heroku-postbuild": "npm run build"
   },
   "main": "server",
