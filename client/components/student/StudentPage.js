@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
@@ -21,14 +21,14 @@ import * as settingsActions from '../../modules/settingsReducer';
 
 import './StudentPage.scss';
 
-class StudentPage extends React.Component {
+class StudentPage extends Component {
   state = {
     dialogOpen : false
   }
 
-
   componentDidMount() {
     const {studentId} = this.props.params;
+
     this.props.actions.getStudent(studentId);
     this.props.actions.getStudentRecords(studentId);
     this.props.actions.getStudentOutreaches(studentId);
@@ -61,38 +61,6 @@ class StudentPage extends React.Component {
       break;
     }
   }
-
-  //remove this function when you change the student card
-  outreachNote = e => {
-    e.preventDefault();
-
-    const {studentId} = this.props.params;
-
-    const outreachId = e.target.id;
-    const note = {note: e.target.outreachNote.value};
-
-    this.props.actions.postOutreachNote(studentId, outreachId, note);
-  }
-
-  postInterventionNote = e => {
-    e.preventDefault();
-
-    const { studentId } = this.props.params;
-    const cardId = e.target.id;
-    const note = {note: e.target.cardNote.value};
-
-    this.props.actions.postInterventionNote(studentId, cardId, note);
-  }
-
-  putOutreachAction = (e, date) => {
-    const { studentId } = this.props.params;
-
-    const outreachId = e.target.id;
-    const actionDate = { actionDate: date };
-
-    this.props.actions.putOutreachAction(studentId, outreachId, actionDate);
-  }
-
 
   render() {
     const { student, records, interventions, outreaches, notes } = this.props.student;
@@ -129,20 +97,31 @@ class StudentPage extends React.Component {
         <div className="tabs">
           <Tabs>
             <Tab label="Parent Info">
+              <div className="tab-view">
+                <div className="actions">
+                  <RaisedButton
+                    label="Add parent hours"
+                    primary />
+                </div>
+              </div>
               <Parent />
             </Tab>
             <Tab label="Outreaches">
-              <div className="outreach-cards">
-                {outreaches.map((card, i) =>
-                  <StudentCard key={i}
-                    cardType="outreach"
-                    cardId={card._id}
-                    cardData={card}
-                    addNote={this.props.actions.postOutreachNote} />)}
+              <div className="tab-view">
+                <div className="cards">
+                  {outreaches.map((card, i) =>
+                    <div className="card" key={i}>
+                      <StudentCard
+                        cardType="outreach"
+                        cardId={card._id}
+                        cardData={card}
+                        addNote={this.props.actions.postOutreachNote} />
+                    </div>)}
+                </div>
               </div>
             </Tab>
             <Tab label="Interventions">
-              <div className="intervention-cards">
+              <div className="tab-view">
                 <div className="actions">
                   <RaisedButton
                     className="add-intervention"
@@ -154,11 +133,13 @@ class StudentPage extends React.Component {
 
                 <div className="cards">
                   {interventions.map((card, i) =>
-                    <StudentCard key={i}
-                      cardType="intervention"
-                      cardId={card._id}
-                      cardData={card}
-                      addNote={this.props.actions.postInterventionNote} />)}
+                    <div className="card" key={i}>
+                      <StudentCard
+                        cardType="intervention"
+                        cardId={card._id}
+                        cardData={card}
+                        addNote={this.props.actions.postInterventionNote} />
+                    </div>)}
                 </div>
               </div>
             </Tab>

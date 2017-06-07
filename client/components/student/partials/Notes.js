@@ -29,7 +29,7 @@ const Notes = ({ studentId, cardId, cardType, notes, addNote }) => {
 
   const renderNote = (note, i) => {
     let date;
-    if(cardType === 'outreach') {
+    if(cardType !== undefined) {
       date = new Date(note.date).toDateString();
     } else {
       date = new Date(note.createdAt).toDateString();

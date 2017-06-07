@@ -4,8 +4,6 @@ import {Card, CardHeader, CardText, CardActions} from 'material-ui/Card';
 import DatePicker from 'material-ui/DatePicker';
 import Notes from './Notes';
 
-import './StudentCard.scss';
-
 const StudentCard = ({ cardType, cardId, cardData, addNote }) => {
   let title, subTitle,
     actionTrigger = false;
@@ -16,7 +14,7 @@ const StudentCard = ({ cardType, cardId, cardData, addNote }) => {
     actionTrigger = true;
   } else if(cardType === 'intervention') {
     title = `${cardData.type}`;
-    subTitle = `${new Date(cardData.createdAt).toDateString()}`;
+    subTitle = `${new Date(cardData.createdDate).toDateString()}`;
   }
 
   return (
