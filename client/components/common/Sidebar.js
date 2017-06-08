@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router';
 import {connect} from 'react-redux';
 
+import './Sidebar.scss';
+
 class Sidebar extends Component {
   constructor(props, context) {
     super(props, context);

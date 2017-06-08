@@ -7,6 +7,8 @@ import SchoolSelect from '../../common/SchoolSelect';
 import {getAllSchools, changeTriggers} from '../../../modules/schoolReducer';
 import {openSnackbar} from '../../../modules/viewReducer';
 
+import './SchoolSettingsPage.scss';
+
 class SchoolSettingsPage extends React.Component {
   constructor() {
     super();

@@ -7,6 +7,9 @@ import DataTableRow from './DataTableRow';
 import { List } from 'immutable';
 import TableModel from '../../../models/TableModel';
 
+import './DataTable.scss';
+import './DataTableOverride.scss';
+
 class TableContainer extends React.Component {
   shouldComponentUpdate(nextProps) {
     //console.log(nextProps.table.get('indexMap'), nextProps.data);

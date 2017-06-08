@@ -5,6 +5,9 @@ import { Cell } from 'fixed-data-table-2';
 
 import { List } from 'immutable';
 
+import './DataTable.scss';
+import './DataTableOverride.scss';
+
 const getColumn = (data, indexMap, rowIndex, col) => {
   if(col === 'student.studentId') {
     const studentId = data.get(indexMap[rowIndex]).get('student._id');
@@ -14,16 +17,15 @@ const getColumn = (data, indexMap, rowIndex, col) => {
   }
 };
 
-const DataTableRow = ({rowIndex, indexMap, data, col, ...props}) => {
-  return (<Cell {...props}>
+const DataTableRow = ({rowIndex, indexMap, data, col, ...props}) => <Cell {...props}>
       {indexMap.length > 0 && data && data.size
         // ? data.get(indexMap[rowIndex]).get(col)
         ? getColumn(data, indexMap, rowIndex, col)
         : ''}
       {/*console.log('Rendering row: ', rowIndex)*/}
-  </Cell>);
+  </Cell>
           //data.get(rowIndex).get(col)
-};
+;
 
 DataTableRow.propTypes = {
   rowIndex : PropTypes.number,

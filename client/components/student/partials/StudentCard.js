@@ -1,42 +1,41 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {Card, CardHeader, CardText} from 'material-ui/Card';
-import FlatButton from 'material-ui/FlatButton';
-import ContentAdd from 'material-ui/svg-icons/content/add';
-import TextField from 'material-ui/TextField';
+import {Card, CardHeader, CardText, CardActions} from 'material-ui/Card';
+import DatePicker from 'material-ui/DatePicker';
+import Notes from './Notes';
 
-const StudentCard = ({ title, subtitle, cardId, notes, addNote }) =>
-<Card className="card">
-  <CardHeader
-    title={title}
-    subtitle={subtitle} />
-  <CardText>
-    <div className="notes-container">
-      <form
-        onSubmit={addNote}
-        id={cardId}>
-        <TextField
-          hintText="Add a note"
-          name="cardNote" />
-          <FlatButton
-            icon={<ContentAdd />}
-            type="submit" />
-          </form>
-          <div className="notes">
-            {notes.map((note, i) =>
-              <p key={i}>
-                <b>({new Date(note.date).toDateString()})</b>
-                &nbsp; {note.note}
-              </p>
-            )}
-          </div>
+const StudentCard = ({ cardType, cardId, cardData, addNote }) => {
+  let title, subTitle,
+    actionTrigger = false;
 
-    </div>
-  </CardText>
-</Card>;
+  if(cardType === 'outreach') {
+    title = `${cardData.type} (${cardData.absences} Absences)`;
+    subTitle = `Trigged: ${new Date(cardData.triggerDate).toDateString()}`;
+    actionTrigger = true;
+  } else if(cardType === 'intervention') {
+    title = `${cardData.type}`;
+    subTitle = `${new Date(cardData.createdDate).toDateString()}`;
+  }
 
-// StudentCard.propTypes = {
-//   outreaches : PropTypes.array
-// };
+  return (
+    <Card className="card">
+      <CardHeader
+        title={title}
+        subtitle={subTitle} />
+      <CardText>
+        <Notes
+          addNote={addNote}
+          cardType={cardType}
+          cardId={cardId}
+          studentId={cardData.student}
+          notes={cardData.notes} />
+      </CardText>
+      {actionTrigger
+        && <CardActions>
+        <DatePicker hintText="Trigger Action Date" />
+      </CardActions>}
+    </Card>
+  );
+};
 
 export default StudentCard;

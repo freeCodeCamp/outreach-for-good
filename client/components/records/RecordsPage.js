@@ -5,6 +5,8 @@ import UploadTab from './partials/UploadTab';
 import ManageTab from './partials/ManageTab';
 import Dimensions from 'react-dimensions-cjs';
 
+import './RecordsPage.scss';
+
 class RecordsPage extends React.Component {
   constructor(props) {
     super(props);

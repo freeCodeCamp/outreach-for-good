@@ -10,6 +10,8 @@ import RaisedButton from 'material-ui/RaisedButton';
 import FontIcon from 'material-ui/FontIcon';
 import logo from '../../assets/images/mstile-150x150.png';
 
+import './LoginPage.scss';
+
 class LoginPage extends React.Component {
 
   componentDidMount() {
