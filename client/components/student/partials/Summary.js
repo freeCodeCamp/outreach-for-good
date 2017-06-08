@@ -12,7 +12,7 @@ const getNotes = notes => {
   if(notes.length > 0) {
     return notes.map((note, i) =>
       <li key={i}>
-        <b>{ formatDate(note.date) }</b> - { formatDate(note.note) }
+        <b>{ formatDate(note.date || note.createdAt) }</b> - {note.note}
       </li>);
   }
 };
@@ -92,14 +92,14 @@ const Summary = ({ student }) =>
 
 
     <h3>Interventions</h3>
-    {student.interventions > 0
-    ? student.interventions.map((intervention, j) =>
-      <div>
+    {student.interventions.length
+    ? student.interventions.map((intervention, i) =>
+      <div key={i}>
         <h4>{ intervention.type }</h4>
         <div className="dates">
           <div><b>Created:</b> { formatDate(intervention.createdDate) }</div>
         </div>
-        {intervention.notes.length > 0
+        {intervention.notes.length
           && <div>
           <b>Notes:</b><br/>
           <ul>
@@ -111,11 +111,10 @@ const Summary = ({ student }) =>
 
 
     <h3>Notes</h3>
-    {student.notes > 0
-    ? student.notes.map((note, i) =>
-      <ul key={i}>
+    {student.notes.length
+    ? <ul>
         {getNotes(student.notes)}
-      </ul>)
+      </ul>
     : <em>No other notes.</em>}
   </div>
 </div>;
