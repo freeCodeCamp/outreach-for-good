@@ -15,6 +15,8 @@ class TableContainer extends React.Component {
     //console.log(nextProps.table.get('indexMap'), nextProps.data);
     return this.props.data !== nextProps.data
       || this.props.loaded !== nextProps.loaded
+      || this.props.view.width !== nextProps.view.width
+      || this.props.view.height !== nextProps.view.height
       || this.props.table.get('indexMap') !== nextProps.table.get('indexMap')
       || this.props.table.get('selectedIndex') !== nextProps.table.get('selectedIndex')
       || this.props.table.get('sortCol') !== nextProps.table.get('sortCol')
