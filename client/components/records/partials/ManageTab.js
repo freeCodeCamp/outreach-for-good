@@ -8,7 +8,7 @@ import {
 import DataTable from '../../common/data-table/DataTable';
 import RaisedButtonModel from '../../../models/RaisedButtonModel';
 import {Link} from 'react-router';
-import { List } from 'immutable';
+import {List} from 'immutable';
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
 import TableModel from '../../../models/TableModel';
@@ -19,22 +19,13 @@ import DeleteDialog from './DeleteDialog';
 const table = new TableModel();
 
 class ManageTab extends React.Component {
-  constructor(props) {
-    super(props);
+  state = {
+    table,
+    dialogOpen : false,
+    loaded     : false
+  };
 
-    this.state = {
-      table,
-      dialogOpen : false,
-      loaded     : false
-    };
-
-    this.changeSchool = this.changeSchool.bind(this);
-    this.clickHandler = this.clickHandler.bind(this);
-    this.closeDialog = this.closeDialog.bind(this);
-    this.removeRecord = this.removeRecord.bind(this);
-  }
-
-  componentWillReceiveProps(nextProps) {
+  componentWillReceiveProps = nextProps => {
     if(this.state.selectedSchool
       && nextProps.absenceRecords.size
       && !this.state.loaded) {
@@ -56,7 +47,7 @@ class ManageTab extends React.Component {
   /**
    * Updates the data table with selected school
    */
-  changeSchool(e, i, selectedSchool) {
+  changeSchool = (e, i, selectedSchool) => {
     let schoolId = selectedSchool.get('_id');
     this.props.actions.fetchSchoolRecordList(schoolId);
     this.setState({
@@ -69,7 +60,7 @@ class ManageTab extends React.Component {
   /**
    * Handles the clicks on the datatable
    */
-  clickHandler(action, data) {
+  clickHandler = (action, data) => {
     switch (action) {
     case 'toggleSortCol': {
       break;
@@ -88,21 +79,21 @@ class ManageTab extends React.Component {
     }
   }
 
-  removeRecord() {
+  removeRecord = () => {
     let recordId = this.props.absenceRecords.get(0).get('recordId');
     this.props.actions.removeRecord(recordId);
     this.closeDialog();
     this.changeSchool(null, null, this.state.selectedSchool);
   }
 
-  closeDialog() {
+  closeDialog = () => {
     this.setState({ dialogOpen: false });
   }
 
   /**
   * Display record is used when clicking on a row to display students
   */
-  _displayRecord(record) {
+  displayRecord = record => {
     //console.log('row clicked: ', record);
     let selectedRecord = {};
 
@@ -120,7 +111,7 @@ class ManageTab extends React.Component {
     this.setState({ selectedRecord });
   }
 
-  render() {
+  render = () => {
     const selectedSchoolName = this.state.selectedSchool
       ? this.state.selectedSchool.get('name') : '';
 
@@ -141,6 +132,10 @@ class ManageTab extends React.Component {
       }, {
         title    : 'School Year',
         id       : 'schoolYear',
+        flexGrow : 1
+      }, {
+        title    : 'Size',
+        id       : 'entries.size',
         flexGrow : 1
       }],
       buttons

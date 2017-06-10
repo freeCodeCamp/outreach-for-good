@@ -1,12 +1,12 @@
 .settings-tab {
+  display: flex;
+  flex-direction: column;
   margin: 10px;
+  h3 {
+    margin-left: 10px;
+  }
 
   .controls {
-    h3 {
-      margin-left: 10px;
-    }
-    .new-btn {
-      float: right;
-    }
+    display: flex;
   }
 }
