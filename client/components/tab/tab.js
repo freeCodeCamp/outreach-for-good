@@ -28,34 +28,35 @@ export const Tab = ({...props}) =>
     </Badge>
     || <i className={props.iconClass} />
     }
-    onActive={props.onActive}
-    value={props.value}
     buttonStyle={props.buttonStyle}
     className={props.className}
     icon={props.icon}
-    style={props.style}
     index={props.index}
+    onActive={props.onActive}
     onTouchTap={props.onTouchTap}
     selected={props.selected}
+    style={props.style}
+    value={props.value}
     width={props.width}
   >
     {props.children}
   </MuiTab>;
 
 Tab.propTypes = {
-  children    : PropTypes.object.isRequired,
+  children    : PropTypes.element.isRequired,
   reports     : PropTypes.instanceOf(Report),
-  value       : PropTypes.string.isRequired,
+  iconClass   : PropTypes.string,
+  // MuiTab default props
+  buttonStyle : PropTypes.string,
+  className   : PropTypes.string,
+  icon        : PropTypes.string,
+  index       : PropTypes.number,
   onActive    : PropTypes.func.isRequired,
-  buttonStyle : PropTypes.string.isRequired,
-  className   : PropTypes.string.isRequired,
-  icon        : PropTypes.string.isRequired,
-  style       : PropTypes.string.isRequired,
-  index       : PropTypes.string.isRequired,
-  onTouchTap  : PropTypes.string.isRequired,
-  selected    : PropTypes.string.isRequired,
-  width       : PropTypes.number.isRequired,
-  iconClass   : PropTypes.string.isRequired
+  onTouchTap  : PropTypes.func,
+  style       : PropTypes.string,
+  selected    : PropTypes.bool,
+  value       : PropTypes.string.isRequired,
+  width       : PropTypes.string
 };
 
 Tab.muiName = 'Tab';
