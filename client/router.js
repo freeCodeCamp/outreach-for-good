@@ -19,13 +19,11 @@ import SchoolSettingsPage from './views/school-settings/school-settings';
 import StudentPage from './views/student/student';
 import UsersPage from './views/users/users';
 import VisualizationPage from './views/visualization/visualization';
+import VolunteerHours from './views/volunteer-hours/volunteer-hours';
 
 class RTRouter extends React.Component {
   constructor() {
     super();
-
-    this.authorize = this.authorize.bind(this);
-
     // Configure routes here as this solves a problem with hot loading where
     // the routes are recreated each time.
     this.routes
@@ -41,11 +39,12 @@ class RTRouter extends React.Component {
         <Route path="/student/:studentId(/:tab)" component={StudentPage} onEnter={this.authorize} />
         <Route path="/users" component={UsersPage} onEnter={this.authorize} />
         <Route path="/visualization" component={VisualizationPage} onEnter={this.authorize} />
+        <Route path="/volunteer" component={VolunteerHours} onEnter={this.authorize} />
       </Route>
     ;
   }
 
-  authorize(nextState, replace) {
+  authorize = (nextState, replace) => {
     if(!this.props.session.token) {
       if(!cookies.get('token')) {
         replace({
@@ -73,9 +72,10 @@ class RTRouter extends React.Component {
 RTRouter.propTypes = { // Prop type validation
   actions : PropTypes.object.isRequired,
   session : PropTypes.object.isRequired,
+  history : PropTypes.object
 };
 
-function mapStateToProps(state, ownProps) {
+function mapStateToProps(state) {
   return {
     session : state.session
   };

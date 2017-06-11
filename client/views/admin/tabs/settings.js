@@ -6,16 +6,22 @@ import * as settingsActions from '../../../modules/settings';
 
 import FontIcon from 'material-ui/FontIcon';
 import RaisedButton from 'material-ui/RaisedButton';
-import { Table, TableBody, TableHeader, TableHeaderColumn,
-  TableRow, TableRowColumn } from 'material-ui/Table';
+import {
+  Table,
+  TableBody,
+  TableHeader,
+  TableHeaderColumn,
+  TableRow,
+  TableRowColumn } from 'material-ui/Table';
+
 import DialogModal from '../../../components/dialog-modal/dialog-modal';
 
 import './settings.scss';
 
 class SettingsTab extends React.Component {
   state = {
-    open : false,
-    row  : []
+    openAdd  : false,
+    openEdit : false
   }
 
   componentDidMount = () => {
@@ -23,61 +29,87 @@ class SettingsTab extends React.Component {
   }
 
   handleClose = e => {
-    console.log(e.target);
-    this.setState({ open: !this.state.open });
-  }
-
-  handleSubmit = e => {
-    console.log(e);
+    this.setState({ openAdd: false, openEdit: false});
   }
 
   handleRowSelect = row => {
-    this.setState({ row: row[0] });
+    const {interventionTypes} = this.props.settings;
+
+    this.setState({ row: interventionTypes[row[0]] });
   }
 
-  getModalContent = () => {
-    let props = {};
-    props.title = 'This is the title';
-    props.open = this.state.open;
-    props.handleClose = this.handleClose;
-    props.handleSubmit = this.handleSubmit;
+  handleSubmit = e => {
+    e.preventDefault();
+    switch (e.target.name) {
+    case 'add':
+      this.props.actions.postInterventionType({
+        title       : e.target.interventionTitle.value,
+        description : e.target.interventionDescription.value
+      });
+      break;
+    case 'edit':
+      const typeId = e.target.interventionId.value;
 
-    return props;
+      this.props.actions.putInterventionType(typeId, {
+        title       : e.target.interventionTitle.value,
+        description : e.target.interventionDescription.value
+      });
+      break;
+    default: break;
+    }
+
+    this.handleClose();
+  };
+
+  handleDelete = e => {
+    console.log(e.target);
   }
 
   render = () => {
-    const settings = this.props.settings.interventionTypes;
+    const { interventionTypes } = this.props.settings;
 
     return (
       <div className="settings-tab">
-        <h3>Settings</h3>
-        <div className="controls">
+        <div className="title-controls">
+          <h3>Settings</h3>
           <RaisedButton
             className="control-btn"
             icon={<FontIcon className="fa fa-plus" />}
-            label="Add New Intervention Type"
-            onTouchTap={() => this.setState({ open: !this.state.open})}
+            label="Add New"
+            onTouchTap={() => this.setState({ openAdd: !this.state.openAdd})}
+            disabled={this.state.row !== undefined}
             primary
           />
 
           <RaisedButton
             className="control-btn"
             icon={<FontIcon className="fa fa-pencil-square-o" />}
-            label="Edit Intervention Type"
-            onTouchTap={() => console.log('open for edit')}
-            disabled={!this.state.hasOwnProperty('row')}
+            label="Edit"
+            onTouchTap={() => this.setState({ openEdit: !this.state.openEdit})}
+            disabled={!(this.state.row !== undefined)}
+          />
+
+          <RaisedButton
+            className="control-btn"
+            icon={<FontIcon className="fa fa-trash" />}
+            label="Delete"
+            onTouchTap={this.handleDelete}
+            disabled={!(this.state.row !== undefined)}
           />
         </div>
 
-        <Table onRowSelection={this.handleRowSelect}>
+        <Table
+          className="intervention-table"
+          onRowSelection={this.handleRowSelect}
+        >
           <TableHeader>
             <TableRow>
               <TableHeaderColumn>Title</TableHeaderColumn>
               <TableHeaderColumn>Description</TableHeaderColumn>
             </TableRow>
           </TableHeader>
-          <TableBody>
-            {settings.map((setting, i) =>
+          <TableBody deselectOnClickaway={false}>
+            {interventionTypes.map((setting, i) =>
               <TableRow key={i}>
                 <TableRowColumn>{setting.title}</TableRowColumn>
                 <TableRowColumn>{setting.description}</TableRowColumn>
@@ -86,7 +118,22 @@ class SettingsTab extends React.Component {
           </TableBody>
         </Table>
 
-        <DialogModal modalContent={this.getModalContent} />
+        <DialogModal
+          name="add"
+          title={'Create a new intervention type'}
+          open={this.state.openAdd}
+          handleSubmit={this.handleSubmit}
+          handleClose={this.handleClose}
+        />
+
+        <DialogModal
+          name="edit"
+          title={'Edit intervention type'}
+          open={this.state.openEdit}
+          intervention={this.state.row}
+          handleSubmit={this.handleSubmit}
+          handleClose={this.handleClose}
+        />
       </div>
     );
   }

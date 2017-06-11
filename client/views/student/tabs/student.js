@@ -13,8 +13,7 @@ const StudentTab = ({ label }) =>
     <FloatingActionButton>
       <ContentAdd />
     </FloatingActionButton>
-    <StudentCard
-    />
+    <StudentCard />
   </Tab>
 ;
 export default StudentTab;
