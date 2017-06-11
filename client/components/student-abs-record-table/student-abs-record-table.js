@@ -3,7 +3,7 @@ import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColu
 
 const StudentAbsenceRecordTable = props =>
   <Table
-    height="200px"
+    height="150px"
     selectable={false}>
     <TableHeader
       displaySelectAll={false}>

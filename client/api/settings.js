@@ -10,6 +10,18 @@ class SettingsApi extends Api {
   static getInterventionTypes() {
     return this.getAPI('/api/settings/intervention/types');
   }
+
+  static putInterventionType(typeId, intervention) {
+    return this.putAPI(`/api/settings/intervention/types/${typeId}`, intervention);
+  }
+
+  static postInterventionType(intervention) {
+    return this.postAPI('/api/settings/intervention/types', intervention);
+  }
+
+  static deleteInterventionType(typeId) {
+    return this.deleteAPI(`/api/settings/intervention/types/${typeId}`);
+  }
 }
 
 
