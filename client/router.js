@@ -2,20 +2,23 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import {connect} from 'react-redux';
-import * as authActions from './modules/sessionReducer';
+
+import * as sessionActions from './modules/session';
+
 import {Router, Route, IndexRoute} from 'react-router';
-import App from './components/App';
-import AboutPage from './components/about/AboutPage';
-import AdminPage from './components/admin/AdminPage';
-import DashboardPage from './components/dashboard/DashboardPage';
-import LoginPage from './components/login/LoginPage';
-import RecordsPage from './components/records/RecordsPage';
-import SchoolReportsPage from './components/school/reports/SchoolReportsPage';
-import SchoolSettingsPage from './components/school/settings/SchoolSettingsPage';
-import StudentPage from './components/student/StudentPage';
-import UsersPage from './components/users/UsersPage';
-import VisualizationPage from './components/visualization/VisualizationPage';
 import cookies from 'browser-cookies';
+
+import App from './views/app';
+import { AboutPage } from './views/about/about';
+import AdminPage from './views/admin/admin';
+import DashboardPage from './views/dashboard/dashboard';
+import LoginPage from './views/login/login';
+import RecordsPage from './views/records/records';
+import SchoolReportsPage from './views/school-reports/school-reports';
+import SchoolSettingsPage from './views/school-settings/school-settings';
+import StudentPage from './views/student/student';
+import UsersPage from './views/users/users';
+import VisualizationPage from './views/visualization/visualization';
 
 class RTRouter extends React.Component {
   constructor() {
@@ -80,7 +83,7 @@ function mapStateToProps(state, ownProps) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    actions : bindActionCreators(authActions, dispatch)
+    actions : bindActionCreators(sessionActions, dispatch)
   };
 }
 
