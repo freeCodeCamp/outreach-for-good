@@ -309,13 +309,13 @@ class DashboardPage extends React.Component {
 }
 
 DashboardPage.propTypes = {
-  absRecordActions          : PropTypes.object.isRequired,
-  reportActions          : PropTypes.object.isRequired,
-  userActions          : PropTypes.object.isRequired,
-  absenceRecords  : PropTypes.object.isRequired,
-  containerWidth  : PropTypes.number.isRequired,
-  containerHeight : PropTypes.number.isRequired,
-  reports         : PropTypes.instanceOf(Report)
+  absRecordActions : PropTypes.object.isRequired,
+  reportActions    : PropTypes.object.isRequired,
+  userActions      : PropTypes.object.isRequired,
+  absenceRecords   : PropTypes.object.isRequired,
+  containerWidth   : PropTypes.number.isRequired,
+  containerHeight  : PropTypes.number.isRequired,
+  reports          : PropTypes.instanceOf(Report)
 };
 
 function mapStateToProps(state) {
@@ -328,8 +328,8 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
   return {
     absRecordActions : bindActionCreators(absRecordActions, dispatch),
-    reportActions : bindActionCreators(reportActions, dispatch),
-    userActions : bindActionCreators(userActions, dispatch)
+    reportActions    : bindActionCreators(reportActions, dispatch),
+    userActions      : bindActionCreators(userActions, dispatch)
   };
 }
 
