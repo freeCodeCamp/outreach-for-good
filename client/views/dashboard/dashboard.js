@@ -30,7 +30,7 @@ class DashboardPage extends React.Component {
 
     // Register Initial Component State
     let nextTable = table.setSelectedTab(table, 'Student');
-    nextTable = table.setFixedGroup(nextTable, 'school.name');
+    nextTable = table.setFixedColumn(nextTable, 'school.name');
     nextTable = this.initClickActions(nextTable);
     this.state = { table: nextTable };
   }
@@ -171,6 +171,7 @@ class DashboardPage extends React.Component {
   handleToggleSortCol = (nextTable, data) => {
     nextTable = table.updateSortCol(this.state.table, data);
     nextTable = table.sortDataByCol(nextTable, this.props.absenceRecords);
+    nextTable = table.setupSummaryRows(nextTable, this.props.absenceRecords);
     this.setState({table: nextTable});
   }
 

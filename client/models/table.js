@@ -15,13 +15,20 @@ export const Table = Immutable.Record({
   sortDirection : locAct.SORT_ASC,
   sortCol       : '',
   filterEnabled : false,
-  fixedGroup    : '',
-  // {data_id: filter_value, ...}
-  filterBy      : Immutable.Map(),
+  // fixedGroup: {column: xx, summaryRow: {index: xx, count: xx}}
+  fixedGroup    : Immutable.Map({
+    column   : '',
+    indices  : Immutable.List(),
+    rowCount : Immutable.Map({
+      total : ''
+    })
+  }),
+  // filterBy: {data_id: filter_value, ...}
+  filterBy    : Immutable.Map(),
   // used to display MaterialUI Components
-  MuiPopovers   : Immutable.Map(),
-  MuiDialogs    : Immutable.Map(),
-  MuiAnchor     : null,
+  MuiPopovers : Immutable.Map(),
+  MuiDialogs  : Immutable.Map(),
+  MuiAnchor   : null,
 });
 
 class TableModel extends Table {
@@ -33,21 +40,38 @@ class TableModel extends Table {
   /**
    * Set a fixed column group
    */
-  setFixedGroup(currentState, colName) {
-    return currentState.set('fixedGroup', colName);
+  setFixedColumn(currentState, colName) {
+    return currentState.update('fixedGroup', fixedGroup =>
+      fixedGroup.set('column', colName));
   }
 
-  sortByFixedGroups(currentState, data, sortCol, sortDirection) {
-    let fixedGroup = currentState.get('fixedGroup');
+  getFixedColumn(currentState) {
+    return currentState.get('fixedGroup').get('column');
+  }
+
+  // input data sorted by fixedGroup, generates fixedGroup.summaryRows[]
+  setupSummaryRows(currentState, data) {
+    let fixedColumn = this.getFixedColumn(currentState);
+    let lastValue = data.get(0).get(fixedColumn);
+    return currentState.update('fixedGroup', fixedGroup =>
+      fixedGroup.set('indices', data.reduce((a, v, i) => {
+        if(v.get(fixedColumn) === lastValue) return a;
+        lastValue = v.get(fixedColumn);
+        return a.push(i);
+      }, Immutable.List([0]))
+    ));
+  }
+
+  // FixedGroup is a column where rows of similar values sort togeather and don't speerate
+  sortByFixedGroup(currentState, data, sortCol, sortDirection) {
     let groupMap = Immutable.Map();
     data.forEach((row, index) => {
-      let group = row.get(fixedGroup);
-      groupMap = groupMap.set(group, groupMap.has(group)
-        ? groupMap.get(group).push(index) : Immutable.List([index]));
+      let fixedColValue = row.get(this.getFixedColumn(currentState));
+      groupMap = groupMap.set(fixedColValue, groupMap.has(fixedColValue)
+        ? groupMap.get(fixedColValue).push(index) : Immutable.List([index]));
     });
-    groupMap = groupMap.map(group => this.sortIndexMap(group, data, sortCol, sortDirection))
+    return groupMap.map(indexMap => this.sortIndexMap(indexMap, data, sortCol, sortDirection))
       .reduce((a, v) => a.concat(v), Immutable.List());
-    return groupMap;
   }
 
   /**
@@ -70,14 +94,14 @@ class TableModel extends Table {
   sortDataByCol(currentState, data) {
     let sortCol = currentState.get('sortCol');
     let sortDirection = currentState.get('sortDirection') == locAct.SORT_ASC;
-    currentState = currentState.update('indexMap', indexMap => currentState.get('fixedGroup')
-    ? this.sortByFixedGroups(currentState, data, sortCol, sortDirection)
+    currentState = currentState.update('indexMap', indexMap => this.getFixedColumn(currentState)
+    ? this.sortByFixedGroup(currentState, data, sortCol, sortDirection)
     : this.sortIndexMap(indexMap, data, sortCol, sortDirection));
     return currentState;
   }
 
-  sortIndexMap(list, data, sortCol, sortDirection) {
-    return list.sort((xIndex, yIndex) => {
+  sortIndexMap(indexMap, data, sortCol, sortDirection) {
+    return indexMap.sort((xIndex, yIndex) => {
       let xValue = data.getIn([xIndex, sortCol]);
       let yValue = data.getIn([yIndex, sortCol]);
       return xValue > yValue
