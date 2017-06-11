@@ -219,90 +219,27 @@ class DashboardPage extends React.Component {
         style={{width: this.props.containerWidth}}
         value={this.state.table.get('selectedTab')}
       >
-        <Tab
-          value='Student'
-          iconClass='fa fa-child fa-2x'
-          onActive={this.tabHandler}
-          {...this.props}
-        >
-          <StudentTab
-            view = {viewport}
-            absenceRecords = {this.props.absenceRecords}
-            table = {this.state.table}
-            loaded = {this.state.loadResolved}
-            clickHandler = {this.clickHandler}
-          />
-        </Tab>
-        <Tab
-          value='PhoneCall'
-          iconClass='fa fa-phone fa-2x'
-          onActive={this.tabHandler}
-          {...this.props}
-        >
-          <PhoneTab
-            view = {viewport}
-            absenceRecords = {this.props.absenceRecords}
-            table = {this.state.table}
-            loaded = {this.state.loadResolved}
-            clickHandler = {this.clickHandler}
-          />
-        </Tab>
-        <Tab
-          value='LetterSent'
-          iconClass='fa fa-envelope fa-2x'
-          onActive={this.tabHandler}
-          {...this.props}
-        >
-          <LetterTab
-            view = {viewport}
-            absenceRecords = {this.props.absenceRecords}
-            table = {this.state.table}
-            loaded = {this.state.loadResolved}
-            clickHandler = {this.clickHandler}
-          />
-        </Tab>
-        <Tab
-          value='HomeVisit'
-          iconClass='fa fa-home fa-2x'
-          onActive={this.tabHandler}
-          {...this.props}
-        >
-          <HomeTab
-            view = {viewport}
-            absenceRecords = {this.props.absenceRecords}
-            table = {this.state.table}
-            loaded = {this.state.loadResolved}
-            clickHandler = {this.clickHandler}
-          />
-        </Tab>
-        <Tab
-          value='SSTReferral'
-          iconClass='fa fa-support fa-2x'
-          onActive={this.tabHandler}
-          {...this.props}
-        >
-          <SstTab
-            view = {viewport}
-            absenceRecords = {this.props.absenceRecords}
-            table = {this.state.table}
-            loaded = {this.state.loadResolved}
-            clickHandler = {this.clickHandler}
-          />
-        </Tab>
-        <Tab
-          value='CourtReferral'
-          iconClass='fa fa-gavel fa-2x'
-          onActive={this.tabHandler}
-          {...this.props}
-        >
-          <CourtTab
-            view = {viewport}
-            absenceRecords = {this.props.absenceRecords}
-            table = {this.state.table}
-            loaded = {this.state.loadResolved}
-            clickHandler = {this.clickHandler}
-          />
-        </Tab>
+        {[{value: 'Student', class: 'fa fa-child fa-2x', Component: StudentTab},
+        {value: 'PhoneCall', class: 'fa fa-phone fa-2x', Component: PhoneTab},
+        {value: 'LetterSent', class: 'fa fa-envelope fa-2x', Component: LetterTab},
+        {value: 'HomeVisit', class: 'fa fa-home fa-2x', Component: HomeTab},
+        {value: 'SSTReferral', class: 'fa fa-support fa-2x', Component: SstTab},
+        {value: 'CourtReferral', class: 'fa fa-gavel fa-2x', Component: CourtTab}
+        ].map((tab, index) => <Tab
+            key={`tab-${index}`}
+            value={tab.value}
+            iconClass={tab.class}
+            onActive={this.tabHandler}
+            {...this.props} >
+            <tab.Component
+              view = {viewport}
+              absenceRecords = {this.props.absenceRecords}
+              table = {this.state.table}
+              loaded = {this.state.loadResolved}
+              clickHandler = {this.clickHandler}
+            />
+          </Tab>
+        )}
       </Tabs>
     );
   }
