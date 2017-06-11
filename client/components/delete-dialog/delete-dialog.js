@@ -8,27 +8,22 @@ import TextField from 'material-ui/TextField';
  * Alerts are urgent interruptions, requiring acknowledgement, that inform the user about a situation.
  */
 class DeleteDialog extends Component {
-  constructor() {
-    super();
-    this.state = {
-      confirmDelete : false
-    };
 
-    this.handleChangeText = this.handleChangeText.bind(this);
-  }
+  state = {
+    confirmDelete : false
+  };
 
-  handleChangeText(e, newVal) {
-    // console.log(newVal);
+  handleChangeText = (e, newVal) => {
     this.setState({ confirmDelete: newVal === 'DELETE' });
   }
 
   render() {
     const actions = [
-      <RaisedButton
+      <RaisedButton key="1"
         label="Cancel"
         onTouchTap={this.props.closeDialog}
       />,
-      <RaisedButton
+      <RaisedButton key="2"
         label="Delete Record"
         disabled={!this.state.confirmDelete}
         onTouchTap={this.props.removeRecord}
@@ -70,6 +65,9 @@ class DeleteDialog extends Component {
 }
 
 DeleteDialog.propTypes = {
-  dialogOpen : PropTypes.bool
+  dialogOpen   : PropTypes.bool,
+  closeDialog  : PropTypes.func,
+  removeRecord : PropTypes.func
 };
+
 export default DeleteDialog;

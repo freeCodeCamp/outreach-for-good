@@ -23,9 +23,6 @@ import VisualizationPage from './views/visualization/visualization';
 class RTRouter extends React.Component {
   constructor() {
     super();
-
-    this.authorize = this.authorize.bind(this);
-
     // Configure routes here as this solves a problem with hot loading where
     // the routes are recreated each time.
     this.routes
@@ -45,7 +42,7 @@ class RTRouter extends React.Component {
     ;
   }
 
-  authorize(nextState, replace) {
+  authorize = (nextState, replace) => {
     if(!this.props.session.token) {
       if(!cookies.get('token')) {
         replace({
@@ -73,9 +70,10 @@ class RTRouter extends React.Component {
 RTRouter.propTypes = { // Prop type validation
   actions : PropTypes.object.isRequired,
   session : PropTypes.object.isRequired,
+  history : PropTypes.object
 };
 
-function mapStateToProps(state, ownProps) {
+function mapStateToProps(state) {
   return {
     session : state.session
   };

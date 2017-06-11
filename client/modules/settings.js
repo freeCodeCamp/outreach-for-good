@@ -29,3 +29,30 @@ export function getInterventionTypes() {
     })
     .catch(err => dispatch(openSnackbar(`ERR: ${err}`, 'error')));
 }
+
+export function putInterventionType(typeId, intervention) {
+  return dispatch => SettingsApi.putInterventionType(typeId, intervention)
+    .then(res => {
+      dispatch(getInterventionTypes());
+      dispatch(openSnackbar(`Intervention ${res.title} updated!`));
+    })
+    .catch(err => dispatch(`ERR: ${err}`, 'error'));
+}
+
+export function postInterventionType(intervention) {
+  return dispatch => SettingsApi.postInterventionType(intervention)
+    .then(res => {
+      dispatch(getInterventionTypes());
+      dispatch(openSnackbar(`Intervention ${res.title} created!`));
+    })
+    .catch(err => dispatch(`ERR: ${err}`, 'error'));
+}
+
+export function deleteInterventionType(typeId) {
+  return dispatch => SettingsApi.deleteInterventionType(typeId)
+    .then(res => {
+      dispatch(getInterventionTypes());
+      dispatch(openSnackbar(`Intervention ${res.title} deleted!`));
+    })
+    .catch(err => dispatch(`ERR: ${err}`, 'error'));
+}

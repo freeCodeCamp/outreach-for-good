@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import {Link} from 'react-router';
-
 import {List} from 'immutable';
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';

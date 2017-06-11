@@ -14,6 +14,7 @@ import FontIcon from 'material-ui/FontIcon';
 import Parent from '../../components/student-parent-card/student-parent-card';
 import StudentAbsenceRecordTable from '../../components/student-abs-record-table/student-abs-record-table';
 import StudentDialog from '../../components/student-dialog/student-dialog';
+import StudentNotes from '../../components/student-notes/student-notes';
 import StudentCard from '../../components/student-card/student-card';
 import Summary from '../../components/student-summary-card/student-summary-card';
 import './student.scss';
@@ -141,7 +142,7 @@ class StudentPage extends React.Component {
               </div>
             </Tab>
             <Tab label="Notes">
-              <Notes
+              <StudentNotes
                 studentId={student._id}
                 addNote={this.props.actions.postStudentNote}
                 notes={notes} />
