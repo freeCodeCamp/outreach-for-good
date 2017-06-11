@@ -59,7 +59,7 @@ class TableContainer extends React.Component {
           ? table.get('filterHeaderHeight') || 60
           : table.get('headerHeight') || 30}
         rowsCount={loaded
-          ? table.get('indexMap').length : 1}
+          ? table.get('indexMap').size : 1}
         width={view.width || 100}
         maxHeight={view.height}
         onRowClick={this.rowToggleSelected}
@@ -105,12 +105,12 @@ class TableContainer extends React.Component {
 
 TableContainer.propTypes = {
   clickHandler : PropTypes.func.isRequired,
-  view         : PropTypes.object.isRequired,
-  page         : PropTypes.object.isRequired,
-  table        : PropTypes.instanceOf(TableModel).isRequired,
   data         : PropTypes.instanceOf(List).isRequired,
+  page         : PropTypes.object.isRequired,
   loaded       : PropTypes.bool,
-  selectedRows : PropTypes.object
+  selectedRows : PropTypes.object,
+  table        : PropTypes.instanceOf(TableModel).isRequired,
+  view         : PropTypes.object.isRequired
 };
 
 export default TableContainer;

@@ -11,10 +11,11 @@ export const Table = Immutable.Record({
   selectedIndex : Immutable.List(),
   selectedData  : Immutable.List(),
   // data indicies -> sorted-table order map
-  indexMap      : [],
+  indexMap      : Immutable.List(),
   sortDirection : locAct.SORT_ASC,
   sortCol       : '',
   filterEnabled : false,
+  fixedGroup    : '',
   // {data_id: filter_value, ...}
   filterBy      : Immutable.Map(),
   // used to display MaterialUI Components
@@ -30,11 +31,31 @@ class TableModel extends Table {
   }
 
   /**
+   * Set a fixed column group
+   */
+  setFixedGroup(currentState, colName) {
+    return currentState.set('fixedGroup', colName);
+  }
+
+  sortByFixedGroups(currentState, data, sortCol, sortDirection) {
+    let fixedGroup = currentState.get('fixedGroup');
+    let groupMap = Immutable.Map();
+    data.forEach((row, index) => {
+      let group = row.get(fixedGroup);
+      groupMap = groupMap.set(group, groupMap.has(group)
+        ? groupMap.get(group).push(index) : Immutable.List([index]));
+    });
+    groupMap = groupMap.map(group => this.sortIndexMap(group, data, sortCol, sortDirection))
+      .reduce((a, v) => a.concat(v), Immutable.List());
+    return groupMap;
+  }
+
+  /**
    * Sort table by column
    */
   buildIndexMap(currentState, data) {
     return currentState.update('indexMap', () =>
-      Array(data.size).fill(0)
+      Immutable.List().setSize(data.size)
       .map((x, i) => i));
   }
 
@@ -46,18 +67,23 @@ class TableModel extends Table {
     return nextState.update('sortCol', () => nextSortCol);
   }
 
-  sortIndexMap(currentState, data) {
+  sortDataByCol(currentState, data) {
     let sortCol = currentState.get('sortCol');
     let sortDirection = currentState.get('sortDirection') == locAct.SORT_ASC;
-    return currentState.update('indexMap', indexMap =>
-      indexMap.sort((xIndex, yIndex) => {
-        let xValue = data.getIn([xIndex, sortCol]);
-        let yValue = data.getIn([yIndex, sortCol]);
-        return xValue > yValue
-          ? sortDirection ? 1 : -1
-          : sortDirection ? -1 : 1;
-      })
-    );
+    currentState = currentState.update('indexMap', indexMap => currentState.get('fixedGroup')
+    ? this.sortByFixedGroups(currentState, data, sortCol, sortDirection)
+    : this.sortIndexMap(indexMap, data, sortCol, sortDirection));
+    return currentState;
+  }
+
+  sortIndexMap(list, data, sortCol, sortDirection) {
+    return list.sort((xIndex, yIndex) => {
+      let xValue = data.getIn([xIndex, sortCol]);
+      let yValue = data.getIn([yIndex, sortCol]);
+      return xValue > yValue
+        ? sortDirection ? 1 : -1
+        : sortDirection ? -1 : 1;
+    });
   }
 
   /**

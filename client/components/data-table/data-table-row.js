@@ -10,15 +10,15 @@ import './data-table-override.scss';
 
 const getColumn = (data, indexMap, rowIndex, col) => {
   if(col === 'student.studentId') {
-    const studentId = data.get(indexMap[rowIndex]).get('student._id');
-    return <Link to={`/student/${studentId}`}>{data.get(indexMap[rowIndex]).get(col)}</Link>;
+    const studentId = data.get(indexMap.get(rowIndex)).get('student._id');
+    return <Link to={`/student/${studentId}`}>{data.get(indexMap.get(rowIndex)).get(col)}</Link>;
   } else {
-    return data.get(indexMap[rowIndex]).get(col);
+    return data.get(indexMap.get(rowIndex)).get(col);
   }
 };
 
 const DataTableRow = ({rowIndex, indexMap, data, col, ...props}) => <Cell {...props}>
-      {indexMap.length > 0 && data && data.size
+      {indexMap.size > 0 && data && data.size
         // ? data.get(indexMap[rowIndex]).get(col)
         ? getColumn(data, indexMap, rowIndex, col)
         : ''}
@@ -29,7 +29,7 @@ const DataTableRow = ({rowIndex, indexMap, data, col, ...props}) => <Cell {...pr
 
 DataTableRow.propTypes = {
   rowIndex : PropTypes.number,
-  indexMap : PropTypes.array.isRequired,
+  indexMap : PropTypes.instanceOf(List).isRequired,
   data     : PropTypes.instanceOf(List).isRequired,
   col      : PropTypes.string.isRequired,
 };
