@@ -9,6 +9,8 @@ import MenuItem from 'material-ui/MenuItem';
 
 import DataTable from '../../../components/data-table/data-table';
 import DeleteDialog from '../../../components/delete-dialog/delete-dialog';
+import SchoolSelect from '../../../components/school-select/school-select';
+
 import Paper from 'material-ui/Paper';
 import { fetchSchoolRecordList, removeRecord } from '../../../modules/absence-record';
 import RaisedButtonModel from '../../../models/raised-button';
@@ -46,11 +48,11 @@ class ManageTab extends React.Component {
   /**
    * Updates the data table with selected school
    */
-  changeSchool = (e, i, selectedSchool) => {
-    let schoolId = selectedSchool.get('_id');
+  changeSchool = (e, i, school) => {
+    const schoolId = school.get('_id');
     this.props.actions.fetchSchoolRecordList(schoolId);
     this.setState({
-      selectedSchool,
+      school,
       selectedRecord : null,
       loaded         : false
     });
@@ -143,20 +145,12 @@ class ManageTab extends React.Component {
 
     return (
       <div className="manage-tab">
-        <SelectField
-          className="select-school"
-          floatingLabelText="Select a school..."
-          value={this.state.selectedSchool}
-          onChange={this.changeSchool}
-          fullWidth={false}
-          >
-          {this.props.schools.map((school, i) =>
-            <MenuItem
-              key={i}
-              value={school}
-              primaryText={school.name} />
-            )}
-        </SelectField>
+        <SchoolSelect
+          value={this.state.school}
+          schools={this.props.schools}
+          changeSchool={this.changeSchool}
+        />
+
         {selectedSchoolName
           && <DataTable
             table={this.state.table}

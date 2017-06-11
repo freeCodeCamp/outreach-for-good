@@ -94,16 +94,6 @@ class StudentPage extends React.Component {
         </div>
         <div className="tabs">
           <Tabs>
-            <Tab label="Parent Info">
-              <div className="tab-view">
-                <div className="actions">
-                  <RaisedButton
-                    label="Add parent hours"
-                    primary />
-                </div>
-              </div>
-              <Parent />
-            </Tab>
             <Tab label="Outreaches">
               <div className="tab-view">
                 <div className="cards">
@@ -150,6 +140,16 @@ class StudentPage extends React.Component {
             <Tab label="Summary">
               {student
                 && <Summary student={this.props.student} />}
+            </Tab>
+            <Tab label="Parent Info">
+              <div className="tab-view">
+                <div className="actions">
+                  <RaisedButton
+                    label="Add parent hours"
+                    primary />
+                </div>
+              </div>
+              <Parent />
             </Tab>
           </Tabs>
         </div>
