@@ -47,15 +47,15 @@ Tab.propTypes = {
   reports     : PropTypes.instanceOf(Report),
   value       : PropTypes.string.isRequired,
   onActive    : PropTypes.func.isRequired,
-  buttonStyle : PropTypes.string.isRequired,
-  className   : PropTypes.string.isRequired,
-  icon        : PropTypes.string.isRequired,
-  style       : PropTypes.string.isRequired,
-  index       : PropTypes.string.isRequired,
-  onTouchTap  : PropTypes.string.isRequired,
-  selected    : PropTypes.string.isRequired,
-  width       : PropTypes.number.isRequired,
-  iconClass   : PropTypes.string.isRequired
+  buttonStyle : PropTypes.string,
+  className   : PropTypes.string,
+  icon        : PropTypes.string,
+  style       : PropTypes.string,
+  index       : PropTypes.number,
+  onTouchTap  : PropTypes.func,
+  selected    : PropTypes.bool,
+  width       : PropTypes.string,
+  iconClass   : PropTypes.string
 };
 
 Tab.muiName = 'Tab';
