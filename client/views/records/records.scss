@@ -36,11 +36,12 @@
     }
   }
 }
+
 .manage-tab {
-  .select-school {
-    margin: 30px;
-    width: 50%;
-  }
+  display: flex;
+  flex-direction: column;
+  margin: 10px;
+
   .record-data{
     margin: 0 10px;
     padding: 10px;

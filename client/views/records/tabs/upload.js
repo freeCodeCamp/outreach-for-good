@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 
+import SchoolSelect from '../../../components/school-select/school-select';
 import LinearProgress from 'material-ui/LinearProgress';
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
@@ -16,25 +17,14 @@ import AbsenceRecordsTable from '../records-table';
 import UploadService from '../../../utils/upload-pdf/upload-pdf';
 
 class UploadTab extends React.Component {
-  constructor() {
-    super();
-
-    this.state = {
-      loadingState  : 'determinate',
-      loadingValue  : 0,
-      record        : null,
-      recordResults : false,
-      date          : new Date(),
-      snackBar      : ''
-    };
-
-    this.confirm = this.confirm.bind(this);
-    this.cancel = this.cancel.bind(this);
-    this.changeFile = this.changeFile.bind(this);
-    this.changeSchool = this.changeSchool.bind(this);
-    this.changeDate = this.changeDate.bind(this);
-    this.closeSnackbar = this.closeSnackbar.bind(this);
-  }
+  state = {
+    loadingState  : 'determinate',
+    loadingValue  : 0,
+    record        : null,
+    recordResults : false,
+    date          : new Date(),
+    snackBar      : ''
+  };
 
   componentDidMount() {
     this.props.actions.fetchRecords();
@@ -44,14 +34,14 @@ class UploadTab extends React.Component {
   /**
    * Fires when the school select is changed
    */
-  changeSchool(e, i, selectedSchool) {
+  changeSchool = (e, i, selectedSchool) => {
     this.setState({ selectedSchool });
   }
 
   /**
    * Fires when a file is dropped into the dropzone
    */
-  changeFile(accepted) {
+  changeFile = accepted => {
     if(accepted && this.state.selectedSchool) {
       let school = this.state.selectedSchool.toJS();
       let previousRecord = this.props.records.current
@@ -68,14 +58,14 @@ class UploadTab extends React.Component {
   /**
    * Fires when the date is changed
    */
-  changeDate(e, date) {
+  changeDate = (e, date) => {
     this.setState({ date });
   }
 
   /**
    * Action to post absence record
    */
-  confirm() {
+  confirm = () => {
     let record = this.state.record;
     record.date = this.state.date;
     this.props.actions.addRecord(record);
@@ -85,14 +75,14 @@ class UploadTab extends React.Component {
   /**
    * Removes the parsed record
    */
-  cancel() {
+  cancel = () => {
     this.setState({ record: null, loadingValue: 0, loadingState: 'determinate' });
   }
 
   /**
    * closes the snackbar message
    */
-  closeSnackbar() {
+  closeSnackbar = () => {
     this.setState({ snackBar: '' });
   }
 
@@ -101,20 +91,14 @@ class UploadTab extends React.Component {
       <div className="upload-tab">
         <div className="dropzone-container">
           <div className="column">
-            <SelectField
-              floatingLabelText="Select a school..."
+            <SchoolSelect
               value={this.state.selectedSchool}
-              onChange={this.changeSchool}
-              fullWidth
-              >
-              {this.props.schools.map((school, i) =>
-                <MenuItem
-                  key={i}
-                  value={school}
-                  primaryText={school.name} />
-                )}
-            </SelectField>
-            <DatePicker
+              schools={this.props.schools}
+              changeSchool={this.changeSchool}
+            />
+
+            {this.state.selectedSchool
+            && <DatePicker
               value={this.state.date}
               onChange={this.changeDate}
               hintText="Landscape Inline Dialog"
@@ -122,7 +106,8 @@ class UploadTab extends React.Component {
               mode="landscape"
               maxDate={new Date()}
               fullWidth
-            />
+            />}
+
           </div>
           <div className="column">
             {this.state.selectedSchool
