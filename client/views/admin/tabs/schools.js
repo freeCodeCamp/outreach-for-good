@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import * as localActions from '../admin.actions';
+import * as localConst from '../admin.const';
 
 import { List } from 'immutable';
 
@@ -15,17 +15,17 @@ const SchoolsTab = ({schools, ...props}) => {
  * Handler Functions
  *   - Catch events from page elements and send to parent component
  */
-  const buttonHandler = event => {
+  const handleButtonClick = event => {
     event.preventDefault();
     props.clickHandler('dialogClick', this.value, event); // eslint-disable-line babel/no-invalid-this
   };
 
-  const textFieldHandler = (event, newValue) => {
+  const handleInputChange = (event, newValue) => {
     event.preventDefault();
     props.clickHandler('textFieldChange', newValue, event); // eslint-disable-line babel/no-invalid-this
   };
 
-  const submitTextField = event => {
+  const handleInputSubmit = event => {
     event.preventDefault();
     props.clickHandler('textFieldEnter', '', event); // eslint-disable-line babel/no-invalid-this
   };
@@ -37,8 +37,8 @@ const SchoolsTab = ({schools, ...props}) => {
    */
   const newSchoolTextField = new TextFieldModel({
     label     : 'School Name',
-    id        : localActions.NEW_SCHOOL,
-    onChange  : textFieldHandler,
+    id        : localConst.NEW_SCHOOL,
+    onChange  : handleInputChange,
     errorText : props.form.get('error').get('newSchool')
   });
 
@@ -51,20 +51,20 @@ const SchoolsTab = ({schools, ...props}) => {
    */
   dialogs.push(new DialogModel({
     title   : 'New School',
-    open    : props.table.get('MuiDialogs').get(localActions.NEW_SCHOOL),
+    open    : props.table.get('MuiDialogs').get(localConst.NEW_SCHOOL),
     actions : List([
-      { label: 'Cancel', click: buttonHandler },
+      { label: 'Cancel', click: handleButtonClick },
       {
         label    : 'Add',
-        click    : buttonHandler,
-        value    : localActions.NEW_SCHOOL,
+        click    : handleButtonClick,
+        value    : localConst.NEW_SCHOOL,
         disabled : props.form.get('submitDisabled')
       },
     ]),
     text : [<div key='0'>
       {'Add a new school to the application'}
       <div key='2' style={{textAlign: 'center'}}>
-        <form onSubmit={submitTextField} id='NEW_SCHOOL_FORM'>
+        <form onSubmit={handleInputSubmit} id='NEW_SCHOOL_FORM'>
         {newSchoolTextField.getTextField(newSchoolTextField, 3)}
         </form>
       </div></div>]
@@ -74,10 +74,10 @@ const SchoolsTab = ({schools, ...props}) => {
   if(props.table.get('selectedData').first()) {
     dialogs.push(new DialogModel({
       title   : 'Remove Schools',
-      open    : props.table.get('MuiDialogs').get(localActions.REMOVE_SCHOOL),
+      open    : props.table.get('MuiDialogs').get(localConst.REMOVE_SCHOOL),
       actions : List([
-        { label: 'Cancel', click: buttonHandler },
-        { label: 'Remove', click: buttonHandler, value: localActions.REMOVE_SCHOOL },
+        { label: 'Cancel', click: handleButtonClick },
+        { label: 'Remove', click: handleButtonClick, value: localConst.REMOVE_SCHOOL },
       ]),
       text : [<div className="alert alert-danger" key='1'>
         <strong key='2'>WARNING!</strong>
@@ -110,14 +110,14 @@ const SchoolsTab = ({schools, ...props}) => {
   buttons.push(new RaisedButtonModel({
     label           : 'New',
     backgroundColor : '#009d9d',
-    actionID        : localActions.NEW_SCHOOL,
+    actionID        : localConst.NEW_SCHOOL,
     disabled        : false
   }));
 
   buttons.push(new RaisedButtonModel({
     label           : 'Remove',
     backgroundColor : '#d9534f',
-    actionID        : localActions.REMOVE_SCHOOL
+    actionID        : localConst.REMOVE_SCHOOL
   }));
 
   /**

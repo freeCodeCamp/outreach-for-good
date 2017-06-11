@@ -19,7 +19,7 @@ class DataTable extends React.Component {
    * Handler Functions
    *   - Catch events from page elements and send to parent component
    */
-  buttonHandler = (event, value) => {
+  handleButtonClick = (event, value) => {
     event.preventDefault();
     this.props.clickHandler('buttonClick', value, event);
   }
@@ -57,7 +57,7 @@ class DataTable extends React.Component {
                   backgroundColor={button.get('backgroundColor')}
                   style={{marginLeft: '10px'}}
                   disabled={table.get('selectedIndex').size == 0 && button.get('disabled')}
-                  onClick={e => this.buttonHandler(e, button.get('actionID') || '')} // eslint-disable-line react/jsx-no-bind
+                  onClick={e => this.handleButtonClick(e, button.get('actionID') || '')} // eslint-disable-line react/jsx-no-bind
                 />
                 {button.get('menu').open
                   && <Popover
