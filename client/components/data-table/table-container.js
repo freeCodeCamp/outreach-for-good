@@ -10,6 +10,8 @@ import TableModel from '../../models/table';
 import './data-table.scss';
 import './data-table-override.scss';
 
+const _table = new TableModel();
+
 class TableContainer extends React.Component {
   shouldComponentUpdate(nextProps) {
     //console.log(nextProps.table.get('indexMap'), nextProps.data);
@@ -52,14 +54,26 @@ class TableContainer extends React.Component {
       table,
       view
     } = this.props;
+
+    let _data = data;
+    let _rowsCount = table.get('indexMap').size;
+    let _indexMap = table.get('indexMap');
+    if(_table.getFixedColumn(table)) {
+      table.get('fixedGroup').get('indices')
+        .forEach((v, k) => {
+          _indexMap = _indexMap.splice(v + k, 0, _data.size);
+          _data = _data.push(_data.get(0).map(() => ''));
+        });
+      _rowsCount += table.get('fixedGroup').get('indices').size;
+    }
+
     return (
       <Table
         rowHeight={table.get('rowHeight') || 30}
         headerHeight={table.get('filterEnabled')
           ? table.get('filterHeaderHeight') || 60
           : table.get('headerHeight') || 30}
-        rowsCount={loaded
-          ? table.get('indexMap').size : 1}
+        rowsCount={loaded ? _rowsCount : 1}
         width={view.width || 100}
         maxHeight={view.height}
         onRowClick={this.rowToggleSelected}
@@ -83,8 +97,8 @@ class TableContainer extends React.Component {
           cell={
             loaded
             ? <DataTableRow
-              indexMap={table.get('indexMap')}
-              data={data}
+              indexMap={_indexMap}
+              data={_data}
               col={col.id}
             />
             : <Cell className="cell-loading">

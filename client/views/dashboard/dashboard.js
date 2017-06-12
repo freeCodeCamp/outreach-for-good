@@ -98,6 +98,8 @@ class DashboardPage extends React.Component {
   updateDataTable = () => {
     let nextTable = table.updateSortCol(this.state.table, '');
     nextTable = table.buildIndexMap(nextTable, this.props.absenceRecords);
+    nextTable = table.sortDataByCol(nextTable, this.props.absenceRecords);
+    nextTable = table.setupSummaryRows(nextTable, this.props.absenceRecords);
     nextTable = table.enableFiltering(nextTable);
     this.setState({table: nextTable, loadResolved: true});
   }
