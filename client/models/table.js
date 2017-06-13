@@ -19,9 +19,9 @@ export const Table = Immutable.Record({
   fixedGroup    : Immutable.Map({
     column   : '',
     indices  : Immutable.List(),
-    rowCount : Immutable.Map({
-      total : ''
-    })
+    rowCount : Immutable.Map(/*{
+      absences : Immutable.Map({'School A': 100, ...})
+    }*/)
   }),
   // filterBy: {data_id: filter_value, ...}
   filterBy    : Immutable.Map(),
@@ -50,7 +50,7 @@ class TableModel extends Table {
   }
 
   // input data sorted by fixedGroup, generates fixedGroup.summaryRows[]
-  setupSummaryRows(currentState, data) {
+  setupSummaryIndices(currentState, data) {
     let fixedColumn = this.getFixedColumn(currentState);
     let lastValue = data.get(0).get(fixedColumn);
     return currentState.update('fixedGroup', fixedGroup =>
@@ -59,6 +59,17 @@ class TableModel extends Table {
         lastValue = v.get(fixedColumn);
         return a.push(i);
       }, Immutable.List([0]))
+    ));
+  }
+
+  // input data sorted by fixedGroup, generates fixedGroup.summaryRows[]
+  setupSummaryCols(currentState, data, columns) {
+    let fixedColumn = this.getFixedColumn(currentState);
+    let indices = currentState.get('fixedGroup').get('indices');
+    currentState.update('fixedGroup', fixedGroup =>
+      fixedGroup.update('rowCount', row => data.reduce((a, v, i) => {
+
+      })
     ));
   }
 
