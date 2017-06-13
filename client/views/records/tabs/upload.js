@@ -93,6 +93,7 @@ class UploadTab extends React.Component {
               value={this.state.selectedSchool}
               schools={this.props.schools}
               changeSchool={this.changeSchool}
+              fullWidth
             />
 
             {this.state.selectedSchool
