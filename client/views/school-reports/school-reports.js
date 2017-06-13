@@ -22,20 +22,18 @@ class SchoolReportsPage extends React.Component {
 
     // Register Initial Component State
     let nextTable = table.setSelectedTab(table, 'atRisk');
-    this.state = { table: nextTable, loaded: false };
-
-    this.retrieveData = this.retrieveData.bind(this);
-    this.clickHandler = this.clickHandler.bind(this);
-    this.tabHandler = this.tabHandler.bind(this);
+    this.state = {
+      currentTab : 'atRisk',
+      table      : nextTable,
+      loaded     : false
+    };
   }
 
   componentDidMount() {
-    // console.log('did mount');
     this.retrieveData('atRisk');
   }
 
   componentWillReceiveProps(nextProps) {
-    //console.log('will receive props ', nextProps);
     let nextTable = this.state.table;
     let dataLoaded = false;
     switch (nextTable.get('selectedTab')) {
@@ -47,7 +45,7 @@ class SchoolReportsPage extends React.Component {
         nextTable = table.buildIndexMap(nextTable, nextProps.reports.atRisk);
       }
       break;
-    case 'chronicallyAbsent':
+    case 'chronicAbsent':
       if(nextProps.reports.chronicAbsent.size && !this.state.loaded) {
         //console.log('Got It!!! ', nextProps.reports.chronicAbsent.size);
         dataLoaded = true;
@@ -55,7 +53,7 @@ class SchoolReportsPage extends React.Component {
         nextTable = table.buildIndexMap(nextTable, nextProps.reports.chronicAbsent);
       }
       break;
-    case 'outreaches':
+    case 'outreachSummary':
       if(nextProps.reports.outreachSummary.size && !this.state.loaded) {
         //console.log('Got It!!! ', nextProps.reports.outreachSummary.size);
         dataLoaded = true;
@@ -63,7 +61,7 @@ class SchoolReportsPage extends React.Component {
         nextTable = table.buildIndexMap(nextTable, nextProps.reports.outreachSummary);
       }
       break;
-    case 'interventions':
+    case 'interventionSummary':
       if(nextProps.reports.interventionSummary.size && !this.state.loaded) {
         //console.log('Got It!!!', nextProps.reports.interventionSummary.size);
         dataLoaded = true;
@@ -91,37 +89,45 @@ class SchoolReportsPage extends React.Component {
    *   - Retrieve and configure data for table
    *   - Set default state for 'action' variables
    */
-  retrieveData(currentTab) {
+  retrieveData = currentTab => {
+    let loadingPromise;
     // Clear previously loaded reports from the store
     this.props.repAct.resetReports();
     // Call the API for new reports
     switch (currentTab) {
     case 'atRisk':
-      this.props.repAct.getCurrentAtRisk();
+      loadingPromise = this.props.repAct.getCurrentAtRisk();
       break;
-    case 'chronicallyAbsent':
-      this.props.repAct.getChronicallyAbsent();
+    case 'chronicAbsent':
+      loadingPromise = this.props.repAct.getChronicallyAbsent();
       break;
-    case 'outreaches':
-      this.props.repAct.getOutreachSummary();
+    case 'outreachSummary':
+      loadingPromise = this.props.repAct.getOutreachSummary();
       break;
-    case 'interventions':
-      this.props.repAct.getInterventionSummary();
+    case 'interventionSummary':
+      loadingPromise = this.props.repAct.getInterventionSummary();
       break;
     }
-//    nextTable = table.enableFiltering(nextTable);
+    loadingPromise.then(() => this.updateData());
   }
 
-  clickHandler(action, data, event) {
+  updateData = () => {
+    let nextTable = table.updateSortCol(this.state.table, '');
+    // nextTable = table.buildIndexMap(nextTable, this.props.reports[this.state.currentTab]);
+    // nextTable = table.enableFiltering(nextTable);
+    this.setState({table: nextTable, loaded: true});
+  }
+
+  clickHandler = (action, data, event) => {
     let nextTable;
     switch (action) {
 
     // Clicked a main tab
     case 'changeTabs':
+      this.props.repAct.resetReports();
       nextTable = table.setSelectedTab(this.state.table, data.props.value);
       this.setState({table: nextTable, loaded: false});
       break;
-
 
     /**
      * DataTable Click Handler
@@ -147,16 +153,14 @@ class SchoolReportsPage extends React.Component {
       this.setState({table: nextTable});
       break;
     case 'buttonClick':
-      //console.log(event);
-      if(data === 'studentPage') {
-        //console.log(event);
-      }
+      console.log(action, data, event);
       break;
     }
   }
 
   // Handle user changing main tabs
-  tabHandler(data) {
+  tabHandler = data => {
+    this.setState({ currentTab: data });
     this.clickHandler('changeTabs', data);
   }
 
@@ -187,7 +191,7 @@ class SchoolReportsPage extends React.Component {
         <Tab
           label="Chronically Absent"
           onActive={this.tabHandler}
-          value='chronicallyAbsent'
+          value='chronicAbsent'
         >
           <ChronicallyAbsentTab
             view={view}
@@ -200,7 +204,7 @@ class SchoolReportsPage extends React.Component {
         <Tab
           label="Outreaches"
           onActive={this.tabHandler}
-          value='outreaches'
+          value='outreachSummary'
         >
           <OutreachesTab
             view = {view}
@@ -213,7 +217,7 @@ class SchoolReportsPage extends React.Component {
         <Tab
           label="Interventions"
           onActive={this.tabHandler}
-          value='interventions'
+          value='interventionSummary'
         >
           <InterventionsTab
             view={view}
