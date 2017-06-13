@@ -4,17 +4,17 @@ import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import {Link} from 'react-router';
 import {List} from 'immutable';
-import SelectField from 'material-ui/SelectField';
-import MenuItem from 'material-ui/MenuItem';
 
 import DataTable from '../../../components/data-table/data-table';
 import DeleteDialog from '../../../components/delete-dialog/delete-dialog';
 import SchoolSelect from '../../../components/school-select/school-select';
 
-import Paper from 'material-ui/Paper';
+import {recordsTableColumns} from '../records.defs';
+
+// import Paper from 'material-ui/Paper';
 import { fetchSchoolRecordList, removeRecord } from '../../../modules/absence-record';
 import RaisedButtonModel from '../../../models/raised-button';
-import { StudentRecords } from '../records';
+// import { StudentRecords } from '../records';
 import TableModel from '../../../models/table';
 
 const table = new TableModel();
@@ -27,12 +27,14 @@ class ManageTab extends React.Component {
   };
 
   componentWillReceiveProps = nextProps => {
-    if(this.state.selectedSchool
+    if(this.state.school
       && nextProps.absenceRecords.size
       && !this.state.loaded) {
       // Props incoming, ToDo: verify absenceRecords changed
       let nextTable = table.updateSortCol(this.state.table, '');
       nextTable = table.buildIndexMap(nextTable, nextProps.absenceRecords);
+
+      console.log('props recieved');
 
       this.setState({
         table  : nextTable,
@@ -40,7 +42,7 @@ class ManageTab extends React.Component {
       });
     } else {
       this.setState({
-        selectedRecord : null
+        loaded : true
       });
     }
   }
@@ -72,8 +74,9 @@ class ManageTab extends React.Component {
         this.setState({ dialogOpen: !this.state.dialogOpen });
         break;
       }
-      default: {
-        this._displayRecord(data);
+      case 'editRecord': {
+        console.log('edit record');
+        break;
       }
       }
     }
@@ -99,46 +102,36 @@ class ManageTab extends React.Component {
     let selectedRecord = {};
 
     selectedRecord.newMissingStudents = this.props.absenceRecords
-    .get(record)
-    .get('newMissingStudents')
-    // .map(entry => entry.get('_id'));
-    .map((entry, i) => <Link key={i} to={`/student/${entry.get('_id')}`}>{entry.firstName} {entry.lastName}</Link>);
+      .get(record)
+      .get('newMissingStudents')
+      // .map(entry => entry.get('_id'));
+      .map((entry, i) => <Link key={i} to={`/student/${entry.get('_id')}`}>{entry.firstName} {entry.lastName}</Link>);
 
     selectedRecord.createdStudents = this.props.absenceRecords
-    .get(record)
-    .get('createdStudents')
-    .map((entry, i) => <Link key={i} to={`/student/${entry.get('_id')}`}>{`${entry.get('firstName')} ${entry.get('lastName')}`}</Link>);
+      .get(record)
+      .get('createdStudents')
+      .map((entry, i) => <Link key={i} to={`/student/${entry.get('_id')}`}>{`${entry.get('firstName')} ${entry.get('lastName')}`}</Link>);
 
     this.setState({ selectedRecord });
   }
 
   render = () => {
-    const selectedSchoolName = this.state.selectedSchool
-      ? this.state.selectedSchool.get('name') : '';
-
     const buttons = [
       new RaisedButtonModel({
         label    : 'Delete Record',
         actionID : 'deleteRecord',
         disabled : false
+      }),
+      new RaisedButtonModel({
+        label    : 'Edit Record',
+        actionID : 'Edit Record',
+        disabled : false
       })
     ];
 
     const page = {
-      title   : `${selectedSchoolName} Absence Records`,
-      columns : [{
-        title : 'Date',
-        id    : 'date',
-        fixed : true
-      }, {
-        title    : 'School Year',
-        id       : 'schoolYear',
-        flexGrow : 1
-      }, {
-        title    : 'Size',
-        id       : 'entries.size',
-        flexGrow : 1
-      }],
+      title   : 'Absence Records',
+      columns : recordsTableColumns,
       buttons
     };
 
@@ -151,7 +144,7 @@ class ManageTab extends React.Component {
           changeSchool={this.changeSchool}
         />
 
-        {selectedSchoolName
+        {this.state.school
           && <DataTable
             table={this.state.table}
             page={page}
@@ -160,7 +153,8 @@ class ManageTab extends React.Component {
             clickHandler={this.clickHandler}
             {...this.props}
           />}
-        {this.state.selectedRecord
+
+        {/* {this.state.selectedRecord
         && <Paper
           className="record-data"
           zDepth={2}>
@@ -172,7 +166,8 @@ class ManageTab extends React.Component {
               title="New Missing Students:"
               students={this.state.selectedRecord.newMissingStudents}
             />
-          </Paper>}
+          </Paper>} */}
+
         <DeleteDialog
           dialogOpen={this.state.dialogOpen}
           closeDialog={this.closeDialog}

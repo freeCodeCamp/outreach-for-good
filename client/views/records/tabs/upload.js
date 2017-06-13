@@ -5,8 +5,6 @@ import {connect} from 'react-redux';
 
 import SchoolSelect from '../../../components/school-select/school-select';
 import LinearProgress from 'material-ui/LinearProgress';
-import SelectField from 'material-ui/SelectField';
-import MenuItem from 'material-ui/MenuItem';
 import DatePicker from 'material-ui/DatePicker';
 import Dropzone from 'react-dropzone';
 
@@ -95,6 +93,7 @@ class UploadTab extends React.Component {
               value={this.state.selectedSchool}
               schools={this.props.schools}
               changeSchool={this.changeSchool}
+              fullWidth
             />
 
             {this.state.selectedSchool

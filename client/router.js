@@ -19,7 +19,7 @@ import SchoolSettingsPage from './views/school-settings/school-settings';
 import StudentPage from './views/student/student';
 import UsersPage from './views/users/users';
 import VisualizationPage from './views/visualization/visualization';
-import VolunteerHours from './views/volunteer-hours/volunteer-hours';
+import Volunteers from './views/volunteers/volunteers';
 
 class RTRouter extends React.Component {
   constructor() {
@@ -39,7 +39,7 @@ class RTRouter extends React.Component {
         <Route path="/student/:studentId(/:tab)" component={StudentPage} onEnter={this.authorize} />
         <Route path="/users" component={UsersPage} onEnter={this.authorize} />
         <Route path="/visualization" component={VisualizationPage} onEnter={this.authorize} />
-        <Route path="/volunteer" component={VolunteerHours} onEnter={this.authorize} />
+        <Route path="/volunteers" component={Volunteers} onEnter={this.authorize} />
       </Route>
     ;
   }
