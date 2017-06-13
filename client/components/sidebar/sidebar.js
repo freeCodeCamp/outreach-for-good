@@ -28,7 +28,7 @@ class Sidebar extends React.Component {
           <span className="fa-stack fa-lg pull-left"><i className="fa fa-stack-1x fa-area-chart" /></span>
           Data Visualization
         </Link></li>
-        <li><Link to="/volunteer" activeClassName="active">
+        <li><Link to="/volunteers" activeClassName="active">
           <span className="fa-stack fa-lg pull-left"><i className="fa fa-stack-1x fa-hourglass-o" /></span>
           Volunteer Hours
         </Link></li>
