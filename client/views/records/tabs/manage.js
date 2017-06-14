@@ -11,10 +11,11 @@ import SchoolSelect from '../../../components/school-select/school-select';
 
 import {recordsTableColumns} from '../records.defs';
 
-// import Paper from 'material-ui/Paper';
-import { fetchSchoolRecordList, removeRecord } from '../../../modules/absence-record';
+import {
+  fetchSchoolRecordList,
+  removeRecord } from '../../../modules/absence-record';
+
 import RaisedButtonModel from '../../../models/raised-button';
-// import { StudentRecords } from '../records';
 import TableModel from '../../../models/table';
 
 const table = new TableModel();
@@ -138,11 +139,13 @@ class ManageTab extends React.Component {
 
     return (
       <div className="manage-tab">
-        <SchoolSelect
-          value={this.state.school}
-          schools={this.props.schools}
-          changeSchool={this.changeSchool}
-        />
+        <div className="school-select">
+          <SchoolSelect
+            value={this.state.school}
+            schools={this.props.schools}
+            changeSchool={this.changeSchool}
+          />
+        </div>
 
         {this.state.school
           && <DataTable
