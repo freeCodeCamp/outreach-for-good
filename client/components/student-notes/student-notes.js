@@ -1,10 +1,9 @@
 import React from 'react';
-
+import PropTypes from 'prop-types';
 import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
 import FontIcon from 'material-ui/FontIcon';
 import Chip from 'material-ui/Chip';
-import Avatar from 'material-ui/Avatar';
 
 import './student-notes.scss';
 
@@ -63,4 +62,13 @@ const StudentNotes = ({ studentId, cardId, cardType, notes, addNote }) => {
     </div>
   );
 };
+
+StudentNotes.propTypes = {
+  studentId : PropTypes.string,
+  cardId    : PropTypes.string,
+  cardType  : PropTypes.string,
+  notes     : PropTypes.array,
+  addNote   : PropTypes.func
+};
+
 export default StudentNotes;
