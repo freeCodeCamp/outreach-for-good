@@ -15,11 +15,13 @@ export const Table = Immutable.Record({
   sortDirection : locAct.SORT_ASC,
   sortCol       : '',
   filterEnabled : false,
-  // fixedGroup: {column: xx, summaryRow: {index: xx, count: xx}}
-  fixedGroup    : Immutable.Map({
-    column   : '',
-    indices  : Immutable.List(),
-    rowCount : Immutable.Map(/*{
+  groupColumn   : Immutable.Map({
+    fixedColumn      : '',
+    displayColumn    : '',
+    aggregateColumns : [],
+    indices          : Immutable.List(),
+    // In unaltered data, which index does each group start
+    groups           : Immutable.Map(/*{
       absences : Immutable.Map({'School A': 100, ...})
     }*/)
   }),
@@ -40,44 +42,79 @@ class TableModel extends Table {
   /**
    * Set a fixed column group
    */
-  setFixedColumn(currentState, colName) {
-    return currentState.update('fixedGroup', fixedGroup =>
-      fixedGroup.set('column', colName));
+  setGroupColumn(currentState, colName) {
+    return currentState.update('groupColumn', groupColumn =>
+      groupColumn.set('fixedColumn', colName));
   }
 
-  getFixedColumn(currentState) {
-    return currentState.get('fixedGroup').get('column');
+  getGroupColumn(currentState) {
+    return currentState.get('groupColumn').get('fixedColumn');
   }
 
-  // input data sorted by fixedGroup, generates fixedGroup.summaryRows[]
-  setupSummaryIndices(currentState, data) {
-    let fixedColumn = this.getFixedColumn(currentState);
-    let lastValue = data.get(0).get(fixedColumn);
-    return currentState.update('fixedGroup', fixedGroup =>
-      fixedGroup.set('indices', data.reduce((a, v, i) => {
-        if(v.get(fixedColumn) === lastValue) return a;
-        lastValue = v.get(fixedColumn);
+  setGroupDisplayColumns(currentState, displayColumn, aggregateColumns) {
+    return currentState.update('groupColumn', groupColumn =>
+      groupColumn.merge({
+        displayColumn,
+        aggregateColumns : Immutable.List(aggregateColumns)
+      }));
+  }
+
+  // input data sorted by groupColumn, generates groupColumn.summaryRows[]
+  setupGroupIndices(currentState, data) {
+    let groupColumn = this.getGroupColumn(currentState);
+    let previousValue = data.get(0).get(groupColumn);
+    return currentState.update('groupColumn', nextGroupColumn =>
+      nextGroupColumn.set('indices', data.reduce((a, row, i) => {
+        if(row.get(groupColumn) === previousValue) return a;
+        previousValue = row.get(groupColumn);
         return a.push(i);
       }, Immutable.List([0]))
     ));
   }
 
-  // input data sorted by fixedGroup, generates fixedGroup.summaryRows[]
-  setupSummaryCols(currentState, data, columns) {
-    let fixedColumn = this.getFixedColumn(currentState);
-    let indices = currentState.get('fixedGroup').get('indices');
-    currentState.update('fixedGroup', fixedGroup =>
-      fixedGroup.update('rowCount', row => data.reduce((a, v, i) => {
-
-      })
-    ));
+  // input data sorted by groupColumn, generates groupColumn.summaryRows[]
+  addGroupRowsToIndexMap(currentState) {
+    let nextIndexMap = currentState.get('indexMap');
+    currentState.get('groupColumn').get('indices')
+      .forEach((v, k) => {
+        nextIndexMap = nextIndexMap.splice(v + k, 0, nextIndexMap.size);
+      });
+    return currentState.update('indexMap', () => nextIndexMap);
   }
 
-  // FixedGroup is a column where rows of similar values sort togeather and don't speerate
-  sortByFixedGroup(currentState, data, sortCol, sortDirection) {
+  // input data sorted by groupColumn, generates groupColumn.summaryRows[]
+  setupGroupCollapseRows(currentState, data) {
+    let groupColumn = this.getGroupColumn(currentState);
+    let groupRowIndices = currentState.get('groupColumn').get('indices').toMap().flip();
+    let count = -1;
+    return currentState.update('groupColumn', nextGroupColumn =>
+      nextGroupColumn.update('groups', () =>
+        groupRowIndices.reduce((a, i, indice) => {
+          count += 1;
+          let rowIndex = indice + count;
+          let nextIndice = groupRowIndices.findEntry((v, k) => k > indice);
+          let recordCount = nextIndice ? nextIndice[0] - indice : data.size - indice;
+          return a.set(rowIndex, Immutable.Map({
+            groupColumn : Immutable.Map({
+              group : data.get(indice + 1).get(groupColumn),
+              count : recordCount
+            })
+          }).concat(this.getRowAggregateRecord(currentState, data.slice(rowIndex - count, rowIndex + recordCount))));
+        }, Immutable.Map()))
+    );
+  }
+
+  // input data sorted by groupColumn, generates groupColumn.summaryRows[]
+  getRowAggregateRecord(currentState, data) {
+    let aggregateColumns = currentState.get('groupColumn').get('aggregateColumns').toMap().flip().map(() => 0);
+    return data.reduce((a, row) => a.map((v, k) => row.get(k) + v), aggregateColumns);
+  }
+
+  // groupColumn is a column where rows of similar values sort togeather and don't speerate
+  sortBygroupColumn(currentState, data, sortCol, sortDirection) {
     let groupMap = Immutable.Map();
     data.forEach((row, index) => {
-      let fixedColValue = row.get(this.getFixedColumn(currentState));
+      let fixedColValue = row.get(this.getGroupColumn(currentState));
       groupMap = groupMap.set(fixedColValue, groupMap.has(fixedColValue)
         ? groupMap.get(fixedColValue).push(index) : Immutable.List([index]));
     });
@@ -105,8 +142,8 @@ class TableModel extends Table {
   sortDataByCol(currentState, data) {
     let sortCol = currentState.get('sortCol');
     let sortDirection = currentState.get('sortDirection') == locAct.SORT_ASC;
-    currentState = currentState.update('indexMap', indexMap => this.getFixedColumn(currentState)
-    ? this.sortByFixedGroup(currentState, data, sortCol, sortDirection)
+    currentState = currentState.update('indexMap', indexMap => this.getGroupColumn(currentState)
+    ? this.sortBygroupColumn(currentState, data, sortCol, sortDirection)
     : this.sortIndexMap(indexMap, data, sortCol, sortDirection));
     return currentState;
   }

@@ -46,6 +46,9 @@ class TableContainer extends React.Component {
     this.props.clickHandler('changeFilterCol', event.target.id, event.target.value);
   }
 
+  usingRowGroups = () =>
+    this.props.table.getGroupColumn(this.props.table);
+
   render() {
     const {
       data,
@@ -54,17 +57,28 @@ class TableContainer extends React.Component {
       table,
       view
     } = this.props;
+    const groupCol = table.get('groupColumn');
 
     let _data = data;
-    let _rowsCount = table.get('indexMap').size;
-    let _indexMap = table.get('indexMap');
-    if(_table.getFixedColumn(table)) {
-      table.get('fixedGroup').get('indices')
-        .forEach((v, k) => {
-          _indexMap = _indexMap.splice(v + k, 0, _data.size);
-          _data = _data.push(_data.get(0).map(() => ''));
+    if(this.usingRowGroups()) {
+      const displayColumn = groupCol.get('displayColumn');
+      const groups = groupCol.get('groups');
+      //console.log('render', groups.toJS());
+      let count = -1;
+      groupCol.get('indices')
+        .forEach(i => {
+          count += 1;
+          _data = _data.push(_data.get(0).map((v, k) => {
+            console.log(groups.get(i + count).toJS(), k);
+            if(k === displayColumn) {
+              return `${groups.get(i + count).get('groupColumn').get('group')}
+                (${groups.get(i + count).get('groupColumn').get('count')})`;
+            } else if(groups.get(i + count).get(k) !== null) {
+              return groups.get(i + count).get(k);
+            }
+            return '';
+          }));
         });
-      _rowsCount += table.get('fixedGroup').get('indices').size;
     }
 
     return (
@@ -73,11 +87,12 @@ class TableContainer extends React.Component {
         headerHeight={table.get('filterEnabled')
           ? table.get('filterHeaderHeight') || 60
           : table.get('headerHeight') || 30}
-        rowsCount={loaded ? _rowsCount : 1}
+        rowsCount={loaded ? table.get('indexMap').size : 1}
         width={view.width || 100}
         maxHeight={view.height}
         onRowClick={this.rowToggleSelected}
         rowClassNameGetter={this.isRowSelected}
+        id="theDataTable"
       >
       {/*console.log('Debugging race condition: ', data, page.columns)*/}
       {page.columns && page.columns
@@ -97,7 +112,7 @@ class TableContainer extends React.Component {
           cell={
             loaded
             ? <DataTableRow
-              indexMap={_indexMap}
+              indexMap={table.get('indexMap')}
               data={_data}
               col={col.id}
             />

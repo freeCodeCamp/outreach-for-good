@@ -3,15 +3,15 @@ import PropTypes from 'prop-types';
 
 import Divider from 'material-ui/Divider';
 import Dialog from 'material-ui/Dialog';
-import { List } from 'immutable';
+import { List, Map } from 'immutable';
 import Menu from 'material-ui/Menu';
 import MenuItem from 'material-ui/MenuItem';
 import Paper from 'material-ui/Paper';
 import Popover from 'material-ui/Popover';
 import RaisedButton from 'material-ui/RaisedButton';
 
-import TableContainer from './table-container';
 import TableModel from '../../models/table';
+import TableContainer from './table-container';
 import './data-table.scss';
 import './data-table-override.scss';
 

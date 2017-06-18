@@ -35,13 +35,13 @@ const SstTab = ({absenceRecords, ...props}) => {
     buttons
   };
 
-  return (
-    <DataTable
-      page={page}
-      data={absenceRecords}
-      {...props}
-    />
-  );
+  return props.table.get('selectedTab') === props.tabName
+    ? <DataTable
+        page={page}
+        data={absenceRecords}
+        {...props}
+      />
+    : null;
 };
 
 SstTab.propTypes = {
