@@ -5,6 +5,12 @@ import * as localActions from './dashboard.actions';
 import RaisedButtonModel from '../../models/raised-button';
 
 export const absenceRecordTableColumns = [{
+  title    : '+',
+  id       : 'school.name',
+  width    : 30,
+  flexGrow : 1,
+  fixed    : true
+}, {
   title    : 'Last Name',
   id       : 'student.lastName',
   width    : 125,
@@ -13,11 +19,6 @@ export const absenceRecordTableColumns = [{
 }, {
   title    : 'First Name',
   id       : 'student.firstName',
-  width    : 125,
-  flexGrow : 1
-}, {
-  title    : 'School',
-  id       : 'school.name',
   width    : 125,
   flexGrow : 1
 }, {
