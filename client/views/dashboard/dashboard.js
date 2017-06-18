@@ -30,10 +30,9 @@ class DashboardPage extends React.Component {
 
     // Register Initial Component State
     let nextTable = table.setSelectedTab(table, 'Student');
-    nextTable = table.setGroupColumn(nextTable, 'school.name');
-    nextTable = table.setGroupDisplayColumns(nextTable, 'student.lastName',
-      ['entry.absences', 'entry.absencesDelta', 'entry.tardies', 'entry.tardiesDelta',
-        'entry.present', 'entry.enrolled']);
+    nextTable = table.setFixedColumn(nextTable, 'school.name', 'student.lastName');
+    nextTable = table.setGroupAggregateColumns(nextTable, ['entry.absences', 'entry.absencesDelta',
+      'entry.tardies', 'entry.tardiesDelta', 'entry.present', 'entry.enrolled']);
     nextTable = this.initClickActions(nextTable);
     this.state = { table: nextTable };
   }
@@ -102,9 +101,7 @@ class DashboardPage extends React.Component {
     let nextTable = table.updateSortCol(this.state.table, '');
     nextTable = table.buildIndexMap(nextTable, this.props.absenceRecords);
     nextTable = table.sortDataByCol(nextTable, this.props.absenceRecords);
-    nextTable = table.setupGroupIndices(nextTable, this.props.absenceRecords);
-    nextTable = table.addGroupRowsToIndexMap(nextTable);
-    nextTable = table.setupGroupCollapseRows(nextTable, this.props.absenceRecords);
+    nextTable = table.setupFixedGroups(nextTable, this.props.absenceRecords);
     nextTable = table.enableFiltering(nextTable);
     this.setState({table: nextTable, loadResolved: true});
   }
@@ -171,7 +168,7 @@ class DashboardPage extends React.Component {
   }
 
   handleToggleSelectedRow = (nextTable, index) => {
-    if(table.getGroupColumn(this.state.table)
+    if(table.getFixedColumn(this.state.table)
         && table.getCorrectedGroupIndices(this.state.table).indexOf(index) !== -1) {
       nextTable = table.setCollapsedRow(this.state.table, index);
     } else {
@@ -183,9 +180,7 @@ class DashboardPage extends React.Component {
   handleToggleSortCol = (nextTable, data) => {
     nextTable = table.updateSortCol(this.state.table, data);
     nextTable = table.sortDataByCol(nextTable, this.props.absenceRecords);
-    nextTable = table.setupGroupIndices(nextTable, this.props.absenceRecords);
-    nextTable = table.addGroupRowsToIndexMap(nextTable);
-    nextTable = table.setupGroupCollapseRows(nextTable, this.props.absenceRecords);
+    nextTable = table.setupFixedGroups(nextTable, this.props.absenceRecords);
     this.setState({table: nextTable});
   }
 

@@ -15,19 +15,22 @@ export const Table = Immutable.Record({
   sortDirection : locAct.SORT_ASC,
   sortCol       : '',
   filterEnabled : false,
+  // filterBy: {data_id: filter_value, ...}
+  filterBy      : Immutable.Map(),
   groupColumn   : Immutable.Map({
-    fixedColumn      : '',
-    displayColumn    : '',
-    aggregateColumns : [],
-    indices          : Immutable.List(),
-    collapsed        : Immutable.List(),
-    // In unaltered data, which index does each group start
-    groups           : Immutable.Map(/*{
-      absences : Immutable.Map({'School A': 100, ...})
+    fixedColumn      : '', // col which data is grouped by
+    displayColumn    : '', // used for Summary Row
+    aggregateColumns : Immutable.List(), // columns to sum() for Summary Row
+    groupIndices     : Immutable.List(), // first index of each group
+    collapsed        : Immutable.List(), // groups which are collapsed/expanded
+    summaryRows      : Immutable.Map(/*{
+      [corrected-index-##]: {
+        groupColumn: {count: ##, group: "School XX"},
+        entry.enrolled: ##,
+        entry...
+      }
     }*/)
   }),
-  // filterBy: {data_id: filter_value, ...}
-  filterBy    : Immutable.Map(),
   // used to display MaterialUI Components
   MuiPopovers : Immutable.Map(),
   MuiDialogs  : Immutable.Map(),
@@ -36,36 +39,57 @@ export const Table = Immutable.Record({
 
 class TableModel extends Table {
 
-  setSelectedTab(currentState, name) {
-    return currentState.set('selectedTab', name);
+  setSelectedTab(state, name) {
+    return state.set('selectedTab', name);
   }
 
   /**
-   * Set a fixed column group
+   * Column Groups
+   *  - Rows are sorted/filtered only within their designated group (or fixedColumn)
+   *  - 'school.name' is the fixedColumn in the context of this app
+   *  - fixedColumn includes a sumamry row and can be expanded/collapsed
+   *  - right-most column of the table should the same id as `fixedColumn` to add
+   *    an expansion indicator ( + ) column
    */
-  setGroupColumn(currentState, colName) {
-    return currentState.update('groupColumn', groupColumn =>
+  setFixedColumn(state, colName, summaryColumn) {
+    let nextState = summaryColumn // optional shorthand, set both in one call
+      ? this.setGroupSummaryColumn(state, summaryColumn)
+      : state;
+    return nextState.update('groupColumn', groupColumn =>
       groupColumn.set('fixedColumn', colName));
   }
 
-  getGroupColumn(currentState) {
-    return currentState.get('groupColumn').get('fixedColumn');
+  getFixedColumn(state) {
+    return state.get('groupColumn').get('fixedColumn');
   }
 
-  setGroupDisplayColumns(currentState, displayColumn, aggregateColumns) {
-    return currentState.update('groupColumn', groupColumn =>
-      groupColumn.merge({
-        displayColumn,
-        aggregateColumns : Immutable.List(aggregateColumns)
-      }));
+  // displayColumn: col where fixedGroup name and count are displayed, ex. School A (10)
+  setGroupSummaryColumn(state, displayColumn) {
+    return state.update('groupColumn', groupColumn =>
+      groupColumn.set('displayColumn', displayColumn));
   }
 
-  // input data sorted by groupColumn, generates groupColumn.summaryRows[]
-  setupGroupIndices(currentState, data) {
-    let groupColumn = this.getGroupColumn(currentState);
+  // aggregateColumns: cols that are added togeather to generate totals for sumamry row
+  setGroupAggregateColumns(state, aggregateColumns) {
+    return state.update('groupColumn', groupColumn =>
+      groupColumn.set('aggregateColumns', Immutable.List(aggregateColumns)));
+  }
+
+  // Shorthand for tasks required to setup dataTable for fixed column groups
+  setupFixedGroups(state, data) {
+    let nextState = this.setupGroupIndices(state, data);
+    nextState = this.addGroupRowsToIndexMap(nextState);
+    return this.setupGroupSummaryRows(nextState, data);
+  }
+
+  // Generate groupColumn.indices
+  //  - List() of indices where each new Group begins
+  //  - Not corrected for the extra data.length caused by Summary Row insertions
+  setupGroupIndices(state, data) {
+    let groupColumn = state.get('groupColumn').get('fixedColumn');
     let previousValue = data.get(0).get(groupColumn);
-    return currentState.update('groupColumn', nextGroupColumn =>
-      nextGroupColumn.set('indices', data.reduce((a, row, i) => {
+    return state.update('groupColumn', nextGroupColumn =>
+      nextGroupColumn.set('groupIndices', data.reduce((a, row, i) => {
         if(row.get(groupColumn) === previousValue) return a;
         previousValue = row.get(groupColumn);
         return a.push(i);
@@ -73,27 +97,28 @@ class TableModel extends Table {
     ));
   }
 
-  getCorrectedGroupIndices(currentState) {
-    return currentState.get('groupColumn').get('indices').map((v, i) => v + i);
+  // Indices where Summary Rows go, accounting for # of previous rows inserted
+  getCorrectedGroupIndices(state) {
+    return state.get('groupColumn').get('groupIndices').map((v, i) => v + i);
   }
 
-  // input data sorted by groupColumn, generates groupColumn.summaryRows[]
-  addGroupRowsToIndexMap(currentState) {
-    let nextIndexMap = currentState.get('indexMap');
-    currentState.get('groupColumn').get('indices')
-      .forEach((v, k) => {
-        nextIndexMap = nextIndexMap.splice(v + k, 0, nextIndexMap.size);
-      });
-    return currentState.update('indexMap', () => nextIndexMap);
+  // Insert groupColumn Sumamry Row index locations into indexMap
+  //  - value = indexMap.size because Summary Rows will be pushed to the end of the data
+  //  - must account for indices increasing the indexMap size with each insertion
+  addGroupRowsToIndexMap(state) {
+    return state.update('indexMap', indexMap =>
+      state.get('groupColumn').get('groupIndices').reduce((_indexMap, indice, i) =>
+        _indexMap.splice(indice + i, 0, _indexMap.size), indexMap));
   }
 
-  // input data sorted by groupColumn, generates groupColumn.summaryRows[]
-  setupGroupCollapseRows(currentState, data) {
-    let groupColumn = this.getGroupColumn(currentState);
-    let groupRowIndices = currentState.get('groupColumn').get('indices').toMap().flip();
+  // Generate counts and display data for each Summary Row
+  //  - needs to be refactored
+  setupGroupSummaryRows(state, data) {
+    let groupColumn = this.getFixedColumn(state);
+    let groupRowIndices = state.get('groupColumn').get('groupIndices').toMap().flip();
     let count = -1;
-    return currentState.update('groupColumn', nextGroupColumn =>
-      nextGroupColumn.update('groups', () =>
+    return state.update('groupColumn', nextGroupColumn =>
+      nextGroupColumn.update('summaryRows', () =>
         groupRowIndices.reduce((a, i, indice) => {
           count += 1;
           let rowIndex = indice + count;
@@ -104,22 +129,22 @@ class TableModel extends Table {
               group : data.get(indice + 1).get(groupColumn),
               count : recordCount
             })
-          }).concat(this.getRowAggregateRecord(currentState, data.slice(rowIndex - count, rowIndex + recordCount))));
+          }).concat(this.getRowAggregateRecord(state, data.slice(rowIndex - count, rowIndex + recordCount))));
         }, Immutable.Map()))
     );
   }
 
   // input data sorted by groupColumn, generates groupColumn.summaryRows[]
-  getRowAggregateRecord(currentState, data) {
-    let aggregateColumns = currentState.get('groupColumn').get('aggregateColumns').toMap().flip().map(() => 0);
+  getRowAggregateRecord(state, data) {
+    let aggregateColumns = state.get('groupColumn').get('aggregateColumns').toMap().flip().map(() => 0);
     return data.reduce((a, row) => a.map((v, k) => row.get(k) + v), aggregateColumns);
   }
 
   // groupColumn is a column where rows of similar values sort togeather and don't speerate
-  sortBygroupColumn(currentState, data, sortCol, sortDirection) {
+  sortBygroupColumn(state, data, sortCol, sortDirection) {
     let groupMap = Immutable.Map();
     data.forEach((row, index) => {
-      let fixedColValue = row.get(this.getGroupColumn(currentState));
+      let fixedColValue = row.get(this.getFixedColumn(state));
       groupMap = groupMap.set(fixedColValue, groupMap.has(fixedColValue)
         ? groupMap.get(fixedColValue).push(index) : Immutable.List([index]));
     });
@@ -127,13 +152,13 @@ class TableModel extends Table {
       .reduce((a, v) => a.concat(v), Immutable.List());
   }
 
-  setCollapsedRow(currentState, mappedIndex) {
-    const target = currentState.get('groupColumn').get('collapsed').indexOf(mappedIndex);
+  setCollapsedRow(state, mappedIndex) {
+    const target = state.get('groupColumn').get('collapsed').indexOf(mappedIndex);
     if(target == -1) {
-      return currentState.update('groupColumn', nextGroupColumn =>
+      return state.update('groupColumn', nextGroupColumn =>
         nextGroupColumn.update('collapsed', i => i.push(mappedIndex)));
     } else {
-      return currentState.update('groupColumn', nextGroupColumn =>
+      return state.update('groupColumn', nextGroupColumn =>
         nextGroupColumn.update('collapsed', i => i.splice(target, 1)));
     }
   }
@@ -141,27 +166,28 @@ class TableModel extends Table {
   /**
    * Sort table by column
    */
-  buildIndexMap(currentState, data) {
-    return currentState.update('indexMap', () =>
+  buildIndexMap(state, data) {
+    return state.update('indexMap', () =>
       Immutable.List().setSize(data.size)
       .map((x, i) => i));
   }
 
-  updateSortCol(currentState, nextSortCol) {
-    let nextState = currentState.update('sortDirection', sortDir =>
-      nextSortCol == currentState.get('sortCol')
+  updateSortCol(state, nextSortCol) {
+    let nextState = state.update('sortDirection', sortDir =>
+      nextSortCol == state.get('sortCol')
       ? locAct.SORT_ASC == sortDir
         ? locAct.SORT_DESC : locAct.SORT_ASC : locAct.SORT_ASC);
     return nextState.update('sortCol', () => nextSortCol);
   }
 
-  sortDataByCol(currentState, data) {
-    let sortCol = currentState.get('sortCol');
-    let sortDirection = currentState.get('sortDirection') == locAct.SORT_ASC;
-    currentState = currentState.update('indexMap', indexMap => this.getGroupColumn(currentState)
-    ? this.sortBygroupColumn(currentState, data, sortCol, sortDirection)
+  // Sort index map, accounts for fixedColumn if set
+  sortDataByCol(state, data) {
+    let sortCol = state.get('sortCol');
+    let sortDirection = state.get('sortDirection') == locAct.SORT_ASC;
+    state = state.update('indexMap', indexMap => this.getFixedColumn(state)
+    ? this.sortBygroupColumn(state, data, sortCol, sortDirection)
     : this.sortIndexMap(indexMap, data, sortCol, sortDirection));
-    return currentState;
+    return state;
   }
 
   sortIndexMap(indexMap, data, sortCol, sortDirection) {
@@ -177,15 +203,15 @@ class TableModel extends Table {
   /**
    * Filter table by column
    */
-  updateFilterBy(currentState, data, id, filter) {
+  updateFilterBy(state, data, id, filter) {
     return this.filterIndexMap(
-      currentState.update('filterBy', filterBy =>
+      state.update('filterBy', filterBy =>
         filterBy.set(id, filter)), data);
   }
 
   // Enhancement: change filter algo based on adding or removing chars
-  filterIndexMap(currentState, data) {
-    let nextState = this.buildIndexMap(currentState, data);
+  filterIndexMap(state, data) {
+    let nextState = this.buildIndexMap(state, data);
     let filterBy = nextState.get('filterBy');
     return nextState.update('indexMap', indexMap => {
       filterBy.forEach((v, k) => {
@@ -199,43 +225,43 @@ class TableModel extends Table {
     });
   }
 
-  enableFiltering(currentState) {
-    return currentState.set('filterEnabled', true);
+  enableFiltering(state) {
+    return state.set('filterEnabled', true);
   }
 
   /**
    * Row Select and Highlighting
    */
-  toggleSelectedRowIndex(currentState, mappedIndex) {
-    let target = this.selectionToMappedIndicies(currentState).indexOf(mappedIndex);
+  toggleSelectedRowIndex(state, mappedIndex) {
+    let target = this.selectionToMappedIndicies(state).indexOf(mappedIndex);
     if(target == -1) { // target was not selected
-      let index = currentState.get('indexMap').get(mappedIndex);
-      return currentState.update('selectedIndex', i => i.push(index));
+      let index = state.get('indexMap').get(mappedIndex);
+      return state.update('selectedIndex', i => i.push(index));
     } else {
-      return currentState.update('selectedIndex', i => i.splice(target, 1));
+      return state.update('selectedIndex', i => i.splice(target, 1));
     }
   }
 
   // Returns `selectedIndex` mapped to table sort order
-  selectionToMappedIndicies(currentState) {
-    let indexMap = currentState.get('indexMap');
-    return currentState
+  selectionToMappedIndicies(state) {
+    let indexMap = state.get('indexMap');
+    return state
       .get('selectedIndex').map(index =>
         indexMap.indexOf(index));
   }
 
-  clearSelectedRows(currentState) {
-    return currentState.update('selectedIndex', i => i.clear());
+  clearSelectedRows(state) {
+    return state.update('selectedIndex', i => i.clear());
   }
 
   // Return data stored in selected rows
-  setSelectedRowData(currentState, data) {
-    return currentState.update('selectedData', i => i.clear().merge(data));
+  setSelectedRowData(state, data) {
+    return state.update('selectedData', i => i.clear().merge(data));
   }
 
   // Return string of comma seperated cell values (from selection)
-  selectedRowsToCsv(currentState, column) {
-    return currentState.get('selectedData')
+  selectedRowsToCsv(state, column) {
+    return state.get('selectedData')
       .map(row => row[column])
       .join(', ');
   }
@@ -243,38 +269,38 @@ class TableModel extends Table {
   /**
    * Material-UI <Popover>
    */
-  addPopovers(currentState, popoverValues) {
-    return currentState.update('MuiPopovers', i => i.clear().merge(popoverValues));
+  addPopovers(state, popoverValues) {
+    return state.update('MuiPopovers', i => i.clear().merge(popoverValues));
   }
 
-  togglePopovers(currentState, popoverValue) {
-    return currentState.update('MuiPopovers', iMap =>
-      iMap.update(popoverValue, state => !state));
+  togglePopovers(state, popoverValue) {
+    return state.update('MuiPopovers', iMap =>
+      iMap.update(popoverValue, currentState => !currentState));
   }
 
-  resetPopovers(currentState) {
-    return currentState.update('MuiPopovers', iMap => iMap.map(() => false));
+  resetPopovers(state) {
+    return state.update('MuiPopovers', iMap => iMap.map(() => false));
   }
 
   // Set anchor element for <Popover> menu
-  setAnchor(currentState, anchor) {
-    return currentState.set('MuiAnchor', anchor);
+  setAnchor(state, anchor) {
+    return state.set('MuiAnchor', anchor);
   }
 
   /**
    * Material-UI <Dialog>
    */
-  addDialogs(currentState, dialogValues) {
-    return currentState.update('MuiDialogs', i => i.clear().merge(dialogValues));
+  addDialogs(state, dialogValues) {
+    return state.update('MuiDialogs', i => i.clear().merge(dialogValues));
   }
 
-  toggleDialogs(currentState, dialogValue) {
-    return currentState.update('MuiDialogs', iMap =>
-      iMap.update(dialogValue, state => !state));
+  toggleDialogs(state, dialogValue) {
+    return state.update('MuiDialogs', iMap =>
+      iMap.update(dialogValue, currentState => !currentState));
   }
 
-  resetDialogs(currentState) {
-    return currentState.update('MuiDialogs', iMap => iMap.map(() => false));
+  resetDialogs(state) {
+    return state.update('MuiDialogs', iMap => iMap.map(() => false));
   }
 }
 

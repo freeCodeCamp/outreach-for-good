@@ -45,9 +45,6 @@ class TableContainer extends React.Component {
     this.props.clickHandler('changeFilterCol', event.target.id, event.target.value);
   }
 
-  usingRowGroups = () =>
-    this.props.table.getGroupColumn(this.props.table);
-
   render() {
     const {
       data,
@@ -57,23 +54,24 @@ class TableContainer extends React.Component {
       view
     } = this.props;
     const groupCol = table.get('groupColumn');
-    const fixedColumn = this.usingRowGroups();
+    const fixedColumn = table.getFixedColumn(table);
 
     let _data = data;
     let _indexMap = table.get('indexMap');
     if(fixedColumn) {
       const displayColumn = groupCol.get('displayColumn');
-      const groups = groupCol.get('groups');
-      const groupIndices = groupCol.get('indices');
+      const summaryRows = groupCol.get('summaryRows');
+      const groupIndices = groupCol.get('groupIndices');
       let count = -1;
       groupIndices.forEach(i => {
         count += 1;
+        console.log(summaryRows.toJS());
         _data = _data.push(_data.get(0).map((v, k) => {
           if(k === displayColumn) {
-            return `${groups.get(i + count).get('groupColumn').get('group')}
-              (${groups.get(i + count).get('groupColumn').get('count')})`;
-          } else if(groups.get(i + count).get(k) !== null) {
-            return groups.get(i + count).get(k);
+            return `${summaryRows.get(i + count).get('groupColumn').get('group')}
+              (${summaryRows.get(i + count).get('groupColumn').get('count')})`;
+          } else if(summaryRows.get(i + count).get(k) !== null) {
+            return summaryRows.get(i + count).get(k);
           }
           return '';
         }));
@@ -123,7 +121,6 @@ class TableContainer extends React.Component {
               data={_data}
               col={col.id}
               fixedColumn={fixedColumn}
-              onClick={() => {console.log('click')}}
             />
             : <Cell className="cell-loading">
                 <i className="fa fa-refresh fa-spin" />
