@@ -5,7 +5,7 @@ import { browserHistory} from 'react-router';
 import RTRouter from './router';
 //import {getAllUsers} from './actions/userActions'; // named import, shorter syntax
 
-import configureStore from './store/configureStore';
+import configureStore from './store/configure-store';
 import {Provider} from 'react-redux';
 import './styles/styles.scss';
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
