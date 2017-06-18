@@ -75,7 +75,7 @@ class TableContainer extends React.Component {
           return '';
         }));
       });
-      //_indexMap = table.removeCollapsedDataFromIndexMap(table, _data.size);
+      _indexMap = table.removeCollapsedDataFromIndexMap(table, _data.size);
     }
 
     return (

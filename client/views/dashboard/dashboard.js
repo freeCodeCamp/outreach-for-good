@@ -186,10 +186,10 @@ class DashboardPage extends React.Component {
 
   handleChangeColFilter = (nextTable, data, event) => {
     //console.log(data.substr(7), event);
-    let tabData = this.state.table.get('selectedTab') == 'users'
-        ? this.props.absenceRecords : this.props.absenceRecords;
+    let tabData = this.props.absenceRecords;
     nextTable = table.updateFilterBy(this.state.table, tabData, data.substr(7), event);
     nextTable = table.sortDataByCol(nextTable, tabData);
+    nextTable = table.setupFixedGroups(nextTable, tabData);
     this.setState({table: nextTable});
   }
 

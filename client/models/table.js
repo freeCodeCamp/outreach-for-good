@@ -140,18 +140,6 @@ class TableModel extends Table {
     return data.reduce((a, row) => a.map((v, k) => row.get(k) + v), aggregateColumns);
   }
 
-  // groupColumn is a column where rows of similar values sort togeather and don't speerate
-  sortBygroupColumn(state, data, sortCol, sortDirection) {
-    let groupMap = Immutable.Map();
-    data.forEach((row, index) => {
-      let fixedColValue = row.get(this.getFixedColumn(state));
-      groupMap = groupMap.set(fixedColValue, groupMap.has(fixedColValue)
-        ? groupMap.get(fixedColValue).push(index) : Immutable.List([index]));
-    });
-    return groupMap.map(indexMap => this.sortIndexMap(indexMap, data, sortCol, sortDirection))
-      .reduce((a, v) => a.concat(v), Immutable.List());
-  }
-
   // Adds/removes row index from a List() of collapsed rows
   toggleCollapsedRow(state, mappedIndex) {
     const target = state.get('groupColumn').get('collapsed').indexOf(mappedIndex);
@@ -178,6 +166,18 @@ class TableModel extends Table {
     }, state.get('indexMap'));
   }
 
+  // groupColumn is a column where rows of similar values sort togeather and don't speerate
+  sortByGroupColumn(state, data, sortCol, sortDirection) {
+    let groupMap = Immutable.Map();
+    data.forEach((row, index) => {
+      let fixedColValue = row.get(this.getFixedColumn(state));
+      groupMap = groupMap.set(fixedColValue, groupMap.has(fixedColValue)
+        ? groupMap.get(fixedColValue).push(index) : Immutable.List([index]));
+    });
+    return groupMap.map(indexMap => this.sortIndexMap(indexMap, data, sortCol, sortDirection))
+      .reduce((a, v) => a.concat(v), Immutable.List());
+  }
+
   /**
    * Sort table by column
    */
@@ -200,7 +200,7 @@ class TableModel extends Table {
     let sortCol = state.get('sortCol');
     let sortDirection = state.get('sortDirection') == locAct.SORT_ASC;
     state = state.update('indexMap', indexMap => this.getFixedColumn(state)
-    ? this.sortBygroupColumn(state, data, sortCol, sortDirection)
+    ? this.sortByGroupColumn(state, data, sortCol, sortDirection)
     : this.sortIndexMap(indexMap, data, sortCol, sortDirection));
     return state;
   }
@@ -218,10 +218,9 @@ class TableModel extends Table {
   /**
    * Filter table by column
    */
-  updateFilterBy(state, data, id, filter) {
-    return this.filterIndexMap(
-      state.update('filterBy', filterBy =>
-        filterBy.set(id, filter)), data);
+  updateFilterBy(state, data, colId, filter) {
+    return state.update('filterBy', filterBy =>
+      filterBy.set(colId, filter));
   }
 
   // Enhancement: change filter algo based on adding or removing chars
