@@ -10,8 +10,6 @@ import TableModel from '../../models/table';
 import './data-table.scss';
 import './data-table-override.scss';
 
-const _table = new TableModel();
-
 class TableContainer extends React.Component {
   shouldComponentUpdate(nextProps) {
     //console.log(nextProps.table.get('indexMap'), nextProps.data);
@@ -22,7 +20,8 @@ class TableContainer extends React.Component {
       || this.props.table.get('indexMap') !== nextProps.table.get('indexMap')
       || this.props.table.get('selectedIndex') !== nextProps.table.get('selectedIndex')
       || this.props.table.get('sortCol') !== nextProps.table.get('sortCol')
-      || this.props.table.get('sortDirection') !== nextProps.table.get('sortDirection');
+      || this.props.table.get('sortDirection') !== nextProps.table.get('sortDirection')
+      || this.props.table.get('groupColumn') !== nextProps.table.get('groupColumn');
   }
 
   /**
@@ -58,27 +57,35 @@ class TableContainer extends React.Component {
       view
     } = this.props;
     const groupCol = table.get('groupColumn');
+    const fixedColumn = this.usingRowGroups();
 
     let _data = data;
-    if(this.usingRowGroups()) {
+    let _indexMap = table.get('indexMap');
+    if(fixedColumn) {
       const displayColumn = groupCol.get('displayColumn');
       const groups = groupCol.get('groups');
-      //console.log('render', groups.toJS());
+      const groupIndices = groupCol.get('indices');
       let count = -1;
-      groupCol.get('indices')
-        .forEach(i => {
-          count += 1;
-          _data = _data.push(_data.get(0).map((v, k) => {
-            console.log(groups.get(i + count).toJS(), k);
-            if(k === displayColumn) {
-              return `${groups.get(i + count).get('groupColumn').get('group')}
-                (${groups.get(i + count).get('groupColumn').get('count')})`;
-            } else if(groups.get(i + count).get(k) !== null) {
-              return groups.get(i + count).get(k);
-            }
-            return '';
-          }));
-        });
+      groupIndices.forEach(i => {
+        count += 1;
+        _data = _data.push(_data.get(0).map((v, k) => {
+          if(k === displayColumn) {
+            return `${groups.get(i + count).get('groupColumn').get('group')}
+              (${groups.get(i + count).get('groupColumn').get('count')})`;
+          } else if(groups.get(i + count).get(k) !== null) {
+            return groups.get(i + count).get(k);
+          }
+          return '';
+        }));
+      });
+      const correctedGroupIndices = table.getCorrectedGroupIndices(table);
+      groupCol.get('collapsed').forEach(indice => {
+        let nextIndice = correctedGroupIndices.findEntry(v => v > indice);
+        let recordCount = nextIndice ? nextIndice[1] - indice : _data.size - indice;
+        let frontsideRange = [0, indice + 1];
+        let backsideRange = [indice + recordCount, _data.size];
+        _indexMap = _indexMap.slice(...frontsideRange).concat(_indexMap.slice(...backsideRange));
+      });
     }
 
     return (
@@ -87,7 +94,7 @@ class TableContainer extends React.Component {
         headerHeight={table.get('filterEnabled')
           ? table.get('filterHeaderHeight') || 60
           : table.get('headerHeight') || 30}
-        rowsCount={loaded ? table.get('indexMap').size : 1}
+        rowsCount={loaded ? _indexMap.size : 1}
         width={view.width || 100}
         maxHeight={view.height}
         onRowClick={this.rowToggleSelected}
@@ -112,9 +119,11 @@ class TableContainer extends React.Component {
           cell={
             loaded
             ? <DataTableRow
-              indexMap={table.get('indexMap')}
+              indexMap={_indexMap}
               data={_data}
               col={col.id}
+              fixedColumn={fixedColumn}
+              onClick={() => {console.log('click')}}
             />
             : <Cell className="cell-loading">
                 <i className="fa fa-refresh fa-spin" />

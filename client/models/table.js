@@ -20,6 +20,7 @@ export const Table = Immutable.Record({
     displayColumn    : '',
     aggregateColumns : [],
     indices          : Immutable.List(),
+    collapsed        : Immutable.List(),
     // In unaltered data, which index does each group start
     groups           : Immutable.Map(/*{
       absences : Immutable.Map({'School A': 100, ...})
@@ -72,6 +73,10 @@ class TableModel extends Table {
     ));
   }
 
+  getCorrectedGroupIndices(currentState) {
+    return currentState.get('groupColumn').get('indices').map((v, i) => v + i);
+  }
+
   // input data sorted by groupColumn, generates groupColumn.summaryRows[]
   addGroupRowsToIndexMap(currentState) {
     let nextIndexMap = currentState.get('indexMap');
@@ -120,6 +125,17 @@ class TableModel extends Table {
     });
     return groupMap.map(indexMap => this.sortIndexMap(indexMap, data, sortCol, sortDirection))
       .reduce((a, v) => a.concat(v), Immutable.List());
+  }
+
+  setCollapsedRow(currentState, mappedIndex) {
+    const target = currentState.get('groupColumn').get('collapsed').indexOf(mappedIndex);
+    if(target == -1) {
+      return currentState.update('groupColumn', nextGroupColumn =>
+        nextGroupColumn.update('collapsed', i => i.push(mappedIndex)));
+    } else {
+      return currentState.update('groupColumn', nextGroupColumn =>
+        nextGroupColumn.update('collapsed', i => i.splice(target, 1)));
+    }
   }
 
   /**
@@ -192,8 +208,8 @@ class TableModel extends Table {
    */
   toggleSelectedRowIndex(currentState, mappedIndex) {
     let target = this.selectionToMappedIndicies(currentState).indexOf(mappedIndex);
-    if(target == -1) {
-      let index = currentState.get('indexMap')[mappedIndex];
+    if(target == -1) { // target was not selected
+      let index = currentState.get('indexMap').get(mappedIndex);
       return currentState.update('selectedIndex', i => i.push(index));
     } else {
       return currentState.update('selectedIndex', i => i.splice(target, 1));

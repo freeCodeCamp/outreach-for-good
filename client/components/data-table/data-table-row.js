@@ -17,14 +17,24 @@ const getColumn = (data, indexMap, rowIndex, col) => {
   }
 };
 
-const DataTableRow = ({rowIndex, indexMap, data, col, ...props}) => <Cell {...props}>
-      {indexMap.size > 0 && data && data.size
-        // ? data.get(indexMap[rowIndex]).get(col)
+const getFixedColumn = (data, indexMap, rowIndex, col) => {
+  let value = data.get(indexMap.get(rowIndex)).get(col);
+  if(value) {
+    return '';
+  } else {
+    return <b>+</b>;
+  }
+};
+
+const DataTableRow = ({rowIndex, indexMap, data, col, fixedColumn, ...props}) => <Cell {...props}>
+  {fixedColumn && col === fixedColumn
+    ? getFixedColumn(data, indexMap, rowIndex, col)
+    : indexMap.size > 0 && data && data.size
         ? getColumn(data, indexMap, rowIndex, col)
-        : ''}
+        : ''
+  }
       {/*console.log('Rendering row: ', rowIndex)*/}
   </Cell>
-          //data.get(rowIndex).get(col)
 ;
 
 DataTableRow.propTypes = {

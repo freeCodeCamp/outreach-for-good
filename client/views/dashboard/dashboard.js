@@ -170,8 +170,13 @@ class DashboardPage extends React.Component {
     this.setState({table: nextTable});
   }
 
-  handleToggleSelectedRow = (nextTable, data) => {
-    nextTable = table.toggleSelectedRowIndex(this.state.table, data);
+  handleToggleSelectedRow = (nextTable, index) => {
+    if(table.getGroupColumn(this.state.table)
+        && table.getCorrectedGroupIndices(this.state.table).indexOf(index) !== -1) {
+      nextTable = table.setCollapsedRow(this.state.table, index);
+    } else {
+      nextTable = table.toggleSelectedRowIndex(this.state.table, index);
+    }
     this.setState({table: nextTable});
   }
 
