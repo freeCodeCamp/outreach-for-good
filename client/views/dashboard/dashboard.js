@@ -170,7 +170,7 @@ class DashboardPage extends React.Component {
   handleToggleSelectedRow = (nextTable, index) => {
     if(table.getFixedColumn(this.state.table)
         && table.getCorrectedGroupIndices(this.state.table).indexOf(index) !== -1) {
-      nextTable = table.setCollapsedRow(this.state.table, index);
+      nextTable = table.toggleCollapsedRow(this.state.table, index);
     } else {
       nextTable = table.toggleSelectedRowIndex(this.state.table, index);
     }

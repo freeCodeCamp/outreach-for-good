@@ -152,7 +152,8 @@ class TableModel extends Table {
       .reduce((a, v) => a.concat(v), Immutable.List());
   }
 
-  setCollapsedRow(state, mappedIndex) {
+  // Adds/removes row index from a List() of collapsed rows
+  toggleCollapsedRow(state, mappedIndex) {
     const target = state.get('groupColumn').get('collapsed').indexOf(mappedIndex);
     if(target == -1) {
       return state.update('groupColumn', nextGroupColumn =>
@@ -161,6 +162,20 @@ class TableModel extends Table {
       return state.update('groupColumn', nextGroupColumn =>
         nextGroupColumn.update('collapsed', i => i.splice(target, 1)));
     }
+  }
+
+  // DataTable Inline Function
+  //  - remove collapsed indices from indexMap before rendering
+  //  - return: indexMap
+  removeCollapsedDataFromIndexMap(state, dataSize) {
+    const correctedGroupIndices = this.getCorrectedGroupIndices(state);
+    return state.get('groupColumn').get('collapsed').reduce((_indexMap, indice) => {
+      let nextIndice = correctedGroupIndices.findEntry(v => v > indice);
+      let recordCount = nextIndice ? nextIndice[1] - indice : dataSize - indice;
+      let frontsideRange = [0, indice + 1];
+      let backsideRange = [indice + recordCount, dataSize];
+      return _indexMap.slice(...frontsideRange).concat(_indexMap.slice(...backsideRange));
+    }, state.get('indexMap'));
   }
 
   /**

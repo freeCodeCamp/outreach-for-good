@@ -65,7 +65,6 @@ class TableContainer extends React.Component {
       let count = -1;
       groupIndices.forEach(i => {
         count += 1;
-        console.log(summaryRows.toJS());
         _data = _data.push(_data.get(0).map((v, k) => {
           if(k === displayColumn) {
             return `${summaryRows.get(i + count).get('groupColumn').get('group')}
@@ -76,14 +75,7 @@ class TableContainer extends React.Component {
           return '';
         }));
       });
-      const correctedGroupIndices = table.getCorrectedGroupIndices(table);
-      groupCol.get('collapsed').forEach(indice => {
-        let nextIndice = correctedGroupIndices.findEntry(v => v > indice);
-        let recordCount = nextIndice ? nextIndice[1] - indice : _data.size - indice;
-        let frontsideRange = [0, indice + 1];
-        let backsideRange = [indice + recordCount, _data.size];
-        _indexMap = _indexMap.slice(...frontsideRange).concat(_indexMap.slice(...backsideRange));
-      });
+      //_indexMap = table.removeCollapsedDataFromIndexMap(table, _data.size);
     }
 
     return (
