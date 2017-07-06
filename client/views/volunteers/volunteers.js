@@ -1,7 +1,10 @@
 import React, {Component} from 'react';
+import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 
+import Dialog from 'material-ui/Dialog';
+import FlatButton from 'material-ui/FlatButton';
 import {Tabs, Tab} from 'material-ui/Tabs';
 
 import ParentTracker from './tabs/parent-tracker';
@@ -38,49 +41,90 @@ const simpleTableData = [
 
 class Volunteers extends Component {
   state = {
-    school : null
+    school : null,
+    modal  : false
   }
 
   componentDidMount() {
     this.props.actions.getAllSchools();
   }
 
+  componentWillUnmount() {
+    this.setState({ school: null });
+  }
+
   changeSchool = (e, i, school) => {
     this.setState({ school });
   }
 
+  handleModal = () => {
+    const {modal} = this.state;
+    this.setState({ modal: !modal });
+  }
+
   render() {
+    const {school, modal} = this.state;
+
+    const actions = [
+      <FlatButton key="cancel"
+        label="Cancel"
+        primary
+        onTouchTap={this.addVolunteer}
+      />,
+      <FlatButton key="add"
+        label="Submit"
+        primary
+        keyboardFocused
+        onTouchTap={this.addVolunteer}
+      />,
+    ];
+
     return (
       <div className="volunteers">
         <div className="aggregates">
           <SchoolSelect
-            value={this.state.school}
+            value={school}
             schools={this.props.schools}
             changeSchool={this.changeSchool}
           />
-          <SimpleTable
-            columns={columns}
-            data={simpleTableData}
-          />
+          {school
+            && <SimpleTable
+              columns={columns}
+              data={simpleTableData}
+            />}
         </div>
         <div className="tabs">
-          <Tabs>
-            <Tab label="Volunteer Tracker">
-              <VolunteerTracker
-                dataSource={[]}
-                handleUpdateInput={e => console.log(e)}
-                handleAddVolunteer={e => console.log(e)}
-              />
-            </Tab>
-            <Tab label="Parent Tracker">
-              <ParentTracker />
-            </Tab>
-          </Tabs>
+          {school
+            && <Tabs>
+              <Tab label="Volunteer Tracker">
+                <VolunteerTracker
+                  data={[]}
+                  handleUpdate={this.handleModal}
+                  handleAdd={this.handleModal}
+                />
+              </Tab>
+              <Tab label="Parent Tracker">
+                <ParentTracker />
+              </Tab>
+            </Tabs>
+          }
         </div>
+        <Dialog
+          title="Add Volunteer"
+          actions={actions}
+          modal={false}
+          open={modal}
+          onRequestClose={this.handleModal}
+         />
       </div>
     );
   }
 }
+
+Volunteers.propTypes = {
+  actions : PropTypes.object,
+  schools : PropTypes.object
+};
 
 function mapStateToProps(state) {
   return {
