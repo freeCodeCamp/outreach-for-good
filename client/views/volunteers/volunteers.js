@@ -5,20 +5,23 @@ import {bindActionCreators} from 'redux';
 
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
+import {RadioButton, RadioButtonGroup} from 'material-ui/RadioButton';
 import {Tabs, Tab} from 'material-ui/Tabs';
+import TextField from 'material-ui/TextField';
 
 import ParentTracker from './tabs/parent-tracker';
 import VolunteerTracker from './tabs/volunteer-tracker';
 
 import SchoolSelect from '../../components/school-select/school-select';
 import SimpleTable from '../../components/simple-table/simple-table';
+
 import * as schoolActions from '../../modules/school';
+import * as volunteerActions from '../../modules/volunteers';
 
 import './volunteers.scss';
 
 const columns = [
-  '',
-  'Aug / Σ',
+  'Category',
   'Sept / Σ',
   'Oct / Σ',
   'Nov / Σ',
@@ -46,7 +49,7 @@ class Volunteers extends Component {
   }
 
   componentDidMount() {
-    this.props.actions.getAllSchools();
+    this.props.schoolActions.getAllSchools();
   }
 
   componentWillUnmount() {
@@ -54,7 +57,24 @@ class Volunteers extends Component {
   }
 
   changeSchool = (e, i, school) => {
+    this.props.volunteerActions.getVolunteers(school._id);
+
     this.setState({ school });
+  }
+
+  handleAddVolunteer = e => {
+    e.preventDefault();
+
+    const volunteer = {
+      firstName : e.target['first-name'].value,
+      lastName  : e.target['last-name'].value,
+      type      : e.target['volunteer-type'].value
+    };
+
+    this.props.volunteerActions.addVolunteer(volunteer);
+    e.target.reset();
+
+    this.handleModal();
   }
 
   handleModal = () => {
@@ -69,33 +89,36 @@ class Volunteers extends Component {
       <FlatButton key="cancel"
         label="Cancel"
         primary
-        onTouchTap={this.addVolunteer}
+        onTouchTap={this.handleModal}
       />,
       <FlatButton key="add"
         label="Submit"
-        primary
+        type="submit"
+        form="add-volunteer"
         keyboardFocused
-        onTouchTap={this.addVolunteer}
+        // onTouchTap={this.addVolunteer}
+        primary
       />,
     ];
 
     return (
       <div className="volunteers">
-        <div className="aggregates">
+        <div className="selector">
           <SchoolSelect
             value={school}
             schools={this.props.schools}
             changeSchool={this.changeSchool}
           />
-          {school
-            && <SimpleTable
-              columns={columns}
-              data={simpleTableData}
-            />}
         </div>
         <div className="tabs">
           {school
             && <Tabs>
+              <Tab label="Overview">
+                <SimpleTable
+                  columns={columns}
+                  data={simpleTableData}
+                />
+              </Tab>
               <Tab label="Volunteer Tracker">
                 <VolunteerTracker
                   data={[]}
@@ -103,7 +126,7 @@ class Volunteers extends Component {
                   handleAdd={this.handleModal}
                 />
               </Tab>
-              <Tab label="Parent Tracker">
+              <Tab label="Parent Tracker" disabled>
                 <ParentTracker />
               </Tab>
             </Tabs>
@@ -114,16 +137,44 @@ class Volunteers extends Component {
           actions={actions}
           modal={false}
           open={modal}
-          onRequestClose={this.handleModal}
-         />
+          onRequestClose={this.handleModal}>
+          <form onSubmit={this.handleAddVolunteer} id="add-volunteer">
+            <TextField
+              id="volunteer-first-name"
+              name="first-name"
+              floatingLabelText="First Name"
+            />
+            <TextField
+              id="volunteer-last-name"
+              name="last-name"
+              floatingLabelText="Last Name"
+            />
+
+            <RadioButtonGroup name="volunteer-type" defaultSelected="family-volunteer">
+              <RadioButton
+                value="family"
+                label="Family Volunteer"
+              />
+              <RadioButton
+                value="community"
+                label="Community Volunteer"
+              />
+              <RadioButton
+                value="student"
+                label="Student Volunteer"
+              />
+            </RadioButtonGroup>
+          </form>
+        </Dialog>
       </div>
     );
   }
 }
 
 Volunteers.propTypes = {
-  actions : PropTypes.object,
-  schools : PropTypes.object
+  schoolActions    : PropTypes.object,
+  volunteerActions : PropTypes.object,
+  schools          : PropTypes.object
 };
 
 function mapStateToProps(state) {
@@ -134,7 +185,8 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    actions : bindActionCreators(schoolActions, dispatch)
+    schoolActions    : bindActionCreators(schoolActions, dispatch),
+    volunteerActions : bindActionCreators(volunteerActions, dispatch)
   };
 }
 
