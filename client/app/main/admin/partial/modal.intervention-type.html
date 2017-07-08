@@ -1,0 +1,10 @@
+<div class="form-group">
+  <label class="control-label">Intervention Title:</label>
+  <input type="text" class="form-control" name="title" ng-model="model.title" placeholder="Intervention Title" required>
+
+  <label class="control-label">Intervention Description:</label>
+  <input type="text" class="form-control" name="description" ng-model="model.description" placeholder="Intervention Description" required />
+
+  <p class="help-block error-text" ng-if="(form.$dirty || form.$submitted) && form.$invalid">The school name is
+    required</p>
+</div>

@@ -7,6 +7,7 @@
 
 var AbsenceRecord = require('../api/absence-record/absence-record.model');
 var School = require('../api/school/school.model');
+var Setting = require('../api/setting/setting.model');
 var Student = require('../api/student/student.model');
 var Outreach = require('../api/student/outreach/outreach.model');
 var Intervention = require('../api/student/intervention/intervention.model');
@@ -19,6 +20,8 @@ AbsenceRecord.remove().exec().then(function() {
   return Intervention.remove().exec();
 }).then(function() {
   return School.remove().exec();
+}).then(function() {
+  return Setting.remove().exec();
 }).then(function() {
   return Student.remove().exec();
 }).then(function() {
@@ -47,17 +50,17 @@ AbsenceRecord.remove().exec().then(function() {
 }).then(function(schoolA, schoolB) {
   // Fake names from http://homepage.net/name_generator/
   return Student.create({
-    studentId: 'sid001',
+    studentId: '1187755',
     lastName: 'Graham',
     firstName: 'Brandon',
     school: schoolA._id
   }, {
-    studentId: 'sid002',
+    studentId: '1189407',
     lastName: 'Simpson',
     firstName: 'Dan',
     school: schoolA._id
   }, {
-    studentId: 'sid003',
+    studentId: '1185990',
     lastName: 'Arnold',
     firstName: 'Gavin',
     school: schoolA._id
@@ -70,34 +73,35 @@ AbsenceRecord.remove().exec().then(function() {
     studentId: 'sid005',
     lastName: 'Thomson',
     firstName: 'Sue',
+    grade: 6,
     school: schoolB._id
   }, logCreateResults('students'));
 }).then(function(studentA, studentB, studentC, studentD, studentE) {
   var twoDaysAgo = Date.now() - 2 * 24 * 60 * 60 * 1000;
   return AbsenceRecord.create({
-    schoolYear: '2015-2016',
+    schoolYear: '2016-2017',
     school: studentA.school,
     date: twoDaysAgo,
     entries: [{
       student: studentA._id,
-      absences: 1.0,
-      absencesDelta: 1.0,
+      absences: 0.0,
+      absencesDelta: 0.0,
       tardies: 0.0,
       tardiesDelta: 0.0,
       present: 15.0,
       enrolled: 16.0
     }, {
       student: studentB._id,
-      absences: 1.0,
-      absencesDelta: 1.0,
+      absences: 0.0,
+      absencesDelta: 0.0,
       tardies: 0.0,
       tardiesDelta: 0.0,
       present: 14.0,
       enrolled: 15.0
     }, {
       student: studentC._id,
-      absences: 1.0,
-      absencesDelta: 1.0,
+      absences: 0.0,
+      absencesDelta: 0.0,
       tardies: 0,
       tardiesDelta: 0.0,
       present: 21.0,
@@ -105,7 +109,7 @@ AbsenceRecord.remove().exec().then(function() {
     }],
     createdStudents: [studentA._id, studentB._id, studentC._id]
   }, {
-    schoolYear: '2015-2016',
+    schoolYear: '2016-2017',
     school: studentD.school,
     date: twoDaysAgo,
     entries: [{
@@ -127,6 +131,19 @@ AbsenceRecord.remove().exec().then(function() {
     }],
     createdStudents: [studentD._id, studentE._id]
   }, logCreateResults('AbsenceRecords'));
+}).then(function() {
+  return Setting.create({ intervention : {
+    types: [{
+      title: 'One Intervention',
+      description: 'A description of one intervention with more details'
+    }, {
+      title: 'Two Intervention',
+      description: 'A description of two intervention with more details'
+    }, {
+      title: 'Three Intervention',
+      description: 'A description of three intervention with more details'
+    }]
+  }}, logCreateResults('settings'));
 }).then(function() {
   return Student.find().populate('school').exec(function(err, students) {
     console.log('\nSchools to Students');

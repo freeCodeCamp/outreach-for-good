@@ -4,7 +4,8 @@
   flex: 1;
   @include cfa-scrollbar();
   .user,
-  .school {
+  .school,
+  .interventions {
     position: relative;
     flex: 1;
     min-height: $cfa-unit * 4;

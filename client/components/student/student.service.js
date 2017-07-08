@@ -115,9 +115,11 @@ function Student($resource, toastr) {
         studentIds: studentIds,
         value: value
       }, function(updatedStudents) {
-        toastr.success(
-          controller.toUpperCase() + ' set to: ' + value,
-          updatedStudents.length + ' students updated.');
+        if(controller !== 'grade') {
+          toastr.success(
+            controller.toUpperCase() + ' set to: ' + value,
+            updatedStudents.length + ' students updated.');
+        }
         return updatedStudents;
       }, function(err) {
         toastr.error(err);
