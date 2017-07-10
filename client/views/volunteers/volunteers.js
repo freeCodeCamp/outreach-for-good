@@ -9,38 +9,17 @@ import {RadioButton, RadioButtonGroup} from 'material-ui/RadioButton';
 import {Tabs, Tab} from 'material-ui/Tabs';
 import TextField from 'material-ui/TextField';
 
+import Overview from './tabs/overview';
 import ParentTracker from './tabs/parent-tracker';
 import VolunteerTracker from './tabs/volunteer-tracker';
 
 import SchoolSelect from '../../components/school-select/school-select';
-import SimpleTable from '../../components/simple-table/simple-table';
 
 import * as schoolActions from '../../modules/school';
 import * as volunteerActions from '../../modules/volunteers';
 
 import './volunteers.scss';
 
-const columns = [
-  'Category',
-  'Sept / Σ',
-  'Oct / Σ',
-  'Nov / Σ',
-  'Dec / Σ',
-  'Jan / Σ',
-  'Feb / Σ',
-  'Mar / Σ',
-  'Apr / Σ',
-  'May / Σ',
-  'Jun / Σ'
-];
-
-const simpleTableData = [
-  ['Student Hours'],
-  ['Family Hours'],
-  ['Community Hours'],
-  ['Volunteer Hours'],
-  ['Total family volunteers']
-];
 
 class Volunteers extends Component {
   state = {
@@ -64,14 +43,16 @@ class Volunteers extends Component {
 
   handleAddVolunteer = e => {
     e.preventDefault();
+    const {school} = this.state;
 
     const volunteer = {
+      school    : school._id,
       firstName : e.target['first-name'].value,
       lastName  : e.target['last-name'].value,
       type      : e.target['volunteer-type'].value
     };
 
-    this.props.volunteerActions.addVolunteer(volunteer);
+    this.props.volunteerActions.postVolunteer(school._id, volunteer);
     e.target.reset();
 
     this.handleModal();
@@ -110,18 +91,16 @@ class Volunteers extends Component {
             changeSchool={this.changeSchool}
           />
         </div>
+        {school
+        && <Overview />}
         <div className="tabs">
           {school
             && <Tabs>
-              <Tab label="Overview">
-                <SimpleTable
-                  columns={columns}
-                  data={simpleTableData}
-                />
-              </Tab>
+              {/* <Tab label="Overview">
+              </Tab> */}
               <Tab label="Volunteer Tracker">
                 <VolunteerTracker
-                  data={[]}
+                  volunteers={this.props.volunteers.volunteers}
                   handleUpdate={this.handleModal}
                   handleAdd={this.handleModal}
                 />
@@ -132,6 +111,7 @@ class Volunteers extends Component {
             </Tabs>
           }
         </div>
+
         <Dialog
           title="Add Volunteer"
           actions={actions}
@@ -179,7 +159,8 @@ Volunteers.propTypes = {
 
 function mapStateToProps(state) {
   return {
-    schools : state.schools
+    schools    : state.schools,
+    volunteers : state.volunteers
   };
 }
 

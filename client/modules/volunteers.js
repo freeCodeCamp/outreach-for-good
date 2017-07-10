@@ -1,9 +1,10 @@
-// import {openSnackbar} from './view';
+import VolunteerApi from '../api/volunteers.js';
+import {openSnackbar} from './view';
 
 const GET_VOLUNTEERS_SUCCESS = 'GET_VOLUNTEERS_SUCCESS';
-const ADD_VOLUNTEER_SUCCESS = 'ADD_VOLUNTEER_SUCCESS';
-const UPDATE_VOLUNTEER_SUCCESS = 'UPDATE_VOLUNTEER_SUCCESS';
-const REMOVE_VOLUNTEER_SUCCESS = 'REMOVE_VOLUNTEER_SUCCESS';
+const POST_VOLUNTEER_SUCCESS = 'POST_VOLUNTEER_SUCCESS';
+const PUT_VOLUNTEER_SUCCESS = 'PUT_VOLUNTEER_SUCCESS';
+const DELETE_VOLUNTEER_SUCCESS = 'DELETE_VOLUNTEER_SUCCESS';
 
 const initialState = {
   volunteers : []
@@ -11,12 +12,13 @@ const initialState = {
 export default function settingsReducer(state = initialState, action) {
   switch (action.type) {
   case GET_VOLUNTEERS_SUCCESS: {
-    console.log(action.schoolId);
+    console.log(action.volunteers);
     return {
-      ...state
+      ...state,
+      volunteers : action.volunteers
     };
   }
-  case ADD_VOLUNTEER_SUCCESS: {
+  case POST_VOLUNTEER_SUCCESS: {
     const {volunteer} = action;
     console.log(volunteer);
     return {
@@ -24,10 +26,10 @@ export default function settingsReducer(state = initialState, action) {
       volunteers : [...state.volunteers, action.volunteer]
     };
   }
-  case REMOVE_VOLUNTEER_SUCCESS: {
+  case DELETE_VOLUNTEER_SUCCESS: {
     return {...state};
   }
-  case UPDATE_VOLUNTEER_SUCCESS: {
+  case PUT_VOLUNTEER_SUCCESS: {
     return {...state};
   }
   default: return state;
@@ -35,17 +37,22 @@ export default function settingsReducer(state = initialState, action) {
 }
 
 export function getVolunteers(schoolId) {
-  return dispatch => dispatch({
-    type : GET_VOLUNTEERS_SUCCESS,
-    schoolId
-  });
+  return dispatch => VolunteerApi.getVolunteers(schoolId)
+    .then(volunteers => dispatch({
+      type : GET_VOLUNTEERS_SUCCESS,
+      volunteers
+    }));
 }
 
-export function addVolunteer(volunteer) {
-  return dispatch => dispatch({
-    type : ADD_VOLUNTEER_SUCCESS,
-    volunteer
-  });
+export function postVolunteer(schoolId, volunteer) {
+  return dispatch => VolunteerApi.postVolunteer(schoolId, volunteer)
+    .then(res => {
+      getVolunteers(schoolId);
+      // dispatch({
+      //   type : POST_VOLUNTEER_SUCCESS
+      // });
+      dispatch(openSnackbar('Post success'));
+    });
 }
 //
 // export function removeVolunteer(volunteerId) {
