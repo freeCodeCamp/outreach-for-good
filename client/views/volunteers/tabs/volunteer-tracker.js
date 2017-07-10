@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 
 // import AutoComplete from 'material-ui/AutoComplete';
 import RaisedButton from 'material-ui/RaisedButton';
+<<<<<<< HEAD
 import SimpleTable from '../../../components/simple-table/simple-table';
 import './volunteer-tracker.scss';
 
@@ -33,6 +34,25 @@ const VolunteerTracker = ({ volunteers, handleUpdate, handleAdd }) => {
           onTouchTap={() => console.log('edit clicked')}
           secondary
         />
+=======
+
+import './volunteer-tracker.scss';
+
+const VolunteerTracker = ({ data, handleUpdate, handleAdd }) =>
+  <div className="volunteer-tracker">
+    <div className="controls">
+{/*
+      <AutoComplete
+        hintText="Volunteer Name"
+        dataSource={data}
+        onUpdateInput={handleUpdate}
+      /> */}
+
+      <RaisedButton
+        label="Add Volunteer"
+        onTouchTap={handleAdd}
+      />
+>>>>>>> 8d81fa2a7583b864906f776fd53bd53269bbdfac
 
         <RaisedButton
           label="Add Volunteer"
@@ -51,6 +71,12 @@ const VolunteerTracker = ({ volunteers, handleUpdate, handleAdd }) => {
 
 VolunteerTracker.propTypes = {
   volunteers   : PropTypes.array,
+  handleUpdate : PropTypes.func,
+  handleAdd    : PropTypes.func
+};
+
+VolunteerTracker.propTypes = {
+  data         : PropTypes.array,
   handleUpdate : PropTypes.func,
   handleAdd    : PropTypes.func
 };

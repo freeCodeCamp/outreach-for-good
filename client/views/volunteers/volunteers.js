@@ -14,12 +14,40 @@ import ParentTracker from './tabs/parent-tracker';
 import VolunteerTracker from './tabs/volunteer-tracker';
 
 import SchoolSelect from '../../components/school-select/school-select';
+<<<<<<< HEAD
+=======
+import SimpleTable from '../../components/simple-table/simple-table';
+>>>>>>> 8d81fa2a7583b864906f776fd53bd53269bbdfac
 
 import * as schoolActions from '../../modules/school';
 import * as volunteerActions from '../../modules/volunteers';
 
 import './volunteers.scss';
 
+<<<<<<< HEAD
+=======
+const columns = [
+  'Category',
+  'Sept / Σ',
+  'Oct / Σ',
+  'Nov / Σ',
+  'Dec / Σ',
+  'Jan / Σ',
+  'Feb / Σ',
+  'Mar / Σ',
+  'Apr / Σ',
+  'May / Σ',
+  'Jun / Σ'
+];
+
+const simpleTableData = [
+  ['Student Hours'],
+  ['Family Hours'],
+  ['Community Hours'],
+  ['Volunteer Hours'],
+  ['Total family volunteers']
+];
+>>>>>>> 8d81fa2a7583b864906f776fd53bd53269bbdfac
 
 class Volunteers extends Component {
   state = {
@@ -43,16 +71,25 @@ class Volunteers extends Component {
 
   handleAddVolunteer = e => {
     e.preventDefault();
+<<<<<<< HEAD
     const {school} = this.state;
 
     const volunteer = {
       school    : school._id,
+=======
+
+    const volunteer = {
+>>>>>>> 8d81fa2a7583b864906f776fd53bd53269bbdfac
       firstName : e.target['first-name'].value,
       lastName  : e.target['last-name'].value,
       type      : e.target['volunteer-type'].value
     };
 
+<<<<<<< HEAD
     this.props.volunteerActions.postVolunteer(school._id, volunteer);
+=======
+    this.props.volunteerActions.addVolunteer(volunteer);
+>>>>>>> 8d81fa2a7583b864906f776fd53bd53269bbdfac
     e.target.reset();
 
     this.handleModal();
@@ -96,11 +133,23 @@ class Volunteers extends Component {
         <div className="tabs">
           {school
             && <Tabs>
+<<<<<<< HEAD
               {/* <Tab label="Overview">
               </Tab> */}
               <Tab label="Volunteer Tracker">
                 <VolunteerTracker
                   volunteers={this.props.volunteers.volunteers}
+=======
+              <Tab label="Overview">
+                <SimpleTable
+                  columns={columns}
+                  data={simpleTableData}
+                />
+              </Tab>
+              <Tab label="Volunteer Tracker">
+                <VolunteerTracker
+                  data={[]}
+>>>>>>> 8d81fa2a7583b864906f776fd53bd53269bbdfac
                   handleUpdate={this.handleModal}
                   handleAdd={this.handleModal}
                 />
@@ -111,7 +160,10 @@ class Volunteers extends Component {
             </Tabs>
           }
         </div>
+<<<<<<< HEAD
 
+=======
+>>>>>>> 8d81fa2a7583b864906f776fd53bd53269bbdfac
         <Dialog
           title="Add Volunteer"
           actions={actions}
