@@ -1,11 +1,15 @@
 'use strict';
+/* eslint-disable no-process-env */
 
 // Development specific configuration
 // ==================================
 module.exports = {
   // MongoDB connection options
   mongo : {
-    uri : 'mongodb://localhost/cfa-local'
+    uri : process.env.MONGOLAB_URI
+            || process.env.MONGOHQ_URL
+            || process.env.OPENSHIFT_MONGODB_DB_URL + process.env.OPENSHIFT_APP_NAME
+            || 'mongodb://localhost/cfa-local'
   },
 
   seedDB : true,
