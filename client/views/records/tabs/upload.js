@@ -5,8 +5,6 @@ import {connect} from 'react-redux';
 
 import SchoolSelect from '../../../components/school-select/school-select';
 import LinearProgress from 'material-ui/LinearProgress';
-import SelectField from 'material-ui/SelectField';
-import MenuItem from 'material-ui/MenuItem';
 import DatePicker from 'material-ui/DatePicker';
 import Dropzone from 'react-dropzone';
 
@@ -22,8 +20,7 @@ class UploadTab extends React.Component {
     loadingValue  : 0,
     record        : null,
     recordResults : false,
-    date          : new Date(),
-    snackBar      : ''
+    date          : new Date()
   };
 
   componentDidMount() {
@@ -49,8 +46,8 @@ class UploadTab extends React.Component {
 
       let uploadService = new UploadService(school, previousRecord, accepted[0]);
 
-      uploadService.getRecord().then(({ record, message }) => {
-        this.setState({ record, snackBar: message });
+      uploadService.getRecord().then(({ record }) => {
+        this.setState({ record });
       });
     }
   }
@@ -95,6 +92,7 @@ class UploadTab extends React.Component {
               value={this.state.selectedSchool}
               schools={this.props.schools}
               changeSchool={this.changeSchool}
+              fullWidth
             />
 
             {this.state.selectedSchool
@@ -132,10 +130,6 @@ class UploadTab extends React.Component {
             record={this.state.record}
             uploadTab
           />}
-        {/* <ResponseSnackbar
-          message={this.state.snackBar}
-          closeSnackbar={this.closeSnackbar}
-          type="success" /> */}
       </div>
     );
   }

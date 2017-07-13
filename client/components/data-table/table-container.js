@@ -20,7 +20,8 @@ class TableContainer extends React.Component {
       || this.props.table.get('indexMap') !== nextProps.table.get('indexMap')
       || this.props.table.get('selectedIndex') !== nextProps.table.get('selectedIndex')
       || this.props.table.get('sortCol') !== nextProps.table.get('sortCol')
-      || this.props.table.get('sortDirection') !== nextProps.table.get('sortDirection');
+      || this.props.table.get('sortDirection') !== nextProps.table.get('sortDirection')
+      || this.props.table.get('groupColumn') !== nextProps.table.get('groupColumn');
   }
 
   /**
@@ -52,18 +53,43 @@ class TableContainer extends React.Component {
       table,
       view
     } = this.props;
+    const groupCol = table.get('groupColumn');
+    const fixedColumn = table.getFixedColumn(table);
+
+    let _data = data;
+    let _indexMap = table.get('indexMap');
+    if(fixedColumn) {
+      const displayColumn = groupCol.get('displayColumn');
+      const summaryRows = groupCol.get('summaryRows');
+      const groupIndices = groupCol.get('groupIndices');
+      let count = -1;
+      groupIndices.forEach(i => {
+        count += 1;
+        _data = _data.push(_data.get(0).map((v, k) => {
+          if(k === displayColumn) {
+            return `${summaryRows.get(i + count).get('groupColumn').get('group')}
+              (${summaryRows.get(i + count).get('groupColumn').get('count')})`;
+          } else if(summaryRows.get(i + count).get(k) !== null) {
+            return summaryRows.get(i + count).get(k);
+          }
+          return '';
+        }));
+      });
+      _indexMap = table.removeCollapsedDataFromIndexMap(table, _data.size);
+    }
+
     return (
       <Table
         rowHeight={table.get('rowHeight') || 30}
         headerHeight={table.get('filterEnabled')
           ? table.get('filterHeaderHeight') || 60
           : table.get('headerHeight') || 30}
-        rowsCount={loaded
-          ? table.get('indexMap').length : 1}
+        rowsCount={loaded ? _indexMap.size : 1}
         width={view.width || 100}
         maxHeight={view.height}
         onRowClick={this.rowToggleSelected}
         rowClassNameGetter={this.isRowSelected}
+        id="theDataTable"
       >
       {/*console.log('Debugging race condition: ', data, page.columns)*/}
       {page.columns && page.columns
@@ -83,9 +109,10 @@ class TableContainer extends React.Component {
           cell={
             loaded
             ? <DataTableRow
-              indexMap={table.get('indexMap')}
-              data={data}
+              indexMap={_indexMap}
+              data={_data}
               col={col.id}
+              fixedColumn={fixedColumn}
             />
             : <Cell className="cell-loading">
                 <i className="fa fa-refresh fa-spin" />
@@ -105,12 +132,12 @@ class TableContainer extends React.Component {
 
 TableContainer.propTypes = {
   clickHandler : PropTypes.func.isRequired,
-  view         : PropTypes.object.isRequired,
-  page         : PropTypes.object.isRequired,
-  table        : PropTypes.instanceOf(TableModel).isRequired,
   data         : PropTypes.instanceOf(List).isRequired,
+  page         : PropTypes.object.isRequired,
   loaded       : PropTypes.bool,
-  selectedRows : PropTypes.object
+  selectedRows : PropTypes.object,
+  table        : PropTypes.instanceOf(TableModel).isRequired,
+  view         : PropTypes.object.isRequired
 };
 
 export default TableContainer;

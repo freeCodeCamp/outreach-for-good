@@ -1,8 +1,6 @@
 .upload-tab {
-  padding: 10px;
-
+  margin: 10px;
   .dropzone-container {
-    padding: 20px;
     .column {
       width: 50%;
       display: inline-block;
@@ -38,9 +36,9 @@
 }
 
 .manage-tab {
-  display: flex;
-  flex-direction: column;
-  margin: 10px;
+  .school-select {
+    margin: 10px;
+  }
 
   .record-data{
     margin: 0 10px;

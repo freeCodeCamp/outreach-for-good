@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import PropTypes from 'prop-types';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import SelectField from 'material-ui/SelectField';
@@ -34,12 +35,12 @@ class StudentDialog extends Component {
 
   render() {
     const actions = [
-      <FlatButton
+      <FlatButton key={0}
         label="Cancel"
         primary
         onTouchTap={this.props.dialogClose}
       />,
-      <FlatButton
+      <FlatButton key={1}
         label="Submit"
         primary
         keyboardFocused
@@ -66,5 +67,13 @@ class StudentDialog extends Component {
     );
   }
 }
+
+StudentDialog.propTypes = {
+  data         : PropTypes.object,
+  dialogOpen   : PropTypes.bool,
+  dialogClose  : PropTypes.func,
+  dialogSubmit : PropTypes.func,
+  student      : PropTypes.object
+};
 
 export default StudentDialog;

@@ -30,6 +30,9 @@ class DashboardPage extends React.Component {
 
     // Register Initial Component State
     let nextTable = table.setSelectedTab(table, 'Student');
+    nextTable = table.setFixedColumn(nextTable, 'school.name', 'student.lastName');
+    nextTable = table.setGroupAggregateColumns(nextTable, ['entry.absences', 'entry.absencesDelta',
+      'entry.tardies', 'entry.tardiesDelta', 'entry.present', 'entry.enrolled']);
     nextTable = this.initClickActions(nextTable);
     this.state = { table: nextTable };
   }
@@ -97,6 +100,8 @@ class DashboardPage extends React.Component {
   updateDataTable = () => {
     let nextTable = table.updateSortCol(this.state.table, '');
     nextTable = table.buildIndexMap(nextTable, this.props.absenceRecords);
+    nextTable = table.sortDataByCol(nextTable, this.props.absenceRecords);
+    nextTable = table.setupFixedGroups(nextTable, this.props.absenceRecords);
     nextTable = table.enableFiltering(nextTable);
     this.setState({table: nextTable, loadResolved: true});
   }
@@ -162,23 +167,29 @@ class DashboardPage extends React.Component {
     this.setState({table: nextTable});
   }
 
-  handleToggleSelectedRow = (nextTable, data) => {
-    nextTable = table.toggleSelectedRowIndex(this.state.table, data);
+  handleToggleSelectedRow = (nextTable, index) => {
+    if(table.getFixedColumn(this.state.table)
+        && table.getCorrectedGroupIndices(this.state.table).indexOf(index) !== -1) {
+      nextTable = table.toggleCollapsedRow(this.state.table, index);
+    } else {
+      nextTable = table.toggleSelectedRowIndex(this.state.table, index);
+    }
     this.setState({table: nextTable});
   }
 
   handleToggleSortCol = (nextTable, data) => {
     nextTable = table.updateSortCol(this.state.table, data);
-    nextTable = table.sortIndexMap(nextTable, this.props.absenceRecords);
+    nextTable = table.sortDataByCol(nextTable, this.props.absenceRecords);
+    nextTable = table.setupFixedGroups(nextTable, this.props.absenceRecords);
     this.setState({table: nextTable});
   }
 
   handleChangeColFilter = (nextTable, data, event) => {
     //console.log(data.substr(7), event);
-    let tabData = this.state.table.get('selectedTab') == 'users'
-        ? this.props.absenceRecords : this.props.absenceRecords;
+    let tabData = this.props.absenceRecords;
     nextTable = table.updateFilterBy(this.state.table, tabData, data.substr(7), event);
-    nextTable = table.sortIndexMap(nextTable, tabData);
+    nextTable = table.sortDataByCol(nextTable, tabData);
+    nextTable = table.setupFixedGroups(nextTable, tabData);
     this.setState({table: nextTable});
   }
 
@@ -219,90 +230,28 @@ class DashboardPage extends React.Component {
         style={{width: this.props.containerWidth}}
         value={this.state.table.get('selectedTab')}
       >
-        <Tab
-          value='Student'
-          iconClass='fa fa-child fa-2x'
-          onActive={this.tabHandler}
-          {...this.props}
-        >
-          <StudentTab
-            view = {viewport}
-            absenceRecords = {this.props.absenceRecords}
-            table = {this.state.table}
-            loaded = {this.state.loadResolved}
-            clickHandler = {this.clickHandler}
-          />
-        </Tab>
-        <Tab
-          value='PhoneCall'
-          iconClass='fa fa-phone fa-2x'
-          onActive={this.tabHandler}
-          {...this.props}
-        >
-          <PhoneTab
-            view = {viewport}
-            absenceRecords = {this.props.absenceRecords}
-            table = {this.state.table}
-            loaded = {this.state.loadResolved}
-            clickHandler = {this.clickHandler}
-          />
-        </Tab>
-        <Tab
-          value='LetterSent'
-          iconClass='fa fa-envelope fa-2x'
-          onActive={this.tabHandler}
-          {...this.props}
-        >
-          <LetterTab
-            view = {viewport}
-            absenceRecords = {this.props.absenceRecords}
-            table = {this.state.table}
-            loaded = {this.state.loadResolved}
-            clickHandler = {this.clickHandler}
-          />
-        </Tab>
-        <Tab
-          value='HomeVisit'
-          iconClass='fa fa-home fa-2x'
-          onActive={this.tabHandler}
-          {...this.props}
-        >
-          <HomeTab
-            view = {viewport}
-            absenceRecords = {this.props.absenceRecords}
-            table = {this.state.table}
-            loaded = {this.state.loadResolved}
-            clickHandler = {this.clickHandler}
-          />
-        </Tab>
-        <Tab
-          value='SSTReferral'
-          iconClass='fa fa-support fa-2x'
-          onActive={this.tabHandler}
-          {...this.props}
-        >
-          <SstTab
-            view = {viewport}
-            absenceRecords = {this.props.absenceRecords}
-            table = {this.state.table}
-            loaded = {this.state.loadResolved}
-            clickHandler = {this.clickHandler}
-          />
-        </Tab>
-        <Tab
-          value='CourtReferral'
-          iconClass='fa fa-gavel fa-2x'
-          onActive={this.tabHandler}
-          {...this.props}
-        >
-          <CourtTab
-            view = {viewport}
-            absenceRecords = {this.props.absenceRecords}
-            table = {this.state.table}
-            loaded = {this.state.loadResolved}
-            clickHandler = {this.clickHandler}
-          />
-        </Tab>
+        {[{value: 'Student', class: 'fa fa-child fa-2x', Component: StudentTab},
+        {value: 'PhoneCall', class: 'fa fa-phone fa-2x', Component: PhoneTab},
+        {value: 'LetterSent', class: 'fa fa-envelope fa-2x', Component: LetterTab},
+        {value: 'HomeVisit', class: 'fa fa-home fa-2x', Component: HomeTab},
+        {value: 'SSTReferral', class: 'fa fa-support fa-2x', Component: SstTab},
+        {value: 'CourtReferral', class: 'fa fa-gavel fa-2x', Component: CourtTab}
+        ].map((tab, index) => <Tab
+            key={`tab-${index}`}
+            value={tab.value}
+            iconClass={tab.class}
+            onActive={this.tabHandler}
+            {...this.props} >
+            <tab.Component
+              view = {viewport}
+              absenceRecords = {this.props.absenceRecords}
+              table = {this.state.table}
+              loaded = {this.state.loadResolved}
+              clickHandler = {this.clickHandler}
+              tabName = {tab.value}
+            />
+          </Tab>
+        )}
       </Tabs>
     );
   }

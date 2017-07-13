@@ -8,7 +8,7 @@ import { openSnackbar } from './view';
 
 //ACTIONS
 const LOAD_ABSENCE_RECORD_SUCCESS = 'LOAD_ABSENCE_RECORD_SUCCESS';
-const LOAD_SCHOOL_RECORD_LIST_SUCCESS = 'LOAD_ABSENCE_RECORD_LIST_SUCCESS';
+const LOAD_ABSENCE_RECORD_LIST_SUCCESS = 'LOAD_ABSENCE_RECORD_LIST_SUCCESS';
 
 //REDUCER
 const initialState = new List();
@@ -20,7 +20,7 @@ export default (state = initialState, action) => {
     return fromJS(action.absenceRecords)
         .map(record => new AbsenceRecord(record));
 
-  case LOAD_SCHOOL_RECORD_LIST_SUCCESS:
+  case LOAD_ABSENCE_RECORD_LIST_SUCCESS:
     return fromJS(action.recordList)
         .map(recordList => new AbsenceRecordListModel(recordList));
   default:
@@ -79,7 +79,7 @@ export function fetchSchoolRecordList(schoolId) {
   return function(dispatch) {
     return AbsenceRecordsApi.fetchSchoolRecordList(schoolId).then(recordList =>
       dispatch({
-        type : LOAD_SCHOOL_RECORD_LIST_SUCCESS,
+        type : LOAD_ABSENCE_RECORD_LIST_SUCCESS,
         recordList
       })
     )

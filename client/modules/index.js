@@ -10,6 +10,7 @@ import student from './student';
 import users from './user';
 import view from './view';
 import visualization from './visualization';
+import volunteers from './volunteers';
 
 export const rootReducer = combineReducers({
   view,
@@ -21,7 +22,8 @@ export const rootReducer = combineReducers({
   settings,
   student,
   users,
-  visualization
+  visualization,
+  volunteers
 });
 
 export default rootReducer;

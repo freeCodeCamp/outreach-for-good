@@ -1,16 +1,17 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import Paper from 'material-ui/Paper';
-import RaisedButton from 'material-ui/RaisedButton';
-import Popover from 'material-ui/Popover';
-import Menu from 'material-ui/Menu';
-import MenuItem from 'material-ui/MenuItem';
 import Divider from 'material-ui/Divider';
 import Dialog from 'material-ui/Dialog';
+import { List, Map } from 'immutable';
+import Menu from 'material-ui/Menu';
+import MenuItem from 'material-ui/MenuItem';
+import Paper from 'material-ui/Paper';
+import Popover from 'material-ui/Popover';
+import RaisedButton from 'material-ui/RaisedButton';
 
-import TableContainer from './table-container';
 import TableModel from '../../models/table';
+import TableContainer from './table-container';
 import './data-table.scss';
 import './data-table-override.scss';
 
@@ -74,7 +75,7 @@ class DataTable extends React.Component {
                         : <MenuItem
                           primaryText={item.text}
                           value={item.actionID}
-                          onTouchTap={e => this.menuItemHandler(e, item.actionID)}
+                          onTouchTap={e => this.menuItemHandler(e, item.actionID)}  // eslint-disable-line react/jsx-no-bind
                           key={`menu-item-${item.text}-${i}`}
                         />
                       )}
@@ -125,7 +126,9 @@ class DataTable extends React.Component {
 }
 
 DataTable.propTypes = {
+  data         : PropTypes.instanceOf(List).isRequired,
   clickHandler : PropTypes.func.isRequired,
+  loaded       : PropTypes.bool,
   page         : PropTypes.object.isRequired,
   table        : PropTypes.instanceOf(TableModel).isRequired,
   selectedRows : PropTypes.object
