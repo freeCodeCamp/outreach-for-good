@@ -11,10 +11,10 @@ const columns = [
 
 const simpleTableData = [
   ['Student Hours', 0, 0],
-  ['Family Hours'],
-  ['Community Hours'],
-  ['Volunteer Hours'],
-  ['Total family volunteers']
+  ['Family Hours', 0, 0],
+  ['Community Hours', 0, 0],
+  ['Volunteer Hours', 0, 0],
+  ['Total family volunteers', 0, 0]
 ];
 
 const Overview = () =>

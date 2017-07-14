@@ -2,6 +2,10 @@ import Api from './api.js';
 
 class VolunteerApi extends Api {
 
+  static getOverview(schoolId) {
+    return this.getAPI(`/api/volunteers/${schoolId}/overview`);
+  }
+
   static getVolunteers(schoolId) {
     return this.getAPI(`/api/volunteers/${schoolId}`);
   }

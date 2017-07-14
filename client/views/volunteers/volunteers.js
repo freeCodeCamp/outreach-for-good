@@ -21,28 +21,6 @@ import * as volunteerActions from '../../modules/volunteers';
 
 import './volunteers.scss';
 
-const columns = [
-  'Category',
-  'Sept / Σ',
-  'Oct / Σ',
-  'Nov / Σ',
-  'Dec / Σ',
-  'Jan / Σ',
-  'Feb / Σ',
-  'Mar / Σ',
-  'Apr / Σ',
-  'May / Σ',
-  'Jun / Σ'
-];
-
-const simpleTableData = [
-  ['Student Hours'],
-  ['Family Hours'],
-  ['Community Hours'],
-  ['Volunteer Hours'],
-  ['Total family volunteers']
-];
-
 class Volunteers extends Component {
   state = {
     school : null,
@@ -58,8 +36,13 @@ class Volunteers extends Component {
   }
 
   changeSchool = (e, i, school) => {
+    //get the overview data for the specific school
+    // this.props.volunteerActions.getOverview(school._id);
+
+    //get all of the volunteers for the selected school
     this.props.volunteerActions.getVolunteers(school._id);
 
+    //set the component state
     this.setState({ school });
   }
 
@@ -173,6 +156,7 @@ class Volunteers extends Component {
 }
 
 Volunteers.propTypes = {
+  volunteers       : PropTypes.object,
   schoolActions    : PropTypes.object,
   volunteerActions : PropTypes.object,
   schools          : PropTypes.object

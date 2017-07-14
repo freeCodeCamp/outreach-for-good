@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 
 // import AutoComplete from 'material-ui/AutoComplete';
@@ -14,49 +14,49 @@ const columns = [
   'Volunteer Type'
 ];
 
-const VolunteerTracker = ({ volunteers, handleUpdate, handleModal }) => {
-  const data = volunteers.map(volunteer => [
-    volunteer.firstName,
-    volunteer.lastName,
-    volunteer.school,
-    volunteer.type
-  ]);
+class VolunteerTracker extends Component {
 
-  return (
-    <div className="volunteer-tracker">
-      <div className="controls">
+  render() {
+    const { volunteers, handleUpdate, handleModal } = this.props;
 
-        <RaisedButton
-          label="Edit Volunteer"
-          onTouchTap={handleUpdate}
-          secondary
+    const data = volunteers.map(volunteer => [
+      volunteer.firstName,
+      volunteer.lastName,
+      volunteer.school.name,
+      volunteer.type
+    ]);
+
+    return (
+      <div className="volunteer-tracker">
+        <div className="controls">
+
+          <RaisedButton
+            label="Edit Volunteer"
+            onTouchTap={handleUpdate}
+            secondary
+          />
+
+          <RaisedButton
+            label="Add Volunteer"
+            onTouchTap={handleModal}
+            primary
+          />
+
+        </div>
+        <SimpleTable
+          columns={columns}
+          data={data}
+          selectable
         />
-
-        <RaisedButton
-          label="Add Volunteer"
-          onTouchTap={handleModal}
-          primary
-        />
-
       </div>
-      <SimpleTable
-        columns={columns}
-        data={data}
-      />
-    </div>
-  );
-};
+    );
+  }
+}
 
 VolunteerTracker.propTypes = {
   volunteers   : PropTypes.array,
   handleUpdate : PropTypes.func,
-  handleAdd    : PropTypes.func
-};
-
-VolunteerTracker.propTypes = {
-  data         : PropTypes.array,
-  handleUpdate : PropTypes.func,
-  handleAdd    : PropTypes.func
+  handleModal  : PropTypes.func
 };
 
 export default VolunteerTracker;
