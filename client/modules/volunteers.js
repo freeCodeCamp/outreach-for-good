@@ -47,10 +47,7 @@ export function getVolunteers(schoolId) {
 export function postVolunteer(schoolId, volunteer) {
   return dispatch => VolunteerApi.postVolunteer(schoolId, volunteer)
     .then(res => {
-      getVolunteers(schoolId);
-      // dispatch({
-      //   type : POST_VOLUNTEER_SUCCESS
-      // });
-      dispatch(openSnackbar('Post success'));
+      dispatch(getVolunteers(schoolId));
+      dispatch(openSnackbar(`Volunteer ${res.firstName} ${res.lastName} added to ${res.school}`));
     });
 }
