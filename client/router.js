@@ -39,9 +39,9 @@ class RTRouter extends React.Component {
         <Route path="/student/:studentId(/:tab)" component={StudentPage} onEnter={this.authorize} />
         <Route path="/users" component={UsersPage} onEnter={this.authorize} />
         <Route path="/visualization" component={VisualizationPage} onEnter={this.authorize} />
-        <Route path="/volunteers" component={Volunteers} onEnter={this.authorize} />
       </Route>
     ;
+//        <Route path="/volunteers" component={Volunteers} onEnter={this.authorize} />
   }
 
   authorize = (nextState, replace) => {

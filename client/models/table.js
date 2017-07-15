@@ -19,7 +19,7 @@ export const Table = Immutable.Record({
   filterBy      : Immutable.Map(),
   groupColumn   : Immutable.Map({
     fixedColumn      : '', // col which data is grouped by
-    displayColumn    : '', // used for Summary Row
+    displayColumn    : '', // used for Summary Row (ex. School A (12))
     aggregateColumns : Immutable.List(), // columns to sum() for Summary Row
     groupIndices     : Immutable.List(), // first index of each group
     collapsed        : Immutable.List(), // groups which are collapsed/expanded
