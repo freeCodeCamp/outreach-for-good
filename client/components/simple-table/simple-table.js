@@ -9,9 +9,10 @@ import {
   TableRowColumn,
 } from 'material-ui/Table';
 
-const SimpleTable = ({ columns, data, selectable = false }) =>
+const SimpleTable = ({ columns, data, selectable = false, onRowSelect }) =>
   <Table
     selectable={selectable}
+    onRowSelection={onRowSelect}
   >
     <TableHeader adjustForCheckbox={false} displaySelectAll={false}>
       <TableRow>
