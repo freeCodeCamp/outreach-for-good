@@ -62,7 +62,7 @@ class TableModel extends Table {
   }
 
   getFixedColumn(state) {
-    return state.getIn(['groupColumn', 'fixedColumn'], null)
+    return state.getIn(['groupColumn', 'fixedColumn'], null);
   }
 
   // displayColumn: col where fixedGroup name and count are displayed, ex. School A (10)
@@ -79,7 +79,6 @@ class TableModel extends Table {
 
   // Shorthand for tasks required to setup dataTable for fixed column groups
   setupFixedGroups(state, data) {
-    console.log('setupFixedGroups');
     let nextState = this.setupGroupIndices(state, data);
     nextState = this.addGroupRowsToIndexMap(nextState, data.size);
     return this.setupGroupSummaryRows(nextState, data);
@@ -111,9 +110,8 @@ class TableModel extends Table {
   //  - must account for indices increasing the indexMap size with each insertion
   addGroupRowsToIndexMap(state, dataSize) {
     return state.update('indexMap', indexMap =>
-      state.get('groupColumn').get('groupIndices').reduce((_indexMap, indice, i) => {
-        console.log('addGroupRowsToIndexMap', _indexMap.toJS(), indice, i);
-        return _indexMap.splice(indice + i, 0, dataSize + i)}, indexMap));
+      state.get('groupColumn').get('groupIndices').reduce((_indexMap, indice, i) =>
+        _indexMap.splice(indice + i, 0, dataSize + i), indexMap));
   }
 
   // Generate counts and display data for each Summary Row
@@ -161,16 +159,11 @@ class TableModel extends Table {
   removeCollapsedDataFromIndexMap(state, dataSize) {
     //const correctedGroupIndices = this.getCorrectedGroupIndices(state);
     let collapsedIndexMap =  state.getIn(['groupColumn', 'collapsed']).reduce((_indexMap, indice) => {
-      console.log('reduce', _indexMap.toJS(), indice);
       let nextIndice = _indexMap.findEntry(v => v > indice); // find next largest indicie
-      let recordCount = nextIndice ? _indexMap.indexOf(nextIndice[1]) - _indexMap.indexOf(indice) - 1 : _indexMap.size - _indexMap.indexOf(indice);
       let frontsideRange = [0, _indexMap.indexOf(indice) + 1];
-      console.log('frontsideRange', frontsideRange, nextIndice && nextIndice[1], recordCount);
       let backsideRange = [nextIndice ? _indexMap.indexOf(nextIndice[1]) : _indexMap.size, _indexMap.size];
-      console.log(backsideRange);
       return _indexMap.slice(...frontsideRange).concat(_indexMap.slice(...backsideRange));
     }, state.get('indexMap_uf'));
-    console.log('collapsedIndexMap', collapsedIndexMap.toJS(), state.get('indexMap_uf').toJS());
     return state.get('indexMap').filter(i => collapsedIndexMap.indexOf(i) !== -1 || dataSize <= i);
   }
 
@@ -250,7 +243,6 @@ class TableModel extends Table {
           .toLowerCase()
           .indexOf(searchString) !== -1);
       });
-      console.log('filterIndexMap', indexMap.toJS(), nextState.get('indexMap_uf').toJS());
       return nextState.get('indexMap_uf').filter(i => indexMap.indexOf(i) !== -1 || data.size <= i);
     });
   }
@@ -263,7 +255,6 @@ class TableModel extends Table {
    * Row Select and Highlighting
    */
   toggleSelectedRowIndex(state, dataIndex) {
-    console.log('toggleSelectedRowIndex', dataIndex);
     let target = state.get('selectedIndex').indexOf(dataIndex);
     if(target == -1) { // target was not selected
       //let index = state.get('indexMap').get(dataIndex);

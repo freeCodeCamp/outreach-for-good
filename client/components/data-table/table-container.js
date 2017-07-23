@@ -12,7 +12,6 @@ import './data-table-override.scss';
 
 class TableContainer extends React.Component {
   shouldComponentUpdate(nextProps) {
-    //console.log(nextProps.table.get('indexMap'), nextProps.data);
     return this.props.data !== nextProps.data
       || this.props.loaded !== nextProps.loaded
       || this.props.view.width !== nextProps.view.width

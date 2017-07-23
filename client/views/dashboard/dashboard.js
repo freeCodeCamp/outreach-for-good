@@ -174,16 +174,14 @@ class DashboardPage extends React.Component {
 
   handleToggleSortCol = (nextTable, data) => {
     nextTable = table.updateSortCol(this.state.table, data);
-    nextTable = table.buildIndexMap(nextTable, this.props.absenceRecords);
+    //nextTable = table.buildIndexMap(nextTable, this.props.absenceRecords);
+    nextTable = table.filterIndexMap(nextTable, this.props.absenceRecords);
     this.setState({table: nextTable});
   }
 
   handleChangeColFilter = (nextTable, data, event) => {
-    console.log('handleChangeColFilter 1', this.props.absenceRecords, data.substr(7), event);
-    let tabData = this.props.absenceRecords;
     nextTable = table.updateFilterBy(this.state.table, data.substr(7), event);
-    nextTable = table.filterIndexMap(nextTable, tabData);
-    console.log('handleChangeColFilter 2', nextTable.get('indexMap').toJS());
+    nextTable = table.filterIndexMap(nextTable, this.props.absenceRecords);
     this.setState({table: nextTable});
   }
 
