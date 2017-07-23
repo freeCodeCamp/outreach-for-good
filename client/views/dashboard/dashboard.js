@@ -98,11 +98,9 @@ class DashboardPage extends React.Component {
   }
 
   updateDataTable = () => {
-    let nextTable = table.updateSortCol(this.state.table, '');
-    nextTable = table.buildIndexMap(nextTable, this.props.absenceRecords);
-    nextTable = table.sortDataByCol(nextTable, this.props.absenceRecords);
-    nextTable = table.setupFixedGroups(nextTable, this.props.absenceRecords);
-    nextTable = table.enableFiltering(nextTable);
+    let nextTable = this.state.table.updateSortCol(this.state.table, '');
+    nextTable = nextTable.buildIndexMap(nextTable, this.props.absenceRecords);
+    nextTable = nextTable.enableFiltering(nextTable);
     this.setState({table: nextTable, loadResolved: true});
   }
 
@@ -168,28 +166,24 @@ class DashboardPage extends React.Component {
   }
 
   handleToggleSelectedRow = (nextTable, index) => {
-    if(table.getFixedColumn(this.state.table)
-        && table.getCorrectedGroupIndices(this.state.table).indexOf(index) !== -1) {
-      nextTable = table.toggleCollapsedRow(this.state.table, index);
-    } else {
-      nextTable = table.toggleSelectedRowIndex(this.state.table, index);
-    }
+    nextTable = this.props.absenceRecords.size <= index
+      ? table.toggleCollapsedRow(this.state.table, index)
+      : table.toggleSelectedRowIndex(this.state.table, index);
     this.setState({table: nextTable});
   }
 
   handleToggleSortCol = (nextTable, data) => {
     nextTable = table.updateSortCol(this.state.table, data);
-    nextTable = table.sortDataByCol(nextTable, this.props.absenceRecords);
-    nextTable = table.setupFixedGroups(nextTable, this.props.absenceRecords);
+    nextTable = table.buildIndexMap(nextTable, this.props.absenceRecords);
     this.setState({table: nextTable});
   }
 
   handleChangeColFilter = (nextTable, data, event) => {
-    //console.log(data.substr(7), event);
+    console.log('handleChangeColFilter 1', this.props.absenceRecords, data.substr(7), event);
     let tabData = this.props.absenceRecords;
-    nextTable = table.updateFilterBy(this.state.table, tabData, data.substr(7), event);
-    nextTable = table.sortDataByCol(nextTable, tabData);
-    nextTable = table.setupFixedGroups(nextTable, tabData);
+    nextTable = table.updateFilterBy(this.state.table, data.substr(7), event);
+    nextTable = table.filterIndexMap(nextTable, tabData);
+    console.log('handleChangeColFilter 2', nextTable.get('indexMap').toJS());
     this.setState({table: nextTable});
   }
 

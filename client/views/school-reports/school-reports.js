@@ -148,7 +148,7 @@ class SchoolReportsPage extends React.Component {
       //console.log(data.substr(7), event);
       let tabData = this.state.table.get('selectedTab') == 'users'
           ? this.props.absenceRecords : this.props.absenceRecords;
-      nextTable = table.updateFilterBy(this.state.table, tabData, data.substr(7), event);
+      nextTable = table.updateFilterBy(this.state.table, data.substr(7), event);
       nextTable = table.sortDataByCol(nextTable, tabData);
       this.setState({table: nextTable});
       break;

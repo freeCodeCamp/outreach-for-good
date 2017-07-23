@@ -24,17 +24,19 @@ class TableContainer extends React.Component {
       || this.props.table.get('groupColumn') !== nextProps.table.get('groupColumn');
   }
 
+  fixedColumn = null;
+  _data = List();
+  _indexMap = List();
+
+
   /**
    * DataTable Handler
    *   - Catch events from the table and send to parent component
    */
 
-  isRowSelected = index =>
-    this.props.table.selectionToMappedIndicies(this.props.table).includes(index)
-    ? 'selected-row' : '';
-
   rowToggleSelected = (event, index) => {
-    this.props.clickHandler('toggleSelected', index);
+    // references the index of unsorted `data`
+    this.props.clickHandler('toggleSelected', this._indexMap.get(index));
   }
 
   tableSortHandler = event => {
@@ -45,6 +47,9 @@ class TableContainer extends React.Component {
     this.props.clickHandler('changeFilterCol', event.target.id, event.target.value);
   }
 
+  getFixedColumn = () =>
+    this.props.table.getFixedColumn(this.props.table);
+
   render() {
     const {
       data,
@@ -54,18 +59,28 @@ class TableContainer extends React.Component {
       view
     } = this.props;
     const groupCol = table.get('groupColumn');
-    const fixedColumn = table.getFixedColumn(table);
+    this.fixedColumn = this.getFixedColumn();
 
-    let _data = data;
-    let _indexMap = table.get('indexMap');
-    if(fixedColumn) {
+    // Uncomment to debug groupCol data structure
+    // console.log('data: ', groupCol.toJS());
+
+    /*
+     * Add summary rows to data and indexMap based on the values set in FixedColumn
+     *  @input: data - full data set
+     *  @input: indexMap - sorted and filtered
+     *  @output: _data - data set with "summary rows" appended to the end
+     *  @output: _indexMap - collapsed/hidden indexes removed
+     */
+    this._data = data;
+    this._indexMap = table.get('indexMap');
+    if(this.fixedColumn) {
       const displayColumn = groupCol.get('displayColumn');
       const summaryRows = groupCol.get('summaryRows');
       const groupIndices = groupCol.get('groupIndices');
       let count = -1;
       groupIndices.forEach(i => {
         count += 1;
-        _data = _data.push(_data.get(0).map((v, k) => {
+        this._data = this._data.push(this._data.get(0).map((v, k) => {
           if(k === displayColumn) {
             return `${summaryRows.get(i + count).get('groupColumn').get('group')}
               (${summaryRows.get(i + count).get('groupColumn').get('count')})`;
@@ -75,8 +90,11 @@ class TableContainer extends React.Component {
           return '';
         }));
       });
-      _indexMap = table.removeCollapsedDataFromIndexMap(table, _data.size);
+      this._indexMap = table.removeCollapsedDataFromIndexMap(table, this._data.size);
     }
+
+    let isRowSelected = index =>
+      table.selectionToMappedIndicies(table, this._indexMap).includes(index) ? 'selected-row' : '';
 
     return (
       <Table
@@ -84,14 +102,14 @@ class TableContainer extends React.Component {
         headerHeight={table.get('filterEnabled')
           ? table.get('filterHeaderHeight') || 60
           : table.get('headerHeight') || 30}
-        rowsCount={loaded ? _indexMap.size : 1}
+        rowsCount={loaded ? this._indexMap && this._indexMap.size : 1}
         width={view.width || 100}
         maxHeight={view.height}
         onRowClick={this.rowToggleSelected}
-        rowClassNameGetter={this.isRowSelected}
+        rowClassNameGetter={isRowSelected}
         id="theDataTable"
       >
-      {/*console.log('Debugging race condition: ', data, page.columns)*/}
+      {/* {console.log('Debugging: ', this._indexMap.toJS(), table.get('indexMap').toJS())} */}
       {page.columns && page.columns
         .map(col =>
         <Column
@@ -109,10 +127,10 @@ class TableContainer extends React.Component {
           cell={
             loaded
             ? <DataTableRow
-              indexMap={_indexMap}
-              data={_data}
+              indexMap={this._indexMap}
+              data={this._data}
               col={col.id}
-              fixedColumn={fixedColumn}
+              fixedColumn={this.fixedColumn}
             />
             : <Cell className="cell-loading">
                 <i className="fa fa-refresh fa-spin" />
