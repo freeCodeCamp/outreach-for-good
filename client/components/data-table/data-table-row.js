@@ -17,18 +17,20 @@ const getColumn = (data, indexMap, rowIndex, col) => {
   }
 };
 
-const getFixedColumn = (data, indexMap, rowIndex, col) => {
+const getFixedColumn = (data, indexMap, rowIndex, col, collapsedColumns) => {
   let value = data.getIn([indexMap.get(rowIndex), col]);
   if(value) {
     return '';
   } else {
-    return <b>+</b>;
+    return collapsedColumns.indexOf(indexMap.get(rowIndex)) !== -1
+      ? <b className="no-select">&#8211;</b>
+      : <b className="no-select">+</b>;
   }
 };
 
-const DataTableRow = ({rowIndex, indexMap, data, col, fixedColumn, ...props}) => <Cell {...props}>
+const DataTableRow = ({rowIndex, indexMap, data, col, fixedColumn, collapsedColumns, ...props}) => <Cell {...props}>
   {fixedColumn && col === fixedColumn
-    ? getFixedColumn(data, indexMap, rowIndex, col)
+    ? getFixedColumn(data, indexMap, rowIndex, col, collapsedColumns)
     : indexMap.size > 0 && data && data.size
         ? getColumn(data, indexMap, rowIndex, col)
         : ''

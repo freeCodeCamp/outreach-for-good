@@ -61,7 +61,7 @@ class DataTable extends React.Component {
     this.fixedColumn = this.getFixedColumn();
 
     // Uncomment to debug groupCol data structure
-    console.log('data: ', groupCol.toJS());
+    //console.log('data: ', groupCol.toJS());
 
     /*
      * Add summary rows to data and indexMap based on the values set in FixedColumn
@@ -81,10 +81,10 @@ class DataTable extends React.Component {
         count += 1;
         this._data = this._data.push(this._data.get(0).map((v, k) => {
           if(k === displayColumn) {
-            return `${summaryRows.get(i + count).get('groupColumn').get('group')}
-              (${summaryRows.get(i + count).get('groupColumn').get('count')})`;
-          } else if(summaryRows.get(i + count).get(k) !== null) {
-            return summaryRows.get(i + count).get(k);
+            return `${summaryRows.getIn([i + count, 'groupColumn', 'group'])}
+              (${summaryRows.getIn([i + count, 'groupColumn', 'count'])})`;
+          } else if(summaryRows.getIn([i + count, k]) !== null) {
+            return summaryRows.getIn([i + count, k]);
           }
           return '';
         }));
@@ -130,6 +130,7 @@ class DataTable extends React.Component {
               data={this._data}
               col={col.id}
               fixedColumn={this.fixedColumn}
+              collapsedColumns={table.getIn(['groupColumn', 'collapsed'])}
             />
             : <Cell className="cell-loading">
                 <i className="fa fa-refresh fa-spin" />
@@ -141,7 +142,7 @@ class DataTable extends React.Component {
           width={col.width || 200}
         />
         )}
-        {/*console.log('Debugging race condition: ', data.toJS())*/}
+        {console.log(table.getIn(['groupColumn', 'collapsed']).toJS())}
       </Table>
     );
   }
