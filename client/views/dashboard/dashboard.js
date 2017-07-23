@@ -90,9 +90,9 @@ class DashboardPage extends React.Component {
       break;
     case 'Student':
       loadingPromise = this.props.absRecordActions.fetchRecordsList(yearFilter);
-      this.props.reportActions.getOutreachCounts('withdrawn=false');
       break;
     }
+    this.props.reportActions.getOutreachCounts('withdrawn=false');
     loadingPromise.then(() => this.updateDataTable());
     this.setState({loadResolved: false});
   }

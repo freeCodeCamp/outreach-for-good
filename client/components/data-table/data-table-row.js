@@ -10,15 +10,15 @@ import './data-table-override.scss';
 
 const getColumn = (data, indexMap, rowIndex, col) => {
   if(col === 'student.studentId') {
-    const studentId = data.get(indexMap.get(rowIndex)).get('student._id');
+    const studentId = data.getIn([indexMap.get(rowIndex), 'student._id']);
     return <Link to={`/student/${studentId}`}>{data.get(indexMap.get(rowIndex)).get(col)}</Link>;
   } else {
-    return data.get(indexMap.get(rowIndex)).get(col);
+    return data.getIn([indexMap.get(rowIndex), col]);
   }
 };
 
 const getFixedColumn = (data, indexMap, rowIndex, col) => {
-  let value = data.get(indexMap.get(rowIndex)).get(col);
+  let value = data.getIn([indexMap.get(rowIndex), col]);
   if(value) {
     return '';
   } else {

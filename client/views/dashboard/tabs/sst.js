@@ -5,18 +5,9 @@ import * as localDefs from '../dashboard.defs';
 
 import { List } from 'immutable';
 
-import DataTable from '../../../components/data-table/data-table';
+import DataTableContainer from '../../../components/data-table/data-table-container';
 
 const SstTab = ({absenceRecords, ...props}) => {
-/**
- * Handler Functions
- *   - Catch events from page elements and send to parent component
- */
-  function handleButtonClick(event) {
-    event.preventDefault();
-    props.clickHandler('dialogClick', this.value, event); // eslint-disable-line babel/no-invalid-this
-  }
-
   let buttons = [];
 
   /**
@@ -36,7 +27,7 @@ const SstTab = ({absenceRecords, ...props}) => {
   };
 
   return props.table.get('selectedTab') === props.tabName
-    ? <DataTable
+    ? <DataTableContainer
         page={page}
         data={absenceRecords}
         {...props}
@@ -51,4 +42,3 @@ SstTab.propTypes = {
 };
 
 export default SstTab;
-

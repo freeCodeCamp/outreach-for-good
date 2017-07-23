@@ -89,7 +89,7 @@ class TableModel extends Table {
   //  - Not corrected for the extra data.length caused by Summary Row insertions
   setupGroupIndices(state, data) {
     let groupColumn = state.get('groupColumn').get('fixedColumn');
-    let previousValue = data.get(0).get(groupColumn);
+    let previousValue = data.getIn([0, groupColumn]);
     return state.update('groupColumn', nextGroupColumn =>
       nextGroupColumn.set('groupIndices', data.reduce((a, row, i) => {
         if(row.get(groupColumn) === previousValue) return a;
@@ -129,7 +129,7 @@ class TableModel extends Table {
           let recordCount = nextIndice ? nextIndice[0] - indice : data.size - indice;
           return a.set(rowIndex, Immutable.Map({
             groupColumn : Immutable.Map({
-              group : data.get(indice + 1).get(groupColumn),
+              group : data.getIn([indice + 1, groupColumn]),
               count : recordCount
             })
           }).concat(this.getRowAggregateRecord(state, data.slice(rowIndex - count, rowIndex + recordCount))));

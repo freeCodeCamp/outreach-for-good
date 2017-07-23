@@ -5,7 +5,7 @@ import {connect} from 'react-redux';
 import {Link} from 'react-router';
 import {List} from 'immutable';
 
-import DataTable from '../../../components/data-table/data-table';
+import DataTableContainer from '../../../components/data-table/data-table-container';
 import DeleteDialog from '../../../components/delete-dialog/delete-dialog';
 import SchoolSelect from '../../../components/school-select/school-select';
 
@@ -148,7 +148,7 @@ class ManageTab extends React.Component {
         </div>
 
         {this.state.school
-          && <DataTable
+          && <DataTableContainer
             table={this.state.table}
             page={page}
             data={this.props.absenceRecords}
