@@ -12,19 +12,21 @@ export const Table = Immutable.Record({
   selectedData  : Immutable.List(),
   // data indicies -> sorted-table order map
   indexMap      : Immutable.List(),
+  indexMap_uf   : Immutable.List(), // unfiltered index map
   sortDirection : locAct.SORT_ASC,
   sortCol       : '',
   filterEnabled : false,
   // filterBy: {data_id: filter_value, ...}
   filterBy      : Immutable.Map(),
+  // inspect `groupCol.toJS()` in data-table.js to review the groupColumn data structure
   groupColumn   : Immutable.Map({
     fixedColumn      : '', // col which data is grouped by
-    displayColumn    : '', // used for Summary Row
+    displayColumn    : '', // used for Summary Row (ex. School A (12))
     aggregateColumns : Immutable.List(), // columns to sum() for Summary Row
     groupIndices     : Immutable.List(), // first index of each group
-    collapsed        : Immutable.List(), // groups which are collapsed/expanded
-    summaryRows      : Immutable.Map(/*{
-      [corrected-index-##]: {
+    collapsed        : Immutable.List(), // index of groupIndicies which are collapsed/expanded
+    summaryRows      : Immutable.Map(/*{ //group summary (mainly sum() of columns)
+      [_indexMap-position]: { // starts at 0, indicates where to insert in _data
         groupColumn: {count: ##, group: "School XX"},
         entry.enrolled: ##,
         entry...
@@ -60,7 +62,7 @@ class TableModel extends Table {
   }
 
   getFixedColumn(state) {
-    return state.get('groupColumn').get('fixedColumn');
+    return state.getIn(['groupColumn', 'fixedColumn'], null);
   }
 
   // displayColumn: col where fixedGroup name and count are displayed, ex. School A (10)
@@ -78,7 +80,7 @@ class TableModel extends Table {
   // Shorthand for tasks required to setup dataTable for fixed column groups
   setupFixedGroups(state, data) {
     let nextState = this.setupGroupIndices(state, data);
-    nextState = this.addGroupRowsToIndexMap(nextState);
+    nextState = this.addGroupRowsToIndexMap(nextState, data.size);
     return this.setupGroupSummaryRows(nextState, data);
   }
 
@@ -87,7 +89,7 @@ class TableModel extends Table {
   //  - Not corrected for the extra data.length caused by Summary Row insertions
   setupGroupIndices(state, data) {
     let groupColumn = state.get('groupColumn').get('fixedColumn');
-    let previousValue = data.get(0).get(groupColumn);
+    let previousValue = data.getIn([0, groupColumn]);
     return state.update('groupColumn', nextGroupColumn =>
       nextGroupColumn.set('groupIndices', data.reduce((a, row, i) => {
         if(row.get(groupColumn) === previousValue) return a;
@@ -97,18 +99,19 @@ class TableModel extends Table {
     ));
   }
 
-  // Indices where Summary Rows go, accounting for # of previous rows inserted
+  // Convert index # in data where each new group begins (groupColumns.groupIndices[])
+  //   to the index # in _data where each Summary Row is
   getCorrectedGroupIndices(state) {
-    return state.get('groupColumn').get('groupIndices').map((v, i) => v + i);
+    return state.getIn(['groupColumn', 'groupIndices']).map((v, i) => v + i);
   }
 
   // Insert groupColumn Sumamry Row index locations into indexMap
   //  - value = indexMap.size because Summary Rows will be pushed to the end of the data
   //  - must account for indices increasing the indexMap size with each insertion
-  addGroupRowsToIndexMap(state) {
+  addGroupRowsToIndexMap(state, dataSize) {
     return state.update('indexMap', indexMap =>
       state.get('groupColumn').get('groupIndices').reduce((_indexMap, indice, i) =>
-        _indexMap.splice(indice + i, 0, _indexMap.size), indexMap));
+        _indexMap.splice(indice + i, 0, dataSize + i), indexMap));
   }
 
   // Generate counts and display data for each Summary Row
@@ -126,7 +129,7 @@ class TableModel extends Table {
           let recordCount = nextIndice ? nextIndice[0] - indice : data.size - indice;
           return a.set(rowIndex, Immutable.Map({
             groupColumn : Immutable.Map({
-              group : data.get(indice + 1).get(groupColumn),
+              group : data.getIn([indice + 1, groupColumn]),
               count : recordCount
             })
           }).concat(this.getRowAggregateRecord(state, data.slice(rowIndex - count, rowIndex + recordCount))));
@@ -141,29 +144,27 @@ class TableModel extends Table {
   }
 
   // Adds/removes row index from a List() of collapsed rows
+  // Collapses the group with summary row in collapsed[] index position
   toggleCollapsedRow(state, mappedIndex) {
-    const target = state.get('groupColumn').get('collapsed').indexOf(mappedIndex);
-    if(target == -1) {
-      return state.update('groupColumn', nextGroupColumn =>
-        nextGroupColumn.update('collapsed', i => i.push(mappedIndex)));
-    } else {
-      return state.update('groupColumn', nextGroupColumn =>
-        nextGroupColumn.update('collapsed', i => i.splice(target, 1)));
-    }
+    const target = state.getIn(['groupColumn', 'collapsed']).indexOf(mappedIndex);
+    return target == -1
+      ? state.updateIn(['groupColumn', 'collapsed'], i => i.push(mappedIndex))
+      : state.updateIn(['groupColumn', 'collapsed'], i => i.splice(target, 1));
   }
 
   // DataTable Inline Function
   //  - remove collapsed indices from indexMap before rendering
+  //  - indexMap (obviously) needs to contain summary rows to collapse
   //  - return: indexMap
   removeCollapsedDataFromIndexMap(state, dataSize) {
-    const correctedGroupIndices = this.getCorrectedGroupIndices(state);
-    return state.get('groupColumn').get('collapsed').reduce((_indexMap, indice) => {
-      let nextIndice = correctedGroupIndices.findEntry(v => v > indice);
-      let recordCount = nextIndice ? nextIndice[1] - indice : dataSize - indice;
-      let frontsideRange = [0, indice + 1];
-      let backsideRange = [indice + recordCount, dataSize];
+    //const correctedGroupIndices = this.getCorrectedGroupIndices(state);
+    let collapsedIndexMap =  state.getIn(['groupColumn', 'collapsed']).reduce((_indexMap, indice) => {
+      let nextIndice = _indexMap.findEntry(v => v > indice); // find next largest indicie
+      let frontsideRange = [0, _indexMap.indexOf(indice) + 1];
+      let backsideRange = [nextIndice ? _indexMap.indexOf(nextIndice[1]) : _indexMap.size, _indexMap.size];
       return _indexMap.slice(...frontsideRange).concat(_indexMap.slice(...backsideRange));
-    }, state.get('indexMap'));
+    }, state.get('indexMap_uf'));
+    return state.get('indexMap').filter(i => collapsedIndexMap.indexOf(i) !== -1 || dataSize <= i);
   }
 
   // groupColumn is a column where rows of similar values sort togeather and don't speerate
@@ -182,9 +183,14 @@ class TableModel extends Table {
    * Sort table by column
    */
   buildIndexMap(state, data) {
-    return state.update('indexMap', () =>
+    let nextState = state.update('indexMap', () =>
       Immutable.List().setSize(data.size)
       .map((x, i) => i));
+    nextState = this.sortDataByCol(nextState, data);
+    if(this.getFixedColumn(nextState)) {
+      nextState = nextState.setupFixedGroups(nextState, data);
+    }
+    return nextState.set('indexMap_uf', nextState.get('indexMap'));
   }
 
   updateSortCol(state, nextSortCol) {
@@ -218,12 +224,13 @@ class TableModel extends Table {
   /**
    * Filter table by column
    */
-  updateFilterBy(state, data, colId, filter) {
+  updateFilterBy(state, colId, filter) {
     return state.update('filterBy', filterBy =>
       filterBy.set(colId, filter));
   }
 
   // Enhancement: change filter algo based on adding or removing chars
+  // Enhancement: use intelligent map instead of indexOf
   filterIndexMap(state, data) {
     let nextState = this.buildIndexMap(state, data);
     let filterBy = nextState.get('filterBy');
@@ -231,11 +238,12 @@ class TableModel extends Table {
       filterBy.forEach((v, k) => {
         let searchString = v.toString().toLowerCase();
         indexMap = indexMap.filter(e =>
-          data.getIn([e, k]).toString()
+          e < data.size // If using groupColumn
+          && data.getIn([e, k]).toString()
           .toLowerCase()
           .indexOf(searchString) !== -1);
       });
-      return indexMap;
+      return nextState.get('indexMap_uf').filter(i => indexMap.indexOf(i) !== -1 || data.size <= i);
     });
   }
 
@@ -246,19 +254,19 @@ class TableModel extends Table {
   /**
    * Row Select and Highlighting
    */
-  toggleSelectedRowIndex(state, mappedIndex) {
-    let target = this.selectionToMappedIndicies(state).indexOf(mappedIndex);
+  toggleSelectedRowIndex(state, dataIndex) {
+    let target = state.get('selectedIndex').indexOf(dataIndex);
     if(target == -1) { // target was not selected
-      let index = state.get('indexMap').get(mappedIndex);
-      return state.update('selectedIndex', i => i.push(index));
+      //let index = state.get('indexMap').get(dataIndex);
+      return state.update('selectedIndex', i => i.push(dataIndex));
     } else {
       return state.update('selectedIndex', i => i.splice(target, 1));
     }
   }
 
   // Returns `selectedIndex` mapped to table sort order
-  selectionToMappedIndicies(state) {
-    let indexMap = state.get('indexMap');
+  selectionToMappedIndicies(state, _indexMap) {
+    let indexMap = _indexMap || state.get('indexMap');
     return state
       .get('selectedIndex').map(index =>
         indexMap.indexOf(index));

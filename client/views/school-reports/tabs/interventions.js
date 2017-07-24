@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import {interventionTableColumns} from '../school-reports.defs';
 
-import DataTable from '../../../components/data-table/data-table';
+import DataTableContainer from '../../../components/data-table/data-table-container';
 
 const InterventionsTab = ({interventions, ...props}) => {
   const page = {
@@ -12,7 +12,7 @@ const InterventionsTab = ({interventions, ...props}) => {
   };
 
   return (
-    <DataTable
+    <DataTableContainer
       page={page}
       data={interventions}
       {...props}

@@ -199,7 +199,7 @@ class AdminPage extends React.Component {
 
   handleColumnSort = (nextTable, data) => {
     nextTable = table.updateSortCol(this.state.table, data);
-    nextTable = table.sortDataByCol(nextTable,
+    nextTable = table.sortIndexMap(nextTable,
       nextTable.get('selectedTab') == 'users'
         ? this.props.users : this.props.schools);
     this.setState({table: nextTable});
@@ -209,8 +209,8 @@ class AdminPage extends React.Component {
     //console.log(data.substr(7), event);
     let tabData = this.state.table.get('selectedTab') == 'users'
         ? this.props.users : this.props.schools;
-    nextTable = table.updateFilterBy(this.state.table, tabData, data.substr(7), event);
-    nextTable = table.sortDataByCol(nextTable, tabData);
+    nextTable = table.updateFilterBy(this.state.table, data.substr(7), event);
+    nextTable = table.sortIndexMap(nextTable, tabData);
     this.setState({table: nextTable});
   }
 

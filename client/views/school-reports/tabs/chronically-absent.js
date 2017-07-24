@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import DataTable from '../../../components/data-table/data-table';
+import DataTableContainer from '../../../components/data-table/data-table-container';
 import RaisedButtonModel from '../../../models/raised-button';
 
 const ChronicallyAbsentTab = ({chronicAbsent, ...props}) => {
@@ -88,7 +88,7 @@ const ChronicallyAbsentTab = ({chronicAbsent, ...props}) => {
   };
 
   return (
-    <DataTable
+    <DataTableContainer
       page = {page}
       data = {chronicAbsent}
       {...props}

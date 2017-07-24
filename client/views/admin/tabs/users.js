@@ -5,7 +5,7 @@ import * as localConst from '../admin.const';
 
 import { List } from 'immutable';
 
-import DataTable from '../../../components/data-table/data-table';
+import DataTableContainer from '../../../components/data-table/data-table-container';
 import DialogModel from '../../../models/dialog';
 import DropdownModel from '../../../models/dropdown';
 import RaisedButtonModel from '../../../models/raised-button';
@@ -164,7 +164,7 @@ const UsersTab = ({users, schools, ...props}) => {
   return (
     props.table.get('selectedTab') == 'users'
     && <div>
-        <DataTable
+        <DataTableContainer
           page={page}
           data={users.map(iMap =>
             iMap.assignment
