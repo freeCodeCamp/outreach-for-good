@@ -56,13 +56,6 @@ class Api {
     console.log(err);
   }
 
-  /**
-   * Fetch requests
-   */
-  static fetchRequest(method = 'GET', url, body) {
-    //console.log(method, url, body);
-  }
-
   static getAPI(url) {
     let request = new Request(url, {
       method  : 'GET',

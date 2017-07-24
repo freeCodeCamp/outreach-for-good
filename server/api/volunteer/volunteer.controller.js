@@ -7,10 +7,17 @@ var Volunteer = require('./volunteer.model');
  */
 exports.getVolunteers = function(req, res) {
   Volunteer.find({ school: req.params.schoolId })
+    .populate('school', 'name')
     .exec(function(err, volunteers) {
       if(err) return handleError(res, err);
       return res.status(200).json(volunteers);
     });
+};
+
+exports.getOverview = function(req, res) {
+  res.status(200).json({
+    message : 'This is going to be an overview of volunteer information'
+  });
 };
 
 /**

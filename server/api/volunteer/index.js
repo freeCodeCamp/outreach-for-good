@@ -9,6 +9,9 @@ var router = express.Router();
 router.get('/:schoolId',
   controller.getVolunteers);
 
+router.get('/:schoolId/overview',
+  controller.getOverview);
+
 router.put('/:schoolId/:volunteerId',
   auth.hasRole('admin'),
   controller.putVolunteer);
