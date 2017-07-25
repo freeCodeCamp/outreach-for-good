@@ -24,7 +24,7 @@ export const Table = Immutable.Record({
     displayColumn    : '', // used for Summary Row (ex. School A (12))
     aggregateColumns : Immutable.List(), // columns to sum() for Summary Row
     groupIndices     : Immutable.List(), // first index of each group
-    collapsed        : Immutable.List(), // index of groupIndicies which are collapsed/expanded
+    collapsed        : Immutable.List(), // index of groupIndicies which are collapsed/expanded (data + 1, 2..)
     summaryRows      : Immutable.Map(/*{ //group summary (mainly sum() of columns)
       [_indexMap-position]: { // starts at 0, indicates where to insert in _data
         groupColumn: {count: ##, group: "School XX"},
@@ -82,6 +82,13 @@ class TableModel extends Table {
     let nextState = this.setupGroupIndices(state, data);
     nextState = this.addGroupRowsToIndexMap(nextState, data.size);
     return this.setupGroupSummaryRows(nextState, data);
+  }
+
+  // Shorthand for tasks required to setup dataTable for fixed column groups
+  collapseFixedGroups(state) {
+    return state.updateIn(['groupColumn', 'collapsed'], () =>
+      state.getIn(['groupColumn', 'groupIndices']).map((v, i) =>
+        state.getIn(['indexMap_uf']).size - i - 1));
   }
 
   // Generate groupColumn.indices
