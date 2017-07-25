@@ -142,7 +142,6 @@ class DataTable extends React.Component {
           width={col.width || 200}
         />
         )}
-        {console.log(table.getIn(['groupColumn', 'collapsed']).toJS())}
       </Table>
     );
   }
