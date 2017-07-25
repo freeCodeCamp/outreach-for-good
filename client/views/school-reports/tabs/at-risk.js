@@ -5,7 +5,7 @@ import { List } from 'immutable';
 
 import * as localDefs from '../school-reports.defs';
 
-import DataTable from '../../../components/data-table/data-table';
+import DataTableContainer from '../../../components/data-table/data-table-container';
 import RaisedButtonModel from '../../../models/raised-button';
 
 const AtRiskTab = ({atRisk, ...props}) => {
@@ -21,7 +21,7 @@ const AtRiskTab = ({atRisk, ...props}) => {
   };
 
   return (
-    <DataTable
+    <DataTableContainer
       page={page}
       data={atRisk}
       {...props}

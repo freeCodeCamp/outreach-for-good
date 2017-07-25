@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import DataTable from '../../../components/data-table/data-table';
+import DataTableContainer from '../../../components/data-table/data-table-container';
 
 const OutreachesTab = ({outreaches, ...props}) => {
   const page = {
@@ -41,7 +41,7 @@ const OutreachesTab = ({outreaches, ...props}) => {
   };
 
   return (
-    <DataTable
+    <DataTableContainer
       page={page}
       data={outreaches}
       {...props}

@@ -28,7 +28,7 @@ export const absenceRecordTableColumns = [{
   flexGrow : 1
 }, {
   title    : 'Grade',
-  id       : '',
+  id       : 'student.grade',
   width    : 60,
   flexGrow : 1
 }, {

@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
@@ -24,11 +25,15 @@ class SettingsTab extends React.Component {
     openEdit : false
   }
 
-  componentDidMount = () => {
+  componentDidMount() {
     this.props.actions.getInterventionTypes();
   }
 
-  handleClose = e => {
+  openAdd = () => this.setState({ openAdd: !this.state.openAdd});
+
+  openEdit = () => this.setState({ openEdit: !this.state.openEdit});
+
+  handleClose = () => {
     this.setState({ openAdd: false, openEdit: false});
   }
 
@@ -61,11 +66,13 @@ class SettingsTab extends React.Component {
     this.handleClose();
   };
 
-  handleDelete = e => {
-    console.log(e.target);
+  handleDelete = () => {
+    const {row} = this.state;
+    this.props.actions.deleteInterventionType(row._id);
+    this.setState({ row: undefined });
   }
 
-  render = () => {
+  render() {
     const { interventionTypes } = this.props.settings;
 
     return (
@@ -76,7 +83,7 @@ class SettingsTab extends React.Component {
             className="control-btn"
             icon={<FontIcon className="fa fa-plus" />}
             label="Add New"
-            onTouchTap={() => this.setState({ openAdd: !this.state.openAdd})}
+            onTouchTap={this.openAdd}
             disabled={this.state.row !== undefined}
             primary
           />
@@ -85,7 +92,7 @@ class SettingsTab extends React.Component {
             className="control-btn"
             icon={<FontIcon className="fa fa-pencil-square-o" />}
             label="Edit"
-            onTouchTap={() => this.setState({ openEdit: !this.state.openEdit})}
+            onTouchTap={this.openEdit}
             disabled={!(this.state.row !== undefined)}
           />
 
@@ -138,6 +145,11 @@ class SettingsTab extends React.Component {
     );
   }
 }
+
+SettingsTab.propTypes = {
+  actions  : PropTypes.object,
+  settings : PropTypes.object
+};
 
 const mapStateToProps = state => ({
   settings : state.settings

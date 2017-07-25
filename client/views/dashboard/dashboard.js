@@ -90,19 +90,18 @@ class DashboardPage extends React.Component {
       break;
     case 'Student':
       loadingPromise = this.props.absRecordActions.fetchRecordsList(yearFilter);
-      this.props.reportActions.getOutreachCounts('withdrawn=false');
       break;
     }
+    this.props.reportActions.getOutreachCounts('withdrawn=false');
     loadingPromise.then(() => this.updateDataTable());
     this.setState({loadResolved: false});
   }
 
   updateDataTable = () => {
-    let nextTable = table.updateSortCol(this.state.table, '');
-    nextTable = table.buildIndexMap(nextTable, this.props.absenceRecords);
-    nextTable = table.sortDataByCol(nextTable, this.props.absenceRecords);
-    nextTable = table.setupFixedGroups(nextTable, this.props.absenceRecords);
-    nextTable = table.enableFiltering(nextTable);
+    let nextTable = this.state.table.updateSortCol(this.state.table, '');
+    nextTable = nextTable.buildIndexMap(nextTable, this.props.absenceRecords);
+    nextTable = nextTable.enableFiltering(nextTable);
+    nextTable = nextTable.collapseFixedGroups(nextTable);
     this.setState({table: nextTable, loadResolved: true});
   }
 
@@ -168,28 +167,22 @@ class DashboardPage extends React.Component {
   }
 
   handleToggleSelectedRow = (nextTable, index) => {
-    if(table.getFixedColumn(this.state.table)
-        && table.getCorrectedGroupIndices(this.state.table).indexOf(index) !== -1) {
-      nextTable = table.toggleCollapsedRow(this.state.table, index);
-    } else {
-      nextTable = table.toggleSelectedRowIndex(this.state.table, index);
-    }
+    nextTable = this.props.absenceRecords.size <= index
+      ? table.toggleCollapsedRow(this.state.table, index)
+      : table.toggleSelectedRowIndex(this.state.table, index);
     this.setState({table: nextTable});
   }
 
   handleToggleSortCol = (nextTable, data) => {
     nextTable = table.updateSortCol(this.state.table, data);
-    nextTable = table.sortDataByCol(nextTable, this.props.absenceRecords);
-    nextTable = table.setupFixedGroups(nextTable, this.props.absenceRecords);
+    //nextTable = table.buildIndexMap(nextTable, this.props.absenceRecords);
+    nextTable = table.filterIndexMap(nextTable, this.props.absenceRecords);
     this.setState({table: nextTable});
   }
 
   handleChangeColFilter = (nextTable, data, event) => {
-    //console.log(data.substr(7), event);
-    let tabData = this.props.absenceRecords;
-    nextTable = table.updateFilterBy(this.state.table, tabData, data.substr(7), event);
-    nextTable = table.sortDataByCol(nextTable, tabData);
-    nextTable = table.setupFixedGroups(nextTable, tabData);
+    nextTable = table.updateFilterBy(this.state.table, data.substr(7), event);
+    nextTable = table.filterIndexMap(nextTable, this.props.absenceRecords);
     this.setState({table: nextTable});
   }
 
