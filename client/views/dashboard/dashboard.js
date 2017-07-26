@@ -6,6 +6,7 @@ import { bindActionCreators } from 'redux';
 import * as absRecordActions from '../../modules/absence-record';
 import * as localActions from './dashboard.actions';
 import * as reportActions from '../../modules/reports';
+import * as settingsActions from '../../modules/settings';
 import * as userActions from '../../modules/user';
 
 import Dimensions from 'react-dimensions-cjs';
@@ -139,6 +140,9 @@ class DashboardPage extends React.Component {
         this.getSelectedRowData());
       if(data == localActions.EDIT || data == localActions.FILTER) {
         this.handleDialogButtonClick(nextTable, data, event);
+      } else if(data == localActions.TOGGLE_WITHDRAWN_STUDENTS) {
+        this.props.settingsActions.setWithdrawnStudents(!this.props.withdrawnStudents);
+        this.handleInterfaceButtonClick(nextTable, data, event);
       } else if(data == localActions.ALL_YEARS) {
         this.retrieveData(nextTable.get('selectedTab'));
         this.handleInterfaceButtonClick(nextTable, data, event);
@@ -253,6 +257,7 @@ class DashboardPage extends React.Component {
 DashboardPage.propTypes = {
   absRecordActions : PropTypes.object.isRequired,
   reportActions    : PropTypes.object.isRequired,
+  settingsActions  : PropTypes.object.isRequired,
   userActions      : PropTypes.object.isRequired,
   absenceRecords   : PropTypes.object.isRequired,
   containerWidth   : PropTypes.number.isRequired,
@@ -262,8 +267,9 @@ DashboardPage.propTypes = {
 
 function mapStateToProps(state) {
   return {
-    absenceRecords : state.absenceRecords,
-    reports        : state.reports,
+    absenceRecords    : state.absenceRecords,
+    reports           : state.reports,
+    withdrawnStudents : state.settings.withdrawnStudents,
   };
 }
 
@@ -271,6 +277,7 @@ function mapDispatchToProps(dispatch) {
   return {
     absRecordActions : bindActionCreators(absRecordActions, dispatch),
     reportActions    : bindActionCreators(reportActions, dispatch),
+    settingsActions  : bindActionCreators(settingsActions, dispatch),
     userActions      : bindActionCreators(userActions, dispatch)
   };
 }

@@ -80,7 +80,7 @@ export const absenceRecordTableColumns = [{
 
 export const filterButtonMenuItems = [{
   text     : 'Withdrawn Students',
-  actionID : localActions.ALL_YEARS
+  actionID : localActions.TOGGLE_WITHDRAWN_STUDENTS
 }, {
   text : 'Divider',
 }, {

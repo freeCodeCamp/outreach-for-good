@@ -13,6 +13,7 @@ export const CFA_ADD = 'WITHDRAW_STUDENT';
 export const CFA_REMOVE = 'ENROLL_STUDENT';
 
 // API Actions
+export const TOGGLE_WITHDRAWN_STUDENTS = 'TOGGLE_WITHDRAWN_STUDENTS';
 export const ALL_YEARS = 'ALL_YEARS';
 export const Y2016_Y2017 = 'Y2016_Y2017';
 export const Y2015_Y2016 = 'Y2015_Y2016';
