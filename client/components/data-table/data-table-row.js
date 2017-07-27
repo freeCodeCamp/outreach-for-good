@@ -22,7 +22,7 @@ const getFixedColumn = (data, indexMap, rowIndex, col, collapsedColumns) => {
   if(value) {
     return '';
   } else {
-    return collapsedColumns.indexOf(indexMap.get(rowIndex)) !== -1
+    return collapsedColumns.indexOf(indexMap.get(rowIndex)) === -1
       ? <b className="no-select">&#8211;</b>
       : <b className="no-select">+</b>;
   }

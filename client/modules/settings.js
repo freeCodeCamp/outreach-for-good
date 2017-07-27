@@ -1,14 +1,23 @@
 import SettingsApi from '../api/settings';
+import {getOutreachCounts} from './reports';
 import {openSnackbar} from './view';
 
+const SET_WITHDRAWN_STUDENTS = 'TOGGLE_WITHDRAWN_STUDENTS';
 const GET_INTERVENTION_TYPES_SUCCESS = 'GET_INTERVENTION_TYPES_SUCCESS';
 
 const initialState = {
+  withdrawnStudents : false,
   interventionTypes : []
 };
 
 export default function settingsReducer(state = initialState, action) {
   switch (action.type) {
+  case SET_WITHDRAWN_STUDENTS: {
+    return {
+      ...state,
+      withdrawnStudents : !state.withdrawnStudents
+    };
+  }
   case GET_INTERVENTION_TYPES_SUCCESS: {
     return {
       ...state,
@@ -17,6 +26,16 @@ export default function settingsReducer(state = initialState, action) {
   }
   default: return state;
   }
+}
+
+export function setWithdrawnStudents(showWidthDrawnStudents) {
+  return function(dispatch) {
+    dispatch(getOutreachCounts(`withdrawn=${showWidthDrawnStudents}`));
+    return dispatch({
+      type : SET_WITHDRAWN_STUDENTS,
+      showWidthDrawnStudents
+    });
+  };
 }
 
 export function getInterventionTypes() {

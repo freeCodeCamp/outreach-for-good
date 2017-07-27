@@ -74,6 +74,7 @@ class DataTableContainer extends React.Component {
                         ? <Divider key={`menu-item-${item.text}-${i}`} />
                         : <MenuItem
                           primaryText={item.text}
+                          leftIcon={item.icon}
                           value={item.actionID}
                           onTouchTap={e => this.menuItemHandler(e, item.actionID)}  // eslint-disable-line react/jsx-no-bind
                           key={`menu-item-${item.text}-${i}`}
