@@ -78,8 +78,15 @@ export const absenceRecordTableColumns = [{
   flexGrow : 1
 }];
 
-export const filterButtonMenuItems = [{
-  text     : 'Withdrawn Students',
+export const filterButtonMenuItems = props => [{
+  text :
+    <div>
+      { props.withdrawnStudents ?
+        <i className="fa fa-check-square-o" /> :
+        <i className="fa fa-square-o" />
+      }
+      &nbsp; Withdrawn Students
+    </div>,
   actionID : localActions.TOGGLE_WITHDRAWN_STUDENTS
 }, {
   text : 'Divider',
@@ -150,7 +157,7 @@ export const filterButton = props =>
     disabled        : false,
     menu            : {
       open : props.table.get('MuiPopovers').get(localActions.FILTER),
-      item : filterButtonMenuItems
+      item : filterButtonMenuItems(props)
     }
   });
 

@@ -246,6 +246,7 @@ class DashboardPage extends React.Component {
               loaded = {this.state.loadResolved}
               clickHandler = {this.clickHandler}
               tabName = {tab.value}
+              withdrawnStudents = {this.props.withdrawnStudents}
             />
           </Tab>
         )}
