@@ -98,22 +98,22 @@ class StudentApi extends Api {
   /**
    * Change iep status of student
    */
-  static putStudentIep(studentId, iep) {
-    return this.putAPI(`/api/students/${studentId}/iep`, iep);
+  static putStudentIep(studentIds, iep) {
+    return this.putAPI('/api/students/iep', {studentIds, value: iep});
   }
 
   /**
    * Change cfa status of student
    */
-  static putStudentCfa(studentId, cfa) {
-    return this.putAPI(`/api/students/${studentId}/cfa`, cfa);
+  static putStudentCfa(studentIds, cfa) {
+    return this.putAPI('/api/students/cfa', {studentIds, value: cfa});
   }
 
   /**
    * Change withdrawn status of student
    */
-  static putStudentWithdrawn(studentId, withdrawn) {
-    return this.putAPI(`/api/students/${studentId}/withdrawn`, withdrawn);
+  static putStudentWithdrawn(studentIds, withdrawn) {
+    return this.putAPI('/api/students/withdrawn', {studentIds, value: withdrawn});
   }
 
   static postStudentNote(studentId, note) {

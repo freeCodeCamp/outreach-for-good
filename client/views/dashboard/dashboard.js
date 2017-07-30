@@ -7,6 +7,7 @@ import * as absRecordActions from '../../modules/absence-record';
 import * as localActions from './dashboard.actions';
 import * as reportActions from '../../modules/reports';
 import * as settingsActions from '../../modules/settings';
+import * as studentActions from '../../modules/student';
 import * as userActions from '../../modules/user';
 
 import Dimensions from 'react-dimensions-cjs';
@@ -46,22 +47,6 @@ class DashboardPage extends React.Component {
     nextTable = table.addPopovers(nextTable, {
       [localActions.FILTER] : false,
       [localActions.EDIT]   : false
-    });
-    nextTable = table.addDialogs(nextTable, {
-      [localActions.WITHDRAW_STUDENT] : false,
-      [localActions.ENROLL_STUDENT]   : false
-    });
-    return nextTable;
-  }
-
-  initClickActions = nextTable => {
-    nextTable = table.addPopovers(nextTable, {
-      [localActions.FILTER] : false,
-      [localActions.EDIT]   : false
-    });
-    nextTable = table.addDialogs(nextTable, {
-      [localActions.WITHDRAW_STUDENT] : false,
-      [localActions.ENROLL_STUDENT]   : false
     });
     return nextTable;
   }
@@ -140,18 +125,47 @@ class DashboardPage extends React.Component {
         this.getSelectedRowData());
       if(data == localActions.EDIT || data == localActions.FILTER) {
         this.handleDialogButtonClick(nextTable, data, event);
+
       } else if(data == localActions.TOGGLE_WITHDRAWN_STUDENTS) {
         this.props.settingsActions.setWithdrawnStudents(!this.props.withdrawnStudents);
         this.handleInterfaceButtonClick(nextTable, data, event);
+
       } else if(data == localActions.ALL_YEARS) {
         this.retrieveData(nextTable.get('selectedTab'));
         this.handleInterfaceButtonClick(nextTable, data, event);
+
       } else if(data == localActions.Y2016_Y2017) {
         this.retrieveData(nextTable.get('selectedTab'), 'year/2016-2017');
         this.handleInterfaceButtonClick(nextTable, data, event);
+
       } else if(data == localActions.Y2015_Y2016) {
         this.retrieveData(nextTable.get('selectedTab'), 'year/2015-2016');
         this.handleInterfaceButtonClick(nextTable, data, event);
+
+      } else if(data == localActions.IEP_ADD) {
+        this.handleIepClick(true);
+        this.handleInterfaceButtonClick(nextTable, data, event);
+
+      } else if(data == localActions.IEP_REMOVE) {
+        this.handleIepClick(false);
+        this.handleInterfaceButtonClick(nextTable, data, event);
+
+      } else if(data == localActions.CFA_ADD) {
+        this.handleCfaClick(true);
+        this.handleInterfaceButtonClick(nextTable, data, event);
+
+      } else if(data == localActions.CFA_REMOVE) {
+        this.handleCfaClick(false);
+        this.handleInterfaceButtonClick(nextTable, data, event);
+
+      } else if(data == localActions.WITHDRAW_ADD) {
+        this.handleWithdrawClick(true);
+        this.handleInterfaceButtonClick(nextTable, data, event);
+
+      } else if(data == localActions.WITHDRAW_REMOVE) {
+        this.handleWithdrawClick(false);
+        this.handleInterfaceButtonClick(nextTable, data, event);
+
       } else {
         this.handleInterfaceButtonClick(nextTable, data, event);
       }
@@ -207,6 +221,25 @@ class DashboardPage extends React.Component {
     this.setState({table: nextTable});
   }
 
+  handleIepClick = value => {
+    console.log(this.getSelectedRowData().toJS());
+    // this.props.studentActions.putStudentIep(
+    //   this.getSelectedRowData().map(v => v.get('student._id')).toJS(), value
+    // );
+  }
+
+  handleCfaClick = value => {
+    this.props.studentActions.putStudentCfa(
+      this.getSelectedRowData().map(v => v.get('student._id')).toJS(), value
+    );
+  }
+
+  handleWithdrawClick = value => {
+    this.props.studentActions.putStudentWithdrawn(
+      this.getSelectedRowData().map(v => v.get('student._id')).toJS(), value
+    );
+  }
+
   // Given a table-row index number, return object containing all row data
   getSelectedRowData = () => this.props.absenceRecords
       .filter((v, i) => this.state.table.get('selectedIndex')
@@ -256,14 +289,16 @@ class DashboardPage extends React.Component {
 }
 
 DashboardPage.propTypes = {
-  absRecordActions : PropTypes.object.isRequired,
-  reportActions    : PropTypes.object.isRequired,
-  settingsActions  : PropTypes.object.isRequired,
-  userActions      : PropTypes.object.isRequired,
-  absenceRecords   : PropTypes.object.isRequired,
-  containerWidth   : PropTypes.number.isRequired,
-  containerHeight  : PropTypes.number.isRequired,
-  reports          : PropTypes.instanceOf(Report)
+  absRecordActions  : PropTypes.object.isRequired,
+  reportActions     : PropTypes.object.isRequired,
+  settingsActions   : PropTypes.object.isRequired,
+  studentActions    : PropTypes.object.isRequired,
+  userActions       : PropTypes.object.isRequired,
+  absenceRecords    : PropTypes.object.isRequired,
+  containerWidth    : PropTypes.number.isRequired,
+  containerHeight   : PropTypes.number.isRequired,
+  reports           : PropTypes.instanceOf(Report),
+  withdrawnStudents : PropTypes.bool.isRequired
 };
 
 function mapStateToProps(state) {
@@ -279,6 +314,7 @@ function mapDispatchToProps(dispatch) {
     absRecordActions : bindActionCreators(absRecordActions, dispatch),
     reportActions    : bindActionCreators(reportActions, dispatch),
     settingsActions  : bindActionCreators(settingsActions, dispatch),
+    studentActions   : bindActionCreators(studentActions, dispatch),
     userActions      : bindActionCreators(userActions, dispatch)
   };
 }

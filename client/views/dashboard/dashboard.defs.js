@@ -139,14 +139,14 @@ export const editButtonMenuItems = [{
       <i className="fa fa-plus-circle dashboard-circle-plus" />
       &nbsp; Withdraw Selected
     </div>,
-  actionID : localActions.WITHDRAW_STUDENT
+  actionID : localActions.WITHDRAW_ADD
 }, {
   text :
     <div>
       <i className="fa fa-minus-circle dashboard-circle-minus" />
       &nbsp; Withdraw Selected
     </div>,
-  actionID : localActions.ENROLL_STUDENT
+  actionID : localActions.WITHDRAW_REMOVE
 }];
 
 export const filterButton = props =>

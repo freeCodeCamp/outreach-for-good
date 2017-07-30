@@ -150,8 +150,9 @@ export function postStudentNote(studentId, body) {
     })));
 }
 
-export function putStudentIep(studentId, iep) {
-  return dispatch => StudentApi.putStudentIep(studentId, iep)
+export function putStudentIep(studentIds, iep) {
+  return dispatch => StudentApi.putStudentIep(Array.isArray(studentIds)
+    ? studentIds : [studentIds], iep)
     .then(student => {
       dispatch({
         type : GET_STUDENT_SUCCESS,
@@ -162,8 +163,9 @@ export function putStudentIep(studentId, iep) {
     .catch(err => openSnackbar(`ERROR: ${err}`, 'error'));
 }
 
-export function putStudentCfa(studentId, cfa) {
-  return dispatch => StudentApi.putStudentCfa(studentId, cfa)
+export function putStudentCfa(studentIds, cfa) {
+  return dispatch => StudentApi.putStudentCfa(Array.isArray(studentIds)
+    ? studentIds : [studentIds], cfa)
     .then(student => {
       dispatch({
         type : GET_STUDENT_SUCCESS,
@@ -174,8 +176,9 @@ export function putStudentCfa(studentId, cfa) {
     .catch(err => openSnackbar(`ERROR: ${err}`, 'error'));
 }
 
-export function putStudentWithdrawn(studentId, withdrawn) {
-  return dispatch => StudentApi.putStudentWithdrawn(studentId, withdrawn)
+export function putStudentWithdrawn(studentIds, withdrawn) {
+  return dispatch => StudentApi.putStudentWithdrawn(Array.isArray(studentIds)
+    ? studentIds : [studentIds], withdrawn)
     .then(student => {
       dispatch({
         type : GET_STUDENT_SUCCESS,
