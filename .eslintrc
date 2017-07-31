@@ -47,7 +47,7 @@
     "react/no-did-mount-set-state": 1,
     "react/no-did-update-set-state": 1,
     "react/no-direct-mutation-state": 1,
-    "react/no-multi-comp": 1,
+    "react/no-multi-comp": 0,
     "react/no-set-state": 0,
     "react/no-unknown-property": 1,
     "react/prefer-es6-class": 1,
@@ -161,7 +161,7 @@
     "no-useless-concat": 2,                                     //disallow unnecessary concatenation of literals or template literals
     "no-useless-escape": 2,                                     //disallow unnecessary escape characters
     "no-void": 0,                                               //disallow use of the void operator
-    "no-warning-comments": 1,                                   //disallow usage of configurable warning terms in comments (e.g. TODO or FIXME)
+    "no-warning-comments": 0,                                   //disallow usage of configurable warning terms in comments (e.g. TODO or FIXME)
     "no-with": 2,                                               //disallow use of the with statement
     "radix": 2,                                                 //require use of the second argument for parseInt()
     "vars-on-top": 0,                                           //require declaration of all vars at the top of their containing scope
