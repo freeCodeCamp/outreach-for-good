@@ -13,12 +13,25 @@ const LOAD_ABSENCE_RECORD_LIST_SUCCESS = 'LOAD_ABSENCE_RECORD_LIST_SUCCESS';
 //REDUCER
 const initialState = new List();
 
+const formatDates = state =>
+  state.map(record => {
+    let timestamp = Date.parse(record.get('date'));
+    let date = isNaN(timestamp) ? null : new Date(timestamp);
+    return record.set('dateFormatted', date ?
+      ('0' + date.getUTCFullYear()).slice(-2) + '-' +
+      ('0' + (date.getUTCMonth() + 1)).slice(-2) + '-' +
+      ('0' + date.getUTCDate()).slice(-2) :
+      null);
+  });
+
 export default (state = initialState, action) => {
   switch (action.type) {
   // Received users from fetchRecordsList()
   case LOAD_ABSENCE_RECORD_SUCCESS:
-    return fromJS(action.absenceRecords)
-        .map(record => new AbsenceRecord(record));
+    return formatDates(
+      fromJS(action.absenceRecords)
+        .map(record => new AbsenceRecord(record)
+      ));
 
   case LOAD_ABSENCE_RECORD_LIST_SUCCESS:
     return fromJS(action.recordList)

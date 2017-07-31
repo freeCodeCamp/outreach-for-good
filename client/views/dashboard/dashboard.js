@@ -7,10 +7,12 @@ import * as absRecordActions from '../../modules/absence-record';
 import * as localActions from './dashboard.actions';
 import * as reportActions from '../../modules/reports';
 import * as settingsActions from '../../modules/settings';
+import * as studentActions from '../../modules/student'
 import * as userActions from '../../modules/user';
 
 import Dimensions from 'react-dimensions-cjs';
 import { Tabs } from 'material-ui/Tabs';
+import { List } from 'immutable';
 
 import { Tab } from '../../components/tab/tab';
 import Report from '../../models/report';
@@ -42,26 +44,19 @@ class DashboardPage extends React.Component {
     this.retrieveData('Student');
   }
 
-  initClickActions = nextTable => {
-    nextTable = table.addPopovers(nextTable, {
-      [localActions.FILTER] : false,
-      [localActions.EDIT]   : false
-    });
-    nextTable = table.addDialogs(nextTable, {
-      [localActions.WITHDRAW_STUDENT] : false,
-      [localActions.ENROLL_STUDENT]   : false
-    });
-    return nextTable;
+  componentDidUpdate() {
+    while(this.pendingApiCalls.length) {
+      this.performApiCall(this.pendingApiCalls.shift());
+    }
   }
+
+  _absenceRecords = List([]);
+  pendingApiCalls = [];
 
   initClickActions = nextTable => {
     nextTable = table.addPopovers(nextTable, {
       [localActions.FILTER] : false,
       [localActions.EDIT]   : false
-    });
-    nextTable = table.addDialogs(nextTable, {
-      [localActions.WITHDRAW_STUDENT] : false,
-      [localActions.ENROLL_STUDENT]   : false
     });
     return nextTable;
   }
@@ -71,8 +66,10 @@ class DashboardPage extends React.Component {
    *   - Retrieve and configure data for table
    *   - Set default state for 'action' variables
    */
-  retrieveData = (currentTab, yearFilter) => {
+  retrieveData = (tab, filter) => {
     let loadingPromise;
+    let currentTab = tab || this.state.currentTab;
+    let yearFilter = filter || this.state.yearFilter;
     switch (currentTab) {
     case 'CourtReferral':
       loadingPromise = this.props.absRecordActions.fetchRecordsListQuery('type=Court+Referral', yearFilter);
@@ -95,12 +92,16 @@ class DashboardPage extends React.Component {
     }
     this.props.reportActions.getOutreachCounts('withdrawn=false');
     loadingPromise.then(() => this.updateDataTable());
-    this.setState({loadResolved: false});
+    this.setState({loadResolved: false, currentTab, yearFilter});
   }
 
-  updateDataTable = () => {
+  updateDataTable = nextProps => {
+    const props = nextProps || this.props;
+    this._absenceRecords = props.withdrawnStudents
+      ? props.absenceRecords
+      : props.absenceRecords.filter(record => !record.get('student.withdrawn'));
     let nextTable = this.state.table.updateSortCol(this.state.table, '');
-    nextTable = nextTable.buildIndexMap(nextTable, this.props.absenceRecords);
+    nextTable = nextTable.buildIndexMap(nextTable, this._absenceRecords);
     nextTable = nextTable.enableFiltering(nextTable);
     nextTable = nextTable.collapseFixedGroups(nextTable);
     this.setState({table: nextTable, loadResolved: true});
@@ -140,20 +141,49 @@ class DashboardPage extends React.Component {
         this.getSelectedRowData());
       if(data == localActions.EDIT || data == localActions.FILTER) {
         this.handleDialogButtonClick(nextTable, data, event);
+
       } else if(data == localActions.TOGGLE_WITHDRAWN_STUDENTS) {
-        this.props.settingsActions.setWithdrawnStudents(!this.props.withdrawnStudents);
-        this.handleInterfaceButtonClick(nextTable, data, event);
+        this.pendingApiCalls.push(localActions.TOGGLE_WITHDRAWN_STUDENTS);
+        this.handleInterfaceButtonClick(nextTable);
+
       } else if(data == localActions.ALL_YEARS) {
         this.retrieveData(nextTable.get('selectedTab'));
-        this.handleInterfaceButtonClick(nextTable, data, event);
+        this.handleInterfaceButtonClick(nextTable);
+
       } else if(data == localActions.Y2016_Y2017) {
         this.retrieveData(nextTable.get('selectedTab'), 'year/2016-2017');
-        this.handleInterfaceButtonClick(nextTable, data, event);
+        this.handleInterfaceButtonClick(nextTable);
+
       } else if(data == localActions.Y2015_Y2016) {
         this.retrieveData(nextTable.get('selectedTab'), 'year/2015-2016');
-        this.handleInterfaceButtonClick(nextTable, data, event);
+        this.handleInterfaceButtonClick(nextTable);
+
+      } else if(data == localActions.IEP_ADD) {
+        this.pendingApiCalls.push(localActions.IEP_ADD);
+        this.handleInterfaceButtonClick(nextTable);
+
+      } else if(data == localActions.IEP_REMOVE) {
+        this.pendingApiCalls.push(localActions.IEP_REMOVE);
+        this.handleInterfaceButtonClick(nextTable);
+
+      } else if(data == localActions.CFA_ADD) {
+        this.pendingApiCalls.push(localActions.CFA_ADD);
+        this.handleInterfaceButtonClick(nextTable);
+
+      } else if(data == localActions.CFA_REMOVE) {
+        this.pendingApiCalls.push(localActions.CFA_REMOVE);
+        this.handleInterfaceButtonClick(nextTable);
+
+      } else if(data == localActions.WITHDRAW_ADD) {
+        this.pendingApiCalls.push(localActions.WITHDRAW_ADD);
+        this.handleInterfaceButtonClick(nextTable);
+
+      } else if(data == localActions.WITHDRAW_REMOVE) {
+        this.pendingApiCalls.push(localActions.WITHDRAW_REMOVE);
+        this.handleInterfaceButtonClick(nextTable);
+
       } else {
-        this.handleInterfaceButtonClick(nextTable, data, event);
+        this.handleInterfaceButtonClick(nextTable);
       }
       break;
     // Clicked away from popover menu
@@ -163,6 +193,47 @@ class DashboardPage extends React.Component {
     }
   } // End of: clickHandler()
 
+  //ToDo: update local cache instead of re-requeting the data
+  performApiCall = apiCallId => {
+    let loadingPromise;
+    switch (apiCallId) {
+    case localActions.TOGGLE_WITHDRAWN_STUDENTS:
+      loadingPromise = this.props.settingsActions.setWithdrawnStudents(!this.props.withdrawnStudents);
+      break;
+    case localActions.IEP_ADD:
+      loadingPromise = this.putStudentIep(true).then(() => this.retrieveData());
+      break;
+    case localActions.IEP_REMOVE:
+      loadingPromise = this.putStudentIep(false).then(() => this.retrieveData());
+      break;
+    case localActions.CFA_ADD:
+      loadingPromise = this.putStudentCfa(true).then(() => this.retrieveData());
+      break;
+    case localActions.CFA_REMOVE:
+      loadingPromise = this.putStudentCfa(false).then(() => this.retrieveData());
+      break;
+    case localActions.WITHDRAW_ADD:
+      loadingPromise = this.putStudentWithdrawn(true).then(() => this.retrieveData());
+      break;
+    case localActions.WITHDRAW_REMOVE:
+      loadingPromise = this.putStudentWithdrawn(false).then(() => this.retrieveData());
+      break;
+    }
+    loadingPromise.then(() => this.updateDataTable());
+  }
+
+  putStudentIep = value =>
+    this.props.studentActions.putStudentIep(
+      this.getSelectedRowData().map(v => v.get('student._id')).toJS(), value);
+
+  putStudentCfa = value =>
+    this.props.studentActions.putStudentCfa(
+      this.getSelectedRowData().map(v => v.get('student._id')).toJS(), value);
+
+  putStudentWithdrawn = value =>
+    this.props.studentActions.putStudentWithdrawn(
+      this.getSelectedRowData().map(v => v.get('student._id')).toJS(), value);
+
   handleChangeTabs = (nextTable, data) => {
     nextTable = table.setSelectedTab(this.state.table, data.props.value);
     nextTable = this.initClickActions(nextTable);
@@ -171,7 +242,7 @@ class DashboardPage extends React.Component {
   }
 
   handleToggleSelectedRow = (nextTable, index) => {
-    nextTable = this.props.absenceRecords.size <= index
+    nextTable = this._absenceRecords.size <= index
       ? table.toggleCollapsedRow(this.state.table, index)
       : table.toggleSelectedRowIndex(this.state.table, index);
     this.setState({table: nextTable});
@@ -180,13 +251,13 @@ class DashboardPage extends React.Component {
   handleToggleSortCol = (nextTable, data) => {
     nextTable = table.updateSortCol(this.state.table, data);
     //nextTable = table.buildIndexMap(nextTable, this.props.absenceRecords);
-    nextTable = table.filterIndexMap(nextTable, this.props.absenceRecords);
+    nextTable = table.filterIndexMap(nextTable, this._absenceRecords);
     this.setState({table: nextTable});
   }
 
   handleChangeColFilter = (nextTable, data, event) => {
     nextTable = table.updateFilterBy(this.state.table, data.substr(7), event);
-    nextTable = table.filterIndexMap(nextTable, this.props.absenceRecords);
+    nextTable = table.filterIndexMap(nextTable, this._absenceRecords);
     this.setState({table: nextTable});
   }
 
@@ -208,7 +279,7 @@ class DashboardPage extends React.Component {
   }
 
   // Given a table-row index number, return object containing all row data
-  getSelectedRowData = () => this.props.absenceRecords
+  getSelectedRowData = () => this._absenceRecords
       .filter((v, i) => this.state.table.get('selectedIndex')
       .indexOf(i) != -1);
 
@@ -241,7 +312,7 @@ class DashboardPage extends React.Component {
             {...this.props} >
             <tab.Component
               view = {viewport}
-              absenceRecords = {this.props.absenceRecords}
+              absenceRecords = {this._absenceRecords}
               table = {this.state.table}
               loaded = {this.state.loadResolved}
               clickHandler = {this.clickHandler}
@@ -256,14 +327,17 @@ class DashboardPage extends React.Component {
 }
 
 DashboardPage.propTypes = {
-  absRecordActions : PropTypes.object.isRequired,
-  reportActions    : PropTypes.object.isRequired,
-  settingsActions  : PropTypes.object.isRequired,
-  userActions      : PropTypes.object.isRequired,
-  absenceRecords   : PropTypes.object.isRequired,
-  containerWidth   : PropTypes.number.isRequired,
-  containerHeight  : PropTypes.number.isRequired,
-  reports          : PropTypes.instanceOf(Report)
+  absRecordActions  : PropTypes.object.isRequired,
+  reportActions     : PropTypes.object.isRequired,
+  settingsActions   : PropTypes.object.isRequired,
+  studentActions    : PropTypes.object.isRequired,
+  userActions       : PropTypes.object.isRequired,
+  absenceRecords    : PropTypes.object.isRequired,
+  apiCallId         : PropTypes.string,
+  containerWidth    : PropTypes.number.isRequired,
+  containerHeight   : PropTypes.number.isRequired,
+  reports           : PropTypes.instanceOf(Report),
+  withdrawnStudents : PropTypes.bool.isRequired
 };
 
 function mapStateToProps(state) {
@@ -279,6 +353,7 @@ function mapDispatchToProps(dispatch) {
     absRecordActions : bindActionCreators(absRecordActions, dispatch),
     reportActions    : bindActionCreators(reportActions, dispatch),
     settingsActions  : bindActionCreators(settingsActions, dispatch),
+    studentActions   : bindActionCreators(studentActions, dispatch),
     userActions      : bindActionCreators(userActions, dispatch)
   };
 }

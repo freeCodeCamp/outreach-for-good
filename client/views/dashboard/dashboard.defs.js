@@ -3,6 +3,7 @@ import React from 'react';
 import * as localActions from './dashboard.actions';
 
 import RaisedButtonModel from '../../models/raised-button';
+import * as dataTableActions from '../../components/data-table/data-table.actions';
 
 export const absenceRecordTableColumns = [{
   title    : '+',
@@ -64,16 +65,19 @@ export const absenceRecordTableColumns = [{
 }, {
   title    : 'IEP',
   id       : 'student.iep',
+  type     : dataTableActions.FORMAT_CHECK,
   width    : 50,
   flexGrow : 1
 }, {
   title    : 'CFA',
   id       : 'student.cfa',
+  type     : dataTableActions.FORMAT_CHECK,
   width    : 50,
   flexGrow : 1
 }, {
   title    : 'Updated',
-  id       : '',
+  id       : 'dateFormatted',
+  type     : dataTableActions.FORMAT_DATE,
   width    : 75,
   flexGrow : 1
 }];
@@ -139,14 +143,14 @@ export const editButtonMenuItems = [{
       <i className="fa fa-plus-circle dashboard-circle-plus" />
       &nbsp; Withdraw Selected
     </div>,
-  actionID : localActions.WITHDRAW_STUDENT
+  actionID : localActions.WITHDRAW_ADD
 }, {
   text :
     <div>
       <i className="fa fa-minus-circle dashboard-circle-minus" />
       &nbsp; Withdraw Selected
     </div>,
-  actionID : localActions.ENROLL_STUDENT
+  actionID : localActions.WITHDRAW_REMOVE
 }];
 
 export const filterButton = props =>

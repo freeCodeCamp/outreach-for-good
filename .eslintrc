@@ -47,7 +47,7 @@
     "react/no-did-mount-set-state": 1,
     "react/no-did-update-set-state": 1,
     "react/no-direct-mutation-state": 1,
-    "react/no-multi-comp": 1,
+    "react/no-multi-comp": 0,
     "react/no-set-state": 0,
     "react/no-unknown-property": 1,
     "react/prefer-es6-class": 1,
@@ -161,7 +161,7 @@
     "no-useless-concat": 2,                                     //disallow unnecessary concatenation of literals or template literals
     "no-useless-escape": 2,                                     //disallow unnecessary escape characters
     "no-void": 0,                                               //disallow use of the void operator
-    "no-warning-comments": 1,                                   //disallow usage of configurable warning terms in comments (e.g. TODO or FIXME)
+    "no-warning-comments": 0,                                   //disallow usage of configurable warning terms in comments (e.g. TODO or FIXME)
     "no-with": 2,                                               //disallow use of the with statement
     "radix": 2,                                                 //require use of the second argument for parseInt()
     "vars-on-top": 0,                                           //require declaration of all vars at the top of their containing scope
@@ -275,7 +275,7 @@
     "one-var-declaration-per-line": 2,                          //require or disallow an newline around variable declarations
     "operator-assignment": 0,                                   //require assignment operator shorthand where possible or prohibit it entirely
     "operator-linebreak": [1, "before"],                        //enforce operators to be placed before or after line breaks
-    "padded-blocks": [2, "never"],                              //enforce padding within blocks
+    "padded-blocks": 0,                              //enforce padding within blocks
     "quote-props": [2, "as-needed"],                            //require quotes around object literal property names
     "quotes": [2, "single"],                                    //specify whether backticks, double or single quotes should be used
     "require-jsdoc": 0,                                         //Require JSDoc comment

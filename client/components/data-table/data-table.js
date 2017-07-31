@@ -129,6 +129,7 @@ class DataTable extends React.Component {
               indexMap={this._indexMap}
               data={this._data}
               col={col.id}
+              type={col.type}
               fixedColumn={this.fixedColumn}
               collapsedColumns={table.getIn(['groupColumn', 'collapsed'])}
             />
