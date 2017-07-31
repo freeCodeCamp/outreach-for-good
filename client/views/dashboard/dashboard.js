@@ -201,16 +201,16 @@ class DashboardPage extends React.Component {
       loadingPromise = this.props.settingsActions.setWithdrawnStudents(!this.props.withdrawnStudents);
       break;
     case localActions.IEP_ADD:
-      loadingPromise = this.handleIepClick(true).then(() => this.retrieveData());
+      loadingPromise = this.putStudentIep(true).then(() => this.retrieveData());
       break;
     case localActions.IEP_REMOVE:
-      loadingPromise = this.handleIepClick(false).then(() => this.retrieveData());
+      loadingPromise = this.putStudentIep(false).then(() => this.retrieveData());
       break;
     case localActions.CFA_ADD:
-      loadingPromise = this.handleCfaClick(true).then(() => this.retrieveData());
+      loadingPromise = this.putStudentCfa(true).then(() => this.retrieveData());
       break;
     case localActions.CFA_REMOVE:
-      loadingPromise = this.handleCfaClick(false).then(() => this.retrieveData());
+      loadingPromise = this.putStudentCfa(false).then(() => this.retrieveData());
       break;
     case localActions.WITHDRAW_ADD:
       loadingPromise = this.putStudentWithdrawn(true).then(() => this.retrieveData());
