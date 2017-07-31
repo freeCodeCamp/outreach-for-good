@@ -44,12 +44,6 @@ class DashboardPage extends React.Component {
     this.retrieveData('Student');
   }
 
-  componentWillReceiveProps(nextProps) {
-    if(nextProps.withdrawnStudents !== this.props.withdrawnStudents) {
-      this.updateDataTable(nextProps);
-    }
-  }
-
   componentDidUpdate() {
     while(this.pendingApiCalls.length) {
       this.performApiCall(this.pendingApiCalls.shift());
@@ -72,8 +66,10 @@ class DashboardPage extends React.Component {
    *   - Retrieve and configure data for table
    *   - Set default state for 'action' variables
    */
-  retrieveData = (currentTab, yearFilter) => {
+  retrieveData = (tab, filter) => {
     let loadingPromise;
+    let currentTab = tab || this.state.currentTab;
+    let yearFilter = filter || this.state.yearFilter;
     switch (currentTab) {
     case 'CourtReferral':
       loadingPromise = this.props.absRecordActions.fetchRecordsListQuery('type=Court+Referral', yearFilter);
@@ -96,7 +92,7 @@ class DashboardPage extends React.Component {
     }
     this.props.reportActions.getOutreachCounts('withdrawn=false');
     loadingPromise.then(() => this.updateDataTable());
-    this.setState({loadResolved: false});
+    this.setState({loadResolved: false, currentTab, yearFilter});
   }
 
   updateDataTable = nextProps => {
@@ -109,14 +105,6 @@ class DashboardPage extends React.Component {
     nextTable = nextTable.enableFiltering(nextTable);
     nextTable = nextTable.collapseFixedGroups(nextTable);
     this.setState({table: nextTable, loadResolved: true});
-  }
-
-  performApiCall = apiCallId => {
-    console.log('performApiCall', apiCallId);
-    switch (apiCallId) {
-    case localActions.TOGGLE_WITHDRAWN_STUDENTS:
-      this.props.settingsActions.setWithdrawnStudents(!this.props.withdrawnStudents);
-    }
   }
 
   clickHandler = (action, data, event) => {
@@ -171,27 +159,27 @@ class DashboardPage extends React.Component {
         this.handleInterfaceButtonClick(nextTable);
 
       } else if(data == localActions.IEP_ADD) {
-        this.handleIepClick(true);
+        this.pendingApiCalls.push(localActions.IEP_ADD);
         this.handleInterfaceButtonClick(nextTable);
 
       } else if(data == localActions.IEP_REMOVE) {
-        this.handleIepClick(false);
+        this.pendingApiCalls.push(localActions.IEP_REMOVE);
         this.handleInterfaceButtonClick(nextTable);
 
       } else if(data == localActions.CFA_ADD) {
-        this.handleCfaClick(true);
+        this.pendingApiCalls.push(localActions.CFA_ADD);
         this.handleInterfaceButtonClick(nextTable);
 
       } else if(data == localActions.CFA_REMOVE) {
-        this.handleCfaClick(false);
+        this.pendingApiCalls.push(localActions.CFA_REMOVE);
         this.handleInterfaceButtonClick(nextTable);
 
       } else if(data == localActions.WITHDRAW_ADD) {
-        this.handleWithdrawClick(true);
+        this.pendingApiCalls.push(localActions.WITHDRAW_ADD);
         this.handleInterfaceButtonClick(nextTable);
 
       } else if(data == localActions.WITHDRAW_REMOVE) {
-        this.handleWithdrawClick(false);
+        this.pendingApiCalls.push(localActions.WITHDRAW_REMOVE);
         this.handleInterfaceButtonClick(nextTable);
 
       } else {
@@ -204,6 +192,48 @@ class DashboardPage extends React.Component {
       break;
     }
   } // End of: clickHandler()
+
+  //ToDo: update local cache instead of re-requeting the data
+  performApiCall = apiCallId => {
+    let loadingPromise;
+    switch (apiCallId) {
+    case localActions.TOGGLE_WITHDRAWN_STUDENTS:
+      loadingPromise = this.props.settingsActions.setWithdrawnStudents(!this.props.withdrawnStudents);
+      break;
+    case localActions.IEP_ADD:
+      loadingPromise = this.handleIepClick(true).then(() => this.retrieveData());
+      break;
+    case localActions.IEP_REMOVE:
+      loadingPromise = this.handleIepClick(false).then(() => this.retrieveData());
+      break;
+    case localActions.CFA_ADD:
+      loadingPromise = this.handleCfaClick(true).then(() => this.retrieveData());
+      break;
+    case localActions.CFA_REMOVE:
+      loadingPromise = this.handleCfaClick(false).then(() => this.retrieveData());
+      break;
+    case localActions.WITHDRAW_ADD:
+      loadingPromise = this.putStudentWithdrawn(true).then(() => this.retrieveData());
+      break;
+    case localActions.WITHDRAW_REMOVE:
+      loadingPromise = this.putStudentWithdrawn(false).then(() => this.retrieveData());
+      break;
+    }
+    console.log(apiCallId, loadingPromise);
+    loadingPromise.then(() => this.updateDataTable());
+  }
+
+  putStudentIep = value =>
+    this.props.studentActions.putStudentIep(
+      this.getSelectedRowData().map(v => v.get('student._id')).toJS(), value);
+
+  putStudentCfa = value =>
+    this.props.studentActions.putStudentCfa(
+      this.getSelectedRowData().map(v => v.get('student._id')).toJS(), value);
+
+  putStudentWithdrawn = value =>
+    this.props.studentActions.putStudentWithdrawn(
+      this.getSelectedRowData().map(v => v.get('student._id')).toJS(), value);
 
   handleChangeTabs = (nextTable, data) => {
     nextTable = table.setSelectedTab(this.state.table, data.props.value);
@@ -247,24 +277,6 @@ class DashboardPage extends React.Component {
   handleClosePopover = nextTable => {
     nextTable = table.resetPopovers(this.state.table);
     this.setState({table: nextTable});
-  }
-
-  handleIepClick = value => {
-    this.props.studentActions.putStudentIep(
-      this.getSelectedRowData().map(v => v.get('student._id')).toJS(), value
-    );
-  }
-
-  handleCfaClick = value => {
-    this.props.studentActions.putStudentCfa(
-      this.getSelectedRowData().map(v => v.get('student._id')).toJS(), value
-    );
-  }
-
-  handleWithdrawClick = value => {
-    this.props.studentActions.putStudentWithdrawn(
-      this.getSelectedRowData().map(v => v.get('student._id')).toJS(), value
-    );
   }
 
   // Given a table-row index number, return object containing all row data

@@ -29,12 +29,12 @@ export default function settingsReducer(state = initialState, action) {
 }
 
 export function setWithdrawnStudents(showWidthDrawnStudents) {
-  return function(dispatch) {
-    dispatch(getOutreachCounts(`withdrawn=${showWidthDrawnStudents}`));
-    return dispatch({
+  return dispatch => {
+    dispatch({
       type : SET_WITHDRAWN_STUDENTS,
       showWidthDrawnStudents
     });
+    return dispatch(getOutreachCounts(`withdrawn=${showWidthDrawnStudents}`));
   };
 }
 
