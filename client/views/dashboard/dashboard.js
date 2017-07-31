@@ -7,7 +7,7 @@ import * as absRecordActions from '../../modules/absence-record';
 import * as localActions from './dashboard.actions';
 import * as reportActions from '../../modules/reports';
 import * as settingsActions from '../../modules/settings';
-import * as studentActions from '../../modules/student';
+import * as studentActions from '../../modules/student'
 import * as userActions from '../../modules/user';
 
 import Dimensions from 'react-dimensions-cjs';
