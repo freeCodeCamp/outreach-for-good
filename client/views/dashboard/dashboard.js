@@ -219,7 +219,6 @@ class DashboardPage extends React.Component {
       loadingPromise = this.putStudentWithdrawn(false).then(() => this.retrieveData());
       break;
     }
-    console.log(apiCallId, loadingPromise);
     loadingPromise.then(() => this.updateDataTable());
   }
 
