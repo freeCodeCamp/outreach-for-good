@@ -273,15 +273,9 @@ class AdminPage extends React.Component {
         break;
       }
     } else if(data == localActions.EDIT) {
-      nextTable = this.handleDialogButtonClick(nextTable, data, event);
+      nextTable = table.handlePopoverButtonClick(nextTable, data, event);
     }
     this.setState({table: nextTable, form: nextForm});
-  }
-
-  handleDialogButtonClick = (nextTable, data, event) => {
-    nextTable = table.togglePopovers(nextTable, data);
-    nextTable = table.setAnchor(nextTable, event.currentTarget);
-    return table.resetDialogs(nextTable);
   }
 
   handleDropdownChange = (nextForm, data) => {

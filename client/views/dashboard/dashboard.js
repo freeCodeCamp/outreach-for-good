@@ -140,7 +140,7 @@ class DashboardPage extends React.Component {
       nextTable = table.setSelectedRowData(this.state.table,
         this.getSelectedRowData());
       if(data == localActions.EDIT || data == localActions.FILTER) {
-        this.handleDialogButtonClick(nextTable, data, event);
+        this.setState({table: table.handlePopoverButtonClick(nextTable, data, event)});
 
       } else if(data == localActions.TOGGLE_WITHDRAWN_STUDENTS) {
         this.pendingApiCalls.push(localActions.TOGGLE_WITHDRAWN_STUDENTS);
@@ -258,13 +258,6 @@ class DashboardPage extends React.Component {
   handleChangeColFilter = (nextTable, data, event) => {
     nextTable = table.updateFilterBy(this.state.table, data.substr(7), event);
     nextTable = table.filterIndexMap(nextTable, this._absenceRecords);
-    this.setState({table: nextTable});
-  }
-
-  handleDialogButtonClick = (nextTable, data, event) => {
-    nextTable = table.togglePopovers(nextTable, data);
-    nextTable = table.setAnchor(nextTable, event.currentTarget);
-    nextTable = table.resetDialogs(nextTable);
     this.setState({table: nextTable});
   }
 
