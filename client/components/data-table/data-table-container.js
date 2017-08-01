@@ -68,7 +68,6 @@ class DataTableContainer extends React.Component {
                     targetOrigin={{horizontal: 'right', vertical: 'top'}}
                     onRequestClose={this.popoverClose}
                   >
-                    {console.log(table.get('MuiAnchor'))}
                     <Menu>
                       {button.get('menu').item.map((item, i) =>
                         item.text == 'Divider'

@@ -6,7 +6,7 @@ import * as localDefs from '../admin.defs';
 
 import { List } from 'immutable';
 
-import DataTable from '../../../components/data-table/data-table';
+import DataTableContainer from '../../../components/data-table/data-table-container';
 import DialogModel from '../../../models/dialog';
 import TextFieldModel from '../../../models/text-field';
 
@@ -129,7 +129,7 @@ const SchoolsTab = ({schools, ...props}) => {
   return (
     props.table.get('selectedTab') == 'schools'
     && <div>
-        <DataTable
+        <DataTableContainer
           page={page}
           data={schools}
           {...props}
