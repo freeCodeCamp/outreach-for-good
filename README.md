@@ -70,6 +70,10 @@ This version is currently under development.
   * ask about confirmation dialogs for API actions
   * button to 'deselect all'
   * color and formatting in dropdown menus
+  * count true/false cells for summary rows
+* Page - Admin
+  * fix dropdown menus in dialogs
+  * align settings page to DataTable style
 
 ## To-Add
 
