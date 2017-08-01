@@ -1,13 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import * as localConst from '../admin.const';
+import * as localConst from '../admin.actions';
+import * as localDefs from '../admin.defs';
 
 import { List } from 'immutable';
 
 import DataTable from '../../../components/data-table/data-table';
 import DialogModel from '../../../models/dialog';
-import RaisedButtonModel from '../../../models/raised-button';
 import TextFieldModel from '../../../models/text-field';
 
 const SchoolsTab = ({schools, ...props}) => {
@@ -100,25 +100,15 @@ const SchoolsTab = ({schools, ...props}) => {
     }));
   }
 
-  let buttons = [];
 
   /**
    * Material-UI <RaisedButton> and <Popover>
    *  - `actionID:` is used by parent to launch dialogs
    *  - See RaisedButtonModel for default parameters
    */
-  buttons.push(new RaisedButtonModel({
-    label           : 'New',
-    backgroundColor : '#009d9d',
-    actionID        : localConst.NEW_SCHOOL,
-    disabled        : false
-  }));
-
-  buttons.push(new RaisedButtonModel({
-    label           : 'Remove',
-    backgroundColor : '#d9534f',
-    actionID        : localConst.REMOVE_SCHOOL
-  }));
+  let buttons = [];
+  buttons.push(localDefs.newSchoolButton(props));
+  buttons.push(localDefs.removeSchoolButton(props));
 
   /**
    * Fixed-Data-Table Parameters
