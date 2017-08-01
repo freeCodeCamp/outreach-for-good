@@ -1,13 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import * as localConst from '../admin.const';
+import * as localActions from '../admin.actions';
+import * as localDefs from '../admin.defs';
 
 import { List } from 'immutable';
 
-import DataTable from '../../../components/data-table/data-table';
+import DataTableContainer from '../../../components/data-table/data-table-container';
 import DialogModel from '../../../models/dialog';
-import RaisedButtonModel from '../../../models/raised-button';
 import TextFieldModel from '../../../models/text-field';
 
 const SchoolsTab = ({schools, ...props}) => {
@@ -15,20 +15,20 @@ const SchoolsTab = ({schools, ...props}) => {
  * Handler Functions
  *   - Catch events from page elements and send to parent component
  */
-  const handleButtonClick = event => {
+  function handleButtonClick(event) {
     event.preventDefault();
     props.clickHandler('dialogClick', this.value, event); // eslint-disable-line babel/no-invalid-this
-  };
+  }
 
-  const handleInputChange = (event, newValue) => {
+  function handleInputChange(event, newValue) {
     event.preventDefault();
     props.clickHandler('textFieldChange', newValue, event); // eslint-disable-line babel/no-invalid-this
-  };
+  }
 
-  const handleInputSubmit = event => {
+  function handleInputSubmit(event) {
     event.preventDefault();
     props.clickHandler('textFieldEnter', '', event); // eslint-disable-line babel/no-invalid-this
-  };
+  }
 
   /**
    * Material-UI <TextField>
@@ -37,7 +37,7 @@ const SchoolsTab = ({schools, ...props}) => {
    */
   const newSchoolTextField = new TextFieldModel({
     label     : 'School Name',
-    id        : localConst.NEW_SCHOOL,
+    id        : localActions.NEW_SCHOOL,
     onChange  : handleInputChange,
     errorText : props.form.get('error').get('newSchool')
   });
@@ -51,13 +51,13 @@ const SchoolsTab = ({schools, ...props}) => {
    */
   dialogs.push(new DialogModel({
     title   : 'New School',
-    open    : props.table.get('MuiDialogs').get(localConst.NEW_SCHOOL),
+    open    : props.table.get('MuiDialogs').get(localActions.NEW_SCHOOL),
     actions : List([
       { label: 'Cancel', click: handleButtonClick },
       {
         label    : 'Add',
         click    : handleButtonClick,
-        value    : localConst.NEW_SCHOOL,
+        value    : localActions.NEW_SCHOOL,
         disabled : props.form.get('submitDisabled')
       },
     ]),
@@ -74,10 +74,10 @@ const SchoolsTab = ({schools, ...props}) => {
   if(props.table.get('selectedData').first()) {
     dialogs.push(new DialogModel({
       title   : 'Remove Schools',
-      open    : props.table.get('MuiDialogs').get(localConst.REMOVE_SCHOOL),
+      open    : props.table.get('MuiDialogs').get(localActions.REMOVE_SCHOOL),
       actions : List([
         { label: 'Cancel', click: handleButtonClick },
-        { label: 'Remove', click: handleButtonClick, value: localConst.REMOVE_SCHOOL },
+        { label: 'Remove', click: handleButtonClick, value: localActions.REMOVE_SCHOOL },
       ]),
       text : [<div className="alert alert-danger" key='1'>
         <strong key='2'>WARNING!</strong>
@@ -100,25 +100,15 @@ const SchoolsTab = ({schools, ...props}) => {
     }));
   }
 
-  let buttons = [];
 
   /**
    * Material-UI <RaisedButton> and <Popover>
    *  - `actionID:` is used by parent to launch dialogs
    *  - See RaisedButtonModel for default parameters
    */
-  buttons.push(new RaisedButtonModel({
-    label           : 'New',
-    backgroundColor : '#009d9d',
-    actionID        : localConst.NEW_SCHOOL,
-    disabled        : false
-  }));
-
-  buttons.push(new RaisedButtonModel({
-    label           : 'Remove',
-    backgroundColor : '#d9534f',
-    actionID        : localConst.REMOVE_SCHOOL
-  }));
+  let buttons = [];
+  buttons.push(localDefs.newSchoolButton(props));
+  buttons.push(localDefs.removeSchoolButton(props));
 
   /**
    * Fixed-Data-Table Parameters
@@ -139,7 +129,7 @@ const SchoolsTab = ({schools, ...props}) => {
   return (
     props.table.get('selectedTab') == 'schools'
     && <div>
-        <DataTable
+        <DataTableContainer
           page={page}
           data={schools}
           {...props}
