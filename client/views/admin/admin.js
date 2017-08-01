@@ -117,8 +117,8 @@ class AdminPage extends React.Component {
    *   - Actions resulting in API calls
    */
   clickHandler = (action, data, event) => {
-    let nextTable;
-    let nextForm;
+    let nextTable = this.state.table;
+    let nextForm = this.state.form;
     switch (action) {
     // Clicked a main tab
     case 'changeTabs':
@@ -132,7 +132,7 @@ class AdminPage extends React.Component {
      *   - Apply a filter
      */
     case 'toggleSelected':
-      nextTable = table.toggleSelectedRowIndex(this.state.table, data);
+      nextTable = table.toggleSelectedRowIndex(nextTable, data);
       this.setState({table: nextTable});
       break;
     case 'toggleSortCol':
@@ -152,7 +152,7 @@ class AdminPage extends React.Component {
         this.handleDialogClick(nextTable, data);
       } else {
         // Click inside dialog with no API action (close dialog)
-        nextTable = table.resetDialogs(this.state.table);
+        nextTable = table.resetDialogs(nextTable);
         this.setState({table: nextTable});
       }
       break;
@@ -164,11 +164,11 @@ class AdminPage extends React.Component {
      */
     case 'menuClick':
     case 'buttonClick':
-      this.handleButtonClick(nextTable, nextForm, data);
+      this.handleButtonClick(nextTable, nextForm, data, event);
       break; // End of: case 'menuClick' or 'buttonClick'
     // Clicked away from popover menu
     case 'popoverClose':
-      nextTable = table.resetPopovers(this.state.table);
+      nextTable = table.resetPopovers(nextTable);
       this.setState({table: nextTable});
       break;
 
@@ -192,13 +192,13 @@ class AdminPage extends React.Component {
   } // End of: clickHandler()
 
   handleTabClick = (nextTable, data) => {
-    nextTable = table.setSelectedTab(this.state.table, data.props.value);
+    nextTable = table.setSelectedTab(nextTable, data.props.value);
     nextTable = this.initClickActions(nextTable);
     this.setState({table: nextTable, loaded: false});
   }
 
   handleColumnSort = (nextTable, data) => {
-    nextTable = table.updateSortCol(this.state.table, data);
+    nextTable = table.updateSortCol(nextTable, data);
     nextTable = table.sortIndexMap(nextTable,
       nextTable.get('selectedTab') == 'users'
         ? this.props.users : this.props.schools);
@@ -207,9 +207,9 @@ class AdminPage extends React.Component {
 
   handleColumnFilter = (nextTable, data) => {
     //console.log(data.substr(7), event);
-    let tabData = this.state.table.get('selectedTab') == 'users'
+    let tabData = nextTable.get('selectedTab') == 'users'
         ? this.props.users : this.props.schools;
-    nextTable = table.updateFilterBy(this.state.table, data.substr(7), event);
+    nextTable = table.updateFilterBy(nextTable, data.substr(7), event);
     nextTable = table.sortIndexMap(nextTable, tabData);
     this.setState({table: nextTable});
   }
@@ -218,18 +218,18 @@ class AdminPage extends React.Component {
     let users, schools; // eslint-disable-line one-var
     switch (data) {
     case localActions.EDIT_SCHOOL:
-      users = this.state.table.get('selectedData')
+      users = nextTable.get('selectedData')
         .map(row => row._id);
       this.props.userAction.updateUserSchool(users.toArray(),
         this.getSchoolId(this.state.form.get('field').get('editSchool')));
       break;
     case localActions.EDIT_ROLE:
-      users = this.state.table.get('selectedData').map(row => row._id);
+      users = nextTable.get('selectedData').map(row => row._id);
       this.props.userAction.updateUserRole(users.toArray(),
         this.state.form.get('field').get('editRole'));
       break;
     case localActions.REMOVE_USER:
-      users = this.state.table.get('selectedData')
+      users = nextTable.get('selectedData')
         .map(row => row._id);
       this.props.userAction.removeUser(users.toArray());
       break;
@@ -237,17 +237,17 @@ class AdminPage extends React.Component {
       this.props.schoolAction.addSchool(this.state.form.get('field').get('newSchool'));
       break;
     case localActions.REMOVE_SCHOOL:
-      schools = this.state.table.get('selectedData')
+      schools = nextTable.get('selectedData')
         .map(row => row._id);
       this.props.schoolAction.removeSchool(schools.toArray());
       break;
     }
-    nextTable = this.initializeTable(this.state.table.selectedTab);
+    nextTable = this.initializeTable(nextTable.selectedTab);
     this.setState({table: nextTable});
   }
 
-  handleButtonClick = (nextTable, nextForm, data) => {
-    nextTable = table.setSelectedRowData(this.state.table,
+  handleButtonClick = (nextTable, nextForm, data, event) => {
+    nextTable = table.setSelectedRowData(nextTable,
       this.getSelectedRowData());
     nextForm = this.state.form;
     // Does this action open a dialog?
@@ -273,11 +273,15 @@ class AdminPage extends React.Component {
         break;
       }
     } else if(data == localActions.EDIT) {
-      nextTable = table.togglePopovers(nextTable, data);
-      nextTable = table.setAnchor(nextTable, event.currentTarget);
-      nextTable = table.resetDialogs(nextTable);
+      nextTable = this.handleDialogButtonClick(nextTable, data, event);
     }
     this.setState({table: nextTable, form: nextForm});
+  }
+
+  handleDialogButtonClick = (nextTable, data, event) => {
+    nextTable = table.togglePopovers(nextTable, data);
+    nextTable = table.setAnchor(nextTable, event.currentTarget);
+    return table.resetDialogs(nextTable);
   }
 
   handleDropdownChange = (nextForm, data) => {

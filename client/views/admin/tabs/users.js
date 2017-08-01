@@ -16,20 +16,20 @@ const UsersTab = ({users, schools, ...props}) => {
    * Handler Functions
    *   - Catch events from page elements and send to parent component
    */
-  const handleButtonClick = event => {
+  function handleButtonClick(event) {
     event.preventDefault();
     props.clickHandler('dialogClick', this.value, event); // eslint-disable-line babel/no-invalid-this
-  };
+  }
 
-  const dropdownHandlerSchool = (event, index, value) => {
+  function dropdownHandlerSchool(event, index, value) {
     event.preventDefault();
     props.clickHandler('dropdownChange', value, localActions.EDIT_SCHOOL); // eslint-disable-line babel/no-invalid-this
-  };
+  }
 
-  const dropdownHandlerRole = (event, index, value) => {
+  function dropdownHandlerRole(event, index, value) {
     event.preventDefault();
     props.clickHandler('dropdownChange', value, localActions.EDIT_ROLE); // eslint-disable-line babel/no-invalid-this
-  };
+  }
 
   let dialogs = [];
 
