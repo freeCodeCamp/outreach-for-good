@@ -12,7 +12,7 @@ module.exports = {
             || 'mongodb://localhost/cfa-local'
   },
 
-  seedDB : true,
+  seedDB : false,
 
   debug : '*'
 };
