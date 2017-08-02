@@ -158,9 +158,9 @@ export function putStudentIep(studentIds, iep) {
         type : GET_STUDENT_SUCCESS,
         student
       });
-      dispatch(openSnackbar(`IEP status changed to ${student.iep}`));
+      dispatch(openSnackbar(`IEP status changed to ${student[0].iep}`));
     })
-    .catch(err => openSnackbar(`ERROR: ${err}`, 'error'));
+    .catch(err => showSnackbarErrorMessage(err));
 }
 
 export function putStudentCfa(studentIds, cfa) {
@@ -171,9 +171,9 @@ export function putStudentCfa(studentIds, cfa) {
         type : GET_STUDENT_SUCCESS,
         student
       });
-      dispatch(openSnackbar(`CFA status changed to ${student.cfa}`));
+      dispatch(openSnackbar(`CFA status changed to ${student[0].cfa}`));
     })
-    .catch(err => openSnackbar(`ERROR: ${err}`, 'error'));
+    .catch(err => showSnackbarErrorMessage(err));
 }
 
 export function putStudentWithdrawn(studentIds, withdrawn) {
@@ -184,9 +184,9 @@ export function putStudentWithdrawn(studentIds, withdrawn) {
         type : GET_STUDENT_SUCCESS,
         student
       });
-      dispatch(openSnackbar(`Withdrawn status changed to ${student.withdrawn}`));
+      dispatch(openSnackbar(`Withdrawn status changed to ${student[0].withdrawn}`));
     })
-    .catch(err => openSnackbar(`ERROR: ${err}`, 'error'));
+    .catch(err => showSnackbarErrorMessage(err));
 }
 
 export function postOutreachNote(studentId, outreachId, note) {
@@ -195,7 +195,7 @@ export function postOutreachNote(studentId, outreachId, note) {
       dispatch(getStudentOutreaches(studentId));
       dispatch(openSnackbar(`Outreach posted for ${outreach.type} ${outreach.tier}`));
     })
-    .catch(err => openSnackbar(`ERROR: ${err}`, 'error'));
+    .catch(err => showSnackbarErrorMessage(err));
 }
 
 export function postIntervention(studentId, intervention) {
@@ -206,7 +206,7 @@ export function postIntervention(studentId, intervention) {
       dispatch(getStudentInterventions(studentId));
       dispatch(openSnackbar(`Intervention of type '${intervention.type}' created on ${date}`));
     })
-    .catch(err => dispatch(openSnackbar(`ERR: ${err}`, 'error')));
+    .catch(err => dispatch(showSnackbarErrorMessage(err)));
 }
 
 export function postInterventionNote(studentId, interventionId, note) {
@@ -216,7 +216,7 @@ export function postInterventionNote(studentId, interventionId, note) {
       dispatch(getStudentInterventions(studentId));
       dispatch(openSnackbar('Intervention note posted'));
     })
-    .catch(err => dispatch(openSnackbar(`ERR: ${err}`, 'error')));
+    .catch(err => dispatch(showSnackbarErrorMessage(err)));
 }
 
 export function deleteIntervention(studentId, interventionId) {
@@ -226,7 +226,7 @@ export function deleteIntervention(studentId, interventionId) {
       dispatch(getStudentInterventions(studentId));
       dispatch(openSnackbar('Intervention deleted'));
     })
-    .catch(err => dispatch(openSnackbar(`ERR: ${err}`, 'error')));
+    .catch(err => dispatch(showSnackbarErrorMessage(err)));
 }
 
 
@@ -235,3 +235,5 @@ export function unmountStudent() {
     type : UNMOUNT_STUDENT
   };
 }
+
+const showSnackbarErrorMessage = err => openSnackbar(`ERR: ${err}`, 'error');
