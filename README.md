@@ -64,6 +64,16 @@ This version is currently under development.
 * Remove all hard-coded school years
 * does current return all or current year?
 * changing tabs disables filter
+* Page - Dashboard
+  * deselect rows after performing API Action
+  * show summary row as selected when collapsed with selected items
+  * ask about confirmation dialogs for API actions
+  * button to 'deselect all'
+  * color and formatting in dropdown menus
+  * count true/false cells for summary rows
+* Page - Admin
+  * fix dropdown menus in dialogs
+  * align settings page to DataTable style
 
 ## To-Add
 
