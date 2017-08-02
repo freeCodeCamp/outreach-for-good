@@ -178,7 +178,7 @@ class AdminPage extends React.Component {
      */
     // User made new dropdown menu selection
     case 'dropdownChange':
-      this.handleDropdownChange(nextForm, data);
+      this.handleDropdownChange(nextForm, data, event);
       break;
     // Real-time text field validation
     case 'textFieldChange':
@@ -242,7 +242,8 @@ class AdminPage extends React.Component {
       this.props.schoolAction.removeSchool(schools.toArray());
       break;
     }
-    nextTable = this.initializeTable(nextTable.selectedTab);
+    nextTable = table.resetDialogs(nextTable);
+    //nextTable = this.initializeTable(nextTable.selectedTab);
     this.setState({table: nextTable});
   }
 
@@ -278,7 +279,7 @@ class AdminPage extends React.Component {
     this.setState({table: nextTable, form: nextForm});
   }
 
-  handleDropdownChange = (nextForm, data) => {
+  handleDropdownChange = (nextForm, data, event) => {
     switch (event) {
     case localActions.EDIT_SCHOOL:
       nextForm = form.setFieldValue(this.state.form, 'editSchool', data);
