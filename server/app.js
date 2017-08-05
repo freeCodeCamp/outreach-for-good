@@ -33,6 +33,7 @@ Raven.context(function () {
 	// Setup server
 	app = express();
 	app.use(Raven.requestHandler());
+	app.use(Raven.errorHandler());
 
 	var server = require('http').createServer(app);
 	require('./config/express')(app);
