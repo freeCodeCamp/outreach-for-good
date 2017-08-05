@@ -14,6 +14,9 @@ var Raven = require('raven');
 var app;
 
 var config = require('./config/environment');
+if(!config.raven.dsn) {
+	throw new Error('You must set the raven environment variable');
+}
 Raven.config(config.raven.dsn).install();
 Raven.context(function () {
 
