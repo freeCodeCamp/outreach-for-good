@@ -9,5 +9,11 @@ module.exports = {
     'mongodb://localhost/app-dev'
   },
 
-  seedDB: true
+  // Raven connection options
+  raven: {
+    dsn:    process.env.RAVEN_DSN ||
+            undefined
+  },
+
+  seedDB: false
 };
