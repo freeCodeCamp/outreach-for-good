@@ -52,6 +52,7 @@
     "passport": "~0.3.2",
     "passport-google-oauth": "latest",
     "passport-local": "~1.0.0",
+    "raven": "^2.1.1",
     "requirejs": "~2.1.11",
     "serve-favicon": "~2.3.0",
     "should": "~8.2.1",

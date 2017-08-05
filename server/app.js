@@ -9,7 +9,10 @@ process.env.NODE_ENV = process.env.NODE_ENV || 'development';
 
 var express = require('express');
 var mongoose = require('mongoose');
+var Raven = require('raven');
+
 var config = require('./config/environment');
+Raven.config(config.raven.dsn).install();
 
 // Connect to database
 mongoose.connect(config.mongo.uri, config.mongo.options);
@@ -23,6 +26,8 @@ if(config.seedDB) { require('./config/seed'); }
 
 // Setup server
 var app = express();
+app.use(Raven.requestHandler());
+
 var server = require('http').createServer(app);
 require('./config/express')(app);
 require('./routes')(app);
