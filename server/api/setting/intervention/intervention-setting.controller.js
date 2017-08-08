@@ -13,7 +13,7 @@ exports.types = function(req, res) {
   var options = {};
   Setting.find(options).exec(function(err, setting) {
     if (err) return handleError(res, err);
-    return res.status(200).json(setting[0].intervention.types);
+    return res.status(200).json(setting && setting[0] && setting[0].intervention.types);
   });
 };
 
