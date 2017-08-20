@@ -5,15 +5,17 @@ import { bindActionCreators } from 'redux';
 
 import * as absRecordActions from '../../modules/absence-record';
 import * as localActions from './dashboard.actions';
+import * as localDefs from './dashboard.defs';
 import * as reportActions from '../../modules/reports';
 import * as settingsActions from '../../modules/settings';
-import * as studentActions from '../../modules/student'
+import * as studentActions from '../../modules/student';
 import * as userActions from '../../modules/user';
 
 import Dimensions from 'react-dimensions-cjs';
 import { Tabs } from 'material-ui/Tabs';
-import { List } from 'immutable';
+import { List, Map } from 'immutable';
 
+import CsvParse from '../../components/csv-parse/csv-parse';
 import { Tab } from '../../components/tab/tab';
 import Report from '../../models/report';
 import TableModel from '../../models/table';
@@ -24,6 +26,7 @@ import PhoneTab from './tabs/phone';
 import SstTab from './tabs/sst';
 import StudentTab from './tabs/student';
 
+import './dashboard.scss';
 
 const table = new TableModel();
 
@@ -56,7 +59,8 @@ class DashboardPage extends React.Component {
   initClickActions = nextTable => {
     nextTable = table.addPopovers(nextTable, {
       [localActions.FILTER] : false,
-      [localActions.EDIT]   : false
+      [localActions.EDIT]   : false,
+      [localActions.TABLE]  : false
     });
     return nextTable;
   }
@@ -139,7 +143,7 @@ class DashboardPage extends React.Component {
     case 'buttonClick':
       nextTable = table.setSelectedRowData(this.state.table,
         this.getSelectedRowData());
-      if(data == localActions.EDIT || data == localActions.FILTER) {
+      if(data == localActions.EDIT || data == localActions.FILTER || data == localActions.TABLE) {
         this.setState({table: table.handlePopoverButtonClick(nextTable, data, event)});
 
       } else if(data == localActions.TOGGLE_WITHDRAWN_STUDENTS) {
@@ -181,6 +185,9 @@ class DashboardPage extends React.Component {
       } else if(data == localActions.WITHDRAW_REMOVE) {
         this.pendingApiCalls.push(localActions.WITHDRAW_REMOVE);
         this.handleInterfaceButtonClick(nextTable);
+
+      } else if(data == localActions.EXPORT_CSV || data == localActions.EXPORT_VISIBLE_CSV) {
+        this.handleExportToCSV(nextTable, data);
 
       } else {
         this.handleInterfaceButtonClick(nextTable);
@@ -271,6 +278,30 @@ class DashboardPage extends React.Component {
     this.setState({table: nextTable});
   }
 
+  handleExportToCSV = (nextTable, data) => {
+    var columns = Map();
+    localDefs.absenceRecordTableColumns.forEach(c => {
+      // special handling for group column, shown as '+' in the table
+      if(c.id == 'school.name') {
+        columns = columns.set('School', c.id);
+      } else {
+        columns = columns.set(c.title, c.id);
+      }
+    });
+    nextTable = table.resetPopovers(this.state.table);
+    if(data == localActions.EXPORT_CSV) {
+      this.setState({
+        table           : nextTable,
+        downloadCsvData :
+          this._absenceRecords.map(record =>
+            columns.map(col_id =>
+              record.get(col_id)
+          )).toJS(),
+        downloadCsvToken : Date.now()
+      });
+    }
+  }
+
   // Given a table-row index number, return object containing all row data
   getSelectedRowData = () => this._absenceRecords
       .filter((v, i) => this.state.table.get('selectedIndex')
@@ -285,36 +316,43 @@ class DashboardPage extends React.Component {
     let viewport = {
       width  : this.props.containerWidth - 20,
       height : this.props.containerHeight - 48 - 80
-    }; // Facillitates table realtime resizing
+    }; // Facilitates table real-time resizing
     return (
-      <Tabs
-        style={{width: this.props.containerWidth}}
-        value={this.state.table.get('selectedTab')}
-      >
-        {[{value: 'Student', class: 'fa fa-child fa-2x', Component: StudentTab},
-        {value: 'PhoneCall', class: 'fa fa-phone fa-2x', Component: PhoneTab},
-        {value: 'LetterSent', class: 'fa fa-envelope fa-2x', Component: LetterTab},
-        {value: 'HomeVisit', class: 'fa fa-home fa-2x', Component: HomeTab},
-        {value: 'SSTReferral', class: 'fa fa-support fa-2x', Component: SstTab},
-        {value: 'CourtReferral', class: 'fa fa-gavel fa-2x', Component: CourtTab}
-        ].map((tab, index) => <Tab
-            key={`tab-${index}`}
-            value={tab.value}
-            iconClass={tab.class}
-            onActive={this.tabHandler}
-            {...this.props} >
-            <tab.Component
-              view = {viewport}
-              absenceRecords = {this._absenceRecords}
-              table = {this.state.table}
-              loaded = {this.state.loadResolved}
-              clickHandler = {this.clickHandler}
-              tabName = {tab.value}
-              withdrawnStudents = {this.props.withdrawnStudents}
-            />
-          </Tab>
-        )}
-      </Tabs>
+      <div>
+        <Tabs
+          style={{width: this.props.containerWidth}}
+          value={this.state.table.get('selectedTab')}
+        >
+          {[{value: 'Student', class: 'fa fa-child fa-2x', Component: StudentTab},
+          {value: 'PhoneCall', class: 'fa fa-phone fa-2x', Component: PhoneTab},
+          {value: 'LetterSent', class: 'fa fa-envelope fa-2x', Component: LetterTab},
+          {value: 'HomeVisit', class: 'fa fa-home fa-2x', Component: HomeTab},
+          {value: 'SSTReferral', class: 'fa fa-support fa-2x', Component: SstTab},
+          {value: 'CourtReferral', class: 'fa fa-gavel fa-2x', Component: CourtTab}
+          ].map((tab, index) => <Tab
+              key={`tab-${index}`}
+              value={tab.value}
+              iconClass={tab.class}
+              onActive={this.tabHandler}
+              {...this.props} >
+              <tab.Component
+                view = {viewport}
+                absenceRecords = {this._absenceRecords}
+                table = {this.state.table}
+                loaded = {this.state.loadResolved}
+                clickHandler = {this.clickHandler}
+                tabName = {tab.value}
+                withdrawnStudents = {this.props.withdrawnStudents}
+              />
+            </Tab>
+          )}
+        </Tabs>
+        <CsvParse
+          data={this.state.downloadCsvData}
+          filename={this.state.downloadCsvFilename}
+          token={this.state.downloadCsvToken}
+        />
+      </div>
     );
   }
 }

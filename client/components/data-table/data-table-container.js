@@ -50,8 +50,10 @@ class DataTableContainer extends React.Component {
               .map((button, index) =>
               <div key={index} style={{display: 'inline'}}>
                 <RaisedButton
+                  className={button.get('className')}
                   label={button.get('label')}
                   labelColor={button.get('labelColor')}
+                  icon={button.get('icon')}
                   value={button.get('actionID') || ''}
                   primary={button.get('primary') || false}
                   secondary={button.get('secondary') || false}

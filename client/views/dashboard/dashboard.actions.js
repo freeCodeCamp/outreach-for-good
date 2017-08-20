@@ -1,6 +1,12 @@
 // Open <Popover>s
 export const FILTER = 'FILTER';
 export const EDIT = 'EDIT';
+export const TABLE = 'TABLE';
+
+// Table Actions
+export const EXPORT_CSV = 'EXPORT_CSV';
+export const EXPORT_VISIBLE_CSV = 'EXPORT_VISIBLE_CSV';
+export const CLEAR_FILTERS = 'CLEAR_FILTERS';
 
 // General Actions
 export const IEP_ADD = 'IEP_ADD';

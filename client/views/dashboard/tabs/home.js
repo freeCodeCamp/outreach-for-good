@@ -19,6 +19,7 @@ const HomeTab = ({absenceRecords, ...props}) => {
    */
   buttons.push(localDefs.filterButton(props));
   buttons.push(localDefs.editButton(props));
+  buttons.push(localDefs.tableButton(props));
 
 
   const page = {
