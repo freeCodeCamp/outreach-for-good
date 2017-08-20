@@ -98,9 +98,9 @@ export const filterButton = props =>
 export const filterButtonMenuItems = props => [{
   text :
     <div>
-      { props.withdrawnStudents ?
-        <i className="fa fa-check-square-o" /> :
-        <i className="fa fa-square-o" />
+      { props.withdrawnStudents
+        ? <i className="fa fa-check-square-o" />
+        : <i className="fa fa-square-o" />
       }
       &nbsp; Withdrawn Students
     </div>,
@@ -178,9 +178,11 @@ export const editButtonMenuItems = [{
 
 export const tableButton = props =>
   new RaisedButtonModel({
-    icon     : <FontIcon className="fa fa-stack-1x fa-wrench" />,
-    actionID : localActions.TABLE,
-    menu     : {
+    icon      : <FontIcon className="fa fa-chevron-down" />,
+    className : 'table-button',
+    actionID  : localActions.TABLE,
+    disabled  : false,
+    menu      : {
       open : props.table.get('MuiPopovers').get(localActions.TABLE),
       item : tableButtonMenuItems
     }

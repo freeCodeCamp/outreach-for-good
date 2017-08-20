@@ -24,6 +24,7 @@ import PhoneTab from './tabs/phone';
 import SstTab from './tabs/sst';
 import StudentTab from './tabs/student';
 
+import './dashboard.scss';
 
 const table = new TableModel();
 
@@ -56,7 +57,8 @@ class DashboardPage extends React.Component {
   initClickActions = nextTable => {
     nextTable = table.addPopovers(nextTable, {
       [localActions.FILTER] : false,
-      [localActions.EDIT]   : false
+      [localActions.EDIT]   : false,
+      [localActions.TABLE]  : false
     });
     return nextTable;
   }
@@ -139,7 +141,7 @@ class DashboardPage extends React.Component {
     case 'buttonClick':
       nextTable = table.setSelectedRowData(this.state.table,
         this.getSelectedRowData());
-      if(data == localActions.EDIT || data == localActions.FILTER) {
+      if(data == localActions.EDIT || data == localActions.FILTER || data == localActions.TABLE) {
         this.setState({table: table.handlePopoverButtonClick(nextTable, data, event)});
 
       } else if(data == localActions.TOGGLE_WITHDRAWN_STUDENTS) {
