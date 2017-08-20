@@ -1,6 +1,7 @@
 // Open <Popover>s
 export const FILTER = 'FILTER';
 export const EDIT = 'EDIT';
+export const TABLE = 'TABLE';
 
 // General Actions
 export const IEP_ADD = 'IEP_ADD';

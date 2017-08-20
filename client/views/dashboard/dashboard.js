@@ -285,7 +285,7 @@ class DashboardPage extends React.Component {
     let viewport = {
       width  : this.props.containerWidth - 20,
       height : this.props.containerHeight - 48 - 80
-    }; // Facillitates table realtime resizing
+    }; // Facilitates table real-time resizing
     return (
       <Tabs
         style={{width: this.props.containerWidth}}

@@ -2,6 +2,7 @@ import React from 'react';
 
 import * as localActions from './dashboard.actions';
 
+import FontIcon from 'material-ui/FontIcon';
 import RaisedButtonModel from '../../models/raised-button';
 import * as dataTableActions from '../../components/data-table/data-table.actions';
 
@@ -82,6 +83,18 @@ export const absenceRecordTableColumns = [{
   flexGrow : 1
 }];
 
+export const filterButton = props =>
+  new RaisedButtonModel({
+    label           : 'Filter',
+    actionID        : localActions.FILTER,
+    backgroundColor : '#009d9d',
+    disabled        : false,
+    menu            : {
+      open : props.table.get('MuiPopovers').get(localActions.FILTER),
+      item : filterButtonMenuItems(props)
+    }
+  });
+
 export const filterButtonMenuItems = props => [{
   text :
     <div>
@@ -104,6 +117,16 @@ export const filterButtonMenuItems = props => [{
   text     : '2015-2016',
   actionID : localActions.Y2015_Y2016
 }];
+
+export const editButton = props =>
+  new RaisedButtonModel({
+    label    : 'Edit',
+    actionID : localActions.EDIT,
+    menu     : {
+      open : props.table.get('MuiPopovers').get(localActions.EDIT),
+      item : editButtonMenuItems
+    }
+  });
 
 export const editButtonMenuItems = [{
   text :
@@ -153,24 +176,60 @@ export const editButtonMenuItems = [{
   actionID : localActions.WITHDRAW_REMOVE
 }];
 
-export const filterButton = props =>
+export const tableButton = props =>
   new RaisedButtonModel({
-    label           : 'Filter',
-    actionID        : localActions.FILTER,
-    backgroundColor : '#009d9d',
-    disabled        : false,
-    menu            : {
-      open : props.table.get('MuiPopovers').get(localActions.FILTER),
-      item : filterButtonMenuItems(props)
+    icon     : <FontIcon className="fa fa-stack-1x fa-wrench" />,
+    actionID : localActions.TABLE,
+    menu     : {
+      open : props.table.get('MuiPopovers').get(localActions.TABLE),
+      item : tableButtonMenuItems
     }
   });
 
-export const editButton = props =>
-  new RaisedButtonModel({
-    label    : 'Edit',
-    actionID : localActions.EDIT,
-    menu     : {
-      open : props.table.get('MuiPopovers').get(localActions.EDIT),
-      item : editButtonMenuItems
-    }
-  });
+export const tableButtonMenuItems = [{
+  text :
+    <div>
+      <i className="fa fa-plus-circle dashboard-circle-plus" />
+      &nbsp; IEP Selected
+    </div>,
+  actionID : localActions.IEP_ADD
+}, {
+  text :
+    <div>
+      <i className="fa fa-minus-circle dashboard-circle-minus" />
+      &nbsp; IEP Selected
+    </div>,
+  actionID : localActions.IEP_REMOVE
+}, {
+  text : 'Divider',
+}, {
+  text :
+    <div>
+      <i className="fa fa-plus-circle dashboard-circle-plus" />
+      &nbsp; CFA Selected
+    </div>,
+  actionID : localActions.CFA_ADD
+}, {
+  text :
+    <div>
+      <i className="fa fa-minus-circle dashboard-circle-minus" />
+      &nbsp; CFA Selected
+    </div>,
+  actionID : localActions.CFA_REMOVE
+}, {
+  text : 'Divider',
+}, {
+  text :
+    <div>
+      <i className="fa fa-plus-circle dashboard-circle-plus" />
+      &nbsp; Withdraw Selected
+    </div>,
+  actionID : localActions.WITHDRAW_ADD
+}, {
+  text :
+    <div>
+      <i className="fa fa-minus-circle dashboard-circle-minus" />
+      &nbsp; Withdraw Selected
+    </div>,
+  actionID : localActions.WITHDRAW_REMOVE
+}];

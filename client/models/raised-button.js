@@ -3,8 +3,9 @@ import Immutable from 'immutable';
 import FlatButton from 'material-ui/FlatButton';
 
 export const RaisedButton = Immutable.Record({
-  label           : '',
+  label           : null,
   labelColor      : '#FFFFFF',
+  icon            : null,
   backgroundColor : '#124e78',
   actionID        : '',
   disabled        : true,

@@ -52,6 +52,7 @@ class DataTableContainer extends React.Component {
                 <RaisedButton
                   label={button.get('label')}
                   labelColor={button.get('labelColor')}
+                  icon={button.get('icon')}
                   value={button.get('actionID') || ''}
                   primary={button.get('primary') || false}
                   secondary={button.get('secondary') || false}
