@@ -5,14 +5,15 @@ import { bindActionCreators } from 'redux';
 
 import * as absRecordActions from '../../modules/absence-record';
 import * as localActions from './dashboard.actions';
+import * as localDefs from './dashboard.defs';
 import * as reportActions from '../../modules/reports';
 import * as settingsActions from '../../modules/settings';
-import * as studentActions from '../../modules/student'
+import * as studentActions from '../../modules/student';
 import * as userActions from '../../modules/user';
 
 import Dimensions from 'react-dimensions-cjs';
 import { Tabs } from 'material-ui/Tabs';
-import { List } from 'immutable';
+import { List, Map } from 'immutable';
 
 import CsvParse from '../../components/csv-parse/csv-parse';
 import { Tab } from '../../components/tab/tab';
@@ -185,6 +186,9 @@ class DashboardPage extends React.Component {
         this.pendingApiCalls.push(localActions.WITHDRAW_REMOVE);
         this.handleInterfaceButtonClick(nextTable);
 
+      } else if(data == localActions.EXPORT_CSV || data == localActions.EXPORT_VISIBLE_CSV) {
+        this.handleExportToCSV(nextTable, data);
+
       } else {
         this.handleInterfaceButtonClick(nextTable);
       }
@@ -274,6 +278,30 @@ class DashboardPage extends React.Component {
     this.setState({table: nextTable});
   }
 
+  handleExportToCSV = (nextTable, data) => {
+    var columns = Map();
+    localDefs.absenceRecordTableColumns.forEach(c => {
+      // special handling for group column, shown as '+' in the table
+      if(c.id == 'school.name') {
+        columns = columns.set('School', c.id);
+      } else {
+        columns = columns.set(c.title, c.id);
+      }
+    });
+    nextTable = table.resetPopovers(this.state.table);
+    if(data == localActions.EXPORT_CSV) {
+      this.setState({
+        table           : nextTable,
+        downloadCsvData :
+          this._absenceRecords.map(record =>
+            columns.map(col_id =>
+              record.get(col_id)
+          )).toJS(),
+        downloadCsvToken : Date.now()
+      });
+    }
+  }
+
   // Given a table-row index number, return object containing all row data
   getSelectedRowData = () => this._absenceRecords
       .filter((v, i) => this.state.table.get('selectedIndex')
@@ -319,14 +347,11 @@ class DashboardPage extends React.Component {
             </Tab>
           )}
         </Tabs>
-        {this.state.downloadCsv
-          && <CsvParse
-            data={{
-              fields : ['col 1', 'col 2', 'col 3'],
-              data   : [['1-1', '1-2', '1-3'], ['2-1', '2-2', '2-3']]
-            }}
-          />
-        }
+        <CsvParse
+          data={this.state.downloadCsvData}
+          filename={this.state.downloadCsvFilename}
+          token={this.state.downloadCsvToken}
+        />
       </div>
     );
   }

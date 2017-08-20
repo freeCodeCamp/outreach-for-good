@@ -5,7 +5,7 @@ export const TABLE = 'TABLE';
 
 // Table Actions
 export const EXPORT_CSV = 'EXPORT_CSV';
-export const EXPORT_SELECTED_CSV = 'EXPORT_SELECTED_CSV';
+export const EXPORT_VISIBLE_CSV = 'EXPORT_VISIBLE_CSV';
 
 // General Actions
 export const IEP_ADD = 'IEP_ADD';

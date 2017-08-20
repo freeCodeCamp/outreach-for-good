@@ -39,7 +39,7 @@ export const absenceRecordTableColumns = [{
   width    : 100,
   flexGrow : 1
 }, {
-  title    : 'Δ',
+  title    : 'Δ a',
   id       : 'entry.absencesDelta',
   width    : 50,
   flexGrow : 1
@@ -49,7 +49,7 @@ export const absenceRecordTableColumns = [{
   width    : 100,
   flexGrow : 1
 }, {
-  title    : 'Δ',
+  title    : 'Δ t',
   id       : 'entry.tardiesDelta',
   width    : 50,
   flexGrow : 1
@@ -189,11 +189,11 @@ export const tableButton = props =>
   });
 
 export const tableButtonMenuItems = [{
-  text     : <div>Export All to .csv</div>,
+  text     : <div>{'Export All to .csv'}</div>,
   actionID : localActions.EXPORT_CSV
 }, {
-  text     : <div>Export Visible to .csv</div>,
-  actionID : localActions.EXPORT_SELECTED_CSV
+  text     : <div>{'Export Visible to .csv'}</div>,
+  actionID : localActions.EXPORT_VISIBLE_CSV
 }, {
   text : 'Divider',
 }];
