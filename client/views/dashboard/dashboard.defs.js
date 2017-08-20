@@ -184,16 +184,58 @@ export const tableButton = props =>
     disabled  : false,
     menu      : {
       open : props.table.get('MuiPopovers').get(localActions.TABLE),
-      item : tableButtonMenuItems
+      item : tableButtonMenuItems(props)
     }
   });
 
-export const tableButtonMenuItems = [{
-  text     : <div>{'Export All to .csv'}</div>,
+export const tableButtonMenuItems = props => [{
+  text     : <div>{'Export all to .csv'}</div>,
   actionID : localActions.EXPORT_CSV
 }, {
-  text     : <div>{'Export Visible to .csv'}</div>,
-  actionID : localActions.EXPORT_VISIBLE_CSV
+  text : 'Divider',
+}, {
+  text     : <div>{'Clear all filters'}</div>,
+  actionID : localActions.CLEAR_FILTERS
 }, {
   text : 'Divider',
+}, {
+  text :
+    <div>
+      {props.summaryRowAggregate == 'Sum'
+        ? <i className="fa fa-check-square-o" />
+        : <i className="fa fa-square-o" />
+      }
+      &nbsp; Sum
+    </div>,
+  actionID : localActions.EXPORT_VISIBLE_CSV
+}, {
+  text :
+    <div>
+      {props.summaryRowAggregate == 'Average'
+        ? <i className="fa fa-check-square-o" />
+        : <i className="fa fa-square-o" />
+      }
+      &nbsp; Average
+    </div>,
+  actionID : localActions.EXPORT_VISIBLE_CSV
+}, {
+  text :
+    <div>
+      {props.summaryRowAggregate == 'Maximum'
+        ? <i className="fa fa-check-square-o" />
+        : <i className="fa fa-square-o" />
+      }
+      &nbsp; Maximum
+    </div>,
+  actionID : localActions.EXPORT_VISIBLE_CSV
+}, {
+  text :
+    <div>
+      {props.summaryRowAggregate == 'Minimum'
+        ? <i className="fa fa-check-square-o" />
+        : <i className="fa fa-square-o" />
+      }
+      &nbsp; Minimum
+    </div>,
+  actionID : localActions.EXPORT_VISIBLE_CSV
 }];
