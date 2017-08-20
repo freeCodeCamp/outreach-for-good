@@ -189,10 +189,10 @@ export const tableButton = props =>
   });
 
 export const tableButtonMenuItems = [{
-  text     : <div>Export all as csv</div>,
+  text     : <div>Export All to .csv</div>,
   actionID : localActions.EXPORT_CSV
 }, {
-  text     : <div>Export selected as csv</div>,
+  text     : <div>Export Visible to .csv</div>,
   actionID : localActions.EXPORT_SELECTED_CSV
 }, {
   text : 'Divider',

@@ -5,6 +5,7 @@ import { Table, Column, Cell } from 'fixed-data-table-2';
 import { List } from 'immutable';
 
 import DataTableHeader from './data-table-header';
+import { insertSummaryRows } from './data-table.utility';
 import DataTableRow from './data-table-row';
 import TableModel from '../../models/table';
 import './data-table.scss';
@@ -57,40 +58,13 @@ class DataTable extends React.Component {
       table,
       view
     } = this.props;
-    const groupCol = table.get('groupColumn');
-    this.fixedColumn = this.getFixedColumn();
 
     // Uncomment to debug groupCol data structure
     //console.log('data: ', groupCol.toJS());
 
-    /*
-     * Add summary rows to data and indexMap based on the values set in FixedColumn
-     *  @input: data - full data set
-     *  @input: indexMap - sorted and filtered
-     *  @output: _data - data set with "summary rows" appended to the end
-     *  @output: _indexMap - collapsed/hidden indexes removed
-     */
-    this._data = data;
-    this._indexMap = table.get('indexMap');
-    if(this.fixedColumn && data.size) {
-      const displayColumn = groupCol.get('displayColumn');
-      const summaryRows = groupCol.get('summaryRows');
-      const groupIndices = groupCol.get('groupIndices');
-      let count = -1;
-      groupIndices.forEach(i => {
-        count += 1;
-        this._data = this._data.push(this._data.get(0).map((v, k) => {
-          if(k === displayColumn) {
-            return `${summaryRows.getIn([i + count, 'groupColumn', 'group'])}
-              (${summaryRows.getIn([i + count, 'groupColumn', 'count'])})`;
-          } else if(summaryRows.getIn([i + count, k]) !== null) {
-            return summaryRows.getIn([i + count, k]);
-          }
-          return '';
-        }));
-      });
-      this._indexMap = table.removeCollapsedDataFromIndexMap(table, this._data.size);
-    }
+    var { _data, _indexMap } = insertSummaryRows(data, table);
+    this._data = _data;
+    this._indexMap = _indexMap;
 
     let isRowSelected = index =>
       table.selectionToMappedIndicies(table, this._indexMap).includes(index) ? 'selected-row' : '';
@@ -130,7 +104,7 @@ class DataTable extends React.Component {
               data={this._data}
               col={col.id}
               type={col.type}
-              fixedColumn={this.fixedColumn}
+              fixedColumn={this.getFixedColumn()}
               collapsedColumns={table.getIn(['groupColumn', 'collapsed'])}
             />
             : <Cell className="cell-loading">

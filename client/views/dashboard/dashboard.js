@@ -14,6 +14,7 @@ import Dimensions from 'react-dimensions-cjs';
 import { Tabs } from 'material-ui/Tabs';
 import { List } from 'immutable';
 
+import CsvParse from '../../components/csv-parse/csv-parse';
 import { Tab } from '../../components/tab/tab';
 import Report from '../../models/report';
 import TableModel from '../../models/table';
@@ -289,34 +290,44 @@ class DashboardPage extends React.Component {
       height : this.props.containerHeight - 48 - 80
     }; // Facilitates table real-time resizing
     return (
-      <Tabs
-        style={{width: this.props.containerWidth}}
-        value={this.state.table.get('selectedTab')}
-      >
-        {[{value: 'Student', class: 'fa fa-child fa-2x', Component: StudentTab},
-        {value: 'PhoneCall', class: 'fa fa-phone fa-2x', Component: PhoneTab},
-        {value: 'LetterSent', class: 'fa fa-envelope fa-2x', Component: LetterTab},
-        {value: 'HomeVisit', class: 'fa fa-home fa-2x', Component: HomeTab},
-        {value: 'SSTReferral', class: 'fa fa-support fa-2x', Component: SstTab},
-        {value: 'CourtReferral', class: 'fa fa-gavel fa-2x', Component: CourtTab}
-        ].map((tab, index) => <Tab
-            key={`tab-${index}`}
-            value={tab.value}
-            iconClass={tab.class}
-            onActive={this.tabHandler}
-            {...this.props} >
-            <tab.Component
-              view = {viewport}
-              absenceRecords = {this._absenceRecords}
-              table = {this.state.table}
-              loaded = {this.state.loadResolved}
-              clickHandler = {this.clickHandler}
-              tabName = {tab.value}
-              withdrawnStudents = {this.props.withdrawnStudents}
-            />
-          </Tab>
-        )}
-      </Tabs>
+      <div>
+        <Tabs
+          style={{width: this.props.containerWidth}}
+          value={this.state.table.get('selectedTab')}
+        >
+          {[{value: 'Student', class: 'fa fa-child fa-2x', Component: StudentTab},
+          {value: 'PhoneCall', class: 'fa fa-phone fa-2x', Component: PhoneTab},
+          {value: 'LetterSent', class: 'fa fa-envelope fa-2x', Component: LetterTab},
+          {value: 'HomeVisit', class: 'fa fa-home fa-2x', Component: HomeTab},
+          {value: 'SSTReferral', class: 'fa fa-support fa-2x', Component: SstTab},
+          {value: 'CourtReferral', class: 'fa fa-gavel fa-2x', Component: CourtTab}
+          ].map((tab, index) => <Tab
+              key={`tab-${index}`}
+              value={tab.value}
+              iconClass={tab.class}
+              onActive={this.tabHandler}
+              {...this.props} >
+              <tab.Component
+                view = {viewport}
+                absenceRecords = {this._absenceRecords}
+                table = {this.state.table}
+                loaded = {this.state.loadResolved}
+                clickHandler = {this.clickHandler}
+                tabName = {tab.value}
+                withdrawnStudents = {this.props.withdrawnStudents}
+              />
+            </Tab>
+          )}
+        </Tabs>
+        {this.state.downloadCsv
+          && <CsvParse
+            data={{
+              fields : ['col 1', 'col 2', 'col 3'],
+              data   : [['1-1', '1-2', '1-3'], ['2-1', '2-2', '2-3']]
+            }}
+          />
+        }
+      </div>
     );
   }
 }

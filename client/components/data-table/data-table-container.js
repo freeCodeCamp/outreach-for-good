@@ -10,7 +10,6 @@ import Paper from 'material-ui/Paper';
 import Popover from 'material-ui/Popover';
 import RaisedButton from 'material-ui/RaisedButton';
 
-import CsvParse from '../csv-parse/csv-parse';
 import TableModel from '../../models/table';
 import DataTable from './data-table';
 import './data-table.scss';
@@ -124,12 +123,6 @@ class DataTableContainer extends React.Component {
             </div>
           : <div />
         }
-        <CsvParse
-          data={{
-            fields : ['col 1', 'col 2', 'col 3'],
-            data   : [['1-1', '1-2', '1-3'], ['2-1', '2-2', '2-3']]
-          }}
-        />
       </div>
     );
   }
