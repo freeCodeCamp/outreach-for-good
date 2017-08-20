@@ -189,49 +189,11 @@ export const tableButton = props =>
   });
 
 export const tableButtonMenuItems = [{
-  text :
-    <div>
-      <i className="fa fa-plus-circle dashboard-circle-plus" />
-      &nbsp; IEP Selected
-    </div>,
-  actionID : localActions.IEP_ADD
+  text     : <div>Export all as csv</div>,
+  actionID : localActions.EXPORT_CSV
 }, {
-  text :
-    <div>
-      <i className="fa fa-minus-circle dashboard-circle-minus" />
-      &nbsp; IEP Selected
-    </div>,
-  actionID : localActions.IEP_REMOVE
+  text     : <div>Export selected as csv</div>,
+  actionID : localActions.EXPORT_SELECTED_CSV
 }, {
   text : 'Divider',
-}, {
-  text :
-    <div>
-      <i className="fa fa-plus-circle dashboard-circle-plus" />
-      &nbsp; CFA Selected
-    </div>,
-  actionID : localActions.CFA_ADD
-}, {
-  text :
-    <div>
-      <i className="fa fa-minus-circle dashboard-circle-minus" />
-      &nbsp; CFA Selected
-    </div>,
-  actionID : localActions.CFA_REMOVE
-}, {
-  text : 'Divider',
-}, {
-  text :
-    <div>
-      <i className="fa fa-plus-circle dashboard-circle-plus" />
-      &nbsp; Withdraw Selected
-    </div>,
-  actionID : localActions.WITHDRAW_ADD
-}, {
-  text :
-    <div>
-      <i className="fa fa-minus-circle dashboard-circle-minus" />
-      &nbsp; Withdraw Selected
-    </div>,
-  actionID : localActions.WITHDRAW_REMOVE
 }];

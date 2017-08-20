@@ -3,6 +3,10 @@ export const FILTER = 'FILTER';
 export const EDIT = 'EDIT';
 export const TABLE = 'TABLE';
 
+// Table Actions
+export const EXPORT_CSV = 'EXPORT_CSV';
+export const EXPORT_SELECTED_CSV = 'EXPORT_SELECTED_CSV';
+
 // General Actions
 export const IEP_ADD = 'IEP_ADD';
 export const IEP_REMOVE = 'IEP_REMOVE';
