@@ -308,7 +308,7 @@ class DashboardPage extends React.Component {
     case tableActions.SET_AGGREGATE_MAXIMUM: nextAggragate = 'maximum'; break;
     case tableActions.SET_AGGREGATE_MINIMUM: nextAggragate = 'minimum'; break;
     }
-    nextTable = table.changeAggregate(nextTable, nextAggragate);
+    nextTable = table.changeAggregateType(nextTable, nextAggragate);
     nextTable = table.resetPopovers(nextTable);
     this.setState({table: nextTable});
   }
