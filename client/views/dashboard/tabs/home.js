@@ -17,7 +17,7 @@ const HomeTab = ({absenceRecords, ...props}) => {
    *  - `actionID:` is used by parent to launch dialogs
    *  - See RaisedButtonModel for default parameters
    */
-  buttons.push(localDefs.filterButton(props));
+  buttons.push(localDefs.filterButton({...props, outreachLabel: 'Home Visit'}));
   buttons.push(localDefs.editButton(props));
   buttons.push(localDefs.tableButton(props));
 
