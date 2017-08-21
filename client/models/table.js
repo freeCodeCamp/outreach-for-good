@@ -23,6 +23,7 @@ export const Table = Immutable.Record({
     fixedColumn      : '', // col which data is grouped by
     displayColumn    : '', // used for Summary Row (ex. School A (12))
     aggregateColumns : Immutable.List(), // columns to sum() for Summary Row
+    aggregateType    : 'sum', // average, sum, maximum, minimum
     groupIndices     : Immutable.List(), // first index of each group
     collapsed        : Immutable.List(), // index of groupIndicies which are collapsed/expanded (data + 1, 2..)
     summaryRows      : Immutable.Map(/*{ //group summary (mainly sum() of columns)
