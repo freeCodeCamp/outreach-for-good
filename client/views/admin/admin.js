@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
-import * as localConst from './admin.const';
+import * as localActions from './admin.actions';
 import * as schoolAction from '../../modules/school';
 import * as userAction from '../../modules/user';
 
@@ -98,14 +98,14 @@ class AdminPage extends React.Component {
    */
   initClickActions = nextTable => {
     nextTable = table.addPopovers(nextTable, {
-      [localConst.EDIT] : false
+      [localActions.EDIT] : false
     });
     nextTable = table.addDialogs(nextTable, {
-      [localConst.EDIT_SCHOOL]   : false,
-      [localConst.EDIT_ROLE]     : false,
-      [localConst.REMOVE_USER]   : false,
-      [localConst.NEW_SCHOOL]    : false,
-      [localConst.REMOVE_SCHOOL] : false
+      [localActions.EDIT_SCHOOL]   : false,
+      [localActions.EDIT_ROLE]     : false,
+      [localActions.REMOVE_USER]   : false,
+      [localActions.NEW_SCHOOL]    : false,
+      [localActions.REMOVE_SCHOOL] : false
     });
     return nextTable;
   }
@@ -117,8 +117,8 @@ class AdminPage extends React.Component {
    *   - Actions resulting in API calls
    */
   clickHandler = (action, data, event) => {
-    let nextTable;
-    let nextForm;
+    let nextTable = this.state.table;
+    let nextForm = this.state.form;
     switch (action) {
     // Clicked a main tab
     case 'changeTabs':
@@ -132,7 +132,7 @@ class AdminPage extends React.Component {
      *   - Apply a filter
      */
     case 'toggleSelected':
-      nextTable = table.toggleSelectedRowIndex(this.state.table, data);
+      nextTable = table.toggleSelectedRowIndex(nextTable, data);
       this.setState({table: nextTable});
       break;
     case 'toggleSortCol':
@@ -147,12 +147,12 @@ class AdminPage extends React.Component {
      *   - Typically results in `Cancel` or `Submit` (API Call)
      */
     case 'dialogClick':
-      if(localConst.DIALOG_LIST.indexOf(data) != -1) {
+      if(localActions.DIALOG_LIST.indexOf(data) != -1) {
         // Click inside dialog with associated API action
         this.handleDialogClick(nextTable, data);
       } else {
         // Click inside dialog with no API action (close dialog)
-        nextTable = table.resetDialogs(this.state.table);
+        nextTable = table.resetDialogs(nextTable);
         this.setState({table: nextTable});
       }
       break;
@@ -164,11 +164,11 @@ class AdminPage extends React.Component {
      */
     case 'menuClick':
     case 'buttonClick':
-      this.handleButtonClick(nextTable, nextForm, data);
+      this.handleButtonClick(nextTable, nextForm, data, event);
       break; // End of: case 'menuClick' or 'buttonClick'
     // Clicked away from popover menu
     case 'popoverClose':
-      nextTable = table.resetPopovers(this.state.table);
+      nextTable = table.resetPopovers(nextTable);
       this.setState({table: nextTable});
       break;
 
@@ -178,7 +178,7 @@ class AdminPage extends React.Component {
      */
     // User made new dropdown menu selection
     case 'dropdownChange':
-      this.handleDropdownChange(nextForm, data);
+      this.handleDropdownChange(nextForm, data, event);
       break;
     // Real-time text field validation
     case 'textFieldChange':
@@ -192,13 +192,13 @@ class AdminPage extends React.Component {
   } // End of: clickHandler()
 
   handleTabClick = (nextTable, data) => {
-    nextTable = table.setSelectedTab(this.state.table, data.props.value);
+    nextTable = table.setSelectedTab(nextTable, data.props.value);
     nextTable = this.initClickActions(nextTable);
     this.setState({table: nextTable, loaded: false});
   }
 
   handleColumnSort = (nextTable, data) => {
-    nextTable = table.updateSortCol(this.state.table, data);
+    nextTable = table.updateSortCol(nextTable, data);
     nextTable = table.sortIndexMap(nextTable,
       nextTable.get('selectedTab') == 'users'
         ? this.props.users : this.props.schools);
@@ -207,9 +207,9 @@ class AdminPage extends React.Component {
 
   handleColumnFilter = (nextTable, data) => {
     //console.log(data.substr(7), event);
-    let tabData = this.state.table.get('selectedTab') == 'users'
+    let tabData = nextTable.get('selectedTab') == 'users'
         ? this.props.users : this.props.schools;
-    nextTable = table.updateFilterBy(this.state.table, data.substr(7), event);
+    nextTable = table.updateFilterBy(nextTable, data.substr(7), event);
     nextTable = table.sortIndexMap(nextTable, tabData);
     this.setState({table: nextTable});
   }
@@ -217,75 +217,74 @@ class AdminPage extends React.Component {
   handleDialogClick = (nextTable, data) => {
     let users, schools; // eslint-disable-line one-var
     switch (data) {
-    case localConst.EDIT_SCHOOL:
-      users = this.state.table.get('selectedData')
+    case localActions.EDIT_SCHOOL:
+      users = nextTable.get('selectedData')
         .map(row => row._id);
       this.props.userAction.updateUserSchool(users.toArray(),
         this.getSchoolId(this.state.form.get('field').get('editSchool')));
       break;
-    case localConst.EDIT_ROLE:
-      users = this.state.table.get('selectedData').map(row => row._id);
+    case localActions.EDIT_ROLE:
+      users = nextTable.get('selectedData').map(row => row._id);
       this.props.userAction.updateUserRole(users.toArray(),
         this.state.form.get('field').get('editRole'));
       break;
-    case localConst.REMOVE_USER:
-      users = this.state.table.get('selectedData')
+    case localActions.REMOVE_USER:
+      users = nextTable.get('selectedData')
         .map(row => row._id);
       this.props.userAction.removeUser(users.toArray());
       break;
-    case localConst.NEW_SCHOOL:
+    case localActions.NEW_SCHOOL:
       this.props.schoolAction.addSchool(this.state.form.get('field').get('newSchool'));
       break;
-    case localConst.REMOVE_SCHOOL:
-      schools = this.state.table.get('selectedData')
+    case localActions.REMOVE_SCHOOL:
+      schools = nextTable.get('selectedData')
         .map(row => row._id);
       this.props.schoolAction.removeSchool(schools.toArray());
       break;
     }
-    nextTable = this.initializeTable(this.state.table.selectedTab);
+    nextTable = table.resetDialogs(nextTable);
+    //nextTable = this.initializeTable(nextTable.selectedTab);
     this.setState({table: nextTable});
   }
 
-  handleButtonClick = (nextTable, nextForm, data) => {
-    nextTable = table.setSelectedRowData(this.state.table,
+  handleButtonClick = (nextTable, nextForm, data, event) => {
+    nextTable = table.setSelectedRowData(nextTable,
       this.getSelectedRowData());
     nextForm = this.state.form;
     // Does this action open a dialog?
-    if(localConst.DIALOG_LIST.indexOf(data) != -1) {
+    if(localActions.DIALOG_LIST.indexOf(data) != -1) {
       // Initialize form state
       nextTable = table.toggleDialogs(nextTable, data);
       nextTable = table.resetPopovers(nextTable);
       switch (data) {
-      case localConst.EDIT_SCHOOL:
+      case localActions.EDIT_SCHOOL:
         nextForm = form.setFieldValue(nextForm, 'editSchool',
           this.props.schools.first().name);
         break;
-      case localConst.EDIT_ROLE:
+      case localActions.EDIT_ROLE:
         nextForm = form.setFieldValue(nextForm, 'editRole', 'teacher');
         break;
-      case localConst.REMOVE_USER:
+      case localActions.REMOVE_USER:
         break;
-      case localConst.NEW_SCHOOL:
+      case localActions.NEW_SCHOOL:
         nextTable = table.clearSelectedRows(nextTable);
         nextForm = form.disableSubmitButton(nextForm);
         break;
-      case localConst.REMOVE_SCHOOL:
+      case localActions.REMOVE_SCHOOL:
         break;
       }
-    } else if(data == localConst.EDIT) {
-      nextTable = table.togglePopovers(nextTable, data);
-      nextTable = table.setAnchor(nextTable, event.currentTarget);
-      nextTable = table.resetDialogs(nextTable);
+    } else if(data == localActions.EDIT) {
+      nextTable = table.handlePopoverButtonClick(nextTable, data, event);
     }
     this.setState({table: nextTable, form: nextForm});
   }
 
-  handleDropdownChange = (nextForm, data) => {
+  handleDropdownChange = (nextForm, data, event) => {
     switch (event) {
-    case localConst.EDIT_SCHOOL:
+    case localActions.EDIT_SCHOOL:
       nextForm = form.setFieldValue(this.state.form, 'editSchool', data);
       break;
-    case localConst.EDIT_ROLE:
+    case localActions.EDIT_ROLE:
       nextForm = form.setFieldValue(this.state.form, 'editRole', data);
       break;
     }
@@ -295,7 +294,7 @@ class AdminPage extends React.Component {
   handleTextFieldChange = (nextForm, data, event) => {
     nextForm = this.state.form;
     switch (event.target.id) {
-    case localConst.NEW_SCHOOL:
+    case localActions.NEW_SCHOOL:
       if(!this.props.schools.filter(i => i.includes(data)).isEmpty()) {
         nextForm = form.disableSubmitButton(nextForm);
         nextForm = form.setErrorMessage(nextForm, 'newSchool', 'School name already exists');
@@ -316,8 +315,8 @@ class AdminPage extends React.Component {
     switch (event.target.id) {
     case 'NEW_SCHOOL_FORM':
       if(this.props.schools.filter(i => i.includes(this.state.form.get('field').get('newSchool'))).isEmpty()
-        && document.getElementById(localConst.NEW_SCHOOL).value.length != 0) {
-        this.clickHandler('dialogClick', localConst.NEW_SCHOOL, event);
+        && document.getElementById(localActions.NEW_SCHOOL).value.length != 0) {
+        this.clickHandler('dialogClick', localActions.NEW_SCHOOL, event);
       }
       break;
     }
@@ -342,7 +341,7 @@ class AdminPage extends React.Component {
     let viewport = {
       width  : this.props.containerWidth - 20,
       height : this.props.containerHeight - 48 - 80
-    }; // Facillitates table realtime resizing
+    }; // Facilitates table real-time resizing
     return (
       <Tabs
         style={{width: this.props.containerWidth}}

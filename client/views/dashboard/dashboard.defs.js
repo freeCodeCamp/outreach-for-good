@@ -2,6 +2,7 @@ import React from 'react';
 
 import * as localActions from './dashboard.actions';
 
+import FontIcon from 'material-ui/FontIcon';
 import RaisedButtonModel from '../../models/raised-button';
 import * as dataTableActions from '../../components/data-table/data-table.actions';
 
@@ -38,7 +39,7 @@ export const absenceRecordTableColumns = [{
   width    : 100,
   flexGrow : 1
 }, {
-  title    : 'Δ',
+  title    : 'Δ a',
   id       : 'entry.absencesDelta',
   width    : 50,
   flexGrow : 1
@@ -48,7 +49,7 @@ export const absenceRecordTableColumns = [{
   width    : 100,
   flexGrow : 1
 }, {
-  title    : 'Δ',
+  title    : 'Δ t',
   id       : 'entry.tardiesDelta',
   width    : 50,
   flexGrow : 1
@@ -82,28 +83,49 @@ export const absenceRecordTableColumns = [{
   flexGrow : 1
 }];
 
-export const filterButtonMenuItems = props => [{
-  text :
-    <div>
-      { props.withdrawnStudents ?
-        <i className="fa fa-check-square-o" /> :
-        <i className="fa fa-square-o" />
-      }
-      &nbsp; Withdrawn Students
-    </div>,
-  actionID : localActions.TOGGLE_WITHDRAWN_STUDENTS
-}, {
-  text : 'Divider',
-}, {
-  text     : 'All Years',
-  actionID : localActions.ALL_YEARS
-}, {
-  text     : '2016-2017',
-  actionID : localActions.Y2016_Y2017
-}, {
-  text     : '2015-2016',
-  actionID : localActions.Y2015_Y2016
-}];
+const getDivider = visible => visible !== false && ({ text: 'Divider' });
+
+export const filterButton = props =>
+  new RaisedButtonModel({
+    label           : 'Filter',
+    actionID        : localActions.FILTER,
+    backgroundColor : '#009d9d',
+    disabled        : false,
+    menu            : {
+      open : props.table.get('MuiPopovers').get(localActions.FILTER),
+      item : filterButtonMenuItems(props)
+    }
+  });
+
+export const filterButtonMenuItems = props => [
+  getWithdrawnItem(props),
+  getDivider(),
+  {
+    text     : 'All Years',
+    actionID : localActions.ALL_YEARS
+  }, {
+    text     : '2016-2017',
+    actionID : localActions.Y2016_Y2017
+  }, {
+    text     : '2015-2016',
+    actionID : localActions.Y2015_Y2016
+  },
+  getDivider(props.outreachLabel || false),
+  getOutreachOne(props),
+  getOutreachTwo(props),
+  getOutreachThree(props),
+  getAllOutreaches(props)
+].filter(v => !!v);
+
+export const editButton = props =>
+  new RaisedButtonModel({
+    label    : 'Edit',
+    actionID : localActions.EDIT,
+    menu     : {
+      open : props.table.get('MuiPopovers').get(localActions.EDIT),
+      item : editButtonMenuItems
+    }
+  });
 
 export const editButtonMenuItems = [{
   text :
@@ -119,9 +141,7 @@ export const editButtonMenuItems = [{
       &nbsp; IEP Selected
     </div>,
   actionID : localActions.IEP_REMOVE
-}, {
-  text : 'Divider',
-}, {
+}, getDivider(), {
   text :
     <div>
       <i className="fa fa-plus-circle dashboard-circle-plus" />
@@ -135,8 +155,6 @@ export const editButtonMenuItems = [{
       &nbsp; CFA Selected
     </div>,
   actionID : localActions.CFA_REMOVE
-}, {
-  text : 'Divider',
 }, {
   text :
     <div>
@@ -153,24 +171,102 @@ export const editButtonMenuItems = [{
   actionID : localActions.WITHDRAW_REMOVE
 }];
 
-export const filterButton = props =>
+export const tableButton = props =>
   new RaisedButtonModel({
-    label           : 'Filter',
-    actionID        : localActions.FILTER,
-    backgroundColor : '#009d9d',
-    disabled        : false,
-    menu            : {
-      open : props.table.get('MuiPopovers').get(localActions.FILTER),
-      item : filterButtonMenuItems(props)
+    icon      : <FontIcon className="fa fa-chevron-down" />,
+    className : 'table-button',
+    actionID  : localActions.TABLE,
+    disabled  : false,
+    menu      : {
+      open : props.table.get('MuiPopovers').get(localActions.TABLE),
+      item : tableButtonMenuItems(props)
     }
   });
 
-export const editButton = props =>
-  new RaisedButtonModel({
-    label    : 'Edit',
-    actionID : localActions.EDIT,
-    menu     : {
-      open : props.table.get('MuiPopovers').get(localActions.EDIT),
-      item : editButtonMenuItems
-    }
-  });
+export const tableButtonMenuItems = props => [{
+  text     : <div>{'Export all to .csv'}</div>,
+  actionID : localActions.EXPORT_CSV
+}, getDivider(), {
+  text     : <div>{'Clear all filters'}</div>,
+  actionID : localActions.CLEAR_FILTERS
+}, getDivider(), {
+  text :
+    <div>
+      {props.summaryRowAggregate == 'Sum'
+        ? <i className="fa fa-check-square-o" />
+        : <i className="fa fa-square-o" />
+      }
+      &nbsp; Sum
+    </div>,
+  actionID : localActions.EXPORT_VISIBLE_CSV
+}, {
+  text :
+    <div>
+      {props.summaryRowAggregate == 'Average'
+        ? <i className="fa fa-check-square-o" />
+        : <i className="fa fa-square-o" />
+      }
+      &nbsp; Average
+    </div>,
+  actionID : localActions.EXPORT_VISIBLE_CSV
+}, {
+  text :
+    <div>
+      {props.summaryRowAggregate == 'Maximum'
+        ? <i className="fa fa-check-square-o" />
+        : <i className="fa fa-square-o" />
+      }
+      &nbsp; Maximum
+    </div>,
+  actionID : localActions.EXPORT_VISIBLE_CSV
+}, {
+  text :
+    <div>
+      {props.summaryRowAggregate == 'Minimum'
+        ? <i className="fa fa-check-square-o" />
+        : <i className="fa fa-square-o" />
+      }
+      &nbsp; Minimum
+    </div>,
+  actionID : localActions.EXPORT_VISIBLE_CSV
+}];
+
+const getWithdrawnItem = props => ({
+  text :
+    <div>
+      { props.withdrawnStudents
+        ? <i className="fa fa-check-square-o" />
+        : <i className="fa fa-square-o" />
+      }
+      &nbsp; Withdrawn Students
+    </div>,
+  actionID : localActions.TOGGLE_WITHDRAWN_STUDENTS
+});
+
+const getOutreachOne = props =>
+  props.outreachLabel
+    && ({
+      text     : `${props.outreachLabel} #1`,
+      actionID : localActions.TIER_1
+    });
+
+const getOutreachTwo = props =>
+  props.outreachLabel
+    && ({
+      text     : `${props.outreachLabel} #2`,
+      actionID : localActions.TIER_2
+    });
+
+const getOutreachThree = props =>
+  props.outreachLabel
+    && ({
+      text     : `${props.outreachLabel} #3`,
+      actionID : localActions.TIER_3
+    });
+
+const getAllOutreaches = props =>
+  props.outreachLabel
+    && ({
+      text     : `${props.outreachLabel} (All)`,
+      actionID : localActions.ALL_TIERS
+    });

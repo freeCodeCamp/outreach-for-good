@@ -1,14 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import * as localConst from '../admin.const';
+import * as localActions from '../admin.actions';
+import * as localDefs from '../admin.defs';
 
 import { List } from 'immutable';
 
 import DataTableContainer from '../../../components/data-table/data-table-container';
 import DialogModel from '../../../models/dialog';
 import DropdownModel from '../../../models/dropdown';
-import RaisedButtonModel from '../../../models/raised-button';
 import './users.scss';
 
 const UsersTab = ({users, schools, ...props}) => {
@@ -16,20 +16,20 @@ const UsersTab = ({users, schools, ...props}) => {
    * Handler Functions
    *   - Catch events from page elements and send to parent component
    */
-  const handleButtonClick = event => {
+  function handleButtonClick(event) {
     event.preventDefault();
     props.clickHandler('dialogClick', this.value, event); // eslint-disable-line babel/no-invalid-this
-  };
+  }
 
-  const dropdownHandlerSchool = (event, index, value) => {
+  function dropdownHandlerSchool(event, index, value) {
     event.preventDefault();
-    props.clickHandler('dropdownChange', value, localConst.EDIT_SCHOOL); // eslint-disable-line babel/no-invalid-this
-  };
+    props.clickHandler('dropdownChange', value, localActions.EDIT_SCHOOL); // eslint-disable-line babel/no-invalid-this
+  }
 
-  const dropdownHandlerRole = (event, index, value) => {
+  function dropdownHandlerRole(event, index, value) {
     event.preventDefault();
-    props.clickHandler('dropdownChange', value, localConst.EDIT_ROLE); // eslint-disable-line babel/no-invalid-this
-  };
+    props.clickHandler('dropdownChange', value, localActions.EDIT_ROLE); // eslint-disable-line babel/no-invalid-this
+  }
 
   let dialogs = [];
 
@@ -60,10 +60,10 @@ const UsersTab = ({users, schools, ...props}) => {
      */
     dialogs.push(new DialogModel({
       title   : 'Change Assigned School',
-      open    : props.table.get('MuiDialogs').get(localConst.EDIT_SCHOOL),
+      open    : props.table.get('MuiDialogs').get(localActions.EDIT_SCHOOL),
       actions : [
         { label: 'Cancel', click: handleButtonClick },
-        { label: 'Save', click: handleButtonClick, value: localConst.EDIT_SCHOOL },
+        { label: 'Save', click: handleButtonClick, value: localActions.EDIT_SCHOOL },
       ],
       text : [<div key='0'>
         {`Change the assigned school for
@@ -77,10 +77,10 @@ const UsersTab = ({users, schools, ...props}) => {
 
     dialogs.push(new DialogModel({
       title   : 'Change User Role',
-      open    : props.table.get('MuiDialogs').get(localConst.EDIT_ROLE),
+      open    : props.table.get('MuiDialogs').get(localActions.EDIT_ROLE),
       actions : List([
         { label: 'Cancel', click: handleButtonClick },
-        { label: 'Save', click: handleButtonClick, value: localConst.EDIT_ROLE },
+        { label: 'Save', click: handleButtonClick, value: localActions.EDIT_ROLE },
       ]),
       text : [<div key='0'>
         {`Change the assigned role of
@@ -94,10 +94,10 @@ const UsersTab = ({users, schools, ...props}) => {
 
     dialogs.push(new DialogModel({
       title   : 'Remove Users',
-      open    : props.table.get('MuiDialogs').get(localConst.REMOVE_USER),
+      open    : props.table.get('MuiDialogs').get(localActions.REMOVE_USER),
       actions : List([
         { label: 'Cancel', click: handleButtonClick },
-        { label: 'Remove', click: handleButtonClick, value: localConst.REMOVE_USER },
+        { label: 'Remove', click: handleButtonClick, value: localActions.REMOVE_USER },
       ]),
       text : [` Permanently remove
         ${props.table.selectedRowsToCsv(props.table, 'name')}
@@ -105,34 +105,15 @@ const UsersTab = ({users, schools, ...props}) => {
     }));
   }
 
-  let buttons = [];
-
   /**
    * Material-UI <RaisedButton> and <Popover>
    *  - `menu:` become a <Popover> menu under button
    *  - `actionID:` is used by parent to launch dialogs
    *  - See RaisedButtonModel for default parameters
    */
-  buttons.push(new RaisedButtonModel({
-    label    : 'Edit',
-    actionID : localConst.EDIT,
-    menu     : {
-      open : props.table.get('MuiPopovers').get(localConst.EDIT),
-      item : [{
-        text     : 'Assigned School',
-        actionID : localConst.EDIT_SCHOOL
-      }, {
-        text     : 'User Role',
-        actionID : localConst.EDIT_ROLE
-      }]
-    }
-  }));
-
-  buttons.push(new RaisedButtonModel({
-    label           : 'Remove',
-    backgroundColor : '#d9534f',
-    actionID        : localConst.REMOVE_USER
-  }));
+  let buttons = [];
+  buttons.push(localDefs.editUserButton(props));
+  buttons.push(localDefs.removeUserButton(props));
 
   /**
    * Fixed-Data-Table Parameters

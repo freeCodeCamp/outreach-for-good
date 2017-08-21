@@ -17,8 +17,9 @@ const LetterTab = ({absenceRecords, ...props}) => {
    *  - `actionID:` is used by parent to launch dialogs
    *  - See RaisedButtonModel for default parameters
    */
-  buttons.push(localDefs.filterButton(props));
+  buttons.push(localDefs.filterButton({...props, outreachLabel: 'Letter Sent'}));
   buttons.push(localDefs.editButton(props));
+  buttons.push(localDefs.tableButton(props));
 
   const page = {
     title   : 'Letters Sent Dashboard',

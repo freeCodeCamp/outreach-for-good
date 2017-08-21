@@ -296,6 +296,15 @@ class TableModel extends Table {
   }
 
   /**
+   * Action Handlers
+   */
+  handlePopoverButtonClick(nextTable, data, event) {
+    nextTable = this.togglePopovers(nextTable, data);
+    nextTable = this.setAnchor(nextTable, event.currentTarget);
+    return this.resetDialogs(nextTable);
+  }
+
+  /**
    * Material-UI <Popover>
    */
   addPopovers(state, popoverValues) {

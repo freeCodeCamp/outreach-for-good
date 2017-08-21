@@ -50,27 +50,37 @@ See [tools/sample-pdfs](https://github.com/freeCodeCamp/child-first-authority/tr
 
 This version is currently under development.
 
-* Upgrade babel-loader, current version causes depreciation warning (need v7)
-  * https://github.com/babel/babel-loader/pull/391
-* When session validation fails, does user stay locked-out? 
-* admin-page
+* General
+  * Integrate bug tracking with Sentry.io
+  * When session validation fails, does user stay locked-out? 
+  * DataTable - improve row selection performance with refs
+* Page - Admin
   * Prevent users from deleting themselves
   * User photo in left-most column
-  * Sort when clicking header
-* TableModel
-  * filter algorithm adjustment
-* Performance
-  * DataTable - improve row selection speed with refs
-* Remove all hard-coded school years
-* does current return all or current year?
-* changing tabs disables filter
-
-## To-Add
-
-* Students should not be grouped outside of their schools
-
-## To-Ask
-
-* Discuss row select / button click responsiveness
-  * Possibly bypass react render cycles
-
+  * Rename 'Settings' tab to something meaningful
+  * align settings tab to DataTable style
+* Page - Dashboard
+  * deselect rows after performing API Action
+  * show summary row as selected when collapsed with selected items
+  * ask about confirmation dialogs for API actions
+  * button to 'deselect all'
+  * color and formatting in dropdown menus
+  * count true/false cells for summary rows
+* Page - Records
+  * Add title and page frame
+  * Look into refactoring the term 'records' into something more meaningful
+  * Add tests and improve error detection and handling
+* Page - Reports
+  * Verify everything is working
+* Page - Settings
+  * Add title and page frame
+  * Add a description of the pages purpose
+* Page - Statistics
+  * Add title and page frame
+  * Indicate that statistics is a work in progress in dev versions
+* Upgrade babel-loader, current version causes depreciation warning (need v7)
+  * https://github.com/babel/babel-loader/pull/391
+* Server
+  * Remove all hard-coded school years
+  * does current return all or current year?
+  * Integrate bug tracking with Sentry.io
