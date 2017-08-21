@@ -70,22 +70,28 @@ class DashboardPage extends React.Component {
    *   - Retrieve and configure data for table
    *   - Set default state for 'action' variables
    */
-  retrieveData = (tab, filter) => {
+  retrieveData = (tab, filter, tier) => {
     let loadingPromise;
     let currentTab = tab || this.state.currentTab;
     let yearFilter = filter || this.state.yearFilter;
+    let tierQuery = '';
+    switch (tier) {
+    case localActions.TIER_1: tierQuery = 'tier=1&'; break;
+    case localActions.TIER_2: tierQuery = 'tier=2&'; break;
+    case localActions.TIER_3: tierQuery = 'tier=3&'; break;
+    }
     switch (currentTab) {
     case 'CourtReferral':
       loadingPromise = this.props.absRecordActions.fetchRecordsListQuery('type=Court+Referral', yearFilter);
       break;
     case 'HomeVisit':
-      loadingPromise = this.props.absRecordActions.fetchRecordsListQuery('type=Home+Visit', yearFilter);
+      loadingPromise = this.props.absRecordActions.fetchRecordsListQuery(`${tierQuery}type=Home+Visit`, yearFilter);
       break;
     case 'LetterSent':
-      loadingPromise = this.props.absRecordActions.fetchRecordsListQuery('type=Letter+Sent', yearFilter);
+      loadingPromise = this.props.absRecordActions.fetchRecordsListQuery(`${tierQuery}type=Letter+Sent`, yearFilter);
       break;
     case 'PhoneCall':
-      loadingPromise = this.props.absRecordActions.fetchRecordsListQuery('type=Phone+Call', yearFilter);
+      loadingPromise = this.props.absRecordActions.fetchRecordsListQuery(`${tierQuery}type=Phone+Call`, yearFilter);
       break;
     case 'SSTReferral':
       loadingPromise = this.props.absRecordActions.fetchRecordsListQuery('type=SST+Referral', yearFilter);
@@ -189,6 +195,10 @@ class DashboardPage extends React.Component {
       } else if(data == localActions.EXPORT_CSV || data == localActions.EXPORT_VISIBLE_CSV) {
         this.handleExportToCSV(nextTable, data);
 
+      } else if(data == localActions.TIER_1 || data == localActions.TIER_2
+                || data == localActions.TIER_3 || data == localActions.ALL_TIERS) {
+        this.handleQueryOutreachTier(nextTable, data);
+
       } else {
         this.handleInterfaceButtonClick(nextTable);
       }
@@ -269,12 +279,19 @@ class DashboardPage extends React.Component {
   }
 
   handleInterfaceButtonClick = nextTable => {
-    nextTable = table.resetPopovers(this.state.table);
-    this.setState({table: nextTable});
+    this.handleClosePopover(nextTable);
   }
 
   handleClosePopover = nextTable => {
     nextTable = table.resetPopovers(this.state.table);
+    this.setState({table: nextTable});
+  }
+
+  handleQueryOutreachTier = (nextTable, data) => {
+    nextTable = table.resetPopovers(this.state.table);
+    data === localActions.ALL_TIERS
+      ? this.retrieveData()
+      : this.retrieveData(null, null, data);
     this.setState({table: nextTable});
   }
 
