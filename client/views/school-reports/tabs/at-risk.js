@@ -11,7 +11,7 @@ import RaisedButtonModel from '../../../models/raised-button';
 const AtRiskTab = ({atRisk, ...props}) => {
   const page = {
     title   : 'At Risk Students',
-    columns : localDefs.atRiskTableColumns,
+    columns : localDefs.defaultTableColumns,
     buttons : [
       new RaisedButtonModel({
         label    : 'Show Student',

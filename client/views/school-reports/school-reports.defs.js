@@ -79,7 +79,7 @@ export const interventionTableColumns = [{
   fixed    : true
 }, {
   title    : 'Intervention Type',
-  id       : 'student.lastName',
+  id       : '',
   flexGrow : 1,
   fixed    : true
 }, {
