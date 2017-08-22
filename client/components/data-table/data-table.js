@@ -60,7 +60,7 @@ class DataTable extends React.Component {
     } = this.props;
 
     // Uncomment to debug groupCol data structure
-    //console.log('data: ', groupCol.toJS());
+    //console.log('data: ', table.get('groupColumn').toJS());
 
     var { _data, _indexMap } = insertSummaryRows(data, table);
     this._data = _data;

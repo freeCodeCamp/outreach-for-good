@@ -4,7 +4,7 @@ import * as localActions from './dashboard.actions';
 
 import FontIcon from 'material-ui/FontIcon';
 import RaisedButtonModel from '../../models/raised-button';
-import * as dataTableActions from '../../components/data-table/data-table.actions';
+import * as tableActions from '../../components/data-table/data-table.actions';
 
 export const absenceRecordTableColumns = [{
   title    : '+',
@@ -66,19 +66,19 @@ export const absenceRecordTableColumns = [{
 }, {
   title    : 'IEP',
   id       : 'student.iep',
-  type     : dataTableActions.FORMAT_CHECK,
+  type     : tableActions.FORMAT_CHECK,
   width    : 50,
   flexGrow : 1
 }, {
   title    : 'CFA',
   id       : 'student.cfa',
-  type     : dataTableActions.FORMAT_CHECK,
+  type     : tableActions.FORMAT_CHECK,
   width    : 50,
   flexGrow : 1
 }, {
   title    : 'Updated',
   id       : 'dateFormatted',
-  type     : dataTableActions.FORMAT_DATE,
+  type     : tableActions.FORMAT_DATE,
   width    : 75,
   flexGrow : 1
 }];
@@ -192,43 +192,43 @@ export const tableButtonMenuItems = props => [{
 }, getDivider(), {
   text :
     <div>
-      {props.summaryRowAggregate == 'Sum'
+      {props.summaryRowAggregateType == 'sum'
         ? <i className="fa fa-check-square-o" />
         : <i className="fa fa-square-o" />
       }
       &nbsp; Sum
     </div>,
-  actionID : localActions.EXPORT_VISIBLE_CSV
+  actionID : tableActions.SET_AGGREGATE_SUM
 }, {
   text :
     <div>
-      {props.summaryRowAggregate == 'Average'
+      {props.summaryRowAggregateType == 'average'
         ? <i className="fa fa-check-square-o" />
         : <i className="fa fa-square-o" />
       }
       &nbsp; Average
     </div>,
-  actionID : localActions.EXPORT_VISIBLE_CSV
+  actionID : tableActions.SET_AGGREGATE_AVERAGE
 }, {
   text :
     <div>
-      {props.summaryRowAggregate == 'Maximum'
+      {props.summaryRowAggregateType == 'maximum'
         ? <i className="fa fa-check-square-o" />
         : <i className="fa fa-square-o" />
       }
       &nbsp; Maximum
     </div>,
-  actionID : localActions.EXPORT_VISIBLE_CSV
+  actionID : tableActions.SET_AGGREGATE_MAXIMUM
 }, {
   text :
     <div>
-      {props.summaryRowAggregate == 'Minimum'
+      {props.summaryRowAggregateType == 'minimum'
         ? <i className="fa fa-check-square-o" />
         : <i className="fa fa-square-o" />
       }
       &nbsp; Minimum
     </div>,
-  actionID : localActions.EXPORT_VISIBLE_CSV
+  actionID : tableActions.SET_AGGREGATE_MINIMUM
 }];
 
 const getWithdrawnItem = props => ({

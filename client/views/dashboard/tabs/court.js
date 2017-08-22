@@ -19,7 +19,10 @@ const CourtTab = ({absenceRecords, ...props}) => {
    */
   buttons.push(localDefs.filterButton(props));
   buttons.push(localDefs.editButton(props));
-  buttons.push(localDefs.tableButton(props));
+  buttons.push(localDefs.tableButton({
+    ...props,
+    summaryRowAggregateType : props.table.getIn(['groupColumn', 'aggregateType'])
+  }));
 
 
   const page = {
