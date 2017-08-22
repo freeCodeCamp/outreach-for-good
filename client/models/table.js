@@ -128,87 +128,52 @@ class TableModel extends Table {
     let groupColumn = this.getFixedColumn(state);
     let groupRowIndices = state.get('groupColumn').get('groupIndices').toMap().flip();
     let count = -1;
-    return state.updateIn(['groupColumn', 'summaryRows'], () => {
-      switch (state.getIn(['groupColumn', 'aggregateType'])) {
-      case 'sum': return this.getSummaryRowSum(state, groupColumn, groupRowIndices, count, data);
-      case 'average': return this.getSummaryRowAverage(state, groupColumn, groupRowIndices, count, data);
-      case 'maximum': return this.getSummaryRowMaximum(state, groupColumn, groupRowIndices, count, data);
-      case 'minimum': return this.getSummaryRowMinimums(state, groupColumn, groupRowIndices, count, data);
-      }
-    });
-  }
-
-  getSummaryRowSum(state, groupColumn, groupRowIndices, count, data) {
-    return groupRowIndices.reduce((a, i, indice) => {
-      count += 1;
-      let rowIndex = indice + count;
-      let nextIndice = groupRowIndices.findEntry((v, k) => k > indice);
-      let recordCount = nextIndice ? nextIndice[0] - indice : data.size - indice;
-      return a.set(rowIndex, Immutable.Map({
-        groupColumn : Immutable.Map({
-          group : data.getIn([indice + 1, groupColumn]),
-          count : recordCount
-        })
-      }).concat(this.getRowAggregateRecord(state, data.slice(rowIndex - count, rowIndex + recordCount))));
-    }, Immutable.Map());
-  }
-
-  getSummaryRowAverage(state, groupColumn, groupRowIndices, count, data) {
-    return groupRowIndices.reduce((a, i, indice) => {
-      count += 1;
-      let rowIndex = indice + count;
-      let nextIndice = groupRowIndices.findEntry((v, k) => k > indice);
-      let recordCount = nextIndice ? nextIndice[0] - indice : data.size - indice;
-      return a.set(rowIndex, Immutable.Map({
-        groupColumn : Immutable.Map({
-          group : data.getIn([indice + 1, groupColumn]),
-          count : recordCount
-        })
-      }).concat(this.getRowAggregateRecord(state, data.slice(rowIndex - count, rowIndex + recordCount))));
-    }, Immutable.Map());
-  }
-
-
-  getSummaryRowMaximum(state, groupColumn, groupRowIndices, count, data) {
-    return groupRowIndices.reduce((a, i, indice) => {
-      count += 1;
-      let rowIndex = indice + count;
-      let nextIndice = groupRowIndices.findEntry((v, k) => k > indice);
-      let recordCount = nextIndice ? nextIndice[0] - indice : data.size - indice;
-      return a.set(rowIndex, Immutable.Map({
-        groupColumn : Immutable.Map({
-          group : data.getIn([indice + 1, groupColumn]),
-          count : recordCount
-        })
-      }).concat(this.getRowAggregateRecord(state, data.slice(rowIndex - count, rowIndex + recordCount))));
-    }, Immutable.Map());
-  }
-
-
-  getSummaryRowMinimums(state, groupColumn, groupRowIndices, count, data) {
-    return groupRowIndices.reduce((a, i, indice) => {
-      count += 1;
-      let rowIndex = indice + count;
-      let nextIndice = groupRowIndices.findEntry((v, k) => k > indice);
-      let recordCount = nextIndice ? nextIndice[0] - indice : data.size - indice;
-      return a.set(rowIndex, Immutable.Map({
-        groupColumn : Immutable.Map({
-          group : data.getIn([indice + 1, groupColumn]),
-          count : recordCount
-        })
-      }).concat(this.getRowAggregateRecord(state, data.slice(rowIndex - count, rowIndex + recordCount))));
-    }, Immutable.Map());
-  }
-
-
-  changeAggregateType(state, type) {
-    return state.updateIn(['groupColumn', 'aggregateType'], () => type);
+    return state.update('groupColumn', nextGroupColumn =>
+      nextGroupColumn.update('summaryRows', () =>
+        groupRowIndices.reduce((a, i, indice) => {
+          count += 1;
+          let rowIndex = indice + count;
+          let nextIndice = groupRowIndices.findEntry((v, k) => k > indice);
+          let recordCount = nextIndice ? nextIndice[0] - indice : data.size - indice;
+          return a.set(rowIndex, Immutable.Map({
+            groupColumn : Immutable.Map({
+              group : data.getIn([indice + 1, groupColumn]),
+              count : recordCount
+            })
+          }).concat(this.getRowAggregateRecord(state, data.slice(rowIndex - count, rowIndex + recordCount))));
+        }, Immutable.Map()))
+    );
   }
 
   // input data sorted by groupColumn, generates groupColumn.summaryRows[]
   getRowAggregateRecord(state, data) {
     let aggregateColumns = state.get('groupColumn').get('aggregateColumns').toMap().flip().map(() => 0);
-    return data.reduce((a, row) => a.map((v, k) => row.get(k) + v), aggregateColumns);
+    switch (state.getIn(['groupColumn', 'aggregateType'])) {
+    case 'sum': return data.reduce((summaryRow, dataRow) =>
+      summaryRow.map((currentSum, dataKey) =>
+        dataRow.get(dataKey) + currentSum)
+      , aggregateColumns);
+    case 'average': let count = -1;
+      return data.reduce((summaryRow, dataRow) => {
+        count++;
+        return summaryRow.map((currentSum, dataKey) =>
+          (dataRow.get(dataKey) + currentSum * (count || 1)) / (count + 1));
+      }, aggregateColumns).map(value => Math.round(value * 10) / 10);
+    case 'maximum': return data.reduce((summaryRow, dataRow) =>
+      summaryRow.map((currentMax, dataKey) =>
+        dataRow.get(dataKey) > currentMax ? dataRow.get(dataKey) : currentMax)
+      , aggregateColumns);
+    case 'minimum': return data.reduce((summaryRow, dataRow) =>
+      summaryRow.map((currentMin, dataKey) =>
+        currentMin === 0 ? dataRow.get(dataKey)
+          : dataRow.get(dataKey) < currentMin ? dataRow.get(dataKey) : currentMin)
+      , aggregateColumns);
+    }
+  }
+
+
+  changeAggregateType(state, type) {
+    return state.updateIn(['groupColumn', 'aggregateType'], () => type);
   }
 
   // Adds/removes row index from a List() of collapsed rows

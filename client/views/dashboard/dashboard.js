@@ -310,6 +310,7 @@ class DashboardPage extends React.Component {
     }
     nextTable = table.changeAggregateType(nextTable, nextAggragate);
     nextTable = table.resetPopovers(nextTable);
+    nextTable = table.buildIndexMap(nextTable, this._absenceRecords);
     this.setState({table: nextTable});
   }
 
