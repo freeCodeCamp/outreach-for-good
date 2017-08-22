@@ -23,6 +23,7 @@ export const Table = Immutable.Record({
     fixedColumn      : '', // col which data is grouped by
     displayColumn    : '', // used for Summary Row (ex. School A (12))
     aggregateColumns : Immutable.List(), // columns to sum() for Summary Row
+    aggregateType    : 'sum', // average, sum, maximum, minimum
     groupIndices     : Immutable.List(), // first index of each group
     collapsed        : Immutable.List(), // index of groupIndicies which are collapsed/expanded (data + 1, 2..)
     summaryRows      : Immutable.Map(/*{ //group summary (mainly sum() of columns)
@@ -147,7 +148,32 @@ class TableModel extends Table {
   // input data sorted by groupColumn, generates groupColumn.summaryRows[]
   getRowAggregateRecord(state, data) {
     let aggregateColumns = state.get('groupColumn').get('aggregateColumns').toMap().flip().map(() => 0);
-    return data.reduce((a, row) => a.map((v, k) => row.get(k) + v), aggregateColumns);
+    switch (state.getIn(['groupColumn', 'aggregateType'])) {
+    case 'sum': return data.reduce((summaryRow, dataRow) =>
+      summaryRow.map((currentSum, dataKey) =>
+        dataRow.get(dataKey) + currentSum)
+      , aggregateColumns);
+    case 'average': let count = -1;
+      return data.reduce((summaryRow, dataRow) => {
+        count++;
+        return summaryRow.map((currentSum, dataKey) =>
+          (dataRow.get(dataKey) + currentSum * (count || 1)) / (count + 1));
+      }, aggregateColumns).map(value => Math.round(value * 10) / 10);
+    case 'maximum': return data.reduce((summaryRow, dataRow) =>
+      summaryRow.map((currentMax, dataKey) =>
+        dataRow.get(dataKey) > currentMax ? dataRow.get(dataKey) : currentMax)
+      , aggregateColumns);
+    case 'minimum': return data.reduce((summaryRow, dataRow) =>
+      summaryRow.map((currentMin, dataKey) =>
+        currentMin === 0 ? dataRow.get(dataKey)
+          : dataRow.get(dataKey) < currentMin ? dataRow.get(dataKey) : currentMin)
+      , aggregateColumns);
+    }
+  }
+
+
+  changeAggregateType(state, type) {
+    return state.updateIn(['groupColumn', 'aggregateType'], () => type);
   }
 
   // Adds/removes row index from a List() of collapsed rows

@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
 import * as absRecordActions from '../../modules/absence-record';
+import * as tableActions from '../../components/data-table/data-table.actions';
 import * as localActions from './dashboard.actions';
 import * as localDefs from './dashboard.defs';
 import * as reportActions from '../../modules/reports';
@@ -199,13 +200,17 @@ class DashboardPage extends React.Component {
                 || data == localActions.TIER_3 || data == localActions.ALL_TIERS) {
         this.handleQueryOutreachTier(nextTable, data);
 
+      } else if(data == tableActions.SET_AGGREGATE_SUM || data == tableActions.SET_AGGREGATE_AVERAGE
+                || data == tableActions.SET_AGGREGATE_MAXIMUM || data == tableActions.SET_AGGREGATE_MINIMUM) {
+        this.handleChangeTableAggregate(nextTable, data);
+
       } else {
         this.handleInterfaceButtonClick(nextTable);
       }
       break;
     // Clicked away from popover menu
     case 'popoverClose':
-      this.handleClosePopover(nextTable);
+      this.handleClosePopover(this.state.table);
       break;
     }
   } // End of: clickHandler()
@@ -283,15 +288,29 @@ class DashboardPage extends React.Component {
   }
 
   handleClosePopover = nextTable => {
-    nextTable = table.resetPopovers(this.state.table);
+    nextTable = table.resetPopovers(nextTable);
     this.setState({table: nextTable});
   }
 
   handleQueryOutreachTier = (nextTable, data) => {
-    nextTable = table.resetPopovers(this.state.table);
+    nextTable = table.resetPopovers(nextTable);
     data === localActions.ALL_TIERS
       ? this.retrieveData()
       : this.retrieveData(null, null, data);
+    this.setState({table: nextTable});
+  }
+
+  handleChangeTableAggregate = (nextTable, data) => {
+    var nextAggragate;
+    switch (data) {
+    case tableActions.SET_AGGREGATE_SUM: nextAggragate = 'sum'; break;
+    case tableActions.SET_AGGREGATE_AVERAGE: nextAggragate = 'average'; break;
+    case tableActions.SET_AGGREGATE_MAXIMUM: nextAggragate = 'maximum'; break;
+    case tableActions.SET_AGGREGATE_MINIMUM: nextAggragate = 'minimum'; break;
+    }
+    nextTable = table.changeAggregateType(nextTable, nextAggragate);
+    nextTable = table.resetPopovers(nextTable);
+    nextTable = table.buildIndexMap(nextTable, this._absenceRecords);
     this.setState({table: nextTable});
   }
 
