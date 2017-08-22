@@ -210,7 +210,7 @@ class DashboardPage extends React.Component {
       break;
     // Clicked away from popover menu
     case 'popoverClose':
-      this.handleClosePopover(nextTable);
+      this.handleClosePopover(this.state.table);
       break;
     }
   } // End of: clickHandler()
