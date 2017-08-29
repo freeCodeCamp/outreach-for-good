@@ -7,7 +7,7 @@ function dateOnly(dateStr) {
 
 function UploadCtrl($scope, PDF, PDF2016, AbsenceRecord, Auth, School, toastr) {
   // Formats of pdf based on school year
-  $scope.formats = ['2015-2016', '2016-2017'];
+  $scope.formats = ['2015-2016', '2016-2017', '2017-2018'];
 
   function resetState() {
     delete $scope.pending;
