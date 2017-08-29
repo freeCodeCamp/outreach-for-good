@@ -5,8 +5,15 @@
 module.exports = {
   // MongoDB connection options
   mongo: {
-    uri: 'mongodb://localhost/app-dev'
+    uri: process.env.MONGOLAB_URI ||
+    'mongodb://localhost/app-dev'
   },
 
-  seedDB: true
+  // Raven connection options
+  raven: {
+    dsn:    process.env.RAVEN_DSN ||
+            undefined
+  },
+
+  seedDB: false
 };

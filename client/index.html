@@ -94,6 +94,9 @@
 <!-- endbower -->
 <!-- endbuild -->
 
+<script src="https://cdn.ravenjs.com/3.17.0/angular/raven.min.js" crossorigin="anonymous"></script>
+<script>Raven.config('https://aeec64cf660946d0939d933eafce7e4b@sentry.io/199987').install();</script>
+
 <!-- build:js(.tmp) app/app.js -->
 
 <script src="app/app.js"></script>
@@ -153,9 +156,9 @@
 <script src="components/mongoose-error/mongoose-error.directive.js"></script>
 <script src="components/navbar/navbar.controller.js"></script>
 <script src="components/navbar/navbar.directive.js"></script>
-<script src="components/pdf/pdf.2016.service.js"></script>
 <script src="components/pdf/pdf.service.js"></script>
 <script src="components/school/school.service.js"></script>
+<script src="components/settings/settings.intervention.service.js"></script>
 <script src="components/sidebar/sidebar.controller.js"></script>
 <script src="components/sidebar/sidebar.directive.js"></script>
 <script src="components/sidebar/sidebar.service.js"></script>

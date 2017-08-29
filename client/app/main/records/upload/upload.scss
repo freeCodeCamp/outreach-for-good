@@ -66,7 +66,9 @@
         left: -9999px;
       }
 
-      tr { border: 1px solid #ccc; }
+      tr {
+        border: 1px solid #ccc;
+      }
 
       /* Behave like a "row" */
       tbody tr td {
@@ -75,7 +77,6 @@
         position: relative;
         padding-left: 50%;
         white-space: normal;
-        text-align: left;
       }
 
       td:before {
@@ -87,11 +88,14 @@
         width: 45%;
         padding-right: 10px;
         white-space: nowrap;
-        text-align: left;
         font-weight: bold;
       }
 
       td:before { content: attr(data-title); }
     }
   }
+}
+
+table > tbody > tr > td:not(:first-child) {
+  text-align: center;
 }

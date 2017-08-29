@@ -134,7 +134,9 @@ function DashboardCtrl($scope, $timeout, AbsenceRecord, GridDefaults, Student) {
   $scope.csvFileNameFn = function() {
     return GridDefaults.datePrefix() + ' ' + $scope.tableTitle + '.csv';
   };
+
   $scope.gridOptions = GridDefaults.recordOptions($scope);
+
   $scope.setFilter = function(type, tier) {
     if ($scope.filter.type !== type || $scope.filter.tier !== tier) {
       var filter = {};

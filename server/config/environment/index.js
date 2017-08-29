@@ -19,7 +19,7 @@ var all = {
   env: process.env.NODE_ENV,
 
   // Root path of server
-  root: path.normalize(__dirname + '/../../..'),
+  root: process.env.APP_ROOT || path.normalize(__dirname + '/../../..'),
 
   // Server port
   port: process.env.PORT || 9000,
@@ -50,6 +50,12 @@ var all = {
     clientID:     process.env.GOOGLE_ID || 'id',
     clientSecret: process.env.GOOGLE_SECRET || 'secret',
     callbackURL:  (process.env.DOMAIN || '') + '/auth/google/callback'
+  },
+
+  // Raven connection options
+  raven: {
+    dsn:    process.env.RAVEN_DSN ||
+            undefined
   }
 };
 
