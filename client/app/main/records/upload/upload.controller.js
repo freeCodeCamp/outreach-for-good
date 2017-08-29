@@ -9,6 +9,7 @@ function UploadCtrl($scope, PDF, AbsenceRecord, Auth, School, Student, toastr) {
   var needGradeField = [];
   var willUpdateGrade = {};
   // Formats of pdf based on school year
+  $scope.formats = ['2015-2016', '2016-2017', '2017-2018'];
   // $scope.formats = ['2015-2016', '2015-2016, with grade level', '2016-2017', '2016-2017, with grade level'];
 
   function resetState() {
