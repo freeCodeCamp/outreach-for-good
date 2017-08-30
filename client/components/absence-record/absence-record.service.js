@@ -36,7 +36,7 @@ angular.module('app').factory('AbsenceRecord', function($resource) {
           year: '2016-2017'
         }
       },
-      list2016: {
+      list2017: {
         method: 'GET',
         isArray: true,
         params: {
