@@ -2,6 +2,7 @@
 
 var User = require('./user.model');
 var School = require('../school/school.model');
+var passport = require('passport');
 var auth = require('../../auth/auth.service');
 
 /**
@@ -11,8 +12,8 @@ exports.me = function(req, res) {
   User.findById(req.user.id)
     .populate('assignment')
     .exec(function(err, user) {
-      if(err) return handleError(res, err);
-      if(!user) return res.status(401).send('Unauthorized');
+      if (err) return handleError(res, err);
+      if (!user) return res.status(401).send('Unauthorized');
       return res.status(200).json(user);
     });
 };
@@ -20,10 +21,10 @@ exports.me = function(req, res) {
 /**
  * Get a single user
  */
-exports.show = function(req, res) {
+exports.show = function(req, res, next) {
   User.findById(req.params.userId, function(err, user) {
-    if(err) return handleError(res, err);
-    if(!user) return res.status(401).send('Unauthorized');
+    if (err) return handleError(res, err);
+    if (!user) return res.status(401).send('Unauthorized');
     return res.status(200).json(user.profile);
   });
 };
@@ -37,7 +38,7 @@ exports.index = function(req, res) {
     .populate('assignment', 'name')
     .sort({name: 1})
     .exec(function(err, users) {
-      if(err) return handleError(res, err);
+      if (err) return handleError(res, err);
       return res.status(200).json(users);
     });
 };
@@ -46,7 +47,6 @@ exports.index = function(req, res) {
  * A user can only assign equal or lower roles to other users.
  */
 exports.validateUpdateRole = function(req, res, next) {
-  //console.log(req.body);
   return auth.hasRole(req.body.role)(req, res, next);
 };
 
@@ -59,7 +59,7 @@ exports.updateRole = function(req, res) {
   paramUser.role = req.body.role;
   paramUser.assignment = undefined;
   paramUser.save(function(err, user) {
-    if(err) return handleError(res, err);
+    if (err) return handleError(res, err);
     return res.status(200).json(user);
   });
 };
@@ -69,8 +69,8 @@ exports.updateRole = function(req, res) {
  */
 exports.validateUpdateAssignment = function(req, res, next) {
   School.findById(req.body.assignment, function(err, school) {
-    if(err) return handleError(res, err);
-    if(!school) {
+    if (err) return handleError(res, err);
+    if (!school) {
       return next(new Error('Assignment is not a valid School.'));
     }
     req.school = school;
@@ -86,9 +86,9 @@ exports.updateAssignment = function(req, res) {
   var paramUser = req.paramUser;
   paramUser.assignment = req.school._id;
   paramUser.save(function(err, user) {
-    if(err) return handleError(res, err);
-    user.populate('assignment', 'name', function(err) {
-      if(err) return handleError(res, err);
+    if (err) return handleError(res, err);
+    user.populate('assignment', 'name', function(err, user) {
+      if (err) return handleError(res, err);
       return res.status(200).json(user);
     });
   });
@@ -107,7 +107,7 @@ exports.validateDelete = function(req, res, next) {
  */
 exports.delete = function(req, res) {
   req.paramUser.remove(function(err) {
-    if(err) return handleError(res, err);
+    if (err) return handleError(res, err);
     return res.status(204).send('No Content');
   });
 };

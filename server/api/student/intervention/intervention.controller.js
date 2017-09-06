@@ -12,7 +12,7 @@ exports.index = function(req, res) {
     .sort({_id: -1})
     .populate('notes.user', 'name')
     .exec(function(err, interventions) {
-      if(err) return handleError(res, err);
+      if (err) return handleError(res, err);
       return res.status(201).json(interventions);
     });
 };
@@ -23,7 +23,7 @@ exports.index = function(req, res) {
  */
 exports.create = function(req, res) {
   Intervention.create(req.body, function(err, intervention) {
-    if(err) return handleError(res, err);
+    if (err) return handleError(res, err);
     return res.status(201).json(intervention);
   });
 };
@@ -36,18 +36,18 @@ exports.createNote = function(req, res) {
   Intervention
     .findById(req.params.interventionId)
     .exec(function(err, intervention) {
-      if(err) return handleError(res, err);
-      if(!intervention) return res.status(404).send('Not Found');
+      if (err) return handleError(res, err);
+      if (!intervention) return res.status(404).send('Not Found');
       intervention.notes.push({
-        user : req.user.id,
-        note : req.body.note
+        user: req.user.id,
+        note: req.body.note
       });
       intervention.save(function(err) {
-        if(err) return handleError(res, err);
+        if (err) return handleError(res, err);
         Intervention.populate(intervention, {path: 'notes.user'},
-          function(err, _intervention) {
-            if(err) return handleError(res, err);
-            return res.status(200).json(_intervention);
+          function(err, intervention) {
+            if (err) return handleError(res, err);
+            return res.status(200).json(intervention);
           });
       });
     });
@@ -57,11 +57,11 @@ exports.updateArchived = function(req, res) {
   Intervention
     .findById(req.params.interventionId)
     .exec(function(err, intervention) {
-      if(err) return handleError(res, err);
-      if(!intervention) return res.send(404);
+      if (err) return handleError(res, err);
+      if (!intervention) return res.send(404);
       intervention.archived = req.body.archived;
       intervention.save(function(err) {
-        if(err) return handleError(res, err);
+        if (err) return handleError(res, err);
         return res.status(200).json(intervention);
       });
     });
@@ -71,10 +71,10 @@ exports.delete = function(req, res) {
   Intervention
     .findById(req.params.interventionId)
     .exec(function(err, intervention) {
-      if(err) return handleError(res, err);
-      if(!intervention) return res.send(404);
+      if (err) return handleError(res, err);
+      if (!intervention) return res.send(404);
       intervention.remove(function(err) {
-        if(err) return handleError(res, err);
+        if (err) return handleError(res, err);
         return res.status(204).send('No Content');
       });
     });

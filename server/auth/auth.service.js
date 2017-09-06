@@ -1,6 +1,8 @@
 'use strict';
 
 var _ = require('lodash');
+var mongoose = require('mongoose');
+var passport = require('passport');
 var config = require('../config/environment');
 var jwt = require('jsonwebtoken');
 var expressJwt = require('express-jwt');
@@ -21,7 +23,7 @@ exports.isAuthenticated = function() {
   // Validate jwt
   composed.use(function(req, res, next) {
     // allow access_token to be passed through query parameter as well
-    if(req.query && req.query.hasOwnProperty('access_token')) {
+    if (req.query && req.query.hasOwnProperty('access_token')) {
       req.headers.authorization = `Bearer ${req.query.access_token}`;
     }
     validateJwt(req, res, next);
@@ -29,13 +31,9 @@ exports.isAuthenticated = function() {
   // Attach user to request
   composed.use(function(req, res, next) {
     User.findById(req.user._id, function(err, user) {
-      if(err) return next(err);
-      if(!user) {
-        debug('401, unauthorized user');
-        return res.status(401).send('Unauthorized');
-      }
+      if (err) return next(err);
+      if (!user) return res.status(401).send('Unauthorized');
       req.user = user;
-      debug('Valid, attaching user object');
       next();
     });
   });
@@ -53,12 +51,11 @@ exports.signToken = function(id) {
  * Set token cookie directly for oAuth strategies
  */
 exports.setTokenCookie = function(req, res) {
-  if(!req.user) {
+  if (!req.user) {
     return res.status(404)
       .json({message: 'Something went wrong, please try again.'});
   }
   var token = exports.signToken(req.user._id, req.user.role);
-  //debug(token);
   res.cookie('token', JSON.stringify(token));
   res.redirect('/');
 };
@@ -69,21 +66,21 @@ function meetsRoleRequirements(userRole, roleRequired) {
 }
 
 function roleMsg(userRole, roleRequired) {
-  return `Your current role of ${userRole}
-          does not meet the minimum required role of
-          ${roleRequired} for the requested resource.`;
+  return "Your current role of " + userRole +
+         " does not meet the minimum required role of " +
+         roleRequired + " for the requested resource.";
 }
 
 /**
  * Checks if the user role meets the minimum requirements of the route
  */
 exports.hasRole = function(roleRequired) {
-  if(!roleRequired) throw new Error('Required role needs to be set');
+  if (!roleRequired) throw new Error('Required role needs to be set');
   return compose()
     .use(exports.isAuthenticated())
     .use(function(req, res, next) {
-      if(meetsRoleRequirements(req.user.role, roleRequired)) {
-        return next();
+      if (meetsRoleRequirements(req.user.role, roleRequired)) {
+        next();
       } else {
         res.status(403).json({reason: roleMsg(req.user.role, roleRequired)});
       }
@@ -91,12 +88,12 @@ exports.hasRole = function(roleRequired) {
 };
 
 function schoolMsg(assignmentId) {
-  return `Your current role of teacher and assignment to schoolId: 
-        ${assignmentId} does not allow access to requested resource.`;
+  return 'Your current role of teacher and assignment to schoolId: ' +
+         assignmentId + ' does not allow access to requested resource.';
 }
 
 function managerOrAssignedSchool(schoolIdStr, user) {
-  if(meetsRoleRequirements(user.role, 'manager')) return true;
+  if (meetsRoleRequirements(user.role, 'manager')) return true;
   return schoolIdStr === user.assignment.toString();
 }
 
@@ -106,11 +103,11 @@ function managerOrAssignedSchool(schoolIdStr, user) {
  */
 exports.school = function(req, res, next) {
   School.findById(req.params.schoolId, function(err, school) {
-    if(err) return handleError(res, err);
-    if(!school) return res.sendStatus(404);
-    if(!managerOrAssignedSchool(school.id, req.user)) {
+    if (err) return handleError(res, err);
+    if (!school) return res.sendStatus(404);
+    if (!managerOrAssignedSchool(school.id, req.user)) {
       return res.status(403).json({
-        reason : schoolMsg(req.user.assignment || 'None')
+        reason: schoolMsg(req.user.assignment || 'None')
       });
     }
     req.school = school;
@@ -119,9 +116,9 @@ exports.school = function(req, res, next) {
 };
 
 function studentMsg(student, req) {
-  return `Your current role of teacher and assignment to schoolId: 
-          ${req.user.assignment.toString()} does not allow access
-          to student._id: ${student._id}.`;
+  return 'Your current role of teacher and assignment to schoolId: ' +
+         req.user.assignment.toString() +
+         ' does not allow access to student._id: ' + student._id + '.';
 }
 
 /**
@@ -130,11 +127,11 @@ function studentMsg(student, req) {
  */
 exports.student = function(req, res, next) {
   Student.findById(req.params.studentId, function(err, student) {
-    if(err) return handleError(res, err);
-    if(!student) return res.sendStatus(404);
-    if(!managerOrAssignedSchool(student.school.toString(), req.user)) {
+    if (err) return handleError(res, err);
+    if (!student) return res.sendStatus(404);
+    if (!managerOrAssignedSchool(student.school.toString(), req.user)) {
       return res.status(403).json({
-        reason : studentMsg(student, req)
+        reason: studentMsg(student, req)
       });
     }
     req.student = student;
@@ -150,14 +147,12 @@ exports.studentBatch = function(req, res, next) {
   Student
     .find({_id: {$in: req.body.studentIds}})
     .exec(function(err, students) {
-      if(err) return handleError(res, err);
-      if(!meetsRoleRequirements(req.user.role, 'manager')) {
-        var schools = _(students).map('school')
-        .uniq()
-        .value();
-        if(schools.length > 1 || schools[0] !== req.user.assignment.id) {
-          return next(new Error('Attempting to update students without '
-                                + 'adequate role or assignment.'));
+      if (err) return handleError(res, err);
+      if (!meetsRoleRequirements(req.user.role, 'manager')) {
+        var schools = _(students).map('school').uniq().value();
+        if (schools.length > 1 || schools[0] !== req.user.assignment.id) {
+          return next(new Error('Attempting to update students without ' +
+                                'adequate role or assignment.'));
         }
       }
       req.students = students;
@@ -166,9 +161,9 @@ exports.studentBatch = function(req, res, next) {
 };
 
 function recordMsg(record, req) {
-  return `Your current role of teacher and assignment to schoolId: 
-          ${req.user.assignment.toString()} does not allow access 
-          to record._id: ${record._id}.`;
+  return 'Your current role of teacher and assignment to schoolId: ' +
+         req.user.assignment.toString() +
+         ' does not allow access to record._id: ' + record._id + '.';
 }
 
 /**
@@ -177,11 +172,11 @@ function recordMsg(record, req) {
  */
 exports.record = function(req, res, next) {
   AbsenceRecord.findById(req.params.recordId, function(err, record) {
-    if(err) return handleError(res, err);
-    if(!record) return res.sendStatus(404);
-    if(!managerOrAssignedSchool(record.school.toString(), req.user)) {
+    if (err) return handleError(res, err);
+    if (!record) return res.sendStatus(404);
+    if (!managerOrAssignedSchool(record.school.toString(), req.user)) {
       return res.status(403).json({
-        reason : recordMsg(record, req)
+        reason: recordMsg(record, req)
       });
     }
     req.record = record;
@@ -190,8 +185,8 @@ exports.record = function(req, res, next) {
 };
 
 function userMsg(paramUser, req) {
-  return `Your current role of ${req.user.role} does not allow access
-          to modify user._id: ${paramUser._id}.`;
+  return 'Your current role of ' + req.user.role +
+         ' does not allow access to modify user._id: ' + paramUser._id + '.';
 }
 
 /**
@@ -200,11 +195,11 @@ function userMsg(paramUser, req) {
  */
 exports.modifyUser = function(req, res, next) {
   User.findById(req.params.userId, function(err, paramUser) {
-    if(err) return handleError(res, err);
-    if(!paramUser) return res.sendStatus(404);
-    if(!meetsRoleRequirements(req.user.role, paramUser.role)) {
+    if (err) return handleError(res, err);
+    if (!paramUser) return res.sendStatus(404);
+    if (!meetsRoleRequirements(req.user.role, paramUser.role)) {
       return res.status(403).json({
-        reason : userMsg(paramUser, req)
+        reason: userMsg(paramUser, req)
       });
     }
     req.paramUser = paramUser;
