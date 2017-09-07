@@ -18,8 +18,7 @@ describe('User controller', function() {
   ];
 
   before(function(done) {
-    User.remove().exec()
-    .then(function() {
+    User.remove().exec().then(function() {
       done();
     });
   });
@@ -33,8 +32,7 @@ describe('User controller', function() {
     });
 
     after(function(done) {
-      User.remove().exec()
-      .then(function() {
+      User.remove().exec().then(function() {
         done();
       });
     });
@@ -92,8 +90,7 @@ describe('User controller', function() {
     });
 
     afterEach(function(done) {
-      User.remove().exec()
-      .then(function() {
+      User.remove().exec().then(function() {
         done();
       });
     });
@@ -172,8 +169,7 @@ describe('User controller', function() {
     });
 
     afterEach(function(done) {
-      User.remove().exec()
-      .then(function() {
+      User.remove().exec().then(function() {
         done();
       });
     });
