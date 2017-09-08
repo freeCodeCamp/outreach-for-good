@@ -12,6 +12,12 @@ module.exports = {
             || 'mongodb://localhost/cfa-local'
   },
 
+  // Raven connection options
+  raven: {
+    dsn:    process.env.RAVEN_DSN ||
+            undefined
+  },
+
   seedDB : false,
 
   debug : '*'
