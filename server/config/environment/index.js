@@ -54,15 +54,17 @@ var all = {
     }
   },
 
-  // Google+ Authentication
-  google : {
-    clientID     : process.env.GOOGLE_ID || 'id',
-    clientSecret : process.env.GOOGLE_SECRET || 'secret',
-    callbackURL  : `${process.env.DOMAIN || ''}/auth/google/callback`
+  google: {
+    clientID:     process.env.GOOGLE_ID || 'id',
+    clientSecret: process.env.GOOGLE_SECRET || 'secret',
+    callbackURL:  (process.env.DOMAIN || '') + '/auth/google/callback'
   },
 
-  // Sentry.io Reporting
-  raven_dsn : process.env.RAVEN_DSN || ''
+  // Raven connection options
+  raven: {
+    dsn:    process.env.RAVEN_DSN ||
+            undefined
+  }
 };
 
 // Export the config object based on the NODE_ENV
