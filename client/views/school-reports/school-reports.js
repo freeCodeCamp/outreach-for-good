@@ -86,7 +86,6 @@ class SchoolReportsPage extends React.Component {
   updateData = nextProps => {
     const props = nextProps || this.props;
     let dataSource = null;
-    console.log('update data', this.state.table.get('selectedTab'), props.reports.toJS());
     switch (this.state.table.get('selectedTab')) {
     case 'atRisk': dataSource = props.reports.get('atRisk'); break;
     case 'chronicAbsent': dataSource = props.reports.get('chronicAbsent'); break;
@@ -94,7 +93,6 @@ class SchoolReportsPage extends React.Component {
     case 'interventionSummary': dataSource = props.reports.get('interventionSummary'); break;
     }
     this._reports = props.withdrawnStudents ? dataSource : dataSource.filter(record => !record.get('student.withdrawn'));
-    console.log(this._reports.toJS());
     let nextTable = this.state.table.updateSortCol(this.state.table, '');
     nextTable = nextTable.buildIndexMap(nextTable, this._reports);
     nextTable = nextTable.enableFiltering(nextTable);
@@ -129,7 +127,6 @@ class SchoolReportsPage extends React.Component {
       this.setState({table: nextTable});
       break;
     case 'changeFilterCol':
-      //console.log(data.substr(7), event);
       let tabData = this.state.table.get('selectedTab') == 'users'
           ? this.props.absenceRecords : this.props.absenceRecords;
       nextTable = table.updateFilterBy(this.state.table, data.substr(7), event);
@@ -137,7 +134,6 @@ class SchoolReportsPage extends React.Component {
       this.setState({table: nextTable});
       break;
     case 'buttonClick':
-      console.log(action, data, event);
       break;
     }
   }
@@ -171,7 +167,7 @@ class SchoolReportsPage extends React.Component {
               onActive={this.tabHandler}>
               <tab.Component
                 view = {viewport}
-                tabData = {tab.tabData}
+                tabData = {this._reports}
                 table = {this.state.table}
                 loaded = {this.state.loadResolved}
                 clickHandler = {this.clickHandler}
