@@ -3,9 +3,11 @@ import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
-import * as repAct from '../../modules/reports';
+import * as reportAct from '../../modules/reports';
+import * as localActions from './school-reports.actions';
 
 import Dimensions from 'react-dimensions-cjs';
+import { List } from 'immutable';
 import {Tabs, Tab} from 'material-ui/Tabs';
 
 import AtRiskTab from './tabs/at-risk';
@@ -13,6 +15,8 @@ import ChronicallyAbsentTab from './tabs/chronically-absent';
 import InterventionsTab from './tabs/interventions';
 import OutreachesTab from './tabs/outreaches';
 import TableModel from '../../models/table';
+
+import CsvParse from '../../components/csv-parse/csv-parse';
 
 const table = new TableModel();
 
@@ -22,6 +26,10 @@ class SchoolReportsPage extends React.Component {
 
     // Register Initial Component State
     let nextTable = table.setSelectedTab(table, 'atRisk');
+    nextTable = table.setFixedColumn(nextTable, 'school.name', 'student.lastName');
+    nextTable = table.setGroupAggregateColumns(nextTable, ['entry.absences', 'entry.absencesDelta',
+      'entry.tardies', 'entry.tardiesDelta', 'entry.present', 'entry.enrolled']);
+    nextTable = this.initClickActions(nextTable);
     this.state = {
       currentTab : 'atRisk',
       table      : nextTable,
@@ -33,55 +41,21 @@ class SchoolReportsPage extends React.Component {
     this.retrieveData('atRisk');
   }
 
-  componentWillReceiveProps(nextProps) {
-    let nextTable = this.state.table;
-    let dataLoaded = false;
-    switch (nextTable.get('selectedTab')) {
-    case 'atRisk':
-      if(nextProps.reports.atRisk.size && !this.state.loaded) {
-        //console.log('Got It!!! ', nextProps.reports.atRisk.size);
-        dataLoaded = true;
-        nextTable = table.updateSortCol(nextTable, '');
-        nextTable = table.buildIndexMap(nextTable, nextProps.reports.atRisk);
-      }
-      break;
-    case 'chronicAbsent':
-      if(nextProps.reports.chronicAbsent.size && !this.state.loaded) {
-        //console.log('Got It!!! ', nextProps.reports.chronicAbsent.size);
-        dataLoaded = true;
-        nextTable = table.updateSortCol(nextTable, '');
-        nextTable = table.buildIndexMap(nextTable, nextProps.reports.chronicAbsent);
-      }
-      break;
-    case 'outreachSummary':
-      if(nextProps.reports.outreachSummary.size && !this.state.loaded) {
-        //console.log('Got It!!! ', nextProps.reports.outreachSummary.size);
-        dataLoaded = true;
-        nextTable = table.updateSortCol(nextTable, '');
-        nextTable = table.buildIndexMap(nextTable, nextProps.reports.outreachSummary);
-      }
-      break;
-    case 'interventionSummary':
-      if(nextProps.reports.interventionSummary.size && !this.state.loaded) {
-        //console.log('Got It!!!', nextProps.reports.interventionSummary.size);
-        dataLoaded = true;
-        nextTable = table.updateSortCol(nextTable, '');
-        nextTable = table.buildIndexMap(nextTable, nextProps.reports.interventionSummary);
-      }
-      break;
+  componentDidUpdate() {
+    while(this.pendingApiCalls.length) {
+      this.performApiCall(this.pendingApiCalls.shift());
     }
-    if(dataLoaded) {
-      this.setState({table: nextTable, loaded: true});
-    }
-    // nextTable = table.enableFiltering(nextTable);
   }
 
-  componentDidUpdate(prevProps, prevState) {
-    //console.log('did update: ', prevState);
-    let selectedTab = this.state.table.get('selectedTab');
-    if(prevState.table.get('selectedTab') != selectedTab) {
-      this.retrieveData(selectedTab);
-    }
+  _absenceRecords = List([]);
+  pendingApiCalls = [];
+
+  initClickActions = nextTable => {
+    nextTable = table.addPopovers(nextTable, {
+      [localActions.FILTER] : false,
+      [localActions.TABLE]  : false
+    });
+    return nextTable;
   }
 
   /**
@@ -92,30 +66,36 @@ class SchoolReportsPage extends React.Component {
   retrieveData = currentTab => {
     let loadingPromise;
     // Clear previously loaded reports from the store
-    this.props.repAct.resetReports();
+    this.props.reportAct.resetReports();
     // Call the API for new reports
     switch (currentTab) {
     case 'atRisk':
-      loadingPromise = this.props.repAct.getCurrentAtRisk();
+      loadingPromise = this.props.reportAct.getCurrentAtRisk();
       break;
     case 'chronicAbsent':
-      loadingPromise = this.props.repAct.getChronicallyAbsent();
+      loadingPromise = this.props.reportAct.getChronicallyAbsent();
       break;
     case 'outreachSummary':
-      loadingPromise = this.props.repAct.getOutreachSummary();
+      loadingPromise = this.props.reportAct.getOutreachSummary();
       break;
     case 'interventionSummary':
-      loadingPromise = this.props.repAct.getInterventionSummary();
+      loadingPromise = this.props.reportAct.getInterventionSummary();
       break;
     }
     loadingPromise.then(() => this.updateData());
+    this.setState({loadResolved: false});
   }
 
-  updateData = () => {
-    let nextTable = table.updateSortCol(this.state.table, '');
-    // nextTable = table.buildIndexMap(nextTable, this.props.reports[this.state.currentTab]);
-    // nextTable = table.enableFiltering(nextTable);
-    this.setState({table: nextTable, loaded: true});
+  updateData = nextProps => {
+    const props = nextProps || this.props;
+    this._absenceRecords = props.withdrawnStudents
+      ? props.absenceRecords
+      : props.absenceRecords.filter(record => !record.get('student.withdrawn'));
+    let nextTable = this.state.table.updateSortCol(this.state.table, '');
+    nextTable = nextTable.buildIndexMap(nextTable, this._absenceRecords);
+    nextTable = nextTable.enableFiltering(nextTable);
+    nextTable = nextTable.collapseFixedGroups(nextTable);
+    this.setState({table: nextTable, loadResolved: true});
   }
 
   clickHandler = (action, data, event) => {
@@ -124,7 +104,7 @@ class SchoolReportsPage extends React.Component {
 
     // Clicked a main tab
     case 'changeTabs':
-      this.props.repAct.resetReports();
+      this.props.reportAct.resetReports();
       nextTable = table.setSelectedTab(this.state.table, data.props.value);
       this.setState({table: nextTable, loaded: false});
       break;
@@ -165,91 +145,68 @@ class SchoolReportsPage extends React.Component {
   }
 
   render() {
-    let view = {
+    let viewport = {
       width  : this.props.containerWidth - 20,
       height : this.props.containerHeight - 48 - 80
     };
 
     return (
-      <Tabs
-        style={{width: this.props.containerWidth}}
-        value={this.state.table.get('selectedTab')}
-      >
-        <Tab
-          label="At Risk"
-          onActive={this.tabHandler}
-          value='atRisk'
+      <div>
+        <Tabs
+          style={{width: this.props.containerWidth}}
+          value={this.state.table.get('selectedTab')}
         >
-          <AtRiskTab
-            view={view}
-            atRisk={this.props.reports.atRisk}
-            table = {this.state.table}
-            loaded = {this.state.loaded}
-            clickHandler = {this.clickHandler}
-          />
-        </Tab>
-        <Tab
-          label="Chronically Absent"
-          onActive={this.tabHandler}
-          value='chronicAbsent'
-        >
-          <ChronicallyAbsentTab
-            view={view}
-            chronicAbsent={this.props.reports.chronicAbsent}
-            table = {this.state.table}
-            loaded = {this.state.loaded}
-            clickHandler = {this.clickHandler}
-          />
-        </Tab>
-        <Tab
-          label="Outreaches"
-          onActive={this.tabHandler}
-          value='outreachSummary'
-        >
-          <OutreachesTab
-            view = {view}
-            outreaches = {this.props.reports.outreachSummary}
-            table = {this.state.table}
-            loaded = {this.state.loaded}
-            clickHandler = {this.clickHandler}
-          />
-        </Tab>
-        <Tab
-          label="Interventions"
-          onActive={this.tabHandler}
-          value='interventionSummary'
-        >
-          <InterventionsTab
-            view={view}
-            interventions = {this.props.reports.interventionSummary}
-            table = {this.state.table}
-            loaded = {this.state.loaded}
-            clickHandler = {this.clickHandler}
-          />
-        </Tab>
-      </Tabs>
+          {[{label: 'At Risk', value: 'atRisk', Component: AtRiskTab, tabData: this.props.reports.atRisk},
+          {label: 'Chronically Absent', value: 'chronicAbsent', Component: ChronicallyAbsentTab, tabData: this.props.reports.chronicAbsent},
+          {label: 'Outreaches', value: 'outreachSummary', Component: OutreachesTab, tabData: this.props.reports.outreachSummary},
+          {label: 'Interventions', value: 'interventionSummary', Component: InterventionsTab, tabData: this.props.reports.interventionSummary},
+          ].map((tab, index) => <Tab
+              key={`tab-${index}`}
+              value={tab.value}
+              label={tab.label}
+              onActive={this.tabHandler}>
+              <tab.Component
+                view = {viewport}
+                tabData = {tab.tabData}
+                table = {this.state.table}
+                loaded = {this.state.loadResolved}
+                clickHandler = {this.clickHandler}
+                tabName = {tab.value}
+                withdrawnStudents = {this.props.withdrawnStudents}
+              />
+            </Tab>
+          )}
+        </Tabs>
+        <CsvParse
+          data={this.state.downloadCsvData}
+          filename={this.state.downloadCsvFilename}
+          token={this.state.downloadCsvToken}
+        />
+      </div>
     );
   }
 }
 
 SchoolReportsPage.propTypes = {
-  repAct          : PropTypes.object.isRequired,
-  absenceRecords  : PropTypes.object.isRequired,
-  reports         : PropTypes.object.isRequired,
-  containerWidth  : PropTypes.number.isRequired,
-  containerHeight : PropTypes.number.isRequired
+  reportAct         : PropTypes.object.isRequired,
+  absenceRecords    : PropTypes.object.isRequired,
+  reports           : PropTypes.object.isRequired,
+  containerWidth    : PropTypes.number.isRequired,
+  containerHeight   : PropTypes.number.isRequired,
+  withdrawnStudents : PropTypes.bool.isRequired
 };
 
 function mapStateToProps(state) {
   return {
-    absenceRecords : state.absenceRecords,
-    reports        : state.reports
+    absenceRecords    : state.absenceRecords,
+    reports           : state.reports,
+    withdrawnStudents : state.settings.withdrawnStudents,
   };
 }
 
 function mapDispatchToProps(dispatch) {
   return {
-    repAct : bindActionCreators(repAct, dispatch)
+    reportAct : bindActionCreators(reportAct, dispatch)
   };
 }
 

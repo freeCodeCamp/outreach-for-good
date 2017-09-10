@@ -1,3 +1,11 @@
+import React from 'react';
+
+import * as localActions from './school-reports.actions';
+
+import FontIcon from 'material-ui/FontIcon';
+import RaisedButtonModel from '../../models/raised-button';
+import * as tableActions from '../../components/data-table/data-table.actions';
+
 export const defaultTableColumns = [{
   title    : 'Last Name',
   id       : 'student.lastName',
@@ -99,3 +107,91 @@ export const interventionTableColumns = [{
   flexGrow : 1,
   fixed    : true
 }];
+
+export const filterButton = props =>
+  new RaisedButtonModel({
+    label           : 'Filter',
+    actionID        : localActions.FILTER,
+    backgroundColor : '#009d9d',
+    disabled        : false,
+    menu            : {
+      open : props.table.get('MuiPopovers').get(localActions.FILTER),
+      item : filterButtonMenuItems(props)
+    }
+  });
+
+export const filterButtonMenuItems = props => [getWithdrawnItem(props)];
+
+const getWithdrawnItem = props => ({
+  text :
+    <div>
+      { props.withdrawnStudents
+        ? <i className="fa fa-check-square-o" />
+        : <i className="fa fa-square-o" />
+      }
+      &nbsp; Withdrawn Students
+    </div>,
+  actionID : localActions.TOGGLE_WITHDRAWN_STUDENTS
+});
+
+export const tableButton = props =>
+  new RaisedButtonModel({
+    icon      : <FontIcon className="fa fa-chevron-down" />,
+    className : 'table-button',
+    actionID  : localActions.TABLE,
+    disabled  : false,
+    menu      : {
+      open : props.table.get('MuiPopovers').get(localActions.TABLE),
+      item : tableButtonMenuItems(props)
+    }
+  });
+
+export const tableButtonMenuItems = props => [{
+  text     : <div>{'Export all to .csv'}</div>,
+  actionID : localActions.EXPORT_CSV
+}, getDivider(), {
+  text     : <div>{'Clear all filters'}</div>,
+  actionID : localActions.CLEAR_FILTERS
+}, getDivider(), {
+  text :
+    <div>
+      {props.summaryRowAggregateType == 'sum'
+        ? <i className="fa fa-check-square-o" />
+        : <i className="fa fa-square-o" />
+      }
+      &nbsp; Sum
+    </div>,
+  actionID : tableActions.SET_AGGREGATE_SUM
+}, {
+  text :
+    <div>
+      {props.summaryRowAggregateType == 'average'
+        ? <i className="fa fa-check-square-o" />
+        : <i className="fa fa-square-o" />
+      }
+      &nbsp; Average
+    </div>,
+  actionID : tableActions.SET_AGGREGATE_AVERAGE
+}, {
+  text :
+    <div>
+      {props.summaryRowAggregateType == 'maximum'
+        ? <i className="fa fa-check-square-o" />
+        : <i className="fa fa-square-o" />
+      }
+      &nbsp; Maximum
+    </div>,
+  actionID : tableActions.SET_AGGREGATE_MAXIMUM
+}, {
+  text :
+    <div>
+      {props.summaryRowAggregateType == 'minimum'
+        ? <i className="fa fa-check-square-o" />
+        : <i className="fa fa-square-o" />
+      }
+      &nbsp; Minimum
+    </div>,
+  actionID : tableActions.SET_AGGREGATE_MINIMUM
+}];
+
+const getDivider = visible => visible !== false && ({ text: 'Divider' });

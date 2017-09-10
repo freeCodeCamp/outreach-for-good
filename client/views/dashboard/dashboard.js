@@ -102,11 +102,11 @@ class DashboardPage extends React.Component {
       break;
     }
     this.props.reportActions.getOutreachCounts('withdrawn=false');
-    loadingPromise.then(() => this.updateDataTable());
+    loadingPromise.then(() => this.updateData());
     this.setState({loadResolved: false, currentTab, yearFilter});
   }
 
-  updateDataTable = nextProps => {
+  updateData = nextProps => {
     const props = nextProps || this.props;
     this._absenceRecords = props.withdrawnStudents
       ? props.absenceRecords
@@ -241,7 +241,7 @@ class DashboardPage extends React.Component {
       loadingPromise = this.putStudentWithdrawn(false).then(() => this.retrieveData());
       break;
     }
-    loadingPromise.then(() => this.updateDataTable());
+    loadingPromise.then(() => this.updateData());
   }
 
   putStudentIep = value =>
