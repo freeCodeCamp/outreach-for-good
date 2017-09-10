@@ -4,7 +4,9 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import * as reportAct from '../../modules/reports';
+import * as tableActions from '../../components/data-table/data-table.actions';
 import * as localActions from './school-reports.actions';
+import * as localDefs from './school-reports.defs';
 
 import Dimensions from 'react-dimensions-cjs';
 import { List } from 'immutable';
@@ -106,11 +108,8 @@ class SchoolReportsPage extends React.Component {
 
     // Clicked a main tab
     case 'changeTabs':
-      this.props.reportAct.resetReports();
-      nextTable = table.setSelectedTab(this.state.table, data.props.value);
-      this.setState({table: nextTable, loaded: false});
+      this.handleChangeTabs(nextTable, data);
       break;
-
     /**
      * DataTable Click Handler
      *   - Select / de-select a table row
@@ -118,25 +117,139 @@ class SchoolReportsPage extends React.Component {
      *   - Apply a filter
      */
     case 'toggleSelected':
-      nextTable = table.toggleSelectedRowIndex(this.state.table, data);
-      this.setState({table: nextTable});
+      this.handleToggleSelectedRow(nextTable, data);
       break;
     case 'toggleSortCol':
-      nextTable = table.updateSortCol(this.state.table, data);
-      nextTable = table.sortDataByCol(nextTable, this._reports);
-      this.setState({table: nextTable});
+      this.handleToggleSortCol(nextTable, data);
       break;
     case 'changeFilterCol':
-      let tabData = this.state.table.get('selectedTab') == 'users'
-          ? this.props.absenceRecords : this.props.absenceRecords;
-      nextTable = table.updateFilterBy(this.state.table, data.substr(7), event);
-      nextTable = table.sortDataByCol(nextTable, tabData);
-      this.setState({table: nextTable});
+      this.handleChangeColFilter(nextTable, data, event);
       break;
+    /**
+     * Button / Popover Menu Click Handler
+     *   - Typically opens a <Dialog> modal or popover menu
+     *   - Initialize dialog and form field parameters
+     */
+    case 'menuClick':
     case 'buttonClick':
+      nextTable = table.setSelectedRowData(this.state.table,
+        this.getSelectedRowData());
+      if(data == localActions.FILTER || data == localActions.TABLE) {
+        this.setState({table: table.handlePopoverButtonClick(nextTable, data, event)});
+
+      } else if(data == localActions.TOGGLE_WITHDRAWN_STUDENTS) {
+        this.pendingApiCalls.push(localActions.TOGGLE_WITHDRAWN_STUDENTS);
+        this.handleInterfaceButtonClick(nextTable);
+
+      } else if(data == localActions.ALL_YEARS) {
+        this.retrieveData(nextTable.get('selectedTab'));
+        this.handleInterfaceButtonClick(nextTable);
+
+      } else if(data == localActions.Y2016_Y2017) {
+        this.retrieveData(nextTable.get('selectedTab'), 'year/2016-2017');
+        this.handleInterfaceButtonClick(nextTable);
+
+      } else if(data == localActions.Y2015_Y2016) {
+        this.retrieveData(nextTable.get('selectedTab'), 'year/2015-2016');
+        this.handleInterfaceButtonClick(nextTable);
+
+      } else if(data == localActions.EXPORT_CSV || data == localActions.EXPORT_VISIBLE_CSV) {
+        this.handleExportToCSV(nextTable, data);
+
+      } else if(data == tableActions.SET_AGGREGATE_SUM || data == tableActions.SET_AGGREGATE_AVERAGE
+                || data == tableActions.SET_AGGREGATE_MAXIMUM || data == tableActions.SET_AGGREGATE_MINIMUM) {
+        this.handleChangeTableAggregate(nextTable, data);
+
+      } else {
+        this.handleInterfaceButtonClick(nextTable);
+      }
+      break;
+    // Clicked away from popover menu
+    case 'popoverClose':
+      this.handleClosePopover(this.state.table);
       break;
     }
+  } // End of: clickHandler()
+
+  handleChangeTabs = (nextTable, data) => {
+    //this.props.reportAct.resetReports();
+    nextTable = table.setSelectedTab(this.state.table, data.props.value);
+    nextTable = this.initClickActions(nextTable);
+    this.retrieveData(data.props.value);
+    this.setState({table: nextTable});
   }
+
+  handleToggleSelectedRow = (nextTable, index) => {
+    nextTable = this._reports.size <= index
+      ? table.toggleCollapsedRow(this.state.table, index)
+      : table.toggleSelectedRowIndex(this.state.table, index);
+    this.setState({table: nextTable});
+  }
+
+  handleToggleSortCol = (nextTable, data) => {
+    nextTable = table.updateSortCol(this.state.table, data);
+    //nextTable = table.buildIndexMap(nextTable, this.props.absenceRecords);
+    nextTable = table.filterIndexMap(nextTable, this._reports);
+    this.setState({table: nextTable});
+  }
+
+  handleChangeColFilter = (nextTable, data, event) => {
+    nextTable = table.updateFilterBy(this.state.table, data.substr(7), event);
+    nextTable = table.filterIndexMap(nextTable, this._reports);
+    this.setState({table: nextTable});
+  }
+
+  handleInterfaceButtonClick = nextTable => {
+    this.handleClosePopover(nextTable);
+  }
+
+  handleClosePopover = nextTable => {
+    nextTable = table.resetPopovers(nextTable);
+    this.setState({table: nextTable});
+  }
+
+  handleChangeTableAggregate = (nextTable, data) => {
+    var nextAggragate;
+    switch (data) {
+    case tableActions.SET_AGGREGATE_SUM: nextAggragate = 'sum'; break;
+    case tableActions.SET_AGGREGATE_AVERAGE: nextAggragate = 'average'; break;
+    case tableActions.SET_AGGREGATE_MAXIMUM: nextAggragate = 'maximum'; break;
+    case tableActions.SET_AGGREGATE_MINIMUM: nextAggragate = 'minimum'; break;
+    }
+    nextTable = table.changeAggregateType(nextTable, nextAggragate);
+    nextTable = table.resetPopovers(nextTable);
+    nextTable = table.buildIndexMap(nextTable, this._reports);
+    this.setState({table: nextTable});
+  }
+
+  handleExportToCSV = (nextTable, data) => {
+    var columns = Map();
+    localDefs.defaultTableColumns.forEach(c => {
+      // special handling for group column, shown as '+' in the table
+      if(c.id == 'school.name') {
+        columns = columns.set('School', c.id);
+      } else {
+        columns = columns.set(c.title, c.id);
+      }
+    });
+    nextTable = table.resetPopovers(this.state.table);
+    if(data == localActions.EXPORT_CSV) {
+      this.setState({
+        table           : nextTable,
+        downloadCsvData :
+          this._reports.map(record =>
+            columns.map(col_id =>
+              record.get(col_id)
+          )).toJS(),
+        downloadCsvToken : Date.now()
+      });
+    }
+  }
+
+  // Given a table-row index number, return object containing all row data
+  getSelectedRowData = () => this._reports
+      .filter((v, i) => this.state.table.get('selectedIndex')
+      .indexOf(i) != -1);
 
   // Handle user changing main tabs
   tabHandler = data => {

@@ -60,13 +60,11 @@ class DataTable extends React.Component {
     } = this.props;
 
     // Uncomment to debug groupCol data structure
-    console.log('data: ', table.get('groupColumn').toJS());
+    //console.log('data: ', table.get('groupColumn').toJS());
 
     var { _data, _indexMap } = insertSummaryRows(data, table);
     this._data = _data;
     this._indexMap = _indexMap;
-    console.log('rows: ', _data.toJS());
-    console.log('_indexMap: ', _indexMap.toJS());
 
     let isRowSelected = index =>
       table.selectionToMappedIndicies(table, this._indexMap).includes(index) ? 'selected-row' : '';

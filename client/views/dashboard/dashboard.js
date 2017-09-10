@@ -120,7 +120,6 @@ class DashboardPage extends React.Component {
 
   clickHandler = (action, data, event) => {
     let nextTable;
-    //let nextForm;
     switch (action) {
     // Clicked a main tab
     case 'changeTabs':
