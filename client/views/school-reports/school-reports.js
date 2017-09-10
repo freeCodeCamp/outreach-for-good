@@ -30,11 +30,7 @@ class SchoolReportsPage extends React.Component {
     nextTable = table.setGroupAggregateColumns(nextTable, ['entry.absences', 'entry.absencesDelta',
       'entry.tardies', 'entry.tardiesDelta', 'entry.present', 'entry.enrolled']);
     nextTable = this.initClickActions(nextTable);
-    this.state = {
-      currentTab : 'atRisk',
-      table      : nextTable,
-      loaded     : false
-    };
+    this.state = {table: nextTable};
   }
 
   componentDidMount() {
@@ -47,7 +43,7 @@ class SchoolReportsPage extends React.Component {
     }
   }
 
-  _absenceRecords = List([]);
+  _reports = List([]);
   pendingApiCalls = [];
 
   initClickActions = nextTable => {
@@ -63,10 +59,11 @@ class SchoolReportsPage extends React.Component {
    *   - Retrieve and configure data for table
    *   - Set default state for 'action' variables
    */
-  retrieveData = currentTab => {
+  retrieveData = tab => {
     let loadingPromise;
+    let currentTab = tab || this.state.currentTab;
     // Clear previously loaded reports from the store
-    this.props.reportAct.resetReports();
+    //this.props.reportAct.resetReports();
     // Call the API for new reports
     switch (currentTab) {
     case 'atRisk':
@@ -83,16 +80,23 @@ class SchoolReportsPage extends React.Component {
       break;
     }
     loadingPromise.then(() => this.updateData());
-    this.setState({loadResolved: false});
+    this.setState({loadResolved: false, currentTab});
   }
 
   updateData = nextProps => {
     const props = nextProps || this.props;
-    this._absenceRecords = props.withdrawnStudents
-      ? props.absenceRecords
-      : props.absenceRecords.filter(record => !record.get('student.withdrawn'));
+    let dataSource = null;
+    console.log('update data', this.state.table.get('selectedTab'), props.reports.toJS());
+    switch (this.state.table.get('selectedTab')) {
+    case 'atRisk': dataSource = props.reports.get('atRisk'); break;
+    case 'chronicAbsent': dataSource = props.reports.get('chronicAbsent'); break;
+    case 'outreachSummary':dataSource = props.reports.get('outreachSummary'); break;
+    case 'interventionSummary': dataSource = props.reports.get('interventionSummary'); break;
+    }
+    this._reports = props.withdrawnStudents ? dataSource : dataSource.filter(record => !record.get('student.withdrawn'));
+    console.log(this._reports.toJS());
     let nextTable = this.state.table.updateSortCol(this.state.table, '');
-    nextTable = nextTable.buildIndexMap(nextTable, this._absenceRecords);
+    nextTable = nextTable.buildIndexMap(nextTable, this._reports);
     nextTable = nextTable.enableFiltering(nextTable);
     nextTable = nextTable.collapseFixedGroups(nextTable);
     this.setState({table: nextTable, loadResolved: true});
@@ -121,7 +125,7 @@ class SchoolReportsPage extends React.Component {
       break;
     case 'toggleSortCol':
       nextTable = table.updateSortCol(this.state.table, data);
-      nextTable = table.sortDataByCol(nextTable, this.props.absenceRecords);
+      nextTable = table.sortDataByCol(nextTable, this._reports);
       this.setState({table: nextTable});
       break;
     case 'changeFilterCol':
@@ -189,7 +193,6 @@ class SchoolReportsPage extends React.Component {
 
 SchoolReportsPage.propTypes = {
   reportAct         : PropTypes.object.isRequired,
-  absenceRecords    : PropTypes.object.isRequired,
   reports           : PropTypes.object.isRequired,
   containerWidth    : PropTypes.number.isRequired,
   containerHeight   : PropTypes.number.isRequired,
@@ -198,7 +201,6 @@ SchoolReportsPage.propTypes = {
 
 function mapStateToProps(state) {
   return {
-    absenceRecords    : state.absenceRecords,
     reports           : state.reports,
     withdrawnStudents : state.settings.withdrawnStudents,
   };

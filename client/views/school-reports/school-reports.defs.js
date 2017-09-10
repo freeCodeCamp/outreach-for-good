@@ -7,6 +7,12 @@ import RaisedButtonModel from '../../models/raised-button';
 import * as tableActions from '../../components/data-table/data-table.actions';
 
 export const defaultTableColumns = [{
+  title    : '+',
+  id       : 'school.name',
+  width    : 30,
+  flexGrow : 1,
+  fixed    : true
+}, {
   title    : 'Last Name',
   id       : 'student.lastName',
   width    : 125,
@@ -18,18 +24,13 @@ export const defaultTableColumns = [{
   width    : 125,
   flexGrow : 1
 }, {
-  title    : 'School',
-  id       : 'school.name',
-  width    : 125,
-  flexGrow : 1
-}, {
   title    : 'Student ID',
   id       : 'student.studentId',
   width    : 90,
   flexGrow : 1
 }, {
   title    : 'Grade',
-  id       : '',
+  id       : 'student.grade',
   width    : 60,
   flexGrow : 1
 }, {
