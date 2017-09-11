@@ -16,7 +16,6 @@ const initialState = {
 export default function recordsReducer(state = initialState, action) {
   switch (action.type) {
   case CHANGE_TAB: {
-    console.log(action.currentTab);
     return {
       ...state,
       view : {
