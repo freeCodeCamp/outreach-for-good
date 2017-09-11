@@ -1,8 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import {interventionTableColumns} from '../school-reports.defs';
-
 import * as localDefs from '../school-reports.defs';
 
 import DataTableContainer from '../../../components/data-table/data-table-container';
@@ -25,7 +23,7 @@ const InterventionsTab = ({tabData, ...props}) => {
 
   const page = {
     title   : 'Interventions',
-    columns : interventionTableColumns,
+    columns : localDefs.interventionTableColumns,
     buttons
   };
 

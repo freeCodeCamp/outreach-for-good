@@ -7,6 +7,7 @@ import * as reportAct from '../../modules/reports';
 import * as tableActions from '../../components/data-table/data-table.actions';
 import * as localActions from './school-reports.actions';
 import * as localDefs from './school-reports.defs';
+import * as settingsActions from '../../modules/settings';
 
 import Dimensions from 'react-dimensions-cjs';
 import { List, Map } from 'immutable';
@@ -171,6 +172,17 @@ class SchoolReportsPage extends React.Component {
     }
   } // End of: clickHandler()
 
+  //ToDo: update local cache instead of re-requeting the data
+  performApiCall = apiCallId => {
+    let loadingPromise;
+    switch (apiCallId) {
+    case localActions.TOGGLE_WITHDRAWN_STUDENTS:
+      loadingPromise = this.props.settingsActions.setWithdrawnStudents(!this.props.withdrawnStudents);
+      break;
+    }
+    loadingPromise.then(() => this.updateData());
+  }
+
   handleChangeTabs = (nextTable, data) => {
     //this.props.reportAct.resetReports();
     nextTable = table.setSelectedTab(this.state.table, data.props.value);
@@ -223,9 +235,7 @@ class SchoolReportsPage extends React.Component {
   }
 
   handleExportToCSV = (nextTable, data) => {
-    console.log('1');
     var columns = Map();
-    console.log('2');
     localDefs.defaultTableColumns.forEach(c => {
       // special handling for group column, shown as '+' in the table
       if(c.id == 'school.name') {
@@ -304,6 +314,7 @@ class SchoolReportsPage extends React.Component {
 
 SchoolReportsPage.propTypes = {
   reportAct         : PropTypes.object.isRequired,
+  settingsActions   : PropTypes.object.isRequired,
   reports           : PropTypes.object.isRequired,
   containerWidth    : PropTypes.number.isRequired,
   containerHeight   : PropTypes.number.isRequired,
@@ -319,7 +330,8 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    reportAct : bindActionCreators(reportAct, dispatch)
+    reportAct       : bindActionCreators(reportAct, dispatch),
+    settingsActions : bindActionCreators(settingsActions, dispatch)
   };
 }
 
