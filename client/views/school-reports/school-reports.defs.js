@@ -6,7 +6,7 @@ import FontIcon from 'material-ui/FontIcon';
 import RaisedButtonModel from '../../models/raised-button';
 import * as tableActions from '../../components/data-table/data-table.actions';
 
-export const defaultTableColumns = [{
+export const outreachTableColumns = [{
   title    : '+',
   id       : 'school.name',
   width    : 30,
@@ -29,54 +29,99 @@ export const defaultTableColumns = [{
   width    : 90,
   flexGrow : 1
 }, {
-  title    : 'Grade',
-  id       : 'student.grade',
-  width    : 60,
+  title    : 'Phone',
+  id       : 'PhoneCall.count',
+  width    : 45,
   flexGrow : 1
 }, {
-  title    : 'Absences',
-  id       : 'entry.absences',
-  width    : 100,
+  title    : 'Outstanding',
+  id       : 'PhoneCall.outstanding',
+  width    : 45,
   flexGrow : 1
 }, {
-  title    : 'Δ',
-  id       : 'entry.absencesDelta',
-  width    : 50,
+  title    : 'Resolved',
+  id       : 'PhoneCall.resolved',
+  width    : 45,
   flexGrow : 1
 }, {
-  title    : 'Tardies',
-  id       : 'entry.tardies',
-  width    : 100,
+  title    : 'Letter',
+  id       : 'LetterSent.count',
+  width    : 45,
   flexGrow : 1
 }, {
-  title    : 'Δ',
-  id       : 'entry.tardiesDelta',
-  width    : 50,
+  title    : 'Outstanding',
+  id       : 'LetterSent.outstanding',
+  width    : 45,
   flexGrow : 1
 }, {
-  title    : 'Present',
-  id       : 'entry.present',
-  width    : 75,
+  title    : 'Resolved',
+  id       : 'LetterSent.resolved',
+  width    : 45,
   flexGrow : 1
 }, {
-  title    : 'Enrolled',
-  id       : 'entry.enrolled',
-  width    : 75,
+  title    : 'Home',
+  id       : 'HomeVisit.count',
+  width    : 45,
   flexGrow : 1
 }, {
-  title    : 'IEP',
-  id       : 'student.iep',
-  width    : 50,
+  title    : 'Outstanding',
+  id       : 'HomeVisit.outstanding',
+  width    : 45,
+  flexGrow : 1
+}, {
+  title    : 'Resolved',
+  id       : 'HomeVisit.resolved',
+  width    : 45,
+  flexGrow : 1
+}, {
+  title    : 'SST',
+  id       : 'SSTReferral.count',
+  width    : 45,
+  flexGrow : 1
+}, {
+  title    : 'Outstanding',
+  id       : 'SSTReferral.outstanding',
+  width    : 45,
+  flexGrow : 1
+}, {
+  title    : 'Resolved',
+  id       : 'SSTReferral.resolved',
+  width    : 45,
+  flexGrow : 1
+}, {
+  title    : 'Court',
+  id       : 'CourtReferral.count',
+  width    : 45,
+  flexGrow : 1
+}, {
+  title    : 'Outstanding',
+  id       : 'CourtReferral.outstanding',
+  width    : 45,
+  flexGrow : 1
+}, {
+  title    : 'Resolved',
+  id       : 'CourtReferral.resolved',
+  width    : 45,
+  flexGrow : 1
+}, {
+  title    : 'Total',
+  id       : 'total.count',
+  width    : 45,
+  flexGrow : 1
+}, {
+  title    : 'Outstanding',
+  id       : 'total.outstanding',
+  width    : 45,
+  flexGrow : 1
+}, {
+  title    : 'Resolved',
+  id       : 'total.resolved',
+  width    : 45,
   flexGrow : 1
 }, {
   title    : 'CFA',
   id       : 'student.cfa',
-  width    : 50,
-  flexGrow : 1
-}, {
-  title    : 'Updated',
-  id       : '',
-  width    : 75,
+  width    : 45,
   flexGrow : 1
 }];
 

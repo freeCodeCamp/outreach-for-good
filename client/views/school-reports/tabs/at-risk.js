@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import { List } from 'immutable';
 
 import * as localDefs from '../school-reports.defs';
+import * as dashboardDefs from '../../dashboard/dashboard.defs';
 
 import DataTableContainer from '../../../components/data-table/data-table-container';
 
@@ -25,7 +26,7 @@ const AtRiskTab = ({tabData, ...props}) => {
 
   const page = {
     title   : 'At Risk Students',
-    columns : localDefs.defaultTableColumns,
+    columns : dashboardDefs.absenceRecordTableColumns,
     buttons
   };
 

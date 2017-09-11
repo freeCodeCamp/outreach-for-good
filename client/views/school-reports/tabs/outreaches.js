@@ -23,7 +23,7 @@ const OutreachesTab = ({tabData, ...props}) => {
 
   const page = {
     title   : 'Outreaches',
-    columns : localDefs.defaultTableColumns,
+    columns : localDefs.outreachTableColumns,
     buttons
   };
 

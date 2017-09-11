@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import * as localDefs from '../school-reports.defs';
+import * as dashboardDefs from '../../dashboard/dashboard.defs';
 
 import DataTableContainer from '../../../components/data-table/data-table-container';
 
@@ -22,7 +23,7 @@ const ChronicallyAbsentTab = ({tabData, ...props}) => {
   }));
   const page = {
     title   : 'Chronically Absent Students',
-    columns : localDefs.defaultTableColumns,
+    columns : dashboardDefs.absenceRecordTableColumns,
     buttons
   };
 
