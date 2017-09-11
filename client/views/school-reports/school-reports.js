@@ -7,6 +7,7 @@ import * as reportAct from '../../modules/reports';
 import * as tableActions from '../../components/data-table/data-table.actions';
 import * as localActions from './school-reports.actions';
 import * as localDefs from './school-reports.defs';
+import * as dashboardDefs from '../dashboard/dashboard.defs';
 import * as settingsActions from '../../modules/settings';
 
 import Dimensions from 'react-dimensions-cjs';
@@ -30,8 +31,8 @@ class SchoolReportsPage extends React.Component {
     // Register Initial Component State
     let nextTable = table.setSelectedTab(table, 'atRisk');
     nextTable = table.setFixedColumn(nextTable, 'school.name', 'student.lastName');
-    nextTable = table.setGroupAggregateColumns(nextTable, ['entry.absences', 'entry.absencesDelta',
-      'entry.tardies', 'entry.tardiesDelta', 'entry.present', 'entry.enrolled']);
+    nextTable = table.setGroupAggregateColumns(nextTable, ['PhoneCall.count', 'LetterSent.count',
+      'HomeVisit.count', 'SSTReferral.count', 'CourtReferral.count', 'total.count']);
     nextTable = this.initClickActions(nextTable);
     this.state = {table: nextTable};
   }
@@ -236,7 +237,14 @@ class SchoolReportsPage extends React.Component {
 
   handleExportToCSV = (nextTable, data) => {
     var columns = Map();
-    localDefs.defaultTableColumns.forEach(c => {
+    var columnDefs = null;
+    switch (this.state.table.get('selectedTab')) {
+    case 'atRisk':
+    case 'chronicAbsent': columnDefs = dashboardDefs.absenceRecordTableColumns; break;
+    case 'outreachSummary': columnDefs = localDefs.outreachTableColumns; break;
+  }
+  console.log(columnDefs);
+    columnDefs.forEach(c => {
       // special handling for group column, shown as '+' in the table
       if(c.id == 'school.name') {
         columns = columns.set('School', c.id);
@@ -245,6 +253,11 @@ class SchoolReportsPage extends React.Component {
       }
     });
     nextTable = table.resetPopovers(this.state.table);
+    console.log(this._reports.toJS())
+    console.log(this._reports.map(record =>
+            columns.map(col_id =>
+              record.get(col_id)
+          )).toJS());
     if(data == localActions.EXPORT_CSV) {
       this.setState({
         table           : nextTable,

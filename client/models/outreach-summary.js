@@ -1,8 +1,5 @@
 import Immutable from 'immutable';
 
-import { flattenMap } from '../utils/object.js';
-import { Map } from 'immutable';
-
 const OutreachSummaryModel = Immutable.Record({
 
 });
@@ -15,7 +12,6 @@ class OutreachSummary extends OutreachSummaryModel {
    */
   constructor(record) {
     super(record);
-    console.log(record.toJS());
     let nextRecord = record;
     let total = {count: 0, resolved: 0, outstanding: 0};
     ['PhoneCall', 'LetterSent', 'HomeVisit', 'SSTReferral', 'CourtReferral'].forEach(outreachType => {

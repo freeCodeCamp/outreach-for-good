@@ -121,6 +121,7 @@ export const outreachTableColumns = [{
 }, {
   title    : 'CFA',
   id       : 'student.cfa',
+  type     : tableActions.FORMAT_CHECK,
   width    : 45,
   flexGrow : 1
 }];
