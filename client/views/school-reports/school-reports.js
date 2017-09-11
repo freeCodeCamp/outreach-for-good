@@ -9,7 +9,7 @@ import * as localActions from './school-reports.actions';
 import * as localDefs from './school-reports.defs';
 
 import Dimensions from 'react-dimensions-cjs';
-import { List } from 'immutable';
+import { List, Map } from 'immutable';
 import {Tabs, Tab} from 'material-ui/Tabs';
 
 import AtRiskTab from './tabs/at-risk';
@@ -223,7 +223,9 @@ class SchoolReportsPage extends React.Component {
   }
 
   handleExportToCSV = (nextTable, data) => {
+    console.log('1');
     var columns = Map();
+    console.log('2');
     localDefs.defaultTableColumns.forEach(c => {
       // special handling for group column, shown as '+' in the table
       if(c.id == 'school.name') {
