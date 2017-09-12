@@ -90,14 +90,19 @@ class SchoolReportsPage extends React.Component {
   updateData = nextProps => {
     const props = nextProps || this.props;
     let dataSource = null;
+    let nextTable = this.state.table;
     switch (this.state.table.get('selectedTab')) {
     case 'atRisk': dataSource = props.reports.get('atRisk'); break;
     case 'chronicAbsent': dataSource = props.reports.get('chronicAbsent'); break;
     case 'outreachSummary':dataSource = props.reports.get('outreachSummary'); break;
-    case 'interventionSummary': dataSource = props.reports.get('interventionSummary'); break;
+    case 'interventionSummary':
+      dataSource = props.reports.get('interventionSummary').first();
+      nextTable = nextTable.setFixedColumn(nextTable, 'type', 'school.name');
+      nextTable = table.setGroupAggregateColumns(nextTable, ['type']);
+      break;
     }
     this._reports = props.withdrawnStudents ? dataSource : dataSource.filter(record => !record.get('student.withdrawn'));
-    let nextTable = this.state.table.updateSortCol(this.state.table, '');
+    nextTable = nextTable.updateSortCol(nextTable, '');
     nextTable = nextTable.buildIndexMap(nextTable, this._reports);
     nextTable = nextTable.enableFiltering(nextTable);
     nextTable = nextTable.collapseFixedGroups(nextTable);
@@ -243,7 +248,6 @@ class SchoolReportsPage extends React.Component {
     case 'chronicAbsent': columnDefs = dashboardDefs.absenceRecordTableColumns; break;
     case 'outreachSummary': columnDefs = localDefs.outreachTableColumns; break;
   }
-  console.log(columnDefs);
     columnDefs.forEach(c => {
       // special handling for group column, shown as '+' in the table
       if(c.id == 'school.name') {
@@ -297,7 +301,7 @@ class SchoolReportsPage extends React.Component {
           {[{label: 'At Risk', value: 'atRisk', Component: AtRiskTab, tabData: this.props.reports.atRisk},
           {label: 'Chronically Absent', value: 'chronicAbsent', Component: ChronicallyAbsentTab, tabData: this.props.reports.chronicAbsent},
           {label: 'Outreaches', value: 'outreachSummary', Component: OutreachesTab, tabData: this.props.reports.outreachSummary},
-          {label: 'Interventions', value: 'interventionSummary', Component: InterventionsTab, tabData: this.props.reports.interventionSummary},
+          {label: 'Interventions', value: 'interventionSummary', Component: InterventionsTab, tabData: this.props.reports.interventionSummary.first()},
           ].map((tab, index) => <Tab
               key={`tab-${index}`}
               value={tab.value}

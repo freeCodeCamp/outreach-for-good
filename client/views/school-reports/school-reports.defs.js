@@ -127,14 +127,14 @@ export const outreachTableColumns = [{
 }];
 
 export const interventionTableColumns = [{
-  title    : 'School Name',
-  id       : 'school.name',
-  width    : 125,
+  title    : '+',
+  id       : 'type',
+  width    : 30,
   flexGrow : 1,
   fixed    : true
 }, {
-  title    : 'Intervention Type',
-  id       : '',
+  title    : 'School Name',
+  id       : 'school.name',
   flexGrow : 1,
   fixed    : true
 }, {
@@ -164,6 +164,18 @@ export const filterButton = props =>
     menu            : {
       open : props.table.get('MuiPopovers').get(localActions.FILTER),
       item : filterButtonMenuItems(props)
+    }
+  });
+
+export const schoolButtons = props =>
+  new RaisedButtonModel({
+    icon      : <FontIcon className="fa fa-chevron-down" />,
+    className : 'table-button',
+    actionID  : localActions.TABLE,
+    disabled  : false,
+    menu      : {
+      open : props.table.get('MuiPopovers').get(localActions.TABLE),
+      item : tableButtonMenuItems(props)
     }
   });
 

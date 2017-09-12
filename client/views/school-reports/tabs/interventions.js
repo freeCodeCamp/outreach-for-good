@@ -15,6 +15,7 @@ const InterventionsTab = ({tabData, ...props}) => {
    *  - `actionID:` is used by parent to launch dialogs
    *  - See RaisedButtonModel for default parameters
    */
+  //buttons.push(localDefs.schoolButtons(props));
   buttons.push(localDefs.filterButton(props));
   buttons.push(localDefs.tableButton({
     ...props,
