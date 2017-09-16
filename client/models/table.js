@@ -137,7 +137,7 @@ class TableModel extends Table {
           let recordCount = nextIndice ? nextIndice[0] - indice : data.size - indice;
           return a.set(rowIndex, Immutable.Map({
             groupColumn : Immutable.Map({
-              group : data.getIn([indice + 1, groupColumn]),
+              group : data.getIn([indice, groupColumn]),
               count : recordCount
             })
           }).concat(this.getRowAggregateRecord(state, data.slice(rowIndex - count, rowIndex + recordCount))));

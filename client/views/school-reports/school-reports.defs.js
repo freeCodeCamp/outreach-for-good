@@ -181,6 +181,31 @@ export const schoolButtons = props =>
 
 export const filterButtonMenuItems = props => [getWithdrawnItem(props)];
 
+export const schoolSelectButton = props =>
+  new RaisedButtonModel({
+    label     : 'School',
+    className : 'table-button',
+    actionID  : localActions.SCHOOL,
+    disabled  : false,
+    menu      : {
+      open : props.table.get('MuiPopovers').get(localActions.SCHOOL),
+      item : schoolSelectMenuItems(props.schools)
+    }
+  });
+
+export const schoolSelectMenuItems = props => props &&
+  props.available.map(school => ({
+    text :
+      <div>
+        {props.selected == school
+          ? <i className="fa fa-check-square-o" />
+          : <i className="fa fa-square-o" />
+        }
+        &nbsp; {school}
+      </div>,
+    actionID : {id: localActions.UPDATE_SCHOOL, school}
+  })) || [];
+
 const getWithdrawnItem = props => ({
   text :
     <div>

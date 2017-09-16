@@ -15,15 +15,20 @@ const InterventionsTab = ({tabData, ...props}) => {
    *  - `actionID:` is used by parent to launch dialogs
    *  - See RaisedButtonModel for default parameters
    */
-  //buttons.push(localDefs.schoolButtons(props));
+  buttons.push(localDefs.schoolSelectButton({
+    ...props
+  }));
   buttons.push(localDefs.filterButton(props));
   buttons.push(localDefs.tableButton({
     ...props,
     summaryRowAggregateType : props.table.getIn(['groupColumn', 'aggregateType'])
   }));
 
+  const pageTitle = props.schools && props.schools.selected ?
+    'Interventions - ' + props.schools.selected : 'Interventions';
+
   const page = {
-    title   : 'Interventions',
+    title   : pageTitle,
     columns : localDefs.interventionTableColumns,
     buttons
   };
@@ -38,8 +43,9 @@ const InterventionsTab = ({tabData, ...props}) => {
 };
 
 InterventionsTab.propTypes = {
-  view    : PropTypes.object.isRequired,
-  tabData : PropTypes.object,
+  view           : PropTypes.object.isRequired,
+  tabData        : PropTypes.object,
+  selectedSchool : PropTypes.object
 };
 
 export default InterventionsTab;

@@ -31,8 +31,8 @@ class SchoolReportsPage extends React.Component {
     // Register Initial Component State
     let nextTable = table.setSelectedTab(table, 'atRisk');
     nextTable = table.setFixedColumn(nextTable, 'school.name', 'student.lastName');
-    nextTable = table.setGroupAggregateColumns(nextTable, ['PhoneCall.count', 'LetterSent.count',
-      'HomeVisit.count', 'SSTReferral.count', 'CourtReferral.count', 'total.count']);
+    nextTable = table.setGroupAggregateColumns(nextTable, ['entry.absences', 'entry.absencesDelta',
+      'entry.tardies', 'entry.tardiesDelta', 'entry.present', 'entry.enrolled']);
     nextTable = this.initClickActions(nextTable);
     this.state = {table: nextTable};
   }
@@ -89,16 +89,32 @@ class SchoolReportsPage extends React.Component {
 
   updateData = nextProps => {
     const props = nextProps || this.props;
+    const schools = this.state.schools || {available: [], selected: ''};
     let dataSource = null;
     let nextTable = this.state.table;
     switch (this.state.table.get('selectedTab')) {
-    case 'atRisk': dataSource = props.reports.get('atRisk'); break;
-    case 'chronicAbsent': dataSource = props.reports.get('chronicAbsent'); break;
-    case 'outreachSummary':dataSource = props.reports.get('outreachSummary'); break;
+    case 'atRisk': dataSource = props.reports.get('atRisk');
+      nextTable = table.setFixedColumn(nextTable, 'school.name', 'student.lastName');
+      nextTable = table.setGroupAggregateColumns(nextTable, ['entry.absences', 'entry.absencesDelta',
+        'entry.tardies', 'entry.tardiesDelta', 'entry.present', 'entry.enrolled']);
+      break;
+    case 'chronicAbsent': dataSource = props.reports.get('chronicAbsent');
+      nextTable = table.setFixedColumn(nextTable, 'school.name', 'student.lastName');
+      nextTable = table.setGroupAggregateColumns(nextTable, ['entry.absences', 'entry.absencesDelta',
+        'entry.tardies', 'entry.tardiesDelta', 'entry.present', 'entry.enrolled']);
+      break;
+    case 'outreachSummary':
+      dataSource = props.reports.get('outreachSummary');
+      nextTable = table.setFixedColumn(nextTable, 'school.name', 'student.lastName');
+      nextTable = table.setGroupAggregateColumns(nextTable, ['PhoneCall.count', 'LetterSent.count',
+        'HomeVisit.count', 'SSTReferral.count', 'CourtReferral.count', 'total.count']);
+      break;
     case 'interventionSummary':
-      dataSource = props.reports.get('interventionSummary').first();
+      schools.available = Object.keys(props.reports.get('interventionSummary').toJS());
+      schools.selected = schools.selected || schools.available[0];
+      dataSource = props.reports.get('interventionSummary').get(schools.selected);
       nextTable = nextTable.setFixedColumn(nextTable, 'type', 'school.name');
-      nextTable = table.setGroupAggregateColumns(nextTable, ['type']);
+      nextTable = table.setGroupAggregateColumns(nextTable, []);
       break;
     }
     this._reports = props.withdrawnStudents ? dataSource : dataSource.filter(record => !record.get('student.withdrawn'));
@@ -106,7 +122,7 @@ class SchoolReportsPage extends React.Component {
     nextTable = nextTable.buildIndexMap(nextTable, this._reports);
     nextTable = nextTable.enableFiltering(nextTable);
     nextTable = nextTable.collapseFixedGroups(nextTable);
-    this.setState({table: nextTable, loadResolved: true});
+    this.setState({table: nextTable, loadResolved: true, schools});
   }
 
   clickHandler = (action, data, event) => {
@@ -141,7 +157,7 @@ class SchoolReportsPage extends React.Component {
     case 'buttonClick':
       nextTable = table.setSelectedRowData(this.state.table,
         this.getSelectedRowData());
-      if(data == localActions.FILTER || data == localActions.TABLE) {
+      if(data == localActions.SCHOOL || data == localActions.FILTER || data == localActions.TABLE) {
         this.setState({table: table.handlePopoverButtonClick(nextTable, data, event)});
 
       } else if(data == localActions.TOGGLE_WITHDRAWN_STUDENTS) {
@@ -166,6 +182,11 @@ class SchoolReportsPage extends React.Component {
       } else if(data == tableActions.SET_AGGREGATE_SUM || data == tableActions.SET_AGGREGATE_AVERAGE
                 || data == tableActions.SET_AGGREGATE_MAXIMUM || data == tableActions.SET_AGGREGATE_MINIMUM) {
         this.handleChangeTableAggregate(nextTable, data);
+
+      } else if(data && data.id == localActions.UPDATE_SCHOOL) {
+        const schools = this.state.schools;
+        schools.selected = data.school;
+        this.updateData({table: table.resetPopovers(nextTable), schools, ...this.props});
 
       } else {
         this.handleInterfaceButtonClick(nextTable);
@@ -314,6 +335,7 @@ class SchoolReportsPage extends React.Component {
                 loaded = {this.state.loadResolved}
                 clickHandler = {this.clickHandler}
                 tabName = {tab.value}
+                schools = {this.state.schools}
                 withdrawnStudents = {this.props.withdrawnStudents}
               />
             </Tab>
