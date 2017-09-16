@@ -86,6 +86,9 @@ class UploadTab extends React.Component {
   render() {
     return (
       <div className="upload-tab">
+        <div className='record-page-title'>
+          <h3>New Attendance Record</h3>
+        </div>
         <div className="dropzone-container">
           <div className="column">
             <SchoolSelect
@@ -114,7 +117,7 @@ class UploadTab extends React.Component {
               multiple={false}
               accept="application/pdf"
               className="dropzone">
-              <h2>Click here or drop a PDF into this field</h2>
+              <h2>Click Here<br />or<br />Drag a PDF</h2>
             </Dropzone>}
           </div>
         </div>
