@@ -111,7 +111,7 @@ class SchoolReportsPage extends React.Component {
     case 'interventionSummary':
       dataSource = props.reports.get('interventionSummary').first();
       nextTable = nextTable.setFixedColumn(nextTable, 'type', 'school.name');
-      nextTable = table.setGroupAggregateColumns(nextTable, ['type']);
+      nextTable = table.setGroupAggregateColumns(nextTable, []);
       break;
     }
     this._reports = props.withdrawnStudents ? dataSource : dataSource.filter(record => !record.get('student.withdrawn'));
