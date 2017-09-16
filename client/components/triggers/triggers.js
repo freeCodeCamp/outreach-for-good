@@ -5,13 +5,16 @@ import TextField from 'material-ui/TextField';
 const Triggers = ({ triggers, onChange }) =>
   <div className="trigger-list">
     {triggers
-      && triggers.map((trigger, i) =>
+      && triggers.sort().map((trigger, i) =>
       <TextField key={i}
         id={`${i}`}
         type="number"
         value={trigger.get('absences')}
         onChange={onChange}
-        floatingLabelText={`${trigger.get('type')} ${trigger.get('tier')}`} />
+        style={{marginRight: 20}}
+        floatingLabelText={`${trigger.get('type')} ${trigger.get('tier')}`}
+        floatingLabelStyle={{fontWeight: 400}}
+      />
     )}
   </div>
 ;

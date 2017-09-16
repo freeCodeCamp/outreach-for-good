@@ -36,6 +36,7 @@
 }
 
 .manage-tab {
+  margin: 10px;
   .school-select {
     margin: 10px;
   }
@@ -61,4 +62,8 @@ $alertred: #f2dede;
   height: 50px;
   padding: 0px 10px 10px;
   position: relative;
+}
+
+.section-label {
+  color: #3c763d;
 }

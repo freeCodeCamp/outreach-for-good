@@ -139,6 +139,9 @@ class ManageTab extends React.Component {
 
     return (
       <div className="manage-tab">
+        <div className='record-page-title'>
+          <h3>Manage Attendance Records</h3>
+        </div>
         <div className="school-select">
           <SchoolSelect
             value={this.state.school}

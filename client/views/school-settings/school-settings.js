@@ -56,15 +56,22 @@ class SchoolSettingsPage extends React.Component {
     let currentSchool = this.props.schools.get(this.state.selectedSchool);
     return (
       <div className="settings-page">
-        {this.props.schools
-          && <SchoolSelect
-          value={currentSchool}
-          changeSchool={this.changeSchool}
-          schools={this.props.schools}/>}
-        {currentSchool
-        && <Triggers
-          onChange={this.changeTrigger}
-          triggers={currentSchool.get('triggers')} />}
+        <div className='settings-page-title'>
+          <h3>School Settings</h3>
+        </div>
+        <div style={{textAlign: 'center', marginTop: -20}}>
+          {this.props.schools
+            && <SchoolSelect
+            value={currentSchool}
+            changeSchool={this.changeSchool}
+            schools={this.props.schools}/>}
+          <div style={{textAlign: 'left', maxWidth: 600, margin: 'auto', paddingTop: 10}}>
+            {currentSchool
+            && <Triggers
+              onChange={this.changeTrigger}
+              triggers={currentSchool.get('triggers')} />}
+          </div>
+        </div>
       </div>
     );
   }
