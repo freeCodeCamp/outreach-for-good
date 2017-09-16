@@ -167,19 +167,32 @@ export const filterButton = props =>
     }
   });
 
-export const schoolButtons = props =>
+export const filterButtonMenuItems = props => [getWithdrawnItem(props)];
+
+export const schoolSelectButton = props =>
   new RaisedButtonModel({
-    icon      : <FontIcon className="fa fa-chevron-down" />,
+    label     : 'School',
     className : 'table-button',
-    actionID  : localActions.TABLE,
+    actionID  : localActions.SCHOOL,
     disabled  : false,
     menu      : {
-      open : props.table.get('MuiPopovers').get(localActions.TABLE),
-      item : tableButtonMenuItems(props)
+      open : props.table.get('MuiPopovers').get(localActions.SCHOOL),
+      item : schoolSelectMenuItems(props.schools)
     }
   });
 
-export const filterButtonMenuItems = props => [getWithdrawnItem(props)];
+export const schoolSelectMenuItems = props => props &&
+  props.available.map(school => ({
+    text :
+      <div>
+        {props.selected == school
+          ? <i className="fa fa-check-square-o" />
+          : <i className="fa fa-square-o" />
+        }
+        &nbsp; {school}
+      </div>,
+    actionID : {id: localActions.UPDATE_SCHOOL, school}
+  })) || [];
 
 const getWithdrawnItem = props => ({
   text :

@@ -89,6 +89,7 @@ class SchoolReportsPage extends React.Component {
 
   updateData = nextProps => {
     const props = nextProps || this.props;
+    const schools = this.state.schools || {available: [], selected: ''};
     let dataSource = null;
     let nextTable = this.state.table;
     switch (this.state.table.get('selectedTab')) {
@@ -109,7 +110,9 @@ class SchoolReportsPage extends React.Component {
         'HomeVisit.count', 'SSTReferral.count', 'CourtReferral.count', 'total.count']);
       break;
     case 'interventionSummary':
-      dataSource = props.reports.get('interventionSummary').first();
+      schools.available = Object.keys(props.reports.get('interventionSummary').toJS());
+      schools.selected = schools.selected || schools.available[0];
+      dataSource = props.reports.get('interventionSummary').get(schools.selected);
       nextTable = nextTable.setFixedColumn(nextTable, 'type', 'school.name');
       nextTable = table.setGroupAggregateColumns(nextTable, []);
       break;
@@ -119,7 +122,7 @@ class SchoolReportsPage extends React.Component {
     nextTable = nextTable.buildIndexMap(nextTable, this._reports);
     nextTable = nextTable.enableFiltering(nextTable);
     nextTable = nextTable.collapseFixedGroups(nextTable);
-    this.setState({table: nextTable, loadResolved: true});
+    this.setState({table: nextTable, loadResolved: true, schools});
   }
 
   clickHandler = (action, data, event) => {
@@ -154,7 +157,7 @@ class SchoolReportsPage extends React.Component {
     case 'buttonClick':
       nextTable = table.setSelectedRowData(this.state.table,
         this.getSelectedRowData());
-      if(data == localActions.FILTER || data == localActions.TABLE) {
+      if(data == localActions.SCHOOL || data == localActions.FILTER || data == localActions.TABLE) {
         this.setState({table: table.handlePopoverButtonClick(nextTable, data, event)});
 
       } else if(data == localActions.TOGGLE_WITHDRAWN_STUDENTS) {
@@ -179,6 +182,11 @@ class SchoolReportsPage extends React.Component {
       } else if(data == tableActions.SET_AGGREGATE_SUM || data == tableActions.SET_AGGREGATE_AVERAGE
                 || data == tableActions.SET_AGGREGATE_MAXIMUM || data == tableActions.SET_AGGREGATE_MINIMUM) {
         this.handleChangeTableAggregate(nextTable, data);
+
+      } else if(data && data.id == localActions.UPDATE_SCHOOL) {
+        const schools = this.state.schools;
+        schools.selected = data.school;
+        this.updateData({table: table.resetPopovers(nextTable), schools, ...this.props});
 
       } else {
         this.handleInterfaceButtonClick(nextTable);
@@ -327,6 +335,7 @@ class SchoolReportsPage extends React.Component {
                 loaded = {this.state.loadResolved}
                 clickHandler = {this.clickHandler}
                 tabName = {tab.value}
+                schools = {this.state.schools}
                 withdrawnStudents = {this.props.withdrawnStudents}
               />
             </Tab>
