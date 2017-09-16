@@ -31,8 +31,8 @@ class SchoolReportsPage extends React.Component {
     // Register Initial Component State
     let nextTable = table.setSelectedTab(table, 'atRisk');
     nextTable = table.setFixedColumn(nextTable, 'school.name', 'student.lastName');
-    nextTable = table.setGroupAggregateColumns(nextTable, ['PhoneCall.count', 'LetterSent.count',
-      'HomeVisit.count', 'SSTReferral.count', 'CourtReferral.count', 'total.count']);
+    nextTable = table.setGroupAggregateColumns(nextTable, ['entry.absences', 'entry.absencesDelta',
+      'entry.tardies', 'entry.tardiesDelta', 'entry.present', 'entry.enrolled']);
     nextTable = this.initClickActions(nextTable);
     this.state = {table: nextTable};
   }
@@ -92,9 +92,22 @@ class SchoolReportsPage extends React.Component {
     let dataSource = null;
     let nextTable = this.state.table;
     switch (this.state.table.get('selectedTab')) {
-    case 'atRisk': dataSource = props.reports.get('atRisk'); break;
-    case 'chronicAbsent': dataSource = props.reports.get('chronicAbsent'); break;
-    case 'outreachSummary':dataSource = props.reports.get('outreachSummary'); break;
+    case 'atRisk': dataSource = props.reports.get('atRisk');
+      nextTable = table.setFixedColumn(nextTable, 'school.name', 'student.lastName');
+      nextTable = table.setGroupAggregateColumns(nextTable, ['entry.absences', 'entry.absencesDelta',
+        'entry.tardies', 'entry.tardiesDelta', 'entry.present', 'entry.enrolled']);
+      break;
+    case 'chronicAbsent': dataSource = props.reports.get('chronicAbsent');
+      nextTable = table.setFixedColumn(nextTable, 'school.name', 'student.lastName');
+      nextTable = table.setGroupAggregateColumns(nextTable, ['entry.absences', 'entry.absencesDelta',
+        'entry.tardies', 'entry.tardiesDelta', 'entry.present', 'entry.enrolled']);
+      break;
+    case 'outreachSummary':
+      dataSource = props.reports.get('outreachSummary');
+      nextTable = table.setFixedColumn(nextTable, 'school.name', 'student.lastName');
+      nextTable = table.setGroupAggregateColumns(nextTable, ['PhoneCall.count', 'LetterSent.count',
+        'HomeVisit.count', 'SSTReferral.count', 'CourtReferral.count', 'total.count']);
+      break;
     case 'interventionSummary':
       dataSource = props.reports.get('interventionSummary').first();
       nextTable = nextTable.setFixedColumn(nextTable, 'type', 'school.name');
