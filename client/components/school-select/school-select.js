@@ -6,6 +6,7 @@ import MenuItem from 'material-ui/MenuItem';
 const SchoolSelect = ({ schools, value, changeSchool, fullWidth = false }) =>
   <SelectField
     floatingLabelText="Select a school..."
+    floatingLabelStyle={{fontWeight: 400}}
     value={value}
     onChange={changeSchool}
     fullWidth={fullWidth}

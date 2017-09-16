@@ -4,7 +4,7 @@
     .column {
       width: 50%;
       display: inline-block;
-      padding: 0;
+      padding: 0 20px;
       margin: 0;
       vertical-align: top;
       .dropzone {
@@ -55,4 +55,10 @@ $alertred: #f2dede;
 .alert {
   color: #a94442;
   background-color: $alertred;
+}
+
+.record-page-title {
+  height: 50px;
+  padding: 0px 10px 10px;
+  position: relative;
 }
