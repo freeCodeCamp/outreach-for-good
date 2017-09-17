@@ -124,9 +124,7 @@ class ManageTab extends React.Component {
   } // End of: clickHandler()
 
   handleToggleSelectedRow = (nextTable, index) => {
-    nextTable = this._reports.size <= index
-      ? table.toggleCollapsedRow(this.state.table, index)
-      : table.toggleSelectedRowIndex(this.state.table, index);
+    nextTable = table.toggleSelectedRowIndex(this.state.table, index);
     this.setState({table: nextTable});
   }
 
