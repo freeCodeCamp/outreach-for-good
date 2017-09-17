@@ -1,4 +1,4 @@
-import PDFJS from 'pdfjs-dist/webpack';
+import PDFJS from 'pdfjs-dist';
 import _ from 'lodash';
 
 /**
@@ -11,7 +11,7 @@ export default class UploadPdf {
     this.file = file;
   }
 
-  getRecords() {
+  getRecord() {
     let promise = new Promise((resolve, reject) => {
       this._readFile(this.file, response => {
         PDFJS.getDocument(response.target.result)
@@ -25,15 +25,15 @@ export default class UploadPdf {
               .then(page => page.getTextContent().then(textContent => textContent.items.map(item => item.str)))));
           })
           .then(allPages => {
-            let items = [].concat.apply([], allPages);
-            // let items = [...allPages];
+            // let items = [].concat.apply([], allPages);
+            let items = [...allPages];
 
             try {
-              const partial = parse(items);
-              const records = completeRecord(this.school, this.previousRecord, partial);
-              const message = this._getMessage(records);
+              let partial = parse(items);
+              let record = completeRecord(this.school, this.previousRecord, partial);
+              let message = this._getMessage(record);
 
-              resolve({ records, message });
+              resolve({ record, message });
             } catch(err) {
               reject(err);
             }
@@ -175,7 +175,6 @@ function completeRecord(school, previousRecord, partialRecord) {
 }
 
 function parse(items) {
-  console.log(items);
   var sidRe = /\(#(\d+)\)$/;
   var re = /^(\d{2,2})\s(.+),\s(.+)$/g;
   var students = [];
