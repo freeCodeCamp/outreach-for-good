@@ -18,7 +18,7 @@ class UploadTab extends React.Component {
   state = {
     loadingState  : 'determinate',
     loadingValue  : 0,
-    record        : null,
+    records       : null,
     recordResults : false,
     date          : new Date()
   };
@@ -40,15 +40,17 @@ class UploadTab extends React.Component {
    */
   changeFile = accepted => {
     if(accepted && this.state.selectedSchool) {
-      let school = this.state.selectedSchool.toJS();
-      let previousRecord = this.props.records.current
+      const school = this.state.selectedSchool.toJS();
+      const previousRecord = this.props.records.current
         .filter(record => record.school._id === school._id)[0];
 
-      let uploadService = new UploadService(school, previousRecord, accepted[0]);
+      const uploadService = new UploadService(school, previousRecord, accepted[0]);
 
-      uploadService.getRecord().then(({ record }) => {
-        this.setState({ record });
-      });
+      uploadService.getRecords()
+        .then(({records}) => {
+          console.log(records);
+          this.setState({ records });
+        });
     }
   }
 
@@ -63,9 +65,9 @@ class UploadTab extends React.Component {
    * Action to post absence record
    */
   confirm = () => {
-    let record = this.state.record;
-    record.date = this.state.date;
-    this.props.actions.addRecord(record);
+    const {records} = this.state;
+    records.date = this.state.date;
+    this.props.actions.addRecord(records);
     this.cancel();
   }
 
@@ -73,7 +75,7 @@ class UploadTab extends React.Component {
    * Removes the parsed record
    */
   cancel = () => {
-    this.setState({ record: null, loadingValue: 0, loadingState: 'determinate' });
+    this.setState({ records: null, loadingValue: 0, loadingState: 'determinate' });
   }
 
   /**
@@ -116,8 +118,21 @@ class UploadTab extends React.Component {
               onDrop={this.changeFile}
               multiple={false}
               accept="application/pdf"
-              className="dropzone">
-              <h2>Click Here<br />or<br />Drag a PDF</h2>
+              className="dropzone"
+              activeClassName="accept"
+              rejectClassName="reject">
+              {({ isDragActive, isDragReject, acceptedFiles, rejectedFiles }) => {
+                if(isDragActive) {
+                  return <i className="fa fa-check fa-5x" />;
+                }
+                if(isDragReject) {
+                  return <i className="fa fa-times fa-5x" />;
+                }
+                return acceptedFiles.length || rejectedFiles.length
+                  ? <h2>{acceptedFiles[0].name}</h2>
+                  : <h2>Click Here<br />or<br />Drag a PDF</h2>;
+              }}
+
             </Dropzone>}
           </div>
         </div>
@@ -126,11 +141,11 @@ class UploadTab extends React.Component {
             mode={this.state.loadingState}
             value={this.state.loadingValue}
           />}
-        {this.state.record
+        {this.state.records
           && <AbsenceRecordsTable
             confirm={this.confirm}
             cancel={this.cancel}
-            record={this.state.record}
+            record={this.state.records}
             uploadTab
           />}
       </div>
