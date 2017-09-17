@@ -9,26 +9,31 @@ export const recordsTableColumns = [
   {
     title    : 'Date',
     id       : 'date',
+    width    : 200,
     flexGrow : 1
   },
   {
     title    : 'School Year',
     id       : 'schoolYear',
+    width    : 200,
     flexGrow : 1
   },
   {
     title    : 'Total Entries',
     id       : 'entries',
+    width    : 100,
     flexGrow : 1
   },
   {
     title    : 'Total New Missing Students',
     id       : 'newMissingStudents',
+    width    : 100,
     flexGrow : 1
   },
   {
     title    : 'Created Students',
     id       : 'createdStudents',
+    width    : 100,
     flexGrow : 1
   }
 ];

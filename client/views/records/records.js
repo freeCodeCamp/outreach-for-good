@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 
 import Dimensions from 'react-dimensions-cjs';
 import {Tabs, Tab} from 'material-ui/Tabs';
@@ -15,9 +16,13 @@ class RecordsPage extends React.Component {
   }
 
   render() {
+    let viewport = {
+      width  : this.props.containerWidth - 20,
+      height : this.props.containerHeight - 48 - 80
+    };
     return (
       <Tabs
-        style={{width: this.props.containerWidth}}
+        style={{width: viewport.width}}
         value={this.state.currentTab}
         onChange={tab => {
           this.setState({currentTab: tab});
@@ -32,10 +37,7 @@ class RecordsPage extends React.Component {
           label="Manage"
           value="manage">
           <ManageTab
-            view={{
-              width  : this.props.containerWidth - 20,
-              height : this.props.containerHeight - 48 - 80
-            }}
+            viewport={viewport}
           />
         </Tab>
       </Tabs>
@@ -48,4 +50,11 @@ RecordsPage.propTypes = {
   containerHeight : PropTypes.number.isRequired
 };
 
-export default (Dimensions({elementResize: true})(RecordsPage));
+function mapStateToProps() {
+}
+
+function mapDispatchToProps() {
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(
+  Dimensions({elementResize: true})(RecordsPage));

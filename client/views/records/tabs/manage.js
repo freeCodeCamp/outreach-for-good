@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
-import {Link} from 'react-router';
 import {List} from 'immutable';
 
 import * as absenceRecordActions from '../../../modules/absence-record';
@@ -14,12 +13,6 @@ import DataTableContainer from '../../../components/data-table/data-table-contai
 import DeleteDialog from '../../../components/delete-dialog/delete-dialog';
 import SchoolSelect from '../../../components/school-select/school-select';
 
-
-import {
-  fetchSchoolRecordList,
-  removeRecord } from '../../../modules/absence-record';
-
-import RaisedButtonModel from '../../../models/raised-button';
 import TableModel from '../../../models/table';
 
 const table = new TableModel();
@@ -148,10 +141,6 @@ class ManageTab extends React.Component {
     if(!this.props.schools) {
       return null;
     }
-    let viewport = {
-      width  : this.props.containerWidth - 20,
-      height : this.props.containerHeight - 48 - 80
-    };
     let buttons = [];
 
     /**
@@ -176,11 +165,10 @@ class ManageTab extends React.Component {
       <DataTableContainer
         page={page}
         data={this.props.absenceRecords}
-        view = {viewport}
+        view = {this.props.viewport}
         table = {this.state.table}
         loaded = {this.state.loadResolved}
         clickHandler = {this.clickHandler}
-        schools = {this.state.schools}
         withdrawnStudents = {this.props.withdrawnStudents}
       />
     );
