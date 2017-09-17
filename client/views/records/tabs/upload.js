@@ -64,8 +64,11 @@ class UploadTab extends React.Component {
     this.setState({ date });
   }
 
-  minDate = () =>
-    new Date(this.props.records.filter(r => r.school._id === this.state.selectedSchool.get('_id'))[0].date);
+  minDate = () => {
+    let currentRecord = this.props.records.filter(r => r.school._id === this.state.selectedSchool.get('_id'))[0];
+    let recordDate = new Date(currentRecord.date);
+    return new Date(recordDate.setDate(recordDate.getDate() + 1));
+  }
 
 
   /**
