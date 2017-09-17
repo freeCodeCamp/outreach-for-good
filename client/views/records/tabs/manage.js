@@ -5,11 +5,15 @@ import {connect} from 'react-redux';
 import {Link} from 'react-router';
 import {List} from 'immutable';
 
+import * as absenceRecordActions from '../../../modules/absence-record';
+import * as schoolActions from '../../../modules/school';
+import * as localActions from '../records.actions';
+import * as localDefs from '../records.defs';
+
 import DataTableContainer from '../../../components/data-table/data-table-container';
 import DeleteDialog from '../../../components/delete-dialog/delete-dialog';
 import SchoolSelect from '../../../components/school-select/school-select';
 
-import {recordsTableColumns} from '../records.defs';
 
 import {
   fetchSchoolRecordList,
@@ -21,176 +25,160 @@ import TableModel from '../../../models/table';
 const table = new TableModel();
 
 class ManageTab extends React.Component {
-  state = {
-    table,
-    dialogOpen : false,
-    loaded     : false
-  };
+  constructor(props) {
+    super(props);
 
-  componentWillReceiveProps = nextProps => {
-    if(this.state.school
-      && nextProps.absenceRecords.size
-      && !this.state.loaded) {
-      // Props incoming, ToDo: verify absenceRecords changed
-      let nextTable = table.updateSortCol(this.state.table, '');
-      nextTable = table.buildIndexMap(nextTable, nextProps.absenceRecords);
+    let nextTable = this.initClickActions(table);
+    this.state = {table: nextTable};
+  }
 
-      console.log('props recieved');
+  componentDidMount() {
+    this.retrieveData('schools');
+  }
 
-      this.setState({
-        table  : nextTable,
-        loaded : true
-      });
-    } else {
-      this.setState({
-        loaded : true
-      });
+  componentDidUpdate() {
+    while(this.pendingApiCalls.length) {
+      this.performApiCall(this.pendingApiCalls.shift());
     }
   }
 
-  /**
-   * Updates the data table with selected school
-   */
-  changeSchool = (e, i, school) => {
-    const schoolId = school.get('_id');
-    this.props.actions.fetchSchoolRecordList(schoolId);
-    this.setState({
-      school,
-      selectedRecord : null,
-      loaded         : false
+  pendingApiCalls = [];
+
+  initClickActions = nextTable => {
+    nextTable = table.addPopovers(nextTable, {
+      [localActions.UPDATE_SCHOOL] : false
     });
+    nextTable = table.addDialogs(nextTable, {
+      [localActions.DELETE_RECORD] : false
+    });
+    return nextTable;
   }
 
-  /**
-   * Handles the clicks on the datatable
-   */
-  clickHandler = (action, data) => {
-    switch (action) {
-    case 'toggleSortCol': {
+  retrieveData = (data, schoolId) => {
+    console.log('retrieveData', data);
+    switch (data) {
+    case 'absenceRecords':
+      this.props.absenceRecordActions.fetchSchoolRecordList(schoolId).then(() => this.updateData());
+      break;
+    case 'schools':
+      this.props.schoolActions.getAllSchools().then(() => this.updateData());
       break;
     }
-    default: {
-      switch (data) {
-      case 'deleteRecord': {
-        this.setState({ dialogOpen: !this.state.dialogOpen });
-        break;
+    this.setState({loadResolved: false});
+  }
+
+  updateData = nextProps => {
+    console.log('updateData', nextProps);
+    let schools = {};
+    schools.available = this.props.schools.map(school => school.name);
+    schools.selected = this.state.schools && this.state.schools.selected || schools.available[0];
+    let nextTable = this.state.table;
+    nextTable = nextTable.updateSortCol(nextTable, '');
+    nextTable = nextTable.buildIndexMap(nextTable, this.props.absenceRecords);
+    this.setState({table: nextTable, loadResolved: true, schools});
+  }
+
+
+  clickHandler = (action, data, event) => {
+    let nextTable;
+    switch (action) {
+    /**
+     * DataTable Click Handler
+     *   - Select / de-select a table row
+     *   - Sort by a column
+     *   - Apply a filter
+     */
+    case 'toggleSelected':
+      this.handleToggleSelectedRow(nextTable, data);
+      break;
+    /**
+     * Button / Popover Menu Click Handler
+     *   - Typically opens a <Dialog> modal or popover menu
+     *   - Initialize dialog and form field parameters
+     */
+    case 'menuClick':
+    case 'buttonClick':
+      nextTable = table.setSelectedRowData(this.state.table,
+        this.getSelectedRowData());
+      if(data == localActions.UPDATE_SCHOOL) {
+        this.setState({table: table.handlePopoverButtonClick(nextTable, data, event)});
+
+      } else if(data == localActions.DELETE_RECORD) {
+        this.pendingApiCalls.push(localActions.DELETE_RECORD);
+        this.handleInterfaceButtonClick(nextTable);
+
+      } else {
+        this.handleInterfaceButtonClick(nextTable);
       }
-      case 'editRecord': {
-        console.log('edit record');
-        break;
-      }
-      }
+      break;
+    // Clicked away from popover menu
+    case 'popoverClose':
+      this.handleClosePopover(this.state.table);
+      break;
     }
+  } // End of: clickHandler()
+
+  handleToggleSelectedRow = (nextTable, index) => {
+    nextTable = this._reports.size <= index
+      ? table.toggleCollapsedRow(this.state.table, index)
+      : table.toggleSelectedRowIndex(this.state.table, index);
+    this.setState({table: nextTable});
+  }
+
+  handleInterfaceButtonClick = nextTable => {
+    this.handleClosePopover(nextTable);
+  }
+
+  handleClosePopover = nextTable => {
+    nextTable = table.resetPopovers(nextTable);
+    this.setState({table: nextTable});
+  }
+
+  render() {
+    if(!this.props.schools) {
+      return null;
     }
-  }
+    let viewport = {
+      width  : this.props.containerWidth - 20,
+      height : this.props.containerHeight - 48 - 80
+    };
+    let buttons = [];
 
-  removeRecord = () => {
-    let recordId = this.props.absenceRecords.get(0).get('recordId');
-    this.props.actions.removeRecord(recordId);
-    this.closeDialog();
-    this.changeSchool(null, null, this.state.selectedSchool);
-  }
-
-  closeDialog = () => {
-    this.setState({ dialogOpen: false });
-  }
-
-  /**
-  * Display record is used when clicking on a row to display students
-  */
-  displayRecord = record => {
-    //console.log('row clicked: ', record);
-    let selectedRecord = {};
-
-    selectedRecord.newMissingStudents = this.props.absenceRecords
-      .get(record)
-      .get('newMissingStudents')
-      // .map(entry => entry.get('_id'));
-      .map((entry, i) => <Link key={i} to={`/student/${entry.get('_id')}`}>{entry.firstName} {entry.lastName}</Link>);
-
-    selectedRecord.createdStudents = this.props.absenceRecords
-      .get(record)
-      .get('createdStudents')
-      .map((entry, i) => <Link key={i} to={`/student/${entry.get('_id')}`}>{`${entry.get('firstName')} ${entry.get('lastName')}`}</Link>);
-
-    this.setState({ selectedRecord });
-  }
-
-  render = () => {
-    const buttons = [
-      new RaisedButtonModel({
-        label    : 'Delete Record',
-        actionID : 'deleteRecord',
-        disabled : false
-      }),
-      new RaisedButtonModel({
-        label    : 'Edit Record',
-        actionID : 'Edit Record',
-        disabled : false
-      })
-    ];
+    /**
+     * Material-UI <RaisedButton> and <Popover>
+     *  - `menu:` become a <Popover> menu under button
+     *  - `actionID:` is used by parent to launch dialogs
+     *  - See RaisedButtonModel for default parameters
+     */
+    buttons.push(localDefs.schoolSelectButton(this.state));
+    buttons.push(localDefs.deleteRecordButton());
 
     const page = {
-      title   : 'Absence Records',
-      columns : recordsTableColumns,
+      title   : 'At Risk Students',
+      columns : localDefs.recordsTableColumns,
       buttons
     };
 
-
     return (
-      <div className="manage-tab">
-        <div className='record-page-title'>
-          <h3>Manage Attendance Records</h3>
-        </div>
-        <div className="school-select">
-          <SchoolSelect
-            value={this.state.school}
-            schools={this.props.schools}
-            changeSchool={this.changeSchool}
-          />
-        </div>
-
-        {this.state.school
-          && <DataTableContainer
-            table={this.state.table}
-            page={page}
-            data={this.props.absenceRecords}
-            loaded={this.state.loaded}
-            clickHandler={this.clickHandler}
-            {...this.props}
-          />}
-
-        {/* {this.state.selectedRecord
-        && <Paper
-          className="record-data"
-          zDepth={2}>
-            <StudentRecords
-              title="Created Students:"
-              students={this.state.selectedRecord.createdStudents}
-            />
-            <StudentRecords
-              title="New Missing Students:"
-              students={this.state.selectedRecord.newMissingStudents}
-            />
-          </Paper>} */}
-
-        <DeleteDialog
-          dialogOpen={this.state.dialogOpen}
-          closeDialog={this.closeDialog}
-          removeRecord={this.removeRecord}
-        />
-      </div>
+      <DataTableContainer
+        page={page}
+        data={this.props.absenceRecords}
+        view = {viewport}
+        table = {this.state.table}
+        loaded = {this.state.loadResolved}
+        clickHandler = {this.clickHandler}
+        schools = {this.state.schools}
+        withdrawnStudents = {this.props.withdrawnStudents}
+      />
     );
   }
-
 }
 
 ManageTab.propTypes = {
-  actions               : PropTypes.object.isRequired,
-  absenceRecords        : PropTypes.instanceOf(List),
-  fetchSchoolRecordList : PropTypes.func,
-  removeRecord          : PropTypes.func,
-  schools               : PropTypes.object
+  absenceRecordActions : PropTypes.object.isRequired,
+  schoolActions        : PropTypes.object.isRequired,
+  absenceRecords       : PropTypes.instanceOf(List),
+  schools              : PropTypes.object,
 };
 
 
@@ -203,10 +191,8 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    actions : bindActionCreators({
-      fetchSchoolRecordList,
-      removeRecord,
-    }, dispatch)
+    absenceRecordActions : bindActionCreators(absenceRecordActions, dispatch),
+    schoolActions        : bindActionCreators(schoolActions, dispatch)
   };
 }
 

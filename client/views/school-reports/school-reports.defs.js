@@ -167,17 +167,17 @@ export const filterButton = props =>
     }
   });
 
-export const schoolButtons = props =>
-  new RaisedButtonModel({
-    icon      : <FontIcon className="fa fa-chevron-down" />,
-    className : 'table-button',
-    actionID  : localActions.TABLE,
-    disabled  : false,
-    menu      : {
-      open : props.table.get('MuiPopovers').get(localActions.TABLE),
-      item : tableButtonMenuItems(props)
-    }
-  });
+// export const schoolButtons = props =>
+//   new RaisedButtonModel({
+//     icon      : <FontIcon className="fa fa-chevron-down" />,
+//     className : 'table-button',
+//     actionID  : localActions.TABLE,
+//     disabled  : false,
+//     menu      : {
+//       open : props.table.get('MuiPopovers').get(localActions.TABLE),
+//       item : tableButtonMenuItems(props)
+//     }
+//   });
 
 export const filterButtonMenuItems = props => [getWithdrawnItem(props)];
 

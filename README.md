@@ -70,6 +70,7 @@ This version is currently under development.
   * Add title and page frame
   * Look into refactoring the term 'records' into something more meaningful
   * Add tests and improve error detection and handling
+  * Ensure schools are referred to by id and not name
 * Page - Reports
   * Verify everything is working
 * Page - Settings
