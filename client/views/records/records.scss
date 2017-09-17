@@ -16,16 +16,6 @@
         margin: 0 auto;
         border: 2px dashed #adadad;
         color: #adadad;
-        transition: all 0.3s;
-        &.accept {
-          background-color: rgba(green, 0.5);
-          color: white;
-        }
-        
-        &.reject {
-          background-color: rgba(red, 0.5);
-          color: white;
-        }
       }
     }
   }
