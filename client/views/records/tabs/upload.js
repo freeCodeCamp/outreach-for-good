@@ -134,6 +134,8 @@ class UploadTab extends React.Component {
               }}
 
             </Dropzone>}
+            {!this.state.selectedSchool
+              && <div className="dropzone" style={{opacity: 0.4}} />}
           </div>
         </div>
         {this.state.loadingValue > 0

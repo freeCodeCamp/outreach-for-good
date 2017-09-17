@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 
 import Dimensions from 'react-dimensions-cjs';
 import {Tabs, Tab} from 'material-ui/Tabs';
@@ -17,6 +18,10 @@ class RecordsPage extends React.Component {
   handleChangeTab = tab => this.setState({currentTab: tab});
 
   render() {
+    let viewport = {
+      width  : this.props.containerWidth - 20,
+      height : this.props.containerHeight - 48 - 80
+    };
     return (
       <Tabs
         style={{width: this.props.containerWidth}}
@@ -32,10 +37,7 @@ class RecordsPage extends React.Component {
           label="Manage"
           value="manage">
           <ManageTab
-            view={{
-              width  : this.props.containerWidth - 20,
-              height : this.props.containerHeight - 48 - 80
-            }}
+            viewport={viewport}
           />
         </Tab>
       </Tabs>
@@ -48,20 +50,13 @@ RecordsPage.propTypes = {
   containerHeight : PropTypes.number.isRequired
 };
 
-export const StudentRecords = ({ title, students }) =>
-<div className="column">
-  <h1>{title}</h1>
-  <ul>
-    {students.map((entry, i) =>
-      <li key={i}>
-        {entry}
-      </li>)}
-  </ul>
-</div>;
+function mapStateToProps() {
+  return {};
+}
 
-StudentRecords.propTypes = {
-  title    : PropTypes.string,
-  students : PropTypes.object
-};
+function mapDispatchToProps() {
+  return {};
+}
 
-export default (Dimensions({elementResize: true})(RecordsPage));
+export default connect(mapStateToProps, mapDispatchToProps)(
+  Dimensions({elementResize: true})(RecordsPage));
