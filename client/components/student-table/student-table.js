@@ -38,13 +38,13 @@ const StudentTable = props =>
         <TableBody displayRowCheckbox={false}>
           {props.students.map((item, i) =>
             <TableRow key={i}>
-              <TableRowColumn>{item.student.lastName}, {item.student.firstName}</TableRowColumn>
-              <TableRowColumn>{item.student.studentId}</TableRowColumn>
-              <TableRowColumn>{item.student.grade}</TableRowColumn>
-              <TableRowColumn>{item.entry.absences}</TableRowColumn>
-              <TableRowColumn>{item.entry.enrolled}</TableRowColumn>
-              <TableRowColumn>{item.entry.present}</TableRowColumn>
-              <TableRowColumn>{item.entry.tardies}</TableRowColumn>
+              <TableRowColumn>{item.student && item.student.lastName}, {item.student && item.student.firstName}</TableRowColumn>
+              <TableRowColumn>{item.student && item.student.studentId}</TableRowColumn>
+              <TableRowColumn>{item.student && item.student.grade}</TableRowColumn>
+              <TableRowColumn>{item.entry && item.entry.absences}</TableRowColumn>
+              <TableRowColumn>{item.entry && item.entry.enrolled}</TableRowColumn>
+              <TableRowColumn>{item.entry && item.entry.present}</TableRowColumn>
+              <TableRowColumn>{item.entry && item.entry.tardies}</TableRowColumn>
             </TableRow>
           )}
         </TableBody>

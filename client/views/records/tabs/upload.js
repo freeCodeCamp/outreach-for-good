@@ -15,13 +15,12 @@ import AbsenceRecordsTable from '../records-table';
 import UploadService from '../../../utils/upload-pdf/upload-pdf';
 
 class UploadTab extends React.Component {
-  state = {
-    initialDataLoaded : false,
-    loadingValue      : 0,
-    records           : null,
-    recordResults     : false,
-    date              : new Date()
-  };
+
+  constructor(props) {
+    super(props);
+
+    this.state = this.initialState;
+  }
 
   componentDidMount() {
     Promise.all([
@@ -29,6 +28,14 @@ class UploadTab extends React.Component {
       this.props.actions.getAllSchools()
     ]).then(this.setState({initialDataLoaded: true}));
   }
+
+  initialState = {
+    initialDataLoaded : false,
+    loadingValue      : 0,
+    records           : null,
+    recordResults     : false,
+    date              : new Date()
+  };
 
   /**
    * Fires when the school select is changed
@@ -78,7 +85,7 @@ class UploadTab extends React.Component {
     const {records} = this.state;
     records.date = this.state.date;
     this.props.actions.addRecord(records);
-    this.cancel();
+    this.setState({ ...this.initialState });
   }
 
   /**
