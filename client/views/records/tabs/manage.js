@@ -70,8 +70,13 @@ class ManageTab extends React.Component {
   updateData = nextProps => {
     console.log('updateData', nextProps);
     let schools = {};
-    schools.available = this.props.schools.map(school => school.name);
-    schools.selected = this.state.schools && this.state.schools.selected || schools.available[0];
+    schools.available = this.props.schools.map(school => ({name: school.name, id: school._id}))
+      .sort((a, b) => a.name > b.name ? 1 : -1);
+    schools.selected = this.state.schools && this.state.schools.selected || schools.available.first();
+    if(!this.state.schools) {
+      console.log(schools)
+      this.retrieveData('absenceRecords', schools.selected.id);
+    }
     let nextTable = this.state.table;
     nextTable = nextTable.updateSortCol(nextTable, '');
     nextTable = nextTable.buildIndexMap(nextTable, this.props.absenceRecords);
@@ -134,6 +139,11 @@ class ManageTab extends React.Component {
     this.setState({table: nextTable});
   }
 
+  // Given a table-row index number, return object containing all row data
+  getSelectedRowData = () => this.props.absenceRecords
+      .filter((v, i) => this.state.table.get('selectedIndex')
+      .indexOf(i) != -1);
+
   render() {
     if(!this.props.schools) {
       return null;
@@ -153,8 +163,11 @@ class ManageTab extends React.Component {
     buttons.push(localDefs.schoolSelectButton(this.state));
     buttons.push(localDefs.deleteRecordButton());
 
+    const pageTitle = this.state.schools && this.state.schools.selected ?
+      'Manage Records - ' + this.state.schools.selected.name : 'Manage Records';
+
     const page = {
-      title   : 'At Risk Students',
+      title   : pageTitle,
       columns : localDefs.recordsTableColumns,
       buttons
     };

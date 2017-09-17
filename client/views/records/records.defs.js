@@ -49,13 +49,13 @@ export const schoolSelectMenuItems = props => props &&
   props.available.map(school => ({
     text :
       <div>
-        {props.selected == school
+        {props.selected == school.name
           ? <i className="fa fa-check-square-o" />
           : <i className="fa fa-square-o" />
         }
-        &nbsp; {school}
+        &nbsp; {school.name}
       </div>,
-    actionID : {id: localActions.UPDATE_SCHOOL, school}
+    actionID : {id: localActions.UPDATE_SCHOOL, school: school.id}
   })) || [];
 
 export const deleteRecordButton = () =>
