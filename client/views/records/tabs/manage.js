@@ -39,7 +39,7 @@ class ManageTab extends React.Component {
 
   initClickActions = nextTable => {
     nextTable = table.addPopovers(nextTable, {
-      [localActions.UPDATE_SCHOOL] : false
+      [localActions.SCHOOL] : false
     });
     nextTable = table.addDialogs(nextTable, {
       [localActions.DELETE_RECORD] : false
@@ -63,17 +63,18 @@ class ManageTab extends React.Component {
   updateData = nextProps => {
     console.log('updateData', nextProps);
     let schools = {};
+    let loadResolved = true;
     schools.available = this.props.schools.map(school => ({name: school.name, id: school._id}))
       .sort((a, b) => a.name > b.name ? 1 : -1);
     schools.selected = this.state.schools && this.state.schools.selected || schools.available.first();
     if(!this.state.schools) {
-      console.log(schools)
       this.retrieveData('absenceRecords', schools.selected.id);
+      loadResolved = false;
     }
     let nextTable = this.state.table;
     nextTable = nextTable.updateSortCol(nextTable, '');
     nextTable = nextTable.buildIndexMap(nextTable, this.props.absenceRecords);
-    this.setState({table: nextTable, loadResolved: true, schools});
+    this.setState({table: nextTable, loadResolved, schools});
   }
 
 
@@ -98,8 +99,14 @@ class ManageTab extends React.Component {
     case 'buttonClick':
       nextTable = table.setSelectedRowData(this.state.table,
         this.getSelectedRowData());
-      if(data == localActions.UPDATE_SCHOOL) {
+      if(data == localActions.SCHOOL) {
         this.setState({table: table.handlePopoverButtonClick(nextTable, data, event)});
+
+      } else if(data && data.action == localActions.UPDATE_SCHOOL) {
+        this.retrieveData('absenceRecords', data.id);
+        const schools = {...this.state.schools, selected: {name: data.name, id: data.id}};
+        nextTable = table.resetPopovers(nextTable);
+        this.setState({table: nextTable, schools});
 
       } else if(data == localActions.DELETE_RECORD) {
         this.pendingApiCalls.push(localActions.DELETE_RECORD);
@@ -138,7 +145,7 @@ class ManageTab extends React.Component {
       .indexOf(i) != -1);
 
   render() {
-    if(!this.props.schools) {
+    if(!this.state.schools) {
       return null;
     }
     let buttons = [];
@@ -162,15 +169,19 @@ class ManageTab extends React.Component {
     };
 
     return (
-      <DataTableContainer
-        page={page}
-        data={this.props.absenceRecords}
-        view = {this.props.viewport}
-        table = {this.state.table}
-        loaded = {this.state.loadResolved}
-        clickHandler = {this.clickHandler}
-        withdrawnStudents = {this.props.withdrawnStudents}
-      />
+      <div>
+        {this.state.schools &&
+        <DataTableContainer
+          page={page}
+          data={this.props.absenceRecords}
+          view = {this.props.viewport}
+          table = {this.state.table}
+          loaded = {this.state.loadResolved}
+          clickHandler = {this.clickHandler}
+          withdrawnStudents = {this.props.withdrawnStudents}
+        />
+        }
+      </div>
     );
   }
 }

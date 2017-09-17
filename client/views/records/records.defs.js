@@ -42,10 +42,10 @@ export const schoolSelectButton = props =>
   new RaisedButtonModel({
     label     : 'School',
     className : 'table-button',
-    actionID  : localActions.UPDATE_SCHOOL,
+    actionID  : localActions.SCHOOL,
     disabled  : false,
     menu      : {
-      open : props.table.get('MuiPopovers').get(localActions.UPDATE_SCHOOL),
+      open : props.table.get('MuiPopovers').get(localActions.SCHOOL),
       item : schoolSelectMenuItems(props.schools)
     }
   });
@@ -54,13 +54,13 @@ export const schoolSelectMenuItems = props => props &&
   props.available.map(school => ({
     text :
       <div>
-        {props.selected == school.name
+        {props.selected && props.selected.name == school.name
           ? <i className="fa fa-check-square-o" />
           : <i className="fa fa-square-o" />
         }
         &nbsp; {school.name}
       </div>,
-    actionID : {id: localActions.UPDATE_SCHOOL, school: school.id}
+    actionID : {action: localActions.UPDATE_SCHOOL, name: school.name, id: school.id}
   })) || [];
 
 export const deleteRecordButton = () =>

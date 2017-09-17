@@ -22,7 +22,7 @@ class RecordsPage extends React.Component {
     };
     return (
       <Tabs
-        style={{width: viewport.width}}
+        style={{width: this.props.containerWidth}}
         value={this.state.currentTab}
         onChange={tab => {
           this.setState({currentTab: tab});
@@ -51,9 +51,11 @@ RecordsPage.propTypes = {
 };
 
 function mapStateToProps() {
+  return {};
 }
 
 function mapDispatchToProps() {
+  return {};
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(
