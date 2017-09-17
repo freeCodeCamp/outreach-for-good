@@ -7,36 +7,36 @@ var Student = require('../student/student.model');
 var Outreach = require('../student/outreach/outreach.model');
 
 var AbsenceRecordSchema = new Schema({
-  schoolYear: {type: String, required: true},
-  school: {type: Schema.Types.ObjectId, ref: 'School', required: true},
-  date: {type: Date, required: true},
-  entries: [{
-    student: {type: Schema.Types.ObjectId, ref: 'Student', required: true},
-    absences: {type: Number, required: true},
-    absencesDelta: {type: Number, required: true},
-    tardies: {type: Number, required: true},
-    tardiesDelta: {type: Number, required: true},
-    present: {type: Number, required: true},
-    enrolled: {type: Number, required: true}
+  schoolYear : {type: String, required: true},
+  school     : {type: Schema.Types.ObjectId, ref: 'School', required: true},
+  date       : {type: Date, required: true},
+  entries    : [{
+    student       : {type: Schema.Types.ObjectId, ref: 'Student', required: true},
+    absences      : {type: Number, required: true},
+    absencesDelta : {type: Number, required: true},
+    tardies       : {type: Number, required: true},
+    tardiesDelta  : {type: Number, required: true},
+    present       : {type: Number, required: true},
+    enrolled      : {type: Number, required: true}
   }],
-  missingEntries: [{
-    student: {type: Schema.Types.ObjectId, ref: 'Student', required: true},
-    absences: {type: Number, required: true},
-    absencesDelta: {type: Number, required: true},
-    tardies: {type: Number, required: true},
-    tardiesDelta: {type: Number, required: true},
-    present: {type: Number, required: true},
-    enrolled: {type: Number, required: true},
-    date: {type: Date, required: true}
+  missingEntries : [{
+    student       : {type: Schema.Types.ObjectId, ref: 'Student', required: true},
+    absences      : {type: Number, required: true},
+    absencesDelta : {type: Number, required: true},
+    tardies       : {type: Number, required: true},
+    tardiesDelta  : {type: Number, required: true},
+    present       : {type: Number, required: true},
+    enrolled      : {type: Number, required: true},
+    date          : {type: Date, required: true}
   }],
-  newMissingStudents: [{type: Schema.Types.ObjectId, ref: 'Student'}],
-  createdStudents: [{type: Schema.Types.ObjectId, ref: 'Student'}]
+  newMissingStudents : [{type: Schema.Types.ObjectId, ref: 'Student'}],
+  createdStudents    : [{type: Schema.Types.ObjectId, ref: 'Student'}]
 });
 
 function deleteCreatedStudents(students) {
   var promises = _.map(students, function(studentId) {
     return Student.findById(studentId).exec(function(err, student) {
-      if (err) throw new Error(err);
+      if(err) throw new Error(err);
       return student.remove();
     });
   });

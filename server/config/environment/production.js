@@ -23,8 +23,8 @@ module.exports = {
   },
 
   // Raven connection options
-  raven: {
-    dsn:    process.env.RAVEN_DSN ||
-            undefined
+  raven : {
+    dsn : process.env.RAVEN_DSN
+            || undefined
   }
 };

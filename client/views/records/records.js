@@ -14,14 +14,14 @@ class RecordsPage extends React.Component {
     this.state = {currentTab: 'upload'};
   }
 
+  handleChangeTab = tab => this.setState({currentTab: tab});
+
   render() {
     return (
       <Tabs
         style={{width: this.props.containerWidth}}
         value={this.state.currentTab}
-        onChange={tab => {
-          this.setState({currentTab: tab});
-        }}
+        onChange={this.handleChangeTab}
         >
         <Tab
           label="Upload"

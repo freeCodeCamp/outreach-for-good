@@ -39,6 +39,8 @@ const ChronicallyAbsentTab = ({tabData, ...props}) => {
 ChronicallyAbsentTab.propTypes = {
   view    : PropTypes.object.isRequired,
   tabData : PropTypes.object,
+  table   : PropTypes.object,
+  tabName : PropTypes.string
 };
 
 export default ChronicallyAbsentTab;

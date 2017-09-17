@@ -31,7 +31,7 @@ See [tools/vagrant](https://github.com/freeCodeCamp/child-first-authority/tree/m
 
 This app contains npm scripts for easy deployment to Heroku.
 
-The env variables that need to be set:
+The env variables that need to be set in server/config/local.env:
 
 - APP_SECRET = *SECRET*
 - DOMAIN = *SOME HTTPS DOMAIN*
