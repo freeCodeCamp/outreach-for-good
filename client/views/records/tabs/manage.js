@@ -12,6 +12,7 @@ import * as localDefs from '../records.defs';
 import DataTableContainer from '../../../components/data-table/data-table-container';
 import DeleteDialog from '../../../components/delete-dialog/delete-dialog';
 import SchoolSelect from '../../../components/school-select/school-select';
+import StudentRecordTable from '../../../components/student-record-table/student-record-table';
 
 import TableModel from '../../../models/table';
 
@@ -167,6 +168,7 @@ class ManageTab extends React.Component {
       columns : localDefs.recordsTableColumns,
       buttons
     };
+    console.log(this.props.records.latest[this.state.selected] && this.props.records.latest[this.state.selected].entries);
 
     return (
       <div>
@@ -181,8 +183,11 @@ class ManageTab extends React.Component {
           withdrawnStudents = {this.props.withdrawnStudents}
         />
         }
-        {this.state.selected &&
-          <span>{this.state.selected}</span>
+        {this.state.selected && this.props.records.latest[this.state.selected] &&
+          <StudentRecordTable
+            studentRecords={this.props.records.latest[this.state.selected] &&
+            this.props.records.latest[this.state.selected].entries}
+          />
         }
       </div>
     );

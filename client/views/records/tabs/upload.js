@@ -168,7 +168,7 @@ UploadTab.propTypes = {
   addRecord      : PropTypes.func,
   absenceRecords : PropTypes.object.isRequired,
   actions        : PropTypes.object.isRequired,
-  records        : PropTypes.array.isRequired
+  records        : PropTypes.object
 };
 
 function mapStateToProps(state) {

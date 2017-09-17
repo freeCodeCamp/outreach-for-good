@@ -15,15 +15,15 @@ const StudentRecordTable = props =>
     </tr>
   </thead>
   <tbody>
-    {props.studentRecords.forEach(record =>
-    <tr>
-      <td data-title="_id">{record.id}</td>
-      <td data-title="Absences">{record.id}</td>
-      <td data-title="Δ Absences">{record.id}</td>
-      <td data-title="Tardies">{record.id}</td>
-      <td data-title="Δ Tardies">{record.id}</td>
-      <td data-title="Present">{record.id}</td>
-      <td data-title="Enrolled">{record.id}</td>
+    {props.studentRecords.map(record =>
+    <tr key={record._id}>
+      <td data-title="Student Id">{record.student && record.student.studentId}</td>
+      <td data-title="Absences">{record.absences}</td>
+      <td data-title="Δ Absences">{record.absencesDelta}</td>
+      <td data-title="Tardies">{record.tardies}</td>
+      <td data-title="Δ Tardies">{record.tardiesDelta}</td>
+      <td data-title="Present">{record.present}</td>
+      <td data-title="Enrolled">{record.enrolled}</td>
     </tr>
     )}
   </tbody>

@@ -4,34 +4,29 @@ import AbsenceRecordsApi from '../api/absence-records';
 import AbsenceRecordListModel from '../models/absence-record-list';
 
 //ACTIONS
-const CHANGE_TAB = 'CHANGE_TAB';
 const FETCH_CURRENT_RECORD_SUCCESS = 'FETCH_CURRENT_RECORD_SUCCESS';
 const ADD_RECORD_SUCCESS = 'ADD_RECORD_SUCCESS';
 const REMOVE_RECORD_SUCCESS = 'REMOVE_RECORD_SUCCESS';
 const LOAD_ABSENCE_RECORD_LIST_SUCCESS = 'LOAD_ABSENCE_RECORD_LIST_SUCCESS';
 
 //REDUCER
-const initialState = {
-  view : {
-    currentTab : 'upload'
-  },
-  current : []
-};
+const initialState = {};
 export default function recordsReducer(state = initialState, action) {
   switch (action.type) {
-  case CHANGE_TAB: {
-    return {
-      ...state,
-      view : {
-        currentTab : action.currentTab
-      }
-    };
-  }
+
   case FETCH_CURRENT_RECORD_SUCCESS: {
-    let current = action.current;
+    let latest = {};
+    action.latestRecords.forEach(record => {
+      latest[record.recordId] = {
+        _id        : record._id,
+        schoolYear : record.schoolYear,
+        date       : record.date,
+        entries    : record.entries
+      }
+    });
     return {
       ...state,
-      current
+      latest
     };
   }
 
@@ -55,18 +50,11 @@ export default function recordsReducer(state = initialState, action) {
 }
 
 //ACTION CREATORS
-export function changeTab(tab) {
-  return {
-    type       : CHANGE_TAB,
-    currentTab : tab
-  };
-}
-
 export function fetchRecords() {
   return dispatch => AbsenceRecordsApi.fetchRecords()
-    .then(current => dispatch({
+    .then(latestRecords => dispatch({
       type : FETCH_CURRENT_RECORD_SUCCESS,
-      current
+      latestRecords
     }));
 }
 
