@@ -41,7 +41,6 @@ class UploadTab extends React.Component {
    * Fires when the school select is changed
    */
   changeSchool = (e, i, selectedSchool) => {
-    console.log(selectedSchool.toJS());
     this.setState({ selectedSchool });
   }
 
@@ -58,7 +57,6 @@ class UploadTab extends React.Component {
 
       uploadService.getRecords()
         .then(({records}) => {
-          console.log(records);
           this.setState({ records });
         });
     }

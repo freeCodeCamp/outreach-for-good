@@ -48,7 +48,6 @@ class ManageTab extends React.Component {
   }
 
   retrieveData = (data, schoolId) => {
-    console.log('retrieveData', data);
     switch (data) {
     case 'absenceRecords':
       this.props.absenceRecordActions.fetchSchoolRecordList(schoolId).then(() => this.updateData());
@@ -61,7 +60,6 @@ class ManageTab extends React.Component {
   }
 
   updateData = nextProps => {
-    console.log('updateData', nextProps);
     let schools = {};
     let loadResolved = true;
     schools.available = this.props.schools.map(school => ({name: school.name, id: school._id}))
