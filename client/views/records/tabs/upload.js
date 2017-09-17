@@ -15,18 +15,27 @@ import AbsenceRecordsTable from '../records-table';
 import UploadService from '../../../utils/upload-pdf/upload-pdf';
 
 class UploadTab extends React.Component {
-  state = {
-    loadingState  : 'determinate',
-    loadingValue  : 0,
-    record        : null,
-    recordResults : false,
-    date          : new Date()
-  };
+
+  constructor(props) {
+    super(props);
+
+    this.state = this.initialState;
+  }
 
   componentDidMount() {
-    this.props.actions.fetchRecords();
-    this.props.actions.getAllSchools();
+    Promise.all([
+      this.props.actions.fetchRecords(),
+      this.props.actions.getAllSchools()
+    ]).then(this.setState({initialDataLoaded: true}));
   }
+
+  initialState = {
+    initialDataLoaded : false,
+    loadingValue      : 0,
+    records           : null,
+    recordResults     : false,
+    date              : new Date()
+  };
 
   /**
    * Fires when the school select is changed
@@ -40,15 +49,16 @@ class UploadTab extends React.Component {
    */
   changeFile = accepted => {
     if(accepted && this.state.selectedSchool) {
-      let school = this.state.selectedSchool.toJS();
-      let previousRecord = this.props.records.current
+      const school = this.state.selectedSchool.toJS();
+      const previousRecord = this.props.records
         .filter(record => record.school._id === school._id)[0];
 
       let uploadService = new UploadService(school, previousRecord, accepted[0]);
 
-      uploadService.getRecord().then(({ record }) => {
-        this.setState({ record });
-      });
+      uploadService.getRecords()
+        .then(({records}) => {
+          this.setState({ records });
+        });
     }
   }
 
@@ -59,21 +69,28 @@ class UploadTab extends React.Component {
     this.setState({ date });
   }
 
+  minDate = () => {
+    let currentRecord = this.props.records.filter(r => r.school._id === this.state.selectedSchool.get('_id'))[0];
+    let recordDate = new Date(currentRecord.date);
+    return new Date(recordDate.setDate(recordDate.getDate() + 1));
+  }
+
+
   /**
    * Action to post absence record
    */
   confirm = () => {
-    let record = this.state.record;
-    record.date = this.state.date;
-    this.props.actions.addRecord(record);
-    this.cancel();
+    const {records} = this.state;
+    records.date = this.state.date;
+    this.props.actions.addRecord(records);
+    this.setState({ ...this.initialState });
   }
 
   /**
    * Removes the parsed record
    */
   cancel = () => {
-    this.setState({ record: null, loadingValue: 0, loadingState: 'determinate' });
+    this.setState({ records: null, loadingValue: 0 });
   }
 
   /**
@@ -93,9 +110,10 @@ class UploadTab extends React.Component {
           <div className="column">
             <SchoolSelect
               value={this.state.selectedSchool}
-              schools={this.props.schools}
+              schools={this.props.schools.sort((a, b) => a.name > b.name ? 1 : -1)}
               changeSchool={this.changeSchool}
               fullWidth
+              disabled={!this.state.initialDataLoaded}
             />
 
             {this.state.selectedSchool
@@ -106,6 +124,7 @@ class UploadTab extends React.Component {
               container="inline"
               mode="landscape"
               maxDate={new Date()}
+              minDate={this.minDate()}
               fullWidth
             />}
 
@@ -120,12 +139,13 @@ class UploadTab extends React.Component {
               <h2>Click Here<br />or<br />Drag a PDF</h2>
             </Dropzone>}
             {!this.state.selectedSchool
-              && <div className="dropzone" style={{opacity: 0.4}} />}
+              && <div className="dropzone" style={{opacity: 0.4}} />
+            }
           </div>
         </div>
         {this.state.loadingValue > 0
           && <LinearProgress
-            mode={this.state.loadingState}
+            mode='determinate'
             value={this.state.loadingValue}
           />}
         {this.state.record
@@ -145,13 +165,13 @@ UploadTab.propTypes = {
   addRecord      : PropTypes.func,
   absenceRecords : PropTypes.object.isRequired,
   actions        : PropTypes.object.isRequired,
-  records        : PropTypes.object.isRequired
+  records        : PropTypes.array.isRequired
 };
 
 function mapStateToProps(state) {
   return {
     absenceRecords : state.absenceRecords,
-    records        : state.records,
+    records        : state.records.current,
     schools        : state.schools
   };
 }
