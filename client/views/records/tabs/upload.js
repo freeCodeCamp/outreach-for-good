@@ -53,7 +53,7 @@ class UploadTab extends React.Component {
       const previousRecord = this.props.records
         .filter(record => record.school._id === school._id)[0];
 
-      const uploadService = new UploadService(school, previousRecord, accepted[0]);
+      let uploadService = new UploadService(school, previousRecord, accepted[0]);
 
       uploadService.getRecords()
         .then(({records}) => {
@@ -135,21 +135,8 @@ class UploadTab extends React.Component {
               onDrop={this.changeFile}
               multiple={false}
               accept="application/pdf"
-              className="dropzone"
-              activeClassName="accept"
-              rejectClassName="reject">
-              {({ isDragActive, isDragReject, acceptedFiles, rejectedFiles }) => {
-                if(isDragActive) {
-                  return <i className="fa fa-check fa-5x" />;
-                }
-                if(isDragReject) {
-                  return <i className="fa fa-times fa-5x" />;
-                }
-                return acceptedFiles.length || rejectedFiles.length
-                  ? <h2>{acceptedFiles[0].name}</h2>
-                  : <h2>Click Here<br />or<br />Drag a PDF</h2>;
-              }}
-
+              className="dropzone">
+              <h2>Click Here<br />or<br />Drag a PDF</h2>
             </Dropzone>}
             {!this.state.selectedSchool
               && <div className="dropzone" style={{opacity: 0.4}} />
@@ -161,11 +148,11 @@ class UploadTab extends React.Component {
             mode='determinate'
             value={this.state.loadingValue}
           />}
-        {this.state.records
+        {this.state.record
           && <AbsenceRecordsTable
             confirm={this.confirm}
             cancel={this.cancel}
-            record={this.state.records}
+            record={this.state.record}
             uploadTab
           />}
       </div>
