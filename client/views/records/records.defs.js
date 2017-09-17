@@ -25,7 +25,7 @@ export const recordsTableColumns = [
     flexGrow : 1
   },
   {
-    title    : 'Total New Missing Students',
+    title    : 'Missing Students',
     id       : 'newMissingStudents',
     width    : 100,
     flexGrow : 1

@@ -1,10 +1,14 @@
+import { List, fromJS } from 'immutable';
+
 import AbsenceRecordsApi from '../api/absence-records';
+import AbsenceRecordListModel from '../models/absence-record-list';
 
 //ACTIONS
 const CHANGE_TAB = 'CHANGE_TAB';
 const FETCH_CURRENT_RECORD_SUCCESS = 'FETCH_CURRENT_RECORD_SUCCESS';
 const ADD_RECORD_SUCCESS = 'ADD_RECORD_SUCCESS';
 const REMOVE_RECORD_SUCCESS = 'REMOVE_RECORD_SUCCESS';
+const LOAD_ABSENCE_RECORD_LIST_SUCCESS = 'LOAD_ABSENCE_RECORD_LIST_SUCCESS';
 
 //REDUCER
 const initialState = {
@@ -30,6 +34,14 @@ export default function recordsReducer(state = initialState, action) {
       current
     };
   }
+
+  case LOAD_ABSENCE_RECORD_LIST_SUCCESS:
+    return {
+      ...state,
+      [action.schoolId] : fromJS(action.recordList)
+        .map(recordList => new AbsenceRecordListModel(recordList))
+    };
+
   case ADD_RECORD_SUCCESS: {
     return {...state};
   }
@@ -56,6 +68,23 @@ export function fetchRecords() {
       type : FETCH_CURRENT_RECORD_SUCCESS,
       current
     }));
+}
+
+/**
+ * Get list of absence records for the most recent
+ *   - untested
+ */
+export function fetchSchoolRecordList(schoolId) {
+  return function(dispatch) {
+    return AbsenceRecordsApi.fetchSchoolRecordList(schoolId).then(recordList =>
+      dispatch({
+        type : LOAD_ABSENCE_RECORD_LIST_SUCCESS,
+        schoolId,
+        recordList
+      })
+    )
+    .catch(err => handleError(err, dispatch));
+  };
 }
 
 // export function addRecord(record) {

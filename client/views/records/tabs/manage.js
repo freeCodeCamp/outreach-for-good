@@ -4,7 +4,7 @@ import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import {List} from 'immutable';
 
-import * as absenceRecordActions from '../../../modules/absence-record';
+import * as recordsActions from '../../../modules/records';
 import * as schoolActions from '../../../modules/school';
 import * as localActions from '../records.actions';
 import * as localDefs from '../records.defs';
@@ -36,6 +36,7 @@ class ManageTab extends React.Component {
   }
 
   pendingApiCalls = [];
+  schoolRecords = List([]);
 
   initClickActions = nextTable => {
     nextTable = table.addPopovers(nextTable, {
@@ -49,8 +50,8 @@ class ManageTab extends React.Component {
 
   retrieveData = (data, schoolId) => {
     switch (data) {
-    case 'absenceRecords':
-      this.props.absenceRecordActions.fetchSchoolRecordList(schoolId).then(() => this.updateData());
+    case 'records':
+      this.props.recordsActions.fetchSchoolRecordList(schoolId).then(() => this.updateData());
       break;
     case 'schools':
       this.props.schoolActions.getAllSchools().then(() => this.updateData());
@@ -66,12 +67,14 @@ class ManageTab extends React.Component {
       .sort((a, b) => a.name > b.name ? 1 : -1);
     schools.selected = this.state.schools && this.state.schools.selected || schools.available.first();
     if(!this.state.schools) {
-      this.retrieveData('absenceRecords', schools.selected.id);
+      this.retrieveData('records', schools.selected.id);
       loadResolved = false;
+    } else {
+      this.schoolRecords = this.props.records[schools.selected.id];
     }
     let nextTable = this.state.table;
     nextTable = nextTable.updateSortCol(nextTable, '');
-    nextTable = nextTable.buildIndexMap(nextTable, this.props.absenceRecords);
+    nextTable = nextTable.buildIndexMap(nextTable, this.schoolRecords);
     this.setState({table: nextTable, loadResolved, schools});
   }
 
@@ -101,7 +104,7 @@ class ManageTab extends React.Component {
         this.setState({table: table.handlePopoverButtonClick(nextTable, data, event)});
 
       } else if(data && data.action == localActions.UPDATE_SCHOOL) {
-        this.retrieveData('absenceRecords', data.id);
+        this.retrieveData('records', data.id);
         const schools = {...this.state.schools, selected: {name: data.name, id: data.id}};
         nextTable = table.resetPopovers(nextTable);
         this.setState({table: nextTable, schools});
@@ -122,8 +125,9 @@ class ManageTab extends React.Component {
   } // End of: clickHandler()
 
   handleToggleSelectedRow = (nextTable, index) => {
-    nextTable = table.toggleSelectedRowIndex(this.state.table, index);
-    this.setState({table: nextTable});
+    nextTable = table.toggleSingleSelectedRowIndex(this.state.table, index);
+    let selectedData = this.getSelectedRowData(nextTable);
+    this.setState({table: nextTable, selected: selectedData.first() && selectedData.first().get('recordId')});
   }
 
   handleInterfaceButtonClick = nextTable => {
@@ -136,8 +140,8 @@ class ManageTab extends React.Component {
   }
 
   // Given a table-row index number, return object containing all row data
-  getSelectedRowData = () => this.props.absenceRecords
-      .filter((v, i) => this.state.table.get('selectedIndex')
+  getSelectedRowData = (nextTable = this.state.table) => this.schoolRecords
+      .filter((v, i) => nextTable.get('selectedIndex')
       .indexOf(i) != -1);
 
   render() {
@@ -169,7 +173,7 @@ class ManageTab extends React.Component {
         {this.state.schools &&
         <DataTableContainer
           page={page}
-          data={this.props.absenceRecords}
+          data={this.schoolRecords}
           view = {this.props.viewport}
           table = {this.state.table}
           loaded = {this.state.loadResolved}
@@ -177,30 +181,33 @@ class ManageTab extends React.Component {
           withdrawnStudents = {this.props.withdrawnStudents}
         />
         }
+        {this.state.selected &&
+          <span>{this.state.selected}</span>
+        }
       </div>
     );
   }
 }
 
 ManageTab.propTypes = {
-  absenceRecordActions : PropTypes.object.isRequired,
-  schoolActions        : PropTypes.object.isRequired,
-  absenceRecords       : PropTypes.instanceOf(List),
-  schools              : PropTypes.object,
+  recordsActions : PropTypes.object.isRequired,
+  schoolActions  : PropTypes.object.isRequired,
+  records        : PropTypes.object,
+  schools        : PropTypes.object,
 };
 
 
 function mapStateToProps(state) {
   return {
-    absenceRecords : state.absenceRecords,
-    schools        : state.schools
+    records : state.records,
+    schools : state.schools
   };
 }
 
 function mapDispatchToProps(dispatch) {
   return {
-    absenceRecordActions : bindActionCreators(absenceRecordActions, dispatch),
-    schoolActions        : bindActionCreators(schoolActions, dispatch)
+    recordsActions : bindActionCreators(recordsActions, dispatch),
+    schoolActions  : bindActionCreators(schoolActions, dispatch)
   };
 }
 

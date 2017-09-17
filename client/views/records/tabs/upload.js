@@ -69,6 +69,9 @@ class UploadTab extends React.Component {
     this.setState({ date });
   }
 
+  /**
+   * Users cannot upload records older than the most recent record
+   */
   minDate = () => {
     let currentRecord = this.props.records.filter(r => r.school._id === this.state.selectedSchool.get('_id'))[0];
     let recordDate = new Date(currentRecord.date);
