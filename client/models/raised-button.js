@@ -16,13 +16,13 @@ export const RaisedButton = Immutable.Record({
 class RaisedButtonModel extends RaisedButton {
 
   getActionButton(label, onTouchTap, key) {
-    return <FlatButton
+    return (<FlatButton
       label={label}
       primary
       onTouchTap={onTouchTap}
       value={label}
       key={key}
-    />;
+    />);
   }
 }
 
