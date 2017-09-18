@@ -175,7 +175,7 @@ class ManageTab extends React.Component {
         {this.state.schools &&
         <DataTableContainer
           page={page}
-          data={this.schoolRecords}
+          data={this.schoolRecords.toList()}
           view = {this.props.viewport}
           table = {this.state.table}
           loaded = {this.state.loadResolved}

@@ -15,27 +15,22 @@ export default function recordsReducer(state = initialState, action) {
   switch (action.type) {
 
   case FETCH_CURRENT_RECORD_SUCCESS: {
-    let latest = {};
-    action.latestRecords.forEach(record => {
-      latest[record.recordId] = {
-        _id        : record._id,
-        schoolYear : record.schoolYear,
-        date       : record.date,
-        entries    : record.entries
-      }
-    });
     return {
       ...state,
-      latest
+      latest : action.latestRecords
     };
   }
 
-  case LOAD_ABSENCE_RECORD_LIST_SUCCESS:
+  case LOAD_ABSENCE_RECORD_LIST_SUCCESS: {
+    let records = {};
+    action.recordList.forEach(record => {
+      records[record.recordId] = record;
+    });
     return {
       ...state,
-      [action.schoolId] : fromJS(action.recordList)
-        .map(recordList => new AbsenceRecordListModel(recordList))
+      [action.schoolId] : fromJS(records).map(recordList => new AbsenceRecordListModel(recordList))
     };
+  }
 
   case ADD_RECORD_SUCCESS: {
     return {...state};
