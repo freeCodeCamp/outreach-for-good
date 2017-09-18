@@ -168,13 +168,13 @@ UploadTab.propTypes = {
   addRecord      : PropTypes.func,
   absenceRecords : PropTypes.object.isRequired,
   actions        : PropTypes.object.isRequired,
-  records        : PropTypes.object
+  records        : PropTypes.array
 };
 
 function mapStateToProps(state) {
   return {
     absenceRecords : state.absenceRecords,
-    records        : state.records.current,
+    records        : state.records.latest,
     schools        : state.schools
   };
 }
