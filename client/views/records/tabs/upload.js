@@ -55,7 +55,7 @@ class UploadTab extends React.Component {
 
       let uploadService = new UploadService(school, previousRecord, accepted[0]);
 
-      uploadService.getRecords()
+      uploadService.getRecord()
         .then(({records}) => {
           this.setState({ records });
         });
