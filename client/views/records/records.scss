@@ -67,3 +67,19 @@ $alertred: #f2dede;
 .section-label {
   color: #3c763d;
 }
+
+.student-record-table-container {
+  padding: 30px;
+}
+
+.student-record-table {
+  width: 100%;
+
+  tr {
+    border-bottom: 1px solid #DDDDDD;
+
+    td {
+      padding: 4px;
+    }
+  }
+}

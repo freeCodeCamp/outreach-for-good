@@ -8,7 +8,7 @@ import * as tableActions from '../../components/data-table/data-table.actions';
 export const recordsTableColumns = [
   {
     title    : 'Date',
-    id       : 'date',
+    id       : 'dateString',
     width    : 200,
     flexGrow : 1
   },
@@ -20,19 +20,19 @@ export const recordsTableColumns = [
   },
   {
     title    : 'Total Entries',
-    id       : 'entries',
+    id       : 'entryCount',
     width    : 100,
     flexGrow : 1
   },
   {
-    title    : 'Total New Missing Students',
-    id       : 'newMissingStudents',
+    title    : 'Missing Students',
+    id       : 'missingStudentsCount',
     width    : 100,
     flexGrow : 1
   },
   {
     title    : 'Created Students',
-    id       : 'createdStudents',
+    id       : 'createdStudentsCount',
     width    : 100,
     flexGrow : 1
   }

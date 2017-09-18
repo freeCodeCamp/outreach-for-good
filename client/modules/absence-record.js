@@ -2,13 +2,11 @@ import { List, fromJS } from 'immutable';
 
 import AbsenceRecord from '../models/absence-record';
 import AbsenceRecordsApi from '../api/absence-records';
-import AbsenceRecordListModel from '../models/absence-record-list';
 import { validate } from './session';
 import { openSnackbar } from './view';
 
 //ACTIONS
 const LOAD_ABSENCE_RECORD_SUCCESS = 'LOAD_ABSENCE_RECORD_SUCCESS';
-const LOAD_ABSENCE_RECORD_LIST_SUCCESS = 'LOAD_ABSENCE_RECORD_LIST_SUCCESS';
 
 //REDUCER
 const initialState = new List();
@@ -33,9 +31,6 @@ export default (state = initialState, action) => {
         .map(record => new AbsenceRecord(record)
       ));
 
-  case LOAD_ABSENCE_RECORD_LIST_SUCCESS:
-    return fromJS(action.recordList)
-        .map(recordList => new AbsenceRecordListModel(recordList));
   default:
     return state;
   }
@@ -79,22 +74,6 @@ export function fetchRecordsList(yearFilter) {
   return function(dispatch) {
     return AbsenceRecordsApi.fetchRecordsList(yearFilter).then(res =>
       dispatch(loadRecordsSuccess(res))
-    )
-    .catch(err => handleError(err, dispatch));
-  };
-}
-
-/**
- * Get list of absence records for the most recent
- *   - untested
- */
-export function fetchSchoolRecordList(schoolId) {
-  return function(dispatch) {
-    return AbsenceRecordsApi.fetchSchoolRecordList(schoolId).then(recordList =>
-      dispatch({
-        type : LOAD_ABSENCE_RECORD_LIST_SUCCESS,
-        recordList
-      })
     )
     .catch(err => handleError(err, dispatch));
   };

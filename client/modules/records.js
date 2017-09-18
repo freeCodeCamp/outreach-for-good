@@ -1,35 +1,37 @@
+import { List, fromJS } from 'immutable';
+
 import AbsenceRecordsApi from '../api/absence-records';
+import AbsenceRecordListModel from '../models/absence-record-list';
 
 //ACTIONS
-const CHANGE_TAB = 'CHANGE_TAB';
 const FETCH_CURRENT_RECORD_SUCCESS = 'FETCH_CURRENT_RECORD_SUCCESS';
 const ADD_RECORD_SUCCESS = 'ADD_RECORD_SUCCESS';
 const REMOVE_RECORD_SUCCESS = 'REMOVE_RECORD_SUCCESS';
+const LOAD_ABSENCE_RECORD_LIST_SUCCESS = 'LOAD_ABSENCE_RECORD_LIST_SUCCESS';
 
 //REDUCER
-const initialState = {
-  view : {
-    currentTab : 'upload'
-  },
-  current : []
-};
+const initialState = {};
 export default function recordsReducer(state = initialState, action) {
   switch (action.type) {
-  case CHANGE_TAB: {
-    return {
-      ...state,
-      view : {
-        currentTab : action.currentTab
-      }
-    };
-  }
+
   case FETCH_CURRENT_RECORD_SUCCESS: {
-    let current = action.current;
     return {
       ...state,
-      current
+      latest : action.latestRecords
     };
   }
+
+  case LOAD_ABSENCE_RECORD_LIST_SUCCESS: {
+    let records = {};
+    action.recordList.forEach(record => {
+      records[record.recordId] = record;
+    });
+    return {
+      ...state,
+      [action.schoolId] : fromJS(records).map(recordList => new AbsenceRecordListModel(recordList))
+    };
+  }
+
   case ADD_RECORD_SUCCESS: {
     return {...state};
   }
@@ -43,19 +45,29 @@ export default function recordsReducer(state = initialState, action) {
 }
 
 //ACTION CREATORS
-export function changeTab(tab) {
-  return {
-    type       : CHANGE_TAB,
-    currentTab : tab
-  };
-}
-
 export function fetchRecords() {
   return dispatch => AbsenceRecordsApi.fetchRecords()
-    .then(current => dispatch({
+    .then(latestRecords => dispatch({
       type : FETCH_CURRENT_RECORD_SUCCESS,
-      current
+      latestRecords
     }));
+}
+
+/**
+ * Get list of absence records for the most recent
+ *   - untested
+ */
+export function fetchSchoolRecordList(schoolId) {
+  return function(dispatch) {
+    return AbsenceRecordsApi.fetchSchoolRecordList(schoolId).then(recordList =>
+      dispatch({
+        type : LOAD_ABSENCE_RECORD_LIST_SUCCESS,
+        schoolId,
+        recordList
+      })
+    )
+    .catch(err => handleError(err, dispatch));
+  };
 }
 
 // export function addRecord(record) {

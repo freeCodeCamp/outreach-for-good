@@ -297,6 +297,17 @@ class TableModel extends Table {
     }
   }
 
+  // Only allow one row to be selected
+  toggleSingleSelectedRowIndex(state, dataIndex) {
+    let target = state.get('selectedIndex').indexOf(dataIndex);
+    if(target == -1) { // target was not selected
+      //let index = state.get('indexMap').get(dataIndex);
+      return state.update('selectedIndex', i => i.clear().push(dataIndex));
+    } else {
+      return state.update('selectedIndex', i => i.clear());
+    }
+  }
+
   // Returns `selectedIndex` mapped to table sort order
   selectionToMappedIndicies(state, _indexMap) {
     let indexMap = _indexMap || state.get('indexMap');
