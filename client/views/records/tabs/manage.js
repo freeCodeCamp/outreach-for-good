@@ -71,7 +71,7 @@ class ManageTab extends React.Component {
       this.retrieveData('records', schools.selected.id);
       loadResolved = false;
     } else {
-      this.schoolRecords = this.props.records[schools.selected.id];
+      this.schoolRecords = this.props.records[schools.selected.id].toList();
     }
     let nextTable = this.state.table;
     nextTable = nextTable.updateSortCol(nextTable, '');
@@ -128,7 +128,8 @@ class ManageTab extends React.Component {
   handleToggleSelectedRow = (nextTable, index) => {
     nextTable = table.toggleSingleSelectedRowIndex(this.state.table, index);
     let selectedData = this.getSelectedRowData(nextTable);
-    this.setState({table: nextTable, selected: selectedData.first() && selectedData.first().get('recordId')});
+    console.log(selectedData.first() && selectedData.first().get('recordId'));
+    this.setState({table: nextTable, selectedRecord: selectedData.first() && selectedData.first().get('recordId')});
   }
 
   handleInterfaceButtonClick = nextTable => {
@@ -168,14 +169,16 @@ class ManageTab extends React.Component {
       columns : localDefs.recordsTableColumns,
       buttons
     };
-    console.log(this.props.records.latest[this.state.selected] && this.props.records.latest[this.state.selected].entries);
+
+    const selectedRecords = this.state.schools.selected && this.props.records[this.state.schools.selected.id] &&
+      this.props.records[this.state.schools.selected.id].getIn([this.state.selectedRecord, 'entries']);
 
     return (
       <div>
         {this.state.schools &&
         <DataTableContainer
           page={page}
-          data={this.schoolRecords.toList()}
+          data={this.schoolRecords}
           view = {this.props.viewport}
           table = {this.state.table}
           loaded = {this.state.loadResolved}
@@ -183,10 +186,9 @@ class ManageTab extends React.Component {
           withdrawnStudents = {this.props.withdrawnStudents}
         />
         }
-        {this.state.selected && this.props.records.latest[this.state.selected] &&
+        {selectedRecords &&
           <StudentRecordTable
-            studentRecords={this.props.records.latest[this.state.selected] &&
-            this.props.records.latest[this.state.selected].entries}
+            studentRecords={selectedRecords.toJS()}
           />
         }
       </div>
