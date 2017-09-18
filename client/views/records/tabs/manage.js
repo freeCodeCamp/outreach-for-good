@@ -187,9 +187,11 @@ class ManageTab extends React.Component {
         />
         }
         {selectedRecords &&
-          <StudentRecordTable
-            studentRecords={selectedRecords.toJS()}
-          />
+          <div className="student-record-table-container">
+            <StudentRecordTable
+              studentRecords={selectedRecords.toJS()}
+            />
+          </div>
         }
       </div>
     );

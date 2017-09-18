@@ -5,7 +5,7 @@ const StudentRecordTable = props =>
 <table className="student-record-table">
   <thead>
     <tr>
-      <th>_id</th>
+      <th>Record Id</th>
       <th>Absences</th>
       <th>Δ Absences</th>
       <th>Tardies</th>
