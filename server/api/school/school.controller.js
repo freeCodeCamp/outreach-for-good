@@ -1,7 +1,7 @@
 'use strict';
 
 var School = require('./school.model');
-var debug = require('debug')('route:api:school');
+// var debug = require('debug')('route:api:school');
 
 /**
  * Get list of schools.
@@ -16,7 +16,6 @@ exports.index = function(req, res) {
   if(req.user.role === 'teacher') {
     options._id = req.user.assignment;
   }
-  //console.log(req.user.assignment);
   School.find(options).exec(function(err, schools) {
     if(err) return handleError(res, err);
     return res.status(200).json(schools);
@@ -36,8 +35,7 @@ exports.names = function(req, res) {
   if(req.user.role === 'teacher') {
     options._id = req.user.assignment;
   }
-  School.find(options).select('name')
-  .exec(function(err, schools) {
+  School.find(options).select('name').exec(function(err, schools) {
     if(err) return handleError(res, err);
     return res.status(200).json(schools);
   });
@@ -68,7 +66,6 @@ exports.create = function(req, res) {
  * restriction: 'teacher'
  */
 exports.updateTriggers = function(req, res) {
-  //console.log(req.body);
   req.school.triggers = req.body.triggers;
   req.school.save(function(err) {
     if(err) return handleError(res, err);
@@ -93,6 +90,6 @@ exports.delete = function(req, res) {
 };
 
 function handleError(res, err) {
-  debug(err);
+  console.log(err);
   return res.status(500).send(err);
 }

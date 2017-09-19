@@ -3,12 +3,15 @@ import PropTypes from 'prop-types';
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
 
-const SchoolSelect = ({ schools, value, changeSchool, fullWidth = false }) =>
+const SchoolSelect = ({ schools, value, changeSchool, fullWidth = false, disabled }) =>
   <SelectField
-    floatingLabelText="Select a school..."
+    floatingLabelText="Select a School"
+    floatingLabelStyle={{fontWeight: 400}}
+    style={{textAlign: 'left'}}
     value={value}
     onChange={changeSchool}
     fullWidth={fullWidth}
+    disabled={disabled}
     >
     {schools.map((school, i) =>
       <MenuItem
@@ -20,6 +23,7 @@ const SchoolSelect = ({ schools, value, changeSchool, fullWidth = false }) =>
 ;
 
 SchoolSelect.propTypes = {
+  disabled       : PropTypes.bool,
   schools        : PropTypes.object,
   selectedSchool : PropTypes.object,
   changeSchool   : PropTypes.func,

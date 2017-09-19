@@ -39,8 +39,7 @@ StudentSchema.pre('save', function(next) {
     ];
     Promise.all(promises).then(function() {
       return next();
-    })
-    .catch(function(err) {
+    }).catch(function(err) {
       return next(new Error(err));
     });
   } else {
@@ -50,17 +49,13 @@ StudentSchema.pre('save', function(next) {
 
 StudentSchema.pre('remove', function(next) {
   var promises = [
-    Outreach.find({student: this._id}).remove()
-    .exec(),
-    Intervention.find({student: this._id}).remove()
-    .exec(),
-    StudentNote.find({student: this._id}).remove()
-    .exec()
+    Outreach.find({student: this._id}).remove().exec(),
+    Intervention.find({student: this._id}).remove().exec(),
+    StudentNote.find({student: this._id}).remove().exec()
   ];
   Promise.all(promises).then(function() {
     return next();
-  })
-  .catch(function(err) {
+  }).catch(function(err) {
     return next(new Error(err));
   });
 });

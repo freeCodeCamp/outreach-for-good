@@ -1,6 +1,8 @@
 'use strict';
 
 var _ = require('lodash');
+// var mongoose = require('mongoose');
+// var passport = require('passport');
 var config = require('../config/environment');
 var jwt = require('jsonwebtoken');
 var expressJwt = require('express-jwt');
@@ -10,7 +12,7 @@ var User = require('../api/user/user.model');
 var School = require('../api/school/school.model');
 var Student = require('../api/student/student.model');
 var validateJwt = expressJwt({secret: config.secrets.session});
-var debug = require('debug')('route:auth:service');
+// var debug = require('debug')('route:auth:service');
 
 /**
  * Attaches the user object to the request if authenticated
@@ -30,12 +32,8 @@ exports.isAuthenticated = function() {
   composed.use(function(req, res, next) {
     User.findById(req.user._id, function(err, user) {
       if(err) return next(err);
-      if(!user) {
-        debug('401, unauthorized user');
-        return res.status(401).send('Unauthorized');
-      }
+      if(!user) return res.status(401).send('Unauthorized');
       req.user = user;
-      debug('Valid, attaching user object');
       next();
     });
   });
@@ -58,7 +56,6 @@ exports.setTokenCookie = function(req, res) {
       .json({message: 'Something went wrong, please try again.'});
   }
   var token = exports.signToken(req.user._id, req.user.role);
-  //debug(token);
   res.cookie('token', JSON.stringify(token));
   res.redirect('/');
 };
@@ -69,9 +66,9 @@ function meetsRoleRequirements(userRole, roleRequired) {
 }
 
 function roleMsg(userRole, roleRequired) {
-  return `Your current role of ${userRole}
-          does not meet the minimum required role of
-          ${roleRequired} for the requested resource.`;
+  return `Your current role of ${userRole
+          } does not meet the minimum required role of ${
+          roleRequired} for the requested resource.`;
 }
 
 /**
@@ -91,8 +88,8 @@ exports.hasRole = function(roleRequired) {
 };
 
 function schoolMsg(assignmentId) {
-  return `Your current role of teacher and assignment to schoolId: 
-        ${assignmentId} does not allow access to requested resource.`;
+  return `Your current role of teacher and assignment to schoolId: ${
+         assignmentId} does not allow access to requested resource.`;
 }
 
 function managerOrAssignedSchool(schoolIdStr, user) {
@@ -119,9 +116,9 @@ exports.school = function(req, res, next) {
 };
 
 function studentMsg(student, req) {
-  return `Your current role of teacher and assignment to schoolId: 
-          ${req.user.assignment.toString()} does not allow access
-          to student._id: ${student._id}.`;
+  return `Your current role of teacher and assignment to schoolId: ${
+         req.user.assignment.toString()
+         } does not allow access to student._id: ${student._id}.`;
 }
 
 /**
@@ -152,9 +149,7 @@ exports.studentBatch = function(req, res, next) {
     .exec(function(err, students) {
       if(err) return handleError(res, err);
       if(!meetsRoleRequirements(req.user.role, 'manager')) {
-        var schools = _(students).map('school')
-        .uniq()
-        .value();
+        var schools = _(students).map('school').uniq().value();
         if(schools.length > 1 || schools[0] !== req.user.assignment.id) {
           return next(new Error('Attempting to update students without '
                                 + 'adequate role or assignment.'));
@@ -166,9 +161,9 @@ exports.studentBatch = function(req, res, next) {
 };
 
 function recordMsg(record, req) {
-  return `Your current role of teacher and assignment to schoolId: 
-          ${req.user.assignment.toString()} does not allow access 
-          to record._id: ${record._id}.`;
+  return `Your current role of teacher and assignment to schoolId: ${
+         req.user.assignment.toString()
+         } does not allow access to record._id: ${record._id}.`;
 }
 
 /**
@@ -190,8 +185,8 @@ exports.record = function(req, res, next) {
 };
 
 function userMsg(paramUser, req) {
-  return `Your current role of ${req.user.role} does not allow access
-          to modify user._id: ${paramUser._id}.`;
+  return `Your current role of ${req.user.role
+         } does not allow access to modify user._id: ${paramUser._id}.`;
 }
 
 /**

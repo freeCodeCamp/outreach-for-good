@@ -1,7 +1,7 @@
 'use strict';
 
-var mongoose = require('mongoose');
-var Schema = mongoose.Schema;
+var mongoose = require('mongoose'),
+  Schema = mongoose.Schema;
 
 var StudentNoteSchema = new Schema({
   student  : {type: Schema.Types.ObjectId, required: true, ref: 'Student'},

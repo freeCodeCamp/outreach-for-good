@@ -35,29 +35,28 @@ const DialogModal = props =>
       {!props.intervention
       && <div>
       <TextField name="interventionTitle"
-        hintText="Intervention Title"
         floatingLabelText="Intervention Title"
-        floatingLabelFixed
+        floatingLabelStyle={{fontWeight: 400}}
       />
 
+      <span style={{width: 40, display: 'inline-block'}}>&nbsp;</span>
+
       <TextField name="interventionDescription"
-        hintText="Intervention Description"
-        floatingLabelText="Intervention Description"
-        floatingLabelFixed
+        floatingLabelText="Description"
+        floatingLabelStyle={{fontWeight: 400}}
       />
       </div>}
-      <div>
+      <div style={{textAlign: 'right'}}>
+        <FlatButton key="submit"
+          type="submit"
+          label="Add"
+          onTouchTap={props.handleSubmit}
+          primary
+        />
         <FlatButton key="cancel"
           label="Cancel"
           primary
           onTouchTap={props.handleClose}
-        />
-
-        <FlatButton key="submit"
-          type="submit"
-          label="Submit"
-          onTouchTap={props.handleSubmit}
-          primary
         />
       </div>
     </form>

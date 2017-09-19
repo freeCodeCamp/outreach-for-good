@@ -2,6 +2,7 @@
 
 var User = require('./user.model');
 var School = require('../school/school.model');
+// var passport = require('passport');
 var auth = require('../../auth/auth.service');
 
 /**
@@ -46,7 +47,6 @@ exports.index = function(req, res) {
  * A user can only assign equal or lower roles to other users.
  */
 exports.validateUpdateRole = function(req, res, next) {
-  //console.log(req.body);
   return auth.hasRole(req.body.role)(req, res, next);
 };
 
@@ -87,9 +87,9 @@ exports.updateAssignment = function(req, res) {
   paramUser.assignment = req.school._id;
   paramUser.save(function(err, user) {
     if(err) return handleError(res, err);
-    user.populate('assignment', 'name', function(err) {
+    user.populate('assignment', 'name', function(err, updatedUser) {
       if(err) return handleError(res, err);
-      return res.status(200).json(user);
+      return res.status(200).json(updatedUser);
     });
   });
 };

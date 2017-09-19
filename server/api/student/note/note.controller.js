@@ -1,6 +1,9 @@
 'use strict';
 
+// var _ = require('lodash');
+// var Student = require('../student.model');
 var StudentNote = require('./note.model');
+// var auth = require('../../../auth/auth.service');
 
 /**
  * Get list of all notes for a student.

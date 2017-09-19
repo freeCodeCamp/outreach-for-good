@@ -35,10 +35,16 @@ class Report extends ReportModel {
    * Convert array of objects, to flattened Immutable Map
    */
   setInterventionSummary(currentState, interventionSummary) {
-    return currentState.update('interventionSummary', i =>
-      i.clear().merge(Immutable.fromJS(interventionSummary)
-        .map(record => new InterventionSummary(record)))
-    );
+    let nextState = currentState.update('interventionSummary', () =>
+      Immutable.fromJS(interventionSummary).map(record => new InterventionSummary(record))
+      );
+    let groupIntoSchools = Immutable.Map();
+    nextState.get('interventionSummary').forEach(record => {
+      groupIntoSchools = groupIntoSchools.set(record.get('school.name'),
+        (groupIntoSchools.get(record.get('school.name')) || Immutable.List()).push(record)
+      );
+    });
+    return nextState.update('interventionSummary', () => groupIntoSchools);
   }
   /**
    * Convert array of objects, to flattened Immutable Map

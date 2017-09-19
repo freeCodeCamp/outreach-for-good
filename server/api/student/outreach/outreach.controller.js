@@ -1,5 +1,7 @@
 'use strict';
 
+// var _ = require('lodash');
+// var auth = require('../../../auth/auth.service');
 var Outreach = require('./outreach.model');
 
 /**
@@ -31,9 +33,9 @@ exports.addNote = function(req, res) {
     outreach.save(function(err) {
       if(err) return handleError(res, err);
       Outreach.populate(outreach, {path: 'notes.user'},
-        function(err, _outreach) {
+        function(err, savedOutreach) {
           if(err) return handleError(res, err);
-          return res.status(200).json(_outreach);
+          return res.status(200).json(savedOutreach);
         });
     });
   });

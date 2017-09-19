@@ -43,54 +43,62 @@ class VisualizationPage extends React.Component {
     const COLORS = ['#c3a435', '#5049ba', '#b43b3b'];
     return (
       <div className="visualization-container">
-        <SelectField
-          floatingLabelText="Select a school..."
-          value={this.state.selectedSchool}
-          onChange={this.changeSchool}
-          >
-          {this.props.schools.map((school, i) =>
-            <MenuItem
-              key={i}
-              value={school}
-              primaryText={school.name} />
-            )}
-            <MenuItem
-              value="combined"
-              primaryText="Combined" />
-        </SelectField>
-        <div className="grid">
-          <div className="grid-cell">
-            <ResponsiveContainer>
-              <PieChart>
-                <Pie
-                  data={this.props.visualization.cfa}
-                  fill="#8884d8"
-                  label>
-                  {this.props.visualization.cfa
-                    && this.props.visualization.cfa.map((entry, i) =>
-                    <Cell key={i} fill={COLORS[i % COLORS.length]} />)}
-                </Pie>
-                <Tooltip/>
-                <Legend />
-              </PieChart>
-            </ResponsiveContainer>
-          </div>
-          <div className="grid-cell">
-            <ResponsiveContainer>
-              <PieChart>
-                <Pie
-                  data={this.props.visualization.non}
-                  fill="#82ca9d">
-                  {this.props.visualization.non
-                    && this.props.visualization.non.map((entry, i) =>
-                    <Cell key={i} fill={COLORS[i % COLORS.length]} />)}
-                </Pie>
-                <Tooltip/>
-                <Legend />
-              </PieChart>
-            </ResponsiveContainer>
-          </div>
+        <div className='visualization-page-title'>
+          <h3>Visualization</h3>
         </div>
+        <div style={{textAlign: 'center', marginTop: -20}}>
+          <div style={{textAlign: 'left', display: 'inline-block'}}>
+            <SelectField
+              floatingLabelText="Select a School"
+              floatingLabelStyle={{fontWeight: 400}}
+              value={this.state.selectedSchool}
+              onChange={this.changeSchool}
+              >
+              {this.props.schools.map((school, i) =>
+                <MenuItem
+                  key={i}
+                  value={school}
+                  primaryText={school.name} />
+                )}
+                <MenuItem
+                  value="combined"
+                  primaryText="Combined" />
+            </SelectField>
+          </div>
+          <div className="grid">
+            <div className="grid-cell">
+              <ResponsiveContainer>
+                <PieChart>
+                  <Pie
+                    data={this.props.visualization.cfa}
+                    fill="#8884d8"
+                    label>
+                    {this.props.visualization.cfa
+                      && this.props.visualization.cfa.map((entry, i) =>
+                      <Cell key={i} fill={COLORS[i % COLORS.length]} />)}
+                  </Pie>
+                  <Tooltip/>
+                  <Legend />
+                </PieChart>
+              </ResponsiveContainer>
+            </div>
+            <div className="grid-cell">
+              <ResponsiveContainer>
+                <PieChart>
+                  <Pie
+                    data={this.props.visualization.non}
+                    fill="#82ca9d">
+                    {this.props.visualization.non
+                      && this.props.visualization.non.map((entry, i) =>
+                      <Cell key={i} fill={COLORS[i % COLORS.length]} />)}
+                  </Pie>
+                  <Tooltip/>
+                  <Legend />
+                </PieChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+          </div>
       </div>
     );
   }

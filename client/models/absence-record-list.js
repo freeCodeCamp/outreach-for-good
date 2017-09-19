@@ -13,17 +13,12 @@ class AbsenceRecordList extends AbsenceRecordListModel {
   constructor(record) {
     super(record);
 
-    const date = new Date(record.get('date')).toDateString();
-    const newMissingStudents = record.get('newMissingStudents').size;
-    const entries = record.get('entries').size;
-    const createdStudents = record.get('createdStudents').size;
+    let nextRecord = record.set('dateString', new Date(record.get('date')).toDateString());
+    nextRecord = nextRecord.set('entryCount', record.get('entries').size);
+    nextRecord = nextRecord.set('missingStudentsCount', record.get('newMissingStudents').size);
+    nextRecord = nextRecord.set('createdStudentsCount', record.get('createdStudents').size);
 
-    const newRecord = record.set('date', date)
-      .set('entries', entries)
-      .set('newMissingStudents', newMissingStudents)
-      .set('createdStudents', createdStudents);
-
-    return newRecord;
+    return nextRecord;
   }
 }
 

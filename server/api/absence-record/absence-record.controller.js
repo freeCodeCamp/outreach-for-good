@@ -1,6 +1,7 @@
 'use strict';
 
 var _ = require('lodash');
+// var mongoose = require('mongoose');
 var AbsenceRecord = require('./absence-record.model');
 var Outreach = require('../student/outreach/outreach.model');
 var Student = require('../student/student.model');
@@ -57,8 +58,7 @@ function createStudents(newStudents) {
     if(!newStudents.length) return resolve([]);
     Student.insertMany(newStudents).then(function(createdStudents) {
       return resolve(createdStudents);
-    })
-    .catch(function(err) {
+    }).catch(function(err) {
       return reject(err);
     });
   });
@@ -69,8 +69,7 @@ function createOutreaches(outreaches) {
     if(!outreaches.length) return resolve([]);
     Outreach.insertMany(outreaches).then(function(createdOutreaches) {
       return resolve(createdOutreaches);
-    })
-    .catch(function(err) {
+    }).catch(function(err) {
       return reject(err);
     });
   });
@@ -97,7 +96,7 @@ exports.create = function(req, res) {
     _.forEach(createdStudents, function(student, index) {
       newEntries[index].student = student._id;
     });
-    var combinedEntries = [].concat.apply(newEntries, existingEntries);   // eslint-disable-line prefer-reflect
+    var combinedEntries = [].concat.apply(newEntries, existingEntries);
     // Outreaches for entries are update with student and added to outreaches.
     _.forEach(combinedEntries, function(entry) {
       _.forEach(entry.outreaches, function(outreach) {
@@ -114,11 +113,9 @@ exports.create = function(req, res) {
       newMissingStudents : req.body.newMissingStudents,
       createdStudents    : _.map(createdStudents, '_id')
     });
-  })
-  .then(function(createdRecord) {
+  }).then(function(createdRecord) {
     return createdRecord.populate('school').execPopulate();
-  })
-  .then(function(populatedRecord) {
+  }).then(function(populatedRecord) {
     result.record = populatedRecord;
     // Outreaches updated with the record id and date.
     _.forEach(outreaches, function(outreach) {
@@ -126,12 +123,10 @@ exports.create = function(req, res) {
       outreach.triggerDate = populatedRecord.date;
     });
     return createOutreaches(outreaches);
-  })
-  .then(function(createdOutreaches) {
+  }).then(function(createdOutreaches) {
     result.outreaches = createdOutreaches;
     return res.status(200).json(result);
-  })
-  .catch(function(err) {
+  }).catch(function(err) {
     return handleError(res, err);
   });
 };

@@ -44,16 +44,12 @@ function deleteCreatedStudents(students) {
 }
 
 AbsenceRecordSchema.pre('remove', function(next) {
-  var self = this;  // eslint-disable-line babel/no-invalid-this, consistent-this
-  Outreach.find({record: self._id}).remove()
-  .exec()
-  .then(function() {
+  var self = this;
+  Outreach.find({record: self._id}).remove().exec().then(function() {
     return deleteCreatedStudents(self.createdStudents);
-  })
-  .then(function() {
+  }).then(function() {
     next();
-  })
-  .catch(function(err) {
+  }).catch(function(err) {
     return next(new Error(err));
   });
 });

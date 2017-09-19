@@ -137,7 +137,7 @@ class TableModel extends Table {
           let recordCount = nextIndice ? nextIndice[0] - indice : data.size - indice;
           return a.set(rowIndex, Immutable.Map({
             groupColumn : Immutable.Map({
-              group : data.getIn([indice + 1, groupColumn]),
+              group : data.getIn([indice, groupColumn]),
               count : recordCount
             })
           }).concat(this.getRowAggregateRecord(state, data.slice(rowIndex - count, rowIndex + recordCount))));
@@ -294,6 +294,17 @@ class TableModel extends Table {
       return state.update('selectedIndex', i => i.push(dataIndex));
     } else {
       return state.update('selectedIndex', i => i.splice(target, 1));
+    }
+  }
+
+  // Only allow one row to be selected
+  toggleSingleSelectedRowIndex(state, dataIndex) {
+    let target = state.get('selectedIndex').indexOf(dataIndex);
+    if(target == -1) { // target was not selected
+      //let index = state.get('indexMap').get(dataIndex);
+      return state.update('selectedIndex', i => i.clear().push(dataIndex));
+    } else {
+      return state.update('selectedIndex', i => i.clear());
     }
   }
 

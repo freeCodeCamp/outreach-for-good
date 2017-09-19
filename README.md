@@ -31,7 +31,7 @@ See [tools/vagrant](https://github.com/freeCodeCamp/child-first-authority/tree/m
 
 This app contains npm scripts for easy deployment to Heroku.
 
-The env variables that need to be set:
+The env variables that need to be set in server/config/local.env:
 
 - APP_SECRET = *SECRET*
 - DOMAIN = *SOME HTTPS DOMAIN*
@@ -70,6 +70,7 @@ This version is currently under development.
   * Add title and page frame
   * Look into refactoring the term 'records' into something more meaningful
   * Add tests and improve error detection and handling
+  * Ensure schools are referred to by id and not name
 * Page - Reports
   * Verify everything is working
 * Page - Settings

@@ -4,7 +4,7 @@
     .column {
       width: 50%;
       display: inline-block;
-      padding: 0;
+      padding: 0 20px;
       margin: 0;
       vertical-align: top;
       .dropzone {
@@ -36,6 +36,7 @@
 }
 
 .manage-tab {
+  margin: 10px;
   .school-select {
     margin: 10px;
   }
@@ -55,4 +56,30 @@ $alertred: #f2dede;
 .alert {
   color: #a94442;
   background-color: $alertred;
+}
+
+.record-page-title {
+  height: 50px;
+  padding: 0px 10px 10px;
+  position: relative;
+}
+
+.section-label {
+  color: #3c763d;
+}
+
+.student-record-table-container {
+  padding: 30px;
+}
+
+.student-record-table {
+  width: 100%;
+
+  tr {
+    border-bottom: 1px solid #DDDDDD;
+
+    td {
+      padding: 4px;
+    }
+  }
 }
