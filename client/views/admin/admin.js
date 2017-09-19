@@ -84,11 +84,14 @@ class AdminPage extends React.Component {
   retrieveData = currentTab => {
     switch (currentTab) {
     case 'users':
-      this.props.userAction.getAllUsers();
-      this.props.schoolAction.getAllSchools();
+      Promise.all([
+        this.props.userAction.getAllUsers(),
+        this.props.schoolAction.getAllSchools()
+      ]).then(() => this.setState({loaded: true}));
       break;
     case 'schools':
-      this.props.schoolAction.getAllSchools();
+      this.props.schoolAction.getAllSchools()
+        .then(() => this.setState({loaded: true}));
       break;
     }
   }
@@ -216,35 +219,37 @@ class AdminPage extends React.Component {
 
   handleDialogClick = (nextTable, data) => {
     let users, schools; // eslint-disable-line one-var
+    let apiAction = Promise.resolve();
     switch (data) {
     case localActions.EDIT_SCHOOL:
       users = nextTable.get('selectedData')
         .map(row => row._id);
-      this.props.userAction.updateUserSchool(users.toArray(),
+      apiAction = this.props.userAction.updateUserSchool(users.toArray(),
         this.getSchoolId(this.state.form.get('field').get('editSchool')));
       break;
     case localActions.EDIT_ROLE:
       users = nextTable.get('selectedData').map(row => row._id);
-      this.props.userAction.updateUserRole(users.toArray(),
+      apiAction = this.props.userAction.updateUserRole(users.toArray(),
         this.state.form.get('field').get('editRole'));
       break;
     case localActions.REMOVE_USER:
       users = nextTable.get('selectedData')
         .map(row => row._id);
-      this.props.userAction.removeUser(users.toArray());
+      apiAction = this.props.userAction.removeUser(users.toArray());
       break;
     case localActions.NEW_SCHOOL:
-      this.props.schoolAction.addSchool(this.state.form.get('field').get('newSchool'));
+      apiAction = this.props.schoolAction.addSchool(this.state.form.get('field').get('newSchool'));
       break;
     case localActions.REMOVE_SCHOOL:
       schools = nextTable.get('selectedData')
         .map(row => row._id);
-      this.props.schoolAction.removeSchool(schools.toArray());
+      apiAction = this.props.schoolAction.removeSchool(schools.toArray());
       break;
     }
     nextTable = table.resetDialogs(nextTable);
     //nextTable = this.initializeTable(nextTable.selectedTab);
-    this.setState({table: nextTable});
+    apiAction.then(() => this.retrieveData());
+    this.setState({table: nextTable, loaded: false});
   }
 
   handleButtonClick = (nextTable, nextForm, data, event) => {
