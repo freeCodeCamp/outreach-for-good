@@ -268,7 +268,7 @@ class SchoolReportsPage extends React.Component {
     case 'atRisk':
     case 'chronicAbsent': columnDefs = dashboardDefs.absenceRecordTableColumns; break;
     case 'outreachSummary': columnDefs = localDefs.outreachTableColumns; break;
-  }
+    }
     columnDefs.forEach(c => {
       // special handling for group column, shown as '+' in the table
       if(c.id == 'school.name') {
@@ -278,7 +278,7 @@ class SchoolReportsPage extends React.Component {
       }
     });
     nextTable = table.resetPopovers(this.state.table);
-    console.log(this._reports.toJS())
+    console.log(this._reports.toJS());
     console.log(this._reports.map(record =>
             columns.map(col_id =>
               record.get(col_id)

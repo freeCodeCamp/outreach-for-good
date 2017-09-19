@@ -43,6 +43,7 @@ StudentTab.propTypes = {
   absenceRecords : PropTypes.instanceOf(List).isRequired,
   table          : PropTypes.object.isRequired,
   clickHandler   : PropTypes.func.isRequired,
+  tabName        : PropTypes.string
 };
 
 export default StudentTab;

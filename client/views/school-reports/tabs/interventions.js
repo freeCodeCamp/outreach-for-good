@@ -24,8 +24,8 @@ const InterventionsTab = ({tabData, ...props}) => {
     summaryRowAggregateType : props.table.getIn(['groupColumn', 'aggregateType'])
   }));
 
-  const pageTitle = props.schools && props.schools.selected ?
-    'Interventions - ' + props.schools.selected : 'Interventions';
+  const pageTitle = props.schools && props.schools.selected
+    ? `Interventions - ${props.schools.selected}` : 'Interventions';
 
   const page = {
     title   : pageTitle,
@@ -45,7 +45,10 @@ const InterventionsTab = ({tabData, ...props}) => {
 InterventionsTab.propTypes = {
   view           : PropTypes.object.isRequired,
   tabData        : PropTypes.object,
-  selectedSchool : PropTypes.object
+  selectedSchool : PropTypes.object,
+  table          : PropTypes.object,
+  schools        : PropTypes.object,
+  tabName        : PropTypes.string
 };
 
 export default InterventionsTab;

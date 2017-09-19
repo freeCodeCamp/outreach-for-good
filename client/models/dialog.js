@@ -18,14 +18,14 @@ class DialogModel extends Dialog {
   }
 
   getActionButton(label, onTouchTap, key, value = '', disabled = false) {
-    return <FlatButton
+    return (<FlatButton
       label={label}
       primary
       onTouchTap={onTouchTap}
       value={value}
       disabled={disabled}
       key={key}
-    />;
+    />);
   }
 
   setResult(currentState, result) {
