@@ -5,12 +5,14 @@
   box-sizing: border-box;
 
   .title-controls {
+    padding: 0px 10px 10px;
+    position: relative;
 
     h3 {
-      display: inline;
-      flex: 1;
-      margin-left: 10px;
-      vertical-align: bottom;
+      margin: 0;
+      position: absolute;
+      top: 10px;
+      left: 10px;
     }
 
     .control-btn {

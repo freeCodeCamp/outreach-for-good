@@ -78,30 +78,33 @@ class SettingsTab extends React.Component {
     return (
       <div className="settings-tab">
         <div className="title-controls">
-          <h3>Settings</h3>
+          <h3>Intervention Types</h3>
+
           <RaisedButton
             className="control-btn"
-            icon={<FontIcon className="fa fa-plus" />}
-            label="Add New"
-            onTouchTap={this.openAdd}
-            disabled={this.state.row !== undefined}
-            primary
+            label="Remove"
+            onTouchTap={this.handleDelete}
+            disabled={!(this.state.row !== undefined)}
+            backgroundColor={'#d9534f'}
+            labelColor={'#FFFFFF'}
           />
 
           <RaisedButton
             className="control-btn"
-            icon={<FontIcon className="fa fa-pencil-square-o" />}
             label="Edit"
             onTouchTap={this.openEdit}
             disabled={!(this.state.row !== undefined)}
+            backgroundColor={'#124e78'}
+            labelColor={'#FFFFFF'}
           />
 
           <RaisedButton
             className="control-btn"
-            icon={<FontIcon className="fa fa-trash" />}
-            label="Delete"
-            onTouchTap={this.handleDelete}
-            disabled={!(this.state.row !== undefined)}
+            label="New"
+            onTouchTap={this.openAdd}
+            disabled={this.state.row !== undefined}
+            backgroundColor={'#009d9d'}
+            labelColor={'#FFFFFF'}
           />
         </div>
 
@@ -127,7 +130,7 @@ class SettingsTab extends React.Component {
 
         <DialogModal
           name="add"
-          title={'Create a new intervention type'}
+          title={'New Type'}
           open={this.state.openAdd}
           handleSubmit={this.handleSubmit}
           handleClose={this.handleClose}
@@ -135,7 +138,7 @@ class SettingsTab extends React.Component {
 
         <DialogModal
           name="edit"
-          title={'Edit intervention type'}
+          title={'Edit Type'}
           open={this.state.openEdit}
           intervention={this.state.row}
           handleSubmit={this.handleSubmit}
