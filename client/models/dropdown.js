@@ -17,7 +17,7 @@ class DropdownModel extends Dropdown {
   }
 
   getDropdown(currentState, key) {
-    return (<DropDownMenu
+    return <DropDownMenu
         value={currentState.get('selected')}
         onChange={currentState.get('onChange')}
         key={key}
@@ -29,7 +29,7 @@ class DropdownModel extends Dropdown {
             key={item}
           />
         )}
-      </DropDownMenu>);
+      </DropDownMenu>;
   }
 }
 

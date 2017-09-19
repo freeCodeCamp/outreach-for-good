@@ -15,8 +15,6 @@ class RecordsPage extends React.Component {
     this.state = {currentTab: 'upload'};
   }
 
-  handleChangeTab = tab => this.setState({currentTab: tab});
-
   render() {
     let viewport = {
       width  : this.props.containerWidth - 20,
@@ -26,7 +24,9 @@ class RecordsPage extends React.Component {
       <Tabs
         style={{width: this.props.containerWidth}}
         value={this.state.currentTab}
-        onChange={this.handleChangeTab}
+        onChange={tab => {
+          this.setState({currentTab: tab});
+        }}
         >
         <Tab
           label="Upload"

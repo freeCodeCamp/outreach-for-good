@@ -17,7 +17,7 @@ class TextFieldModel extends Text {
   }
 
   getTextField(currentState, key) {
-    return (<TextField
+    return <TextField
         floatingLabelText={currentState.label}
         floatingLabelStyle={{fontWeight: 'normal'}}
         id={currentState.id}
@@ -26,7 +26,7 @@ class TextFieldModel extends Text {
         errorText={currentState.errorText}
         errorStyle={{textAlign: 'left'}}
         key={key}
-      />);
+      />;
   }
 }
 

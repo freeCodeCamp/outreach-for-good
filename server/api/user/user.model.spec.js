@@ -1,12 +1,14 @@
 'use strict';
 
+var should = require('should');
+var app = require('../../app');
 var User = require('./user.model');
 
 describe('User Model', function() {
   var user = new User({
-    provider : 'local',
-    name     : 'Fake User',
-    email    : 'test@test.com'
+    provider: 'local',
+    name: 'Fake User',
+    email: 'test@test.com'
   });
 
   before(function(done) {

@@ -1,7 +1,7 @@
 'use strict';
 
-// var _ = require('lodash');
-// var auth = require('../../../auth/auth.service');
+var _ = require('lodash');
+var auth = require('../../../auth/auth.service');
 var Outreach = require('./outreach.model');
 
 /**
@@ -13,7 +13,7 @@ exports.index = function(req, res) {
     .find({student: req.student.id})
     .sort({_id: -1})
     .exec(function(err, outreaches) {
-      if(err) return handleError(res, err);
+      if (err) return handleError(res, err);
       return res.status(201).json(outreaches);
     });
 };
@@ -24,18 +24,18 @@ exports.index = function(req, res) {
  */
 exports.addNote = function(req, res) {
   Outreach.findById(req.params.outreachId, function(err, outreach) {
-    if(err) return handleError(res, err);
-    if(!outreach) return res.status(404).send('Not Found');
+    if (err) return handleError(res, err);
+    if (!outreach) return res.status(404).send('Not Found');
     outreach.notes.push({
-      user : req.user.id,
-      note : req.body.note
+      user: req.user.id,
+      note: req.body.note
     });
     outreach.save(function(err) {
-      if(err) return handleError(res, err);
+      if (err) return handleError(res, err);
       Outreach.populate(outreach, {path: 'notes.user'},
-        function(err, savedOutreach) {
-          if(err) return handleError(res, err);
-          return res.status(200).json(savedOutreach);
+        function(err, outreach) {
+          if (err) return handleError(res, err);
+          return res.status(200).json(outreach);
         });
     });
   });
@@ -47,11 +47,11 @@ exports.addNote = function(req, res) {
  */
 exports.updateAction = function(req, res) {
   Outreach.findById(req.params.outreachId, function(err, outreach) {
-    if(err) return handleError(res, err);
-    if(!outreach) return res.status(404).send('Not Found');
+    if (err) return handleError(res, err);
+    if (!outreach) return res.status(404).send('Not Found');
     outreach.actionDate = req.body.actionDate;
     outreach.save(function(err) {
-      if(err) return handleError(res, err);
+      if (err) return handleError(res, err);
       return res.status(200).json(outreach);
     });
   });

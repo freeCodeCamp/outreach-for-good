@@ -6,7 +6,7 @@
 
 var errors = require('./components/errors');
 var path = require('path');
-// var debug = require('debug')('route:main');
+var debug = require('debug')('route:main');
 
 module.exports = function(app) {
   // models

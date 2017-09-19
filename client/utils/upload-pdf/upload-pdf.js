@@ -21,12 +21,10 @@ export default class UploadPdf {
             for(let i = 0; i < pdf.numPages; i++) {
               pages.push(i);
             }
-            return Promise.all(pages.map(pageNumber => pdf.getPage(pageNumber + 1)
-              .then(page => page.getTextContent().then(textContent => textContent.items.map(item => item.str)))));
+            return Promise.all(pages.map(pageNumber => pdf.getPage(pageNumber + 1).then(page => page.getTextContent().then(textContent => textContent.items.map(item => item.str)))));
           })
           .then(allPages => {
-            // let items = [].concat.apply([], allPages);
-            let items = [...allPages];
+            let items = [].concat.apply([], allPages);
 
             try {
               let partial = parse(items);

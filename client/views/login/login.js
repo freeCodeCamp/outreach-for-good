@@ -55,7 +55,7 @@ LoginPage.propTypes = { // Prop type validation
   session : PropTypes.object.isRequired,
 };
 
-function mapStateToProps(state) {
+function mapStateToProps(state, ownProps) {
   return {
     session : state.session
   };
