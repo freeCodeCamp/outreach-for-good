@@ -128,7 +128,6 @@ class ManageTab extends React.Component {
   handleToggleSelectedRow = (nextTable, index) => {
     nextTable = table.toggleSingleSelectedRowIndex(this.state.table, index);
     let selectedData = this.getSelectedRowData(nextTable);
-    console.log(selectedData.first() && selectedData.first().get('recordId'));
     this.setState({table: nextTable, selectedRecord: selectedData.first() && selectedData.first().get('recordId')});
   }
 

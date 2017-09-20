@@ -27,7 +27,6 @@ class SchoolSettingsPage extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    console.log(this.props.schools);
     /**
      * When props update, if they are different open the snackbar
      */
