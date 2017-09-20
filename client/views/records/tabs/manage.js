@@ -71,7 +71,8 @@ class ManageTab extends React.Component {
       this.retrieveData('records', schools.selected.id);
       loadResolved = false;
     } else {
-      this.schoolRecords = this.props.records[schools.selected.id].toList();
+      this.schoolRecords = this.props.records[schools.selected.id]
+        && this.props.records[schools.selected.id].toList();
     }
     let nextTable = this.state.table;
     nextTable = nextTable.updateSortCol(nextTable, '');
