@@ -71,7 +71,8 @@ class ManageTab extends React.Component {
       this.retrieveData('records', schools.selected.id);
       loadResolved = false;
     } else {
-      this.schoolRecords = this.props.records[schools.selected.id].toList();
+      this.schoolRecords = this.props.records[schools.selected.id]
+        && this.props.records[schools.selected.id].toList();
     }
     let nextTable = this.state.table;
     nextTable = nextTable.updateSortCol(nextTable, '');
@@ -128,7 +129,6 @@ class ManageTab extends React.Component {
   handleToggleSelectedRow = (nextTable, index) => {
     nextTable = table.toggleSingleSelectedRowIndex(this.state.table, index);
     let selectedData = this.getSelectedRowData(nextTable);
-    console.log(selectedData.first() && selectedData.first().get('recordId'));
     this.setState({table: nextTable, selectedRecord: selectedData.first() && selectedData.first().get('recordId')});
   }
 

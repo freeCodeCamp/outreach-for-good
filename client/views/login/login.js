@@ -23,13 +23,20 @@ class LoginPage extends React.Component {
   }
 
   render() {
+    const isGuest = this.props.session && this.props.session.me;
     return (
       <div className="login-page">
         <img src={logo} />
         <div>
+          {isGuest &&
+          <div className="login-page-title">
+            This application is for staff use only. Contact admin for access approval
+          </div>
+          } {!isGuest &&
           <div className="login-page-title">
             Student absenteeism tracking and reporting
           </div>
+          }
           <RaisedButton
             href="/auth/google"
             label="Sign In with Google"

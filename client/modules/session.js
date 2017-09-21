@@ -15,7 +15,6 @@ const initialState = {};
 export default function sessionReducer(state = initialState, action) {
   switch (action.type) {
   case SET_TOKEN:
-    //console.log('Setting Token');
     return {
       token : action.token,
       me    : {
@@ -27,10 +26,8 @@ export default function sessionReducer(state = initialState, action) {
       }
     };
   case SESSION_VALID:
-    //console.log('Session Valid');
     return state;
   case SESSION_CLEAR:
-    //console.log('Logout');
     return {
       token : null,
       me    : {
@@ -48,7 +45,6 @@ export default function sessionReducer(state = initialState, action) {
 
 //ACTION CREATORS
 export function setToken(token, me) {
-  //console.log('Setting Token');
   return {type: SET_TOKEN, token, me};
 }
 
@@ -70,10 +66,13 @@ export function verifyToken() {
   let token = cookies.get('token').replace(/"/g, '');
   if(token) {
     sessionStorage.setItem('token', token);
-    // Thunk returns a function that accepts a dispatch
     return function(dispatch) {
       return userAPI.getMyself(token).then(me => {
-        dispatch(setToken(token, me));
+        if(me && me.role === 'guest') {
+          dispatch(logout());
+        } else {
+          dispatch(setToken(token, me));
+        }
       })
       .catch(() => dispatch(logout()));
     };

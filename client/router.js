@@ -19,7 +19,6 @@ import SchoolSettingsPage from './views/school-settings/school-settings';
 import StudentPage from './views/student/student';
 import UsersPage from './views/users/users';
 import VisualizationPage from './views/visualization/visualization';
-import Volunteers from './views/volunteers/volunteers';
 
 class RTRouter extends React.Component {
   constructor() {
@@ -52,7 +51,6 @@ class RTRouter extends React.Component {
           state    : { nextPathname: nextState.location.pathname }
         });
       } else {
-        //console.log('router validate');
         this.props.actions.validate();
       }
     }
