@@ -35,11 +35,10 @@ export default class UploadPdf {
               pages.push(i);
             }
             return Promise.all(pages.map(pageNumber => pdf.getPage(pageNumber + 1)
-              .then(page => page.getTextContent().then(textContent => textContent.items.map(item => item.str)))));
+            .then(page => page.getTextContent().then(textContent => textContent.items.map(item => item.str)))));
           })
           .then(allPages => {
-            // let items = [].concat.apply([], allPages);
-            let items = [...allPages];
+            let items = [].concat.apply([], allPages);
 
             try {
               let partial = parse(items);

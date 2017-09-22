@@ -32,7 +32,7 @@ class UploadTab extends React.Component {
   initialState = {
     initialDataLoaded : false,
     loadingValue      : 0,
-    records           : null,
+    newRecord         : null,
     recordResults     : false,
     date              : new Date()
   };
@@ -56,8 +56,8 @@ class UploadTab extends React.Component {
       let uploadService = new UploadService(school, previousRecord, accepted[0]);
 
       uploadService.getRecord()
-        .then(({records}) => {
-          this.setState({ records });
+        .then(newRecord => {
+          this.setState({ newRecord });
         });
     }
   }
@@ -83,9 +83,9 @@ class UploadTab extends React.Component {
    * Action to post absence record
    */
   confirm = () => {
-    const {records} = this.state;
-    records.date = this.state.date;
-    this.props.actions.addRecord(records);
+    const {newRecord} = this.state;
+    newRecord.date = this.state.date;
+    this.props.actions.addRecord(newRecord);
     this.setState({ ...this.initialState });
   }
 
@@ -93,7 +93,7 @@ class UploadTab extends React.Component {
    * Removes the parsed record
    */
   cancel = () => {
-    this.setState({ records: null, loadingValue: 0 });
+    this.setState({ newRecord: null, loadingValue: 0 });
   }
 
   /**
@@ -151,11 +151,11 @@ class UploadTab extends React.Component {
             mode='determinate'
             value={this.state.loadingValue}
           />}
-        {this.state.record
+        {this.state.newRecord
           && <AbsenceRecordsTable
             confirm={this.confirm}
             cancel={this.cancel}
-            record={this.state.record}
+            record={this.state.newRecord}
             uploadTab
           />}
       </div>
