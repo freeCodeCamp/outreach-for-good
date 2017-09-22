@@ -5,9 +5,22 @@ import _ from 'lodash';
  * Class constructor to parse the pdf file and return records and messages
  */
 export default class UploadPdf {
+  baseRecord = {
+    _id      : 'xxxxxxxxxxxxxxxxxxxxxxx',
+    recordId : 'xxxxxxxxxxxxxxxxxxxxxxx',
+    date     : '2010-01-01T01:01:43.116Z',
+    school   : {
+      _id  : 'xxxxxxxxxxxxxxxxxxxxxxx',
+      name : 'School',
+    },
+    schoolYear     : '2015-2016',
+    entries        : [],
+    missingEntries : []
+  }
+
   constructor(school, previousRecord, file) {
     this.school = school;
-    this.previousRecord = previousRecord;
+    this.previousRecord = previousRecord || this.baseRecord;
     this.file = file;
   }
 
@@ -158,7 +171,7 @@ function handleNewSchoolYear(prevRecord, partialRecord, school) {
 
 function completeRecord(school, previousRecord, partialRecord) {
   // TODO: If there is no previous record an error is thrown.
-  var record = partialRecord.schoolYear === previousRecord.schoolYear
+  var record = partialRecord.schoolYear === previousRecord.schoolYear || 2017
     ? handleSameSchoolYear(previousRecord, partialRecord, school)
     : handleNewSchoolYear(previousRecord, partialRecord, school);
 
