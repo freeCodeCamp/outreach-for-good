@@ -18,9 +18,9 @@ const StudentTable = props =>
   <Card style={styles.card}>
     <CardHeader
       title={props.studentType}
-      subtitle={`${props.students.length} records`}
+      subtitle={`${props.students && props.students.length} records`}
       style={styles.toggle}
-      showExpandableButton={props.students.length > 0}
+      showExpandableButton={props.students && props.students.length > 0}
     />
     <CardText expandable>
       <Table height="400">
@@ -36,7 +36,7 @@ const StudentTable = props =>
           </TableRow>
         </TableHeader>
         <TableBody displayRowCheckbox={false}>
-          {props.students.map((item, i) =>
+          {props.students && props.students.map((item, i) =>
             <TableRow key={i}>
               <TableRowColumn>{item.student && item.student.lastName}, {item.student && item.student.firstName}</TableRowColumn>
               <TableRowColumn>{item.student && item.student.studentId}</TableRowColumn>
