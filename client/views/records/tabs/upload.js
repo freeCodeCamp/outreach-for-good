@@ -23,10 +23,7 @@ class UploadTab extends React.Component {
   }
 
   componentDidMount() {
-    Promise.all([
-      this.props.actions.fetchRecords(),
-      this.props.actions.getAllSchools()
-    ]).then(this.setState({initialDataLoaded: true}));
+    this.loadData();
   }
 
   initialState = {
@@ -36,6 +33,13 @@ class UploadTab extends React.Component {
     recordResults     : false,
     date              : new Date()
   };
+
+  loadData = () => {
+    Promise.all([
+      this.props.actions.fetchRecords(),
+      this.props.actions.getAllSchools()
+    ]).then(this.setState({initialDataLoaded: true}));
+  }
 
   /**
    * Fires when the school select is changed
@@ -57,7 +61,7 @@ class UploadTab extends React.Component {
 
       uploadService.getRecord()
         .then(newRecord => {
-          this.setState({ newRecord });
+          this.setState({ newRecord: newRecord && newRecord.record });
         });
     }
   }
@@ -74,7 +78,7 @@ class UploadTab extends React.Component {
    */
   minDate = () => {
     let currentRecord = this.props.records.filter(r => r.school._id === this.state.selectedSchool.get('_id'))[0];
-    let recordDate = new Date(currentRecord.date);
+    let recordDate = new Date(currentRecord && currentRecord.date) || new Date(0);
     return new Date(recordDate.setDate(recordDate.getDate() + 1));
   }
 
@@ -85,7 +89,7 @@ class UploadTab extends React.Component {
   confirm = () => {
     const {newRecord} = this.state;
     newRecord.date = this.state.date;
-    this.props.actions.addRecord(newRecord);
+    this.props.actions.addRecord(newRecord).then(() => this.loadData());
     this.setState({ ...this.initialState });
   }
 
