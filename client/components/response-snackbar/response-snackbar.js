@@ -7,6 +7,8 @@ import Snackbar from 'material-ui/Snackbar';
 
 import {closeSnackbar} from '../../modules/view';
 
+import './snackbar.scss';
+
 class ResponseSnackbar extends React.Component {
   constructor(props, context) {
     super(props, context);
@@ -18,25 +20,17 @@ class ResponseSnackbar extends React.Component {
   }
 
   render() {
-    const snackTypes = {
-      success : {
-        transform       : 'translateY(-29px)',
-        backgroundColor : '#16a461',
-        color           : 'white'
-      },
-      error : {
-        transform       : 'translateY(-29px)',
-        backgroundColor : '#d9152a',
-        color           : 'white'
-      }
-    };
+    if(!this.props.snackbar) {
+      return null;
+    }
+
     return (
       <Snackbar
         open={!!this.props.snackbar.message}
         message={this.props.snackbar.message}
         autoHideDuration={this.props.snackbar.autoHideDuration}
         onRequestClose={this.handleRequestClose}
-        bodyStyle={snackTypes[this.props.snackbar.snackType]}
+        className={`snackbar-${this.props.snackbar.snackType}`}
       />
     );
   }

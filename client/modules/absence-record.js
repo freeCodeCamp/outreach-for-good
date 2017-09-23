@@ -1,15 +1,13 @@
-import { List, fromJS } from 'immutable';
+import { fromJS } from 'immutable';
 
 import AbsenceRecord from '../models/absence-record';
 import AbsenceRecordsApi from '../api/absence-records';
-import { validate } from './session';
-import { openSnackbar } from './view';
+import { handleReducerError, errorMessage } from '../utils/error';
 
 //ACTIONS
 const LOAD_ABSENCE_RECORD_SUCCESS = 'LOAD_ABSENCE_RECORD_SUCCESS';
 
 //REDUCER
-const initialState = new List();
 
 const formatDates = state =>
   state.map(record => {
@@ -22,7 +20,8 @@ const formatDates = state =>
       null);
   });
 
-export default (state = initialState, action) => {
+export default function reducer(state = {}, action) {
+  console.log(action);
   switch (action.type) {
   // Received users from fetchRecordsList()
   case LOAD_ABSENCE_RECORD_SUCCESS:
@@ -34,7 +33,7 @@ export default (state = initialState, action) => {
   default:
     return state;
   }
-};
+}
 
 //ACTION CREATORS
 export function loadRecordsSuccess(absenceRecords) {
@@ -49,7 +48,7 @@ export function fetchRecords() {
     return AbsenceRecordsApi.fetchRecords().then(res =>
       dispatch(loadRecordsSuccess(res))
     )
-    .catch(err => handleError(err, dispatch));
+    .catch(err => handleReducerError(err, dispatch, errorMessage.fetchRecords));
   };
 }
 
@@ -62,7 +61,7 @@ export function fetchStudentRecord(studentId) {
     return AbsenceRecordsApi.fetchStudentRecord(studentId).then(res =>
       dispatch(loadRecordsSuccess(res))
     )
-    .catch(err => handleError(err, dispatch));
+    .catch(err => handleReducerError(err, dispatch, errorMessage.fetchStudentRecord));
   };
 }
 
@@ -75,7 +74,7 @@ export function fetchRecordsList(yearFilter) {
     return AbsenceRecordsApi.fetchRecordsList(yearFilter).then(res =>
       dispatch(loadRecordsSuccess(res))
     )
-    .catch(err => handleError(err, dispatch));
+    .catch(err => handleReducerError(err, dispatch, errorMessage.fetchRecordsList));
   };
 }
 
@@ -88,7 +87,7 @@ export function fetchRecordsListQuery(querystring, yearFilter) {
     return AbsenceRecordsApi.fetchRecordsListQuery(querystring, yearFilter).then(res =>
       dispatch(loadRecordsSuccess(res))
     )
-    .catch(err => handleError(err, dispatch));
+    .catch(err => handleReducerError(err, dispatch, errorMessage.fetchRecordsListQuery));
   };
 }
 
@@ -101,7 +100,7 @@ export function fetchRecordsListAtRisk() {
     return AbsenceRecordsApi.fetchRecordsListAtRisk().then(res =>
       dispatch(loadRecordsSuccess(res))
     )
-    .catch(err => handleError(err, dispatch));
+    .catch(err => handleReducerError(err, dispatch, errorMessage.fetchRecordsListAtRisk));
   };
 }
 
@@ -114,7 +113,7 @@ export function fetchRecordsListChronic() {
     return AbsenceRecordsApi.fetchRecordsListChronic().then(res =>
       dispatch(loadRecordsSuccess(res))
     )
-    .catch(err => handleError(err, dispatch));
+    .catch(err => handleReducerError(err, dispatch, errorMessage.fetchRecordsListChronic));
   };
 }
 
@@ -127,7 +126,7 @@ export function fetchRecordsListYear(year) {
     return AbsenceRecordsApi.fetchRecordsListYear(year).then(res =>
       dispatch(loadRecordsSuccess(res))
     )
-    .catch(err => handleError(err, dispatch));
+    .catch(err => handleReducerError(err, dispatch, errorMessage.fetchRecordsListYear));
   };
 }
 
@@ -142,9 +141,7 @@ export function addRecord(schoolId, record) {
 
       dispatch(openSnackbar(`Record added for ${res.record.school.name} with ${res.outreaches.length} outreaches created.`));
     })
-    .catch(err => {
-      dispatch(openSnackbar(`ERROR: ${err.toString()}`, 'error'));
-    });
+    .catch(err => handleReducerError(err, dispatch, errorMessage.addRecord));
   };
 }
 
@@ -159,19 +156,7 @@ export function removeRecord(recordId) {
 
       dispatch(openSnackbar(`Record deleted for ${res.record.school.name}.`))
     )
-    .catch(err => dispatch(openSnackbar(`ERROR: ${err.toString()}`, 'error')));
+    .catch(err => handleReducerError(err, dispatch, errorMessage.removeRecord));
   };
 }
 
-/**
- * Handle expected return codes
- */
-export function handleError(err, dispatch) {
-  let status = err.status;
-  //console.log('In userActions.js, handleError()', status, err);
-  if(status == 401) {
-    return dispatch(validate());
-  } else {
-    throw err;
-  }
-}
