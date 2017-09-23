@@ -48,5 +48,36 @@ export const errorMessage = {
     putInterventionType    : 'Error: Could not update intervention type',
     postInterventionType   : 'Error: Could not set intervention type',
     deleteInterventionType : 'Error: Could not remove intervention type'
+  },
+  student : {
+    getStudent              : 'Error: Could not fetch student',
+    getStudentRecords       : 'Error: Could not fetch student records',
+    getOutreachCounts       : 'Error: Could not fetch student outreach counts',
+    getInterventionSummary  : 'Error: Could not fetch student intervention',
+    getOutreachSummary      : 'Error: Could not fetch student outreach',
+    getStudentInterventions : 'Error: Could not fetch student interventions',
+    postStudentIntervention : 'Error: Could not set student intervention',
+    getStudentOutreaches    : 'Error: Could not fetch student outreaches',
+    getStudentNotes         : 'Error: Could not fetch student notes',
+    postStudentNote         : 'Error: Could not set student note',
+    putStudentIep           : 'Error: Could not update student IEP status',
+    putStudentCfa           : 'Error: Could not update student CFA status',
+    putStudentWithdrawn     : 'Error: Could not update student withdrawn status',
+    postOutreachNote        : 'Error: Could not set outreach note',
+    postIntervention        : 'Error: Could not set student intervention',
+    postInterventionNote    : 'Error: Could not set intervention note',
+    deleteIntervention      : 'Error: Could not remove student intervention'
+  },
+  user : {
+    getMyself        : 'Error: Could not fetch your profile',
+    getUser          : 'Error: Could not fetch user profile',
+    getAllUsers      : 'Error: Could not fetch all profiles',
+    updateUserRole   : 'Error: Could not update user role',
+    updateUserSchool : 'Error: Could not update user school',
+    removeUser       : 'Error: Could not remove user'
+  },
+  visualization : {
+    getCombined         : 'Error: Could not fetch combined schools',
+    getSchoolComparison : 'Error: Could not fetch school comparison'
   }
 };

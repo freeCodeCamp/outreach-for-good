@@ -1,5 +1,6 @@
 import StudentApi from '../api/students';
 import {openSnackbar} from './view';
+import { handleReducerError, errorMessage } from '../utils/error';
 
 
 //ACTIONS
@@ -74,7 +75,9 @@ export function getStudent(studentId) {
     .then(student => dispatch({
       type : GET_STUDENT_SUCCESS,
       student
-    }));
+    }))
+    .catch(err => handleReducerError(err, dispatch, errorMessage.student.getStudent));
+
 }
 
 export function getStudentRecords(studentId) {
@@ -82,7 +85,8 @@ export function getStudentRecords(studentId) {
     .then(records => dispatch({
       type : GET_STUDENT_RECORDS_SUCCESS,
       records
-    }));
+    }))
+    .catch(err => handleReducerError(err, dispatch, errorMessage.student.getStudentRecords));
 }
 
 export function getOutreachCounts() {
@@ -90,7 +94,8 @@ export function getOutreachCounts() {
     .then(outreachCounts => dispatch({
       type : GET_OUTREACH_COUNTS_SUCCESS,
       outreachCounts
-    }));
+    }))
+    .catch(err => handleReducerError(err, dispatch, errorMessage.student.getOutreachCounts));
 }
 
 export function getInterventionSummary() {
@@ -98,7 +103,8 @@ export function getInterventionSummary() {
     .then(interventionSummary => dispatch({
       type : GET_INTERVENTION_SUMMARY_SUCCESS,
       interventionSummary
-    }));
+    }))
+    .catch(err => handleReducerError(err, dispatch, errorMessage.student.getInterventionSummary));
 }
 
 export function getOutreachSummary() {
@@ -106,7 +112,8 @@ export function getOutreachSummary() {
     .then(outreachSummary => dispatch({
       type : GET_OUTREACH_SUMMARY_SUCCESS,
       outreachSummary
-    }));
+    }))
+    .catch(err => handleReducerError(err, dispatch, errorMessage.student.getOutreachSummary));
 }
 
 export function getStudentInterventions(studentId) {
@@ -114,7 +121,8 @@ export function getStudentInterventions(studentId) {
     .then(interventions => dispatch({
       type : GET_STUDENT_INTERVENTIONS_SUCCESS,
       interventions
-    }));
+    }))
+    .catch(err => handleReducerError(err, dispatch, errorMessage.student.getStudentInterventions));
 }
 
 export function postStudentIntervention(studentId, body) {
@@ -122,7 +130,8 @@ export function postStudentIntervention(studentId, body) {
     .then(intervention => dispatch({
       type : 'POST_INTERVENTION_SUCCESS',
       intervention
-    }));
+    }))
+    .catch(err => handleReducerError(err, dispatch, errorMessage.student.postStudentIntervention));
 }
 
 export function getStudentOutreaches(studentId) {
@@ -130,7 +139,8 @@ export function getStudentOutreaches(studentId) {
     .then(outreaches => dispatch({
       type : GET_STUDENT_OUTREACHES_SUCCESS,
       outreaches
-    }));
+    }))
+    .catch(err => handleReducerError(err, dispatch, errorMessage.student.getStudentOutreaches));
 }
 
 export function getStudentNotes(studentId) {
@@ -138,7 +148,8 @@ export function getStudentNotes(studentId) {
     .then(notes => dispatch({
       type : GET_STUDENT_NOTES_SUCCESS,
       notes
-    }));
+    }))
+    .catch(err => handleReducerError(err, dispatch, errorMessage.student.getStudentNotes));
 }
 
 export function postStudentNote(studentId, body) {
@@ -147,7 +158,8 @@ export function postStudentNote(studentId, body) {
     .then(notes => dispatch({
       type : GET_STUDENT_NOTES_SUCCESS,
       notes
-    })));
+    })))
+    .catch(err => handleReducerError(err, dispatch, errorMessage.student.postStudentNote));
 }
 
 export function putStudentIep(studentIds, iep) {
@@ -160,7 +172,7 @@ export function putStudentIep(studentIds, iep) {
       });
       dispatch(openSnackbar(`IEP status changed to ${student[0].iep}`));
     })
-    .catch(err => showSnackbarErrorMessage(err));
+    .catch(err => handleReducerError(err, dispatch, errorMessage.student.putStudentIep));
 }
 
 export function putStudentCfa(studentIds, cfa) {
@@ -173,7 +185,7 @@ export function putStudentCfa(studentIds, cfa) {
       });
       dispatch(openSnackbar(`CFA status changed to ${student[0].cfa}`));
     })
-    .catch(err => showSnackbarErrorMessage(err));
+    .catch(err => handleReducerError(err, dispatch, errorMessage.student.putStudentCfa));
 }
 
 export function putStudentWithdrawn(studentIds, withdrawn) {
@@ -186,7 +198,7 @@ export function putStudentWithdrawn(studentIds, withdrawn) {
       });
       dispatch(openSnackbar(`Withdrawn status changed to ${student[0].withdrawn}`));
     })
-    .catch(err => showSnackbarErrorMessage(err));
+    .catch(err => handleReducerError(err, dispatch, errorMessage.student.putStudentWithdrawn));
 }
 
 export function postOutreachNote(studentId, outreachId, note) {
@@ -195,7 +207,7 @@ export function postOutreachNote(studentId, outreachId, note) {
       dispatch(getStudentOutreaches(studentId));
       dispatch(openSnackbar(`Outreach posted for ${outreach.type} ${outreach.tier}`));
     })
-    .catch(err => showSnackbarErrorMessage(err));
+    .catch(err => handleReducerError(err, dispatch, errorMessage.student.postOutreachNote));
 }
 
 export function postIntervention(studentId, intervention) {
@@ -206,7 +218,7 @@ export function postIntervention(studentId, intervention) {
       dispatch(getStudentInterventions(studentId));
       dispatch(openSnackbar(`Intervention of type '${intervention.type}' created on ${date}`));
     })
-    .catch(err => dispatch(showSnackbarErrorMessage(err)));
+    .catch(err => handleReducerError(err, dispatch, errorMessage.student.postIntervention));
 }
 
 export function postInterventionNote(studentId, interventionId, note) {
@@ -215,7 +227,7 @@ export function postInterventionNote(studentId, interventionId, note) {
       dispatch(getStudentInterventions(studentId));
       dispatch(openSnackbar('Intervention note posted'));
     })
-    .catch(err => dispatch(showSnackbarErrorMessage(err)));
+    .catch(err => handleReducerError(err, dispatch, errorMessage.student.postInterventionNote));
 }
 
 export function deleteIntervention(studentId, interventionId) {
@@ -224,7 +236,7 @@ export function deleteIntervention(studentId, interventionId) {
       dispatch(getStudentInterventions(studentId));
       dispatch(openSnackbar('Intervention deleted'));
     })
-    .catch(err => dispatch(showSnackbarErrorMessage(err)));
+    .catch(err => handleReducerError(err, dispatch, errorMessage.student.deleteIntervention));
 }
 
 
@@ -233,5 +245,3 @@ export function unmountStudent() {
     type : UNMOUNT_STUDENT
   };
 }
-
-const showSnackbarErrorMessage = err => openSnackbar(`ERR: ${err}`, 'error');

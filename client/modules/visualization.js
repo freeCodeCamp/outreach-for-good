@@ -1,4 +1,5 @@
 import VisualizationApi from '../api/visualization';
+import { handleReducerError, errorMessage } from '../utils/error';
 
 //ACTIONS
 const DATA_VISUALIZATION_SUCCESS = 'DATA_VISUALIZATION_SUCCESS';
@@ -31,7 +32,8 @@ export function getCombined() {
     .then(combined => dispatch({
       type          : DATA_VISUALIZATION_SUCCESS,
       visualization : combined
-    }));
+    }))
+    .catch(err => handleReducerError(err, dispatch, errorMessage.visualization.getSchoolComparison));
 }
 
 export function getSchoolComparison(schoolId) {
@@ -39,5 +41,6 @@ export function getSchoolComparison(schoolId) {
     .then(school => dispatch({
       type          : DATA_VISUALIZATION_SUCCESS,
       visualization : school
-    }));
+    }))
+    .catch(err => handleReducerError(err, dispatch, errorMessage.visualization.getSchoolComparison));
 }
