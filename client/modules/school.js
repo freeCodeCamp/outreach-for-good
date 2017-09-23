@@ -1,7 +1,7 @@
 import { List, fromJS } from 'immutable';
 import School from '../models/school';
 import SchoolsApi from '../api/schools';
-import {validate} from './session';
+import { handleReducerError, errorMessage } from '../utils/error';
 
 //ACTIONS
 const LOAD_SCHOOLS_SUCCESS = 'LOAD_SCHOOLS_SUCCESS';
@@ -36,7 +36,7 @@ export function getSchoolNames() {
     return SchoolsApi.getSchoolNames().then(schools => {
       dispatch(loadSchoolsSuccess(schools));
     })
-    .catch(err => handleError(err, dispatch));
+    .catch(err => handleReducerError(err, dispatch, errorMessage.school.getSchoolNames));
   };
 }
 
@@ -45,7 +45,7 @@ export function getSchool(schoolId) {
     return SchoolsApi.getSchool(schoolId).then(schools => {
       dispatch(loadSchoolsSuccess(schools));
     })
-    .catch(err => handleError(err, dispatch));
+    .catch(err => handleReducerError(err, dispatch, errorMessage.school.getSchool));
   };
 }
 
@@ -53,7 +53,7 @@ export function getAllSchools() {
   return function(dispatch) {
     return SchoolsApi.getSchools()
       .then(schools => dispatch(loadSchoolsSuccess(schools)))
-      .catch(err => handleError(err, dispatch));
+    .catch(err => handleReducerError(err, dispatch, errorMessage.school.getAllSchools));
   };
 }
 
@@ -61,7 +61,7 @@ export function addSchool(schoolName) {
   return function(dispatch) {
     return SchoolsApi.addSchool(schoolName)
     .then(() => dispatch(getAllSchools()))
-    .catch(err => handleError(err, dispatch));
+    .catch(err => handleReducerError(err, dispatch, errorMessage.school.addSchool));
   };
 }
 
@@ -70,7 +70,7 @@ export function removeSchool(schoolId) {
     let promises = schoolId.map(school => SchoolsApi.removeSchool(school));
     return Promise.all(promises)
     .then(() => dispatch(getAllSchools()))
-    .catch(err => handleError(err, dispatch));
+    .catch(err => handleReducerError(err, dispatch, errorMessage.school.removeSchool));
   };
 }
 
@@ -85,23 +85,6 @@ export function changeTriggers(schoolId, triggers) {
           snackType : 'success'
         });
       })
-      .catch(err => handleError(err, dispatch));
+    .catch(err => handleReducerError(err, dispatch, errorMessage.school.changeTriggers));
   };
-}
-
-/**
- * Handle expected return codes
- */
-export function handleError(err, dispatch) {
-  let status = err.status;
-  if(status == 401) {
-    return dispatch(validate());
-  } else {
-    dispatch({
-      type      : 'OPEN_SNACKBAR',
-      message   : `Error: ${err.toString()}`,
-      snackType : 'error'
-    });
-    throw err;
-  }
 }

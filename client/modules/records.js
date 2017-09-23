@@ -2,6 +2,7 @@ import { List, fromJS } from 'immutable';
 
 import AbsenceRecordsApi from '../api/absence-records';
 import AbsenceRecordListModel from '../models/absence-record-list';
+import { handleReducerError, errorMessage } from '../utils/error';
 
 //ACTIONS
 const FETCH_CURRENT_RECORD_SUCCESS = 'FETCH_CURRENT_RECORD_SUCCESS';
@@ -50,7 +51,8 @@ export function fetchRecords() {
     .then(latestRecords => dispatch({
       type : FETCH_CURRENT_RECORD_SUCCESS,
       latestRecords
-    }));
+    }))
+    .catch(err => handleReducerError(err, dispatch, errorMessage.records.fetchRecords));
 }
 
 /**
@@ -66,39 +68,6 @@ export function fetchSchoolRecordList(schoolId) {
         recordList
       })
     )
-    .catch(err => handleError(err, dispatch));
+    .catch(err => handleReducerError(err, dispatch, errorMessage.records.fetchSchoolRecordList));
   };
 }
-
-// export function addRecord(record) {
-//   return dispatch => AbsenceRecordsApi.addRecord(record)
-//     .then(response => {
-//       dispatch({
-//         type : ADD_RECORD_SUCCESS
-//       });
-//       dispatch({
-//         type      : 'OPEN_SNACKBAR',
-//         message   : `Record created for ${response.record.school.name} with ${response.outreaches.length} outreaches.`,
-//         snackType : 'success'
-//       });
-//     })
-//     .catch(err => dispatch({
-//       type      : 'OPEN_SNACKBAR',
-//       message   : `Error: ${err}`,
-//       snackType : 'error'
-//     }));
-// }
-//
-// export function removeRecord(record) {
-//   return dispatch => AbsenceRecordsApi.removeRecord(record)
-//     .then(() => {
-//       dispatch({
-//         type : REMOVE_RECORD_SUCCESS
-//       });
-//       dispatch({
-//         type    : 'OPEN_SNACKBAR',
-//         message : 'Record deleted.',
-//         type    : 'success'
-//       });
-//     });
-// }

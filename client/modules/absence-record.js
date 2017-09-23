@@ -3,6 +3,7 @@ import { fromJS } from 'immutable';
 import AbsenceRecord from '../models/absence-record';
 import AbsenceRecordsApi from '../api/absence-records';
 import { handleReducerError, errorMessage } from '../utils/error';
+import { openSnackbar } from './view';
 
 //ACTIONS
 const LOAD_ABSENCE_RECORD_SUCCESS = 'LOAD_ABSENCE_RECORD_SUCCESS';
@@ -21,9 +22,7 @@ const formatDates = state =>
   });
 
 export default function reducer(state = {}, action) {
-  console.log(action);
   switch (action.type) {
-  // Received users from fetchRecordsList()
   case LOAD_ABSENCE_RECORD_SUCCESS:
     return formatDates(
       fromJS(action.absenceRecords)
@@ -48,7 +47,7 @@ export function fetchRecords() {
     return AbsenceRecordsApi.fetchRecords().then(res =>
       dispatch(loadRecordsSuccess(res))
     )
-    .catch(err => handleReducerError(err, dispatch, errorMessage.fetchRecords));
+    .catch(err => handleReducerError(err, dispatch, errorMessage.absenceRecord.fetchRecords));
   };
 }
 
@@ -61,7 +60,7 @@ export function fetchStudentRecord(studentId) {
     return AbsenceRecordsApi.fetchStudentRecord(studentId).then(res =>
       dispatch(loadRecordsSuccess(res))
     )
-    .catch(err => handleReducerError(err, dispatch, errorMessage.fetchStudentRecord));
+    .catch(err => handleReducerError(err, dispatch, errorMessage.absenceRecord.fetchStudentRecord));
   };
 }
 
@@ -74,7 +73,7 @@ export function fetchRecordsList(yearFilter) {
     return AbsenceRecordsApi.fetchRecordsList(yearFilter).then(res =>
       dispatch(loadRecordsSuccess(res))
     )
-    .catch(err => handleReducerError(err, dispatch, errorMessage.fetchRecordsList));
+    .catch(err => handleReducerError(err, dispatch, errorMessage.absenceRecord.fetchRecordsList));
   };
 }
 
@@ -87,7 +86,7 @@ export function fetchRecordsListQuery(querystring, yearFilter) {
     return AbsenceRecordsApi.fetchRecordsListQuery(querystring, yearFilter).then(res =>
       dispatch(loadRecordsSuccess(res))
     )
-    .catch(err => handleReducerError(err, dispatch, errorMessage.fetchRecordsListQuery));
+    .catch(err => handleReducerError(err, dispatch, errorMessage.absenceRecord.fetchRecordsListQuery));
   };
 }
 
@@ -100,7 +99,7 @@ export function fetchRecordsListAtRisk() {
     return AbsenceRecordsApi.fetchRecordsListAtRisk().then(res =>
       dispatch(loadRecordsSuccess(res))
     )
-    .catch(err => handleReducerError(err, dispatch, errorMessage.fetchRecordsListAtRisk));
+    .catch(err => handleReducerError(err, dispatch, errorMessage.absenceRecord.fetchRecordsListAtRisk));
   };
 }
 
@@ -113,7 +112,7 @@ export function fetchRecordsListChronic() {
     return AbsenceRecordsApi.fetchRecordsListChronic().then(res =>
       dispatch(loadRecordsSuccess(res))
     )
-    .catch(err => handleReducerError(err, dispatch, errorMessage.fetchRecordsListChronic));
+    .catch(err => handleReducerError(err, dispatch, errorMessage.absenceRecord.fetchRecordsListChronic));
   };
 }
 
@@ -126,7 +125,7 @@ export function fetchRecordsListYear(year) {
     return AbsenceRecordsApi.fetchRecordsListYear(year).then(res =>
       dispatch(loadRecordsSuccess(res))
     )
-    .catch(err => handleReducerError(err, dispatch, errorMessage.fetchRecordsListYear));
+    .catch(err => handleReducerError(err, dispatch, errorMessage.absenceRecord.fetchRecordsListYear));
   };
 }
 
@@ -137,11 +136,10 @@ export function fetchRecordsListYear(year) {
 export function addRecord(schoolId, record) {
   return function(dispatch) {
     return AbsenceRecordsApi.addRecord(schoolId, record).then(res => {
-      // dispatch(loadRecordsSuccess(res))
-
+      console.log('record', record);
       dispatch(openSnackbar(`Record added for ${res.record.school.name} with ${res.outreaches.length} outreaches created.`));
     })
-    .catch(err => handleReducerError(err, dispatch, errorMessage.addRecord));
+    .catch(err => handleReducerError(err, dispatch, errorMessage.absenceRecord.addRecord));
   };
 }
 
@@ -151,12 +149,11 @@ export function addRecord(schoolId, record) {
  */
 export function removeRecord(recordId) {
   return function(dispatch) {
-    return AbsenceRecordsApi.removeRecord(recordId).then(res =>
-      // dispatch(loadRecordsSuccess(res))
-
-      dispatch(openSnackbar(`Record deleted for ${res.record.school.name}.`))
-    )
-    .catch(err => handleReducerError(err, dispatch, errorMessage.removeRecord));
+    return AbsenceRecordsApi.removeRecord(recordId).then(res => {
+      console.log('record', recordId, res);
+      dispatch(openSnackbar(`Record deleted for ${res.record.school.name}.`));
+    })
+    .catch(err => handleReducerError(err, dispatch, errorMessage.absenceRecord.removeRecord));
   };
 }
 
