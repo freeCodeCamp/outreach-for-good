@@ -1,6 +1,7 @@
 import Report from '../models/report';
 import AbsenceRecordsApi from '../api/absence-records';
 import StudentApi from '../api/students';
+import { handleReducerError, errorMessage } from '../utils/error';
 
 //ACTIONS
 const RESET_REPORTS = 'RESET_REPORTS';
@@ -49,7 +50,8 @@ export function getCurrentAtRisk() {
     .then(atRisk => dispatch({
       type : AT_RISK_SUCCESS,
       atRisk
-    }));
+    }))
+    .catch(err => handleReducerError(err, dispatch, errorMessage.reports.getCurrentAtRisk));
 }
 
 export function getChronicallyAbsent() {
@@ -57,7 +59,8 @@ export function getChronicallyAbsent() {
     .then(chronic => dispatch({
       type : CHRONICALLY_ABSENT_SUCCESS,
       chronic
-    }));
+    }))
+    .catch(err => handleReducerError(err, dispatch, errorMessage.reports.getChronicallyAbsent));
 }
 
 export function getOutreachCounts(querystring = '') {
@@ -65,7 +68,8 @@ export function getOutreachCounts(querystring = '') {
     .then(outreachCounts => dispatch({
       type : OUTREACH_COUNT_SUCCESS,
       outreachCounts
-    }));
+    }))
+    .catch(err => handleReducerError(err, dispatch, errorMessage.reports.getOutreachCounts));
 }
 
 export function getOutreachSummary() {
@@ -73,7 +77,8 @@ export function getOutreachSummary() {
     .then(outreachSummary => dispatch({
       type : OUTREACH_SUMMARY_SUCCESS,
       outreachSummary
-    }));
+    }))
+    .catch(err => handleReducerError(err, dispatch, errorMessage.reports.getOutreachSummary));
 }
 
 export function getInterventionSummary() {
@@ -81,5 +86,6 @@ export function getInterventionSummary() {
     .then(interventionSummary => dispatch({
       type : INTERVENTION_SUMMARY_SUCCESS,
       interventionSummary
-    }));
+    }))
+    .catch(err => handleReducerError(err, dispatch, errorMessage.reports.getInterventionSummary));
 }

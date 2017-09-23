@@ -29,7 +29,7 @@ export default function viewReducer(state = initialState, action) {
     return {
       ...state,
       snackbar : {
-        autoHideDuration : 3000,
+        autoHideDuration : action.snackType === 'error' ? 20000 : 3000,
         message          : action.message,
         open             : true,
         snackType        : action.snackType

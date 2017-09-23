@@ -1,8 +1,8 @@
 import { List, fromJS } from 'immutable';
 
 import User from '../models/user';
-import { validate } from './session';
 import UsersApi from '../api/users';
+import { handleReducerError, errorMessage } from '../utils/error';
 
 
 //ACTIONS
@@ -38,7 +38,7 @@ export function getMyself() {
     return UsersApi.getMyself().then(users =>
       dispatch(loadUsersSuccess(users))
     )
-    .catch(err => handleError(err, dispatch));
+    .catch(err => handleReducerError(err, dispatch, errorMessage.user.getMyself));
   };
 }
 
@@ -48,7 +48,7 @@ export function getUser(userId) {
     return UsersApi.getUser(userId).then(users =>
       dispatch(loadUsersSuccess(users))
     )
-    .catch(err => handleError(err, dispatch));
+    .catch(err => handleReducerError(err, dispatch, errorMessage.user.getUser));
   };
 }
 
@@ -60,7 +60,7 @@ export function getAllUsers() {
     return UsersApi.getUsers().then(res =>
       //console.log('getAllUsers API: ', res);
        dispatch(loadUsersSuccess(res)))
-    .catch(err => handleError(err, dispatch));
+    .catch(err => handleReducerError(err, dispatch, errorMessage.user.getAllUsers));
   };
 }
 
@@ -74,7 +74,7 @@ export function updateUserRole(userId, roleId) {
     let promises = userId.map(user => UsersApi.updateRole(user, roleId));
     return Promise.all(promises)
     .then(() => dispatch(getAllUsers()))
-    .catch(err => handleError(err, dispatch));
+    .catch(err => handleReducerError(err, dispatch, errorMessage.user.updateUserRole));
   };
 }
 
@@ -88,7 +88,7 @@ export function updateUserSchool(userId, schoolId) {
     let promises = userId.map(user => UsersApi.updateSchool(user, schoolId));
     return Promise.all(promises)
     .then(() => dispatch(getAllUsers()))
-    .catch(err => handleError(err, dispatch));
+    .catch(err => handleReducerError(err, dispatch, errorMessage.user.updateUserSchool));
   };
 }
 
@@ -101,19 +101,6 @@ export function removeUser(userId) {
     let promises = userId.map(user => UsersApi.removeUser(user));
     return Promise.all(promises)
     .then(() => dispatch(getAllUsers()))
-    .catch(err => handleError(err, dispatch));
+    .catch(err => handleReducerError(err, dispatch, errorMessage.user.removeUser));
   };
-}
-
-/**
- * Handle expected return codes
- */
-export function handleError(err, dispatch) {
-  let status = err.status;
-  console.log('In userActions.js, handleError()', status, err);
-  if(status == 401) {
-    return dispatch(validate());
-  } else {
-    throw err;
-  }
 }

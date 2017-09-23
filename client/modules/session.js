@@ -3,6 +3,7 @@ import { browserHistory } from 'react-router';
 import cookies from 'browser-cookies';
 
 import userAPI from '../api/users';
+import { handleReducerError, errorMessage } from '../utils/error';
 
 //ACTIONS
 const SET_TOKEN = 'SET_TOKEN';

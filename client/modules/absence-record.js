@@ -1,15 +1,14 @@
-import { List, fromJS } from 'immutable';
+import { fromJS } from 'immutable';
 
 import AbsenceRecord from '../models/absence-record';
 import AbsenceRecordsApi from '../api/absence-records';
-import { validate } from './session';
+import { handleReducerError, errorMessage } from '../utils/error';
 import { openSnackbar } from './view';
 
 //ACTIONS
 const LOAD_ABSENCE_RECORD_SUCCESS = 'LOAD_ABSENCE_RECORD_SUCCESS';
 
 //REDUCER
-const initialState = new List();
 
 const formatDates = state =>
   state.map(record => {
@@ -22,9 +21,8 @@ const formatDates = state =>
       null);
   });
 
-export default (state = initialState, action) => {
+export default function reducer(state = {}, action) {
   switch (action.type) {
-  // Received users from fetchRecordsList()
   case LOAD_ABSENCE_RECORD_SUCCESS:
     return formatDates(
       fromJS(action.absenceRecords)
@@ -34,7 +32,7 @@ export default (state = initialState, action) => {
   default:
     return state;
   }
-};
+}
 
 //ACTION CREATORS
 export function loadRecordsSuccess(absenceRecords) {
@@ -49,7 +47,7 @@ export function fetchRecords() {
     return AbsenceRecordsApi.fetchRecords().then(res =>
       dispatch(loadRecordsSuccess(res))
     )
-    .catch(err => handleError(err, dispatch));
+    .catch(err => handleReducerError(err, dispatch, errorMessage.absenceRecord.fetchRecords));
   };
 }
 
@@ -62,7 +60,7 @@ export function fetchStudentRecord(studentId) {
     return AbsenceRecordsApi.fetchStudentRecord(studentId).then(res =>
       dispatch(loadRecordsSuccess(res))
     )
-    .catch(err => handleError(err, dispatch));
+    .catch(err => handleReducerError(err, dispatch, errorMessage.absenceRecord.fetchStudentRecord));
   };
 }
 
@@ -75,7 +73,7 @@ export function fetchRecordsList(yearFilter) {
     return AbsenceRecordsApi.fetchRecordsList(yearFilter).then(res =>
       dispatch(loadRecordsSuccess(res))
     )
-    .catch(err => handleError(err, dispatch));
+    .catch(err => handleReducerError(err, dispatch, errorMessage.absenceRecord.fetchRecordsList));
   };
 }
 
@@ -88,7 +86,7 @@ export function fetchRecordsListQuery(querystring, yearFilter) {
     return AbsenceRecordsApi.fetchRecordsListQuery(querystring, yearFilter).then(res =>
       dispatch(loadRecordsSuccess(res))
     )
-    .catch(err => handleError(err, dispatch));
+    .catch(err => handleReducerError(err, dispatch, errorMessage.absenceRecord.fetchRecordsListQuery));
   };
 }
 
@@ -101,7 +99,7 @@ export function fetchRecordsListAtRisk() {
     return AbsenceRecordsApi.fetchRecordsListAtRisk().then(res =>
       dispatch(loadRecordsSuccess(res))
     )
-    .catch(err => handleError(err, dispatch));
+    .catch(err => handleReducerError(err, dispatch, errorMessage.absenceRecord.fetchRecordsListAtRisk));
   };
 }
 
@@ -114,7 +112,7 @@ export function fetchRecordsListChronic() {
     return AbsenceRecordsApi.fetchRecordsListChronic().then(res =>
       dispatch(loadRecordsSuccess(res))
     )
-    .catch(err => handleError(err, dispatch));
+    .catch(err => handleReducerError(err, dispatch, errorMessage.absenceRecord.fetchRecordsListChronic));
   };
 }
 
@@ -127,7 +125,7 @@ export function fetchRecordsListYear(year) {
     return AbsenceRecordsApi.fetchRecordsListYear(year).then(res =>
       dispatch(loadRecordsSuccess(res))
     )
-    .catch(err => handleError(err, dispatch));
+    .catch(err => handleReducerError(err, dispatch, errorMessage.absenceRecord.fetchRecordsListYear));
   };
 }
 
@@ -138,13 +136,10 @@ export function fetchRecordsListYear(year) {
 export function addRecord(schoolId, record) {
   return function(dispatch) {
     return AbsenceRecordsApi.addRecord(schoolId, record).then(res => {
-      // dispatch(loadRecordsSuccess(res))
-
+      console.log('record', record);
       dispatch(openSnackbar(`Record added for ${res.record.school.name} with ${res.outreaches.length} outreaches created.`));
     })
-    .catch(err => {
-      dispatch(openSnackbar(`ERROR: ${err.toString()}`, 'error'));
-    });
+    .catch(err => handleReducerError(err, dispatch, errorMessage.absenceRecord.addRecord));
   };
 }
 
@@ -154,24 +149,11 @@ export function addRecord(schoolId, record) {
  */
 export function removeRecord(recordId) {
   return function(dispatch) {
-    return AbsenceRecordsApi.removeRecord(recordId).then(res =>
-      // dispatch(loadRecordsSuccess(res))
-
-      dispatch(openSnackbar(`Record deleted for ${res.record.school.name}.`))
-    )
-    .catch(err => dispatch(openSnackbar(`ERROR: ${err.toString()}`, 'error')));
+    return AbsenceRecordsApi.removeRecord(recordId).then(res => {
+      console.log('record', recordId, res);
+      dispatch(openSnackbar(`Record deleted for ${res.record.school.name}.`));
+    })
+    .catch(err => handleReducerError(err, dispatch, errorMessage.absenceRecord.removeRecord));
   };
 }
 
-/**
- * Handle expected return codes
- */
-export function handleError(err, dispatch) {
-  let status = err.status;
-  //console.log('In userActions.js, handleError()', status, err);
-  if(status == 401) {
-    return dispatch(validate());
-  } else {
-    throw err;
-  }
-}

@@ -1,6 +1,7 @@
 import SettingsApi from '../api/settings';
 import {getOutreachCounts} from './reports';
 import {openSnackbar} from './view';
+import { handleReducerError, errorMessage } from '../utils/error';
 
 const SET_WITHDRAWN_STUDENTS = 'TOGGLE_WITHDRAWN_STUDENTS';
 const GET_INTERVENTION_TYPES_SUCCESS = 'GET_INTERVENTION_TYPES_SUCCESS';
@@ -46,7 +47,7 @@ export function getInterventionTypes() {
         interventionTypes
       });
     })
-    .catch(err => dispatch(openSnackbar(`ERR: ${err}`, 'error')));
+    .catch(err => handleReducerError(err, dispatch, errorMessage.settings.getInterventionTypes));
 }
 
 export function putInterventionType(typeId, intervention) {
@@ -55,7 +56,7 @@ export function putInterventionType(typeId, intervention) {
       dispatch(getInterventionTypes());
       dispatch(openSnackbar(`Intervention ${res.title} updated!`));
     })
-    .catch(err => dispatch(`ERR: ${err}`, 'error'));
+    .catch(err => handleReducerError(err, dispatch, errorMessage.settings.putInterventionType));
 }
 
 export function postInterventionType(intervention) {
@@ -64,7 +65,7 @@ export function postInterventionType(intervention) {
       dispatch(getInterventionTypes());
       dispatch(openSnackbar(`Intervention ${res.title} created!`));
     })
-    .catch(err => dispatch(`ERR: ${err}`, 'error'));
+    .catch(err => handleReducerError(err, dispatch, errorMessage.settings.postInterventionType));
 }
 
 export function deleteInterventionType(typeId) {
@@ -73,5 +74,5 @@ export function deleteInterventionType(typeId) {
       dispatch(getInterventionTypes());
       dispatch(openSnackbar(`Intervention ${res.title} deleted!`));
     })
-    .catch(err => dispatch(`ERR: ${err}`, 'error'));
+    .catch(err => handleReducerError(err, dispatch, errorMessage.settings.deleteInterventionType));
 }
