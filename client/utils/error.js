@@ -69,8 +69,10 @@ export const errorMessage = {
     putStudentCfa           : 'Error: Could not update student CFA status',
     putStudentWithdrawn     : 'Error: Could not update student withdrawn status',
     postOutreachNote        : 'Error: Could not set outreach note',
+    putOutreachAction       : 'Error: Could not update outreach action',
     postIntervention        : 'Error: Could not set student intervention',
     postInterventionNote    : 'Error: Could not set intervention note',
+    putInterventionArchive  : 'Error: Could not archive intervention',
     deleteIntervention      : 'Error: Could not remove student intervention'
   },
   user : {

@@ -198,6 +198,15 @@ export function postOutreachNote(studentId, outreachId, note) {
     .catch(err => handleReducerError(err, dispatch, errorMessage.student.postOutreachNote));
 }
 
+export function putOutreachAction(studentId, outreachId, action) {
+  return dispatch => StudentApi.putOutreachAction(studentId, outreachId, action)
+    .then(outreach => {
+      dispatch(getStudentOutreaches(studentId));
+      dispatch(openSnackbar(`${outreach.type} ${outreach.tier} updated`));
+    })
+    .catch(err => handleReducerError(err, dispatch, errorMessage.student.postOutreachNote));
+}
+
 export function postIntervention(studentId, intervention) {
   return dispatch => StudentApi.postIntervention(studentId, intervention)
     .then(response => {
@@ -216,6 +225,15 @@ export function postInterventionNote(studentId, interventionId, note) {
       dispatch(openSnackbar('Intervention note posted'));
     })
     .catch(err => handleReducerError(err, dispatch, errorMessage.student.postInterventionNote));
+}
+
+export function putInterventionArchive(studentId, interventionId, archived) {
+  return dispatch => StudentApi.putInterventionArchive(studentId, interventionId, archived)
+    .then(outreach => {
+      dispatch(getStudentInterventions(studentId));
+      dispatch(openSnackbar(`Intervention archived`));
+    })
+    .catch(err => handleReducerError(err, dispatch, errorMessage.student.putInterventionArchive));
 }
 
 export function deleteIntervention(studentId, interventionId) {
