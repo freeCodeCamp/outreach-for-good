@@ -1,6 +1,11 @@
 import { validate } from '../modules/session';
 import { openSnackbar } from '../modules/view';
 
+export const attachGlobalErrorHandler = () => {
+  window.addEventListener('error', handleGlobalError);
+  window.addEventListener('unhandledrejection', handleUnhandledRejection);
+};
+
 export const handleReducerError = (error, dispatch, message) => {
   let status = error.status;
   if(status == 401) {
@@ -80,4 +85,16 @@ export const errorMessage = {
     getCombined         : 'Error: Could not fetch combined schools',
     getSchoolComparison : 'Error: Could not fetch school comparison'
   }
+};
+
+const handleGlobalError = error => {
+  throw error;
+};
+
+const handleUnhandledRejection = error => {
+  if(error && error.reason && error.reason.isCanceled === true) {
+    return;
+  }
+
+  throw error;
 };

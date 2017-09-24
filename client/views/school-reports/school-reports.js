@@ -9,6 +9,7 @@ import * as localActions from './school-reports.actions';
 import * as localDefs from './school-reports.defs';
 import * as dashboardDefs from '../dashboard/dashboard.defs';
 import * as settingsActions from '../../modules/settings';
+import { makeCancelable } from '../../utils/promise';
 
 import Dimensions from 'react-dimensions-cjs';
 import { List, Map } from 'immutable';
@@ -47,6 +48,13 @@ class SchoolReportsPage extends React.Component {
     }
   }
 
+  componentWillUnmount() {
+    this.activeApiCalls.forEach(call => {
+      call.cancel();
+    });
+  }
+
+  activeApiCalls = [];
   _reports = List([]);
   pendingApiCalls = [];
 
@@ -83,7 +91,9 @@ class SchoolReportsPage extends React.Component {
       loadingPromise = this.props.reportAct.getInterventionSummary();
       break;
     }
-    loadingPromise.then(() => this.updateData());
+    const cancelablePromise = makeCancelable(loadingPromise);
+    cancelablePromise.promise.then(() => this.updateData());
+    this.activeApiCalls.push(cancelablePromise);
     this.setState({loadResolved: false, currentTab});
   }
 

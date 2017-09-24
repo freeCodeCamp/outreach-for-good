@@ -11,6 +11,9 @@ import './styles/styles.scss';
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 //import '../node_modules/toastr/build/toastr.min.css';
 import injectTapEventPlugin from 'react-tap-event-plugin';
+import { attachGlobalErrorHandler } from './utils/error';
+
+attachGlobalErrorHandler();
 
 // Needed for onTouchTap
 // http://stackoverflow.com/a/34015469/988941

@@ -27,11 +27,11 @@ class StudentPage extends React.Component {
   componentDidMount() {
     const {studentId} = this.props.params;
 
-    this.props.actions.getStudent(studentId);
-    this.props.actions.getStudentRecords(studentId);
-    this.props.actions.getStudentOutreaches(studentId);
-    this.props.actions.getStudentInterventions(studentId);
-    this.props.actions.getStudentNotes(studentId);
+    this.props.studentActions.getStudent(studentId);
+    this.props.studentActions.getStudentRecords(studentId);
+    this.props.studentActions.getStudentOutreaches(studentId);
+    this.props.studentActions.getStudentInterventions(studentId);
+    this.props.studentActions.getStudentNotes(studentId);
 
     this.props.settingsActions.getInterventionTypes();
   }
@@ -49,19 +49,19 @@ class StudentPage extends React.Component {
 
     switch (e.target.name) {
     case 'iep':
-      this.props.actions.putStudentIep(studentId, {iep: val});
+      this.props.studentActions.putStudentIep(studentId, {iep: val});
       break;
     case 'cfa':
-      this.props.actions.putStudentCfa(studentId, {cfa: val});
+      this.props.studentActions.putStudentCfa(studentId, {cfa: val});
       break;
     case 'withdrawn':
-      this.props.actions.putStudentWithdrawn(studentId, {withdrawn: val});
+      this.props.studentActions.putStudentWithdrawn(studentId, {withdrawn: val});
       break;
     }
   }
 
   render() {
-    const { student, records, interventions, outreaches, notes } = this.props.student;
+    const { student, absenceRecords, interventions, outreaches, notes } = this.props.student;
 
     return (
       <div className="student-page">
@@ -89,7 +89,7 @@ class StudentPage extends React.Component {
             />
           </div>
           <div className="col-attendance">
-            <StudentAbsenceRecordTable records={records} />
+            <StudentAbsenceRecordTable records={absenceRecords} />
           </div>
         </div>
         <div className="tabs">
@@ -103,7 +103,7 @@ class StudentPage extends React.Component {
                         cardType="outreach"
                         cardId={card._id}
                         cardData={card}
-                        addNote={this.props.actions.postOutreachNote} />
+                        addNote={this.props.studentActions.postOutreachNote} />
                     </div>)}
                 </div>
               </div>
@@ -126,7 +126,7 @@ class StudentPage extends React.Component {
                         cardType="intervention"
                         cardId={card._id}
                         cardData={card}
-                        addNote={this.props.actions.postInterventionNote} />
+                        addNote={this.props.studentActions.postInterventionNote} />
                     </div>)}
                 </div>
               </div>
@@ -134,7 +134,7 @@ class StudentPage extends React.Component {
             <Tab label="Notes">
               <StudentNotes
                 studentId={student._id}
-                addNote={this.props.actions.postStudentNote}
+                addNote={this.props.studentActions.postStudentNote}
                 notes={notes} />
             </Tab>
             <Tab label="Summary">
@@ -158,7 +158,7 @@ class StudentPage extends React.Component {
           data={this.props.settings.interventionTypes}
           dialogOpen={this.state.dialogOpen}
           dialogClose={this.dialogClose}
-          dialogSubmit={this.props.actions.postIntervention}
+          dialogSubmit={this.props.studentActions.postIntervention}
           student={this.props.student.student} />
 
       </div>
@@ -167,10 +167,10 @@ class StudentPage extends React.Component {
 }
 
 StudentPage.propTypes = {
-  params   : PropTypes.object,
-  settings : PropTypes.object,
-  student  : PropTypes.object.isRequired,
-  actions  : PropTypes.object.isRequired
+  params         : PropTypes.object,
+  settings       : PropTypes.object,
+  student        : PropTypes.object.isRequired,
+  studentActions : PropTypes.object.isRequired
 };
 
 function mapStateToProps(state) {
@@ -182,7 +182,7 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    actions         : bindActionCreators(studentActions, dispatch),
+    studentActions  : bindActionCreators(studentActions, dispatch),
     settingsActions : bindActionCreators(settingsActions, dispatch)
   };
 }
