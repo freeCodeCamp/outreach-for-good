@@ -7,7 +7,6 @@ import * as studentActions from '../../modules/student';
 import * as settingsActions from '../../modules/settings';
 
 import {Tabs, Tab} from 'material-ui/Tabs';
-import Checkbox from 'material-ui/Checkbox';
 import RaisedButton from 'material-ui/RaisedButton';
 import FontIcon from 'material-ui/FontIcon';
 
@@ -16,24 +15,28 @@ import StudentAbsenceRecordTable from '../../components/student-abs-record-table
 import StudentDialog from '../../components/student-dialog/student-dialog';
 import StudentNotes from '../../components/student-notes/student-notes';
 import StudentCard from '../../components/student-card/student-card';
+import StudentOutreaches from '../../components/student-outreaches/student-outreaches';
+import StudentInfoPane from '../../components/student-info-pane/student-info-pane';
 import StudentSummaryCard from '../../components/student-summary-card/student-summary-card';
 import './student.scss';
 
 class StudentPage extends React.Component {
   state = {
-    dialogOpen : false
+    dialogOpen        : false,
+    initialDataLoaded : false
   }
 
   componentDidMount() {
     const {studentId} = this.props.params;
 
-    this.props.studentActions.getStudent(studentId);
-    this.props.studentActions.getStudentRecords(studentId);
-    this.props.studentActions.getStudentOutreaches(studentId);
-    this.props.studentActions.getStudentInterventions(studentId);
-    this.props.studentActions.getStudentNotes(studentId);
-
-    this.props.settingsActions.getInterventionTypes();
+    Promise.all([
+      this.props.studentActions.getStudent(studentId),
+      this.props.studentActions.getStudentRecords(studentId),
+      this.props.studentActions.getStudentOutreaches(studentId),
+      this.props.studentActions.getStudentInterventions(studentId),
+      this.props.studentActions.getStudentNotes(studentId),
+      this.props.settingsActions.getInterventionTypes()
+    ]).then(() => this.setState({initialDataLoaded: true}));
   }
 
   dialogOpen = () => {
@@ -44,21 +47,26 @@ class StudentPage extends React.Component {
     this.setState({ dialogOpen: false });
   }
 
-  onCheck = (e, val) => {
+  clickHandler = (action, data, event) => {
     const { studentId } = this.props.params;
-
-    switch (e.target.name) {
-    case 'iep':
-      this.props.studentActions.putStudentIep(studentId, {iep: val});
+    switch (action) {
+    case 'setIep':
+      this.props.studentActions.putStudentIep(studentId, {iep: data});
       break;
-    case 'cfa':
-      this.props.studentActions.putStudentCfa(studentId, {cfa: val});
+    case 'setCfa':
+      this.props.studentActions.putStudentCfa(studentId, {cfa: data});
       break;
-    case 'withdrawn':
-      this.props.studentActions.putStudentWithdrawn(studentId, {withdrawn: val});
+    case 'setWithdrawn':
+      this.props.studentActions.putStudentWithdrawn(studentId, {withdrawn: data});
+      break;
+    case 'addOutreachNote':
+      this.props.studentActions.postOutreachNote(studentId, data);
+      break;
+    case 'addInterventionNote':
+      this.props.studentActions.postOutreachNote(studentId, data);
       break;
     }
-  }
+  } // End of: clickHandler()
 
   render() {
     const { student, absenceRecords, interventions, outreaches, notes } = this.props.student;
@@ -77,63 +85,31 @@ class StudentPage extends React.Component {
             <div className="col-heading">
               Student Info
             </div>
-            <div className="student-info">
-              <div className="student-settings">
-                <Checkbox
-                  label="IEP"
-                  name="iep"
-                  onCheck={this.onCheck}
-                  checked={student.iep}
-                  labelStyle={{fontWeight: 400}}
-                  inputStyle={{width: '100px'}}
-                />
-                <Checkbox
-                  label="CFA"
-                  name="cfa"
-                  onCheck={this.onCheck}
-                  checked={student.cfa}
-                  labelStyle={{fontWeight: 400}}
-                  inputStyle={{width: '100px'}}
-                />
-                <Checkbox
-                  label="Withdrawn"
-                  name="withdrawn"
-                  onCheck={this.onCheck}
-                  checked={student.withdrawn}
-                  labelStyle={{fontWeight: 400}}
-                  inputStyle={{width: '100px'}}
-                />
-              </div>
-              <div className="student-data">
-                <b>School:</b> {student.school.name}<br />
-                <b>Grade:</b> {student.grade}
-              </div>
-            </div>
+            <StudentInfoPane
+              student={student}
+              clickHandler={this.clickHandler}
+            />
           </div>
           <div className="col-attendance">
             <div className="col-heading">
               Attendance Data
             </div>
-          {absenceRecords
-            && <StudentAbsenceRecordTable absenceRecords={absenceRecords} />
-          }
+            {absenceRecords &&
+            <StudentAbsenceRecordTable
+              absenceRecords={absenceRecords}
+            />
+            }
           </div>
         </div>
         <div className="tabs">
           <Tabs>
             <Tab label="Outreaches">
-              <div className="tab-view">
-                <div className="cards">
-                  {outreaches && outreaches.map((card, i) =>
-                    <div className="card" key={i}>
-                      <StudentCard
-                        cardType="outreach"
-                        cardId={card._id}
-                        cardData={card}
-                        addNote={this.props.studentActions.postOutreachNote} />
-                    </div>)}
-                </div>
-              </div>
+              {outreaches &&
+              <StudentOutreaches
+                outreaches={outreaches}
+                clickHandler={this.clickHandler}
+              />
+              }
             </Tab>
             <Tab label="Interventions">
               <div className="tab-view">
@@ -167,8 +143,8 @@ class StudentPage extends React.Component {
             }
             </Tab>
             <Tab label="Summary">
-            {student && outreaches && interventions && notes && absenceRecords &&
-              <StudentSummaryCard
+            {student && outreaches && interventions && notes && absenceRecords
+              && <StudentSummaryCard
                 student={student}
                 absenceRecords={absenceRecords}
                 outreaches={outreaches}

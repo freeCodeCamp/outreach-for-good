@@ -88,3 +88,4 @@ This version is currently under development.
 
 
 Fix promise-cancel console error
+Ensure performApiCall queue always flushes
