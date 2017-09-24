@@ -35,7 +35,7 @@ export default function studentReducer(state = initialState, action) {
   case GET_STUDENT_RECORDS_SUCCESS: {
     return {
       ...state,
-      records : action.records
+      absenceRecords : action.records
     };
   }
   case GET_STUDENT_INTERVENTIONS_SUCCESS: {

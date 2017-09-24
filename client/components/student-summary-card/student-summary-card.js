@@ -10,31 +10,31 @@ const formatDate = date => {
 
 const getNotes = notes => {
   if(notes.length > 0) {
-    return notes.map((note, i) =>
+    return notes && notes.map((note, i) =>
       <li key={i}>
         <b>{ formatDate(note.date || note.createdAt) }</b> - {note.note}
       </li>);
   }
 };
-const Summary = ({ student }) =>
+const StudentSummaryCard = ({ student, absenceRecords, outreaches, interventions, notes }) =>
 <div className="summary">
   <div className="print-area">
-    <h2>{student.student.firstName} {student.student.lastName}</h2>
-    {student.student.school
-    && <div><b>School:</b> { student.student.school.name }</div>}
+    <h2>{student.firstName} {student.lastName}</h2>
+    {student.school
+    && <div><b>School:</b> { student.school.name }</div>}
     <div>
       <b>Student id:</b>
-      {student.student.studentId}
+      {student.studentId}
     </div>
     <div>
       <b>IEP:</b>
-      {student.student.iep
+      {student.iep
         ? 'yes'
         : 'no'}
     </div>
     <div>
       <b>CFA:</b>
-      {student.student.cfa
+      {student.cfa
         ? 'yes'
         : 'no'}
     </div>
@@ -54,7 +54,7 @@ const Summary = ({ student }) =>
         </tr>
       </thead>
       <tbody>
-        {student.records.map((record, i) =>
+        {absenceRecords.map((record, i) =>
           <tr key={i}>
             <td>{ formatDate(record.date) }</td>
             <td>{ record.entry.absences }</td>
@@ -70,8 +70,8 @@ const Summary = ({ student }) =>
     </table>
 
     <h3>Outreaches</h3>
-    {student.outreaches.length
-    ? student.outreaches.map((outreach, i) =>
+    {outreaches.length
+    ? outreaches.map((outreach, i) =>
       <div key={i}>
         <h4>{ outreach.type } #{ outreach.tier }</h4>
         <div className="dates">
@@ -92,8 +92,8 @@ const Summary = ({ student }) =>
 
 
     <h3>Interventions</h3>
-    {student.interventions.length
-    ? student.interventions.map((intervention, i) =>
+    {interventions.length
+    ? interventions.map((intervention, i) =>
       <div key={i}>
         <h4>{ intervention.type }</h4>
         <div className="dates">
@@ -111,12 +111,12 @@ const Summary = ({ student }) =>
 
 
     <h3>Notes</h3>
-    {student.notes.length
+    {notes.length
     ? <ul>
-        {getNotes(student.notes)}
+        {getNotes(notes)}
       </ul>
     : <em>No other notes.</em>}
   </div>
 </div>;
 
-export default Summary;
+export default StudentSummaryCard;

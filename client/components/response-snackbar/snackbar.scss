@@ -1,6 +1,11 @@
+.snackbar-success,
+.snackbar-error {
+  color: white;
+  bottom: 29px !important;
+}
+
 .snackbar-success {
   background-color: #16a461 !important;
-  color: white;
   * {
     background-color: #16a461 !important;
   }
@@ -8,8 +13,6 @@
 
 .snackbar-error {
   background-color: #d9152a !important;
-  color: white;
-  bottom: 29px !important;
   * {
     background-color: #d9152a !important;
   }

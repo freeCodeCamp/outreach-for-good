@@ -69,7 +69,7 @@ class StudentDialog extends Component {
 }
 
 StudentDialog.propTypes = {
-  data         : PropTypes.object,
+  data         : PropTypes.array,
   dialogOpen   : PropTypes.bool,
   dialogClose  : PropTypes.func,
   dialogSubmit : PropTypes.func,
