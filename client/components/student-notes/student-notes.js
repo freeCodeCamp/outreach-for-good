@@ -1,41 +1,31 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import TextField from 'material-ui/TextField';
-import RaisedButton from 'material-ui/RaisedButton';
-import FontIcon from 'material-ui/FontIcon';
-import Chip from 'material-ui/Chip';
 
+import { formatDate } from '../../utils/date';
 import './student-notes.scss';
 
-const StudentNotes = ({ studentId, cardId, cardType, notes, addNote }) => {
-  const postNote = e => {
-    e.preventDefault();
-    const note = { note: e.target.note.value };
+const StudentNotes = ({ notes, clickHandler }) => {
+  // const postNote = e => {
+  //   const note = { note: e.target.note.value };
 
-    switch (cardType) {
-    case 'outreach':
-      addNote(studentId, cardId, note);
-      break;
-    case 'intervention':
-      addNote(studentId, cardId, note);
-      break;
-    default:
-      addNote(studentId, note);
-      break;
-    }
-
-    e.target.reset();
-  };
+  //   switch (cardType) {
+  //   case 'outreach':
+  //     addNote(studentId, cardId, note);
+  //     break;
+  //   case 'intervention':
+  //     addNote(studentId, cardId, note);
+  //     break;
+  //   default:
+  //     addNote(studentId, note);
+  //     break;
+  //   }
+  // };
 
   const renderNote = (note, i) => {
     let date;
-    if(cardType !== undefined) {
-      date = new Date(note.date).toDateString();
-    } else {
-      date = new Date(note.createdAt).toDateString();
-    }
+    date = new Date(note.date || note.updatedAt).toDateString();
     return (
-      <div className="note-display" key={i}>
+      <div className="note-display">
         <Chip className="chip-style">
           {date}
         </Chip>
@@ -46,18 +36,20 @@ const StudentNotes = ({ studentId, cardId, cardType, notes, addNote }) => {
 
   return (
     <div className="notes-container">
-      <form name="postNote" onSubmit={postNote}>
-        <TextField
-          id="post-note-field"
-          name="note"
-          hintText="Type your note here" />
-        <RaisedButton
-          icon={<FontIcon className="fa fa-plus" />}
-          type="submit"
-          primary />
-      </form>
-      <div className={`note-window ${cardType ? 'card' : ''}`}>
-        {notes.map(renderNote)}
+      <div className="add-notes input-group">
+        <input type="text" className="form-control" placeholder="Search for..." />
+        <span className="input-group-btn">
+          <button className="btn btn-secondary" type="button">Go!</button>
+        </span>
+      </div>
+      <div className="note-list">
+        {notes.map((note, i) =>
+          <div className="note-line" key={note._id}>
+            <span className="note-date">{formatDate(new Date(note.date || note.updatedAt))}</span> &nbsp;
+            {note.note}
+            {i !== notes.length - 1 && <hr />}
+          </div>
+        )}
       </div>
     </div>
   );

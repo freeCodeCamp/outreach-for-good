@@ -1,19 +1,43 @@
 .notes-container {
-  margin: 10px;
-  .note-window {
+  padding: 10px;
+  display: flex;
+  height: 200px;
+  flex-direction: column;
+  .add-notes {
+    display: flex;
+    min-height: 27px;
+  }
+  .note-list {
     border: 1px solid #b5b5b5;
     border-radius: 3px;
-    padding: 4px;
-    min-height: 130px;
-    &.card {
-      max-height: 130px;
-      overflow-y: auto;
-    }
-    .note-display {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      padding: 4px 0;
-    }
+    padding: 10px 4px;
+    height: 130px;
+    overflow-y: auto;
   }
+}
+
+.note-line hr {
+  margin: 10px 0px;
+}
+
+.note-date {
+  background-color: #265e6d;
+  border-radius: 10px;
+  font-size: 12px;
+  color: #FFFFFF;
+  padding: 3px 7px;
+}
+
+/**  STYLE 3 */
+.note-list::-webkit-scrollbar-track {
+	background-color: #d9edf7;
+}
+
+.note-list::-webkit-scrollbar {
+	width: 6px;
+	background-color: #d9edf7;
+}
+
+.note-list::-webkit-scrollbar-thumb {
+	background-color: #265e6d;
 }

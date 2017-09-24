@@ -58,18 +58,10 @@ class StudentOutreaches extends React.Component {
                 <div className="outreach-info-data">{outreach.actionDate && formatDate(new Date(outreach.actionDate))}&nbsp;</div>
               </div>
               <div className="outreach-notes">
-            
-            {/* <StudentNotes
-              addNote={addNote}
-              cardType={cardType}
-              cardId={cardId}
-              studentId={cardData.student}
-              notes={cardData.notes}
-            /> */}
-
-
-                
-                {this.state.datePickers[i] && this.state.datePickers[i].value}
+                <StudentNotes
+                  clickHandler={this.props.clickHandler}
+                  notes={outreach.notes}
+                />
               </div>
             </div>
           </div>
