@@ -16,7 +16,7 @@ import StudentAbsenceRecordTable from '../../components/student-abs-record-table
 import StudentDialog from '../../components/student-dialog/student-dialog';
 import StudentNotes from '../../components/student-notes/student-notes';
 import StudentCard from '../../components/student-card/student-card';
-import Summary from '../../components/student-summary-card/student-summary-card';
+import StudentSummaryCard from '../../components/student-summary-card/student-summary-card';
 import './student.scss';
 
 class StudentPage extends React.Component {
@@ -27,11 +27,11 @@ class StudentPage extends React.Component {
   componentDidMount() {
     const {studentId} = this.props.params;
 
-    this.props.actions.getStudent(studentId);
-    this.props.actions.getStudentRecords(studentId);
-    this.props.actions.getStudentOutreaches(studentId);
-    this.props.actions.getStudentInterventions(studentId);
-    this.props.actions.getStudentNotes(studentId);
+    this.props.studentActions.getStudent(studentId);
+    this.props.studentActions.getStudentRecords(studentId);
+    this.props.studentActions.getStudentOutreaches(studentId);
+    this.props.studentActions.getStudentInterventions(studentId);
+    this.props.studentActions.getStudentNotes(studentId);
 
     this.props.settingsActions.getInterventionTypes();
   }
@@ -49,47 +49,74 @@ class StudentPage extends React.Component {
 
     switch (e.target.name) {
     case 'iep':
-      this.props.actions.putStudentIep(studentId, {iep: val});
+      this.props.studentActions.putStudentIep(studentId, {iep: val});
       break;
     case 'cfa':
-      this.props.actions.putStudentCfa(studentId, {cfa: val});
+      this.props.studentActions.putStudentCfa(studentId, {cfa: val});
       break;
     case 'withdrawn':
-      this.props.actions.putStudentWithdrawn(studentId, {withdrawn: val});
+      this.props.studentActions.putStudentWithdrawn(studentId, {withdrawn: val});
       break;
     }
   }
 
   render() {
-    const { student, records, interventions, outreaches, notes } = this.props.student;
+    const { student, absenceRecords, interventions, outreaches, notes } = this.props.student;
+    if(!student || !student._id) {
+      return null;
+    }
 
     return (
       <div className="student-page">
+        <div className="student-name-header">
+          <h3>{student.firstName} {student.lastName}</h3>
+          <span className={'student-id-heading'}><b>Student ID:</b> {student.studentId}</span>
+        </div>
         <div className="info">
           <div className="col-data">
-            <h1>{student.lastName}, {student.firstName} <small>Grade: {student.grade}</small></h1>
-            <p>Student ID: (#{student.studentId})</p>
-            <Checkbox
-              label="IEP"
-              name="iep"
-              onCheck={this.onCheck}
-              checked={student.iep}
-            />
-            <Checkbox
-              label="CFA"
-              name="cfa"
-              onCheck={this.onCheck}
-              checked={student.cfa}
-            />
-            <Checkbox
-              label="Withdrawn"
-              name="withdrawn"
-              onCheck={this.onCheck}
-              checked={student.withdrawn}
-            />
+            <div className="col-heading">
+              Student Info
+            </div>
+            <div className="student-info">
+              <div className="student-settings">
+                <Checkbox
+                  label="IEP"
+                  name="iep"
+                  onCheck={this.onCheck}
+                  checked={student.iep}
+                  labelStyle={{fontWeight: 400}}
+                  inputStyle={{width: '100px'}}
+                />
+                <Checkbox
+                  label="CFA"
+                  name="cfa"
+                  onCheck={this.onCheck}
+                  checked={student.cfa}
+                  labelStyle={{fontWeight: 400}}
+                  inputStyle={{width: '100px'}}
+                />
+                <Checkbox
+                  label="Withdrawn"
+                  name="withdrawn"
+                  onCheck={this.onCheck}
+                  checked={student.withdrawn}
+                  labelStyle={{fontWeight: 400}}
+                  inputStyle={{width: '100px'}}
+                />
+              </div>
+              <div className="student-data">
+                <b>School:</b> {student.school.name}<br />
+                <b>Grade:</b> {student.grade}
+              </div>
+            </div>
           </div>
           <div className="col-attendance">
-            <StudentAbsenceRecordTable records={records} />
+            <div className="col-heading">
+              Attendance Data
+            </div>
+          {absenceRecords
+            && <StudentAbsenceRecordTable absenceRecords={absenceRecords} />
+          }
           </div>
         </div>
         <div className="tabs">
@@ -97,13 +124,13 @@ class StudentPage extends React.Component {
             <Tab label="Outreaches">
               <div className="tab-view">
                 <div className="cards">
-                  {outreaches.map((card, i) =>
+                  {outreaches && outreaches.map((card, i) =>
                     <div className="card" key={i}>
                       <StudentCard
                         cardType="outreach"
                         cardId={card._id}
                         cardData={card}
-                        addNote={this.props.actions.postOutreachNote} />
+                        addNote={this.props.studentActions.postOutreachNote} />
                     </div>)}
                 </div>
               </div>
@@ -120,26 +147,35 @@ class StudentPage extends React.Component {
                 </div>
 
                 <div className="cards">
-                  {interventions.map((card, i) =>
+                  {interventions && interventions.map((card, i) =>
                     <div className="card" key={i}>
                       <StudentCard
                         cardType="intervention"
                         cardId={card._id}
                         cardData={card}
-                        addNote={this.props.actions.postInterventionNote} />
+                        addNote={this.props.studentActions.postInterventionNote} />
                     </div>)}
                 </div>
               </div>
             </Tab>
             <Tab label="Notes">
-              <StudentNotes
+            {notes
+              && <StudentNotes
                 studentId={student._id}
-                addNote={this.props.actions.postStudentNote}
+                addNote={this.props.studentActions.postStudentNote}
                 notes={notes} />
+            }
             </Tab>
             <Tab label="Summary">
-              {student
-                && <Summary student={this.props.student} />}
+            {student && outreaches && interventions && notes && absenceRecords &&
+              <StudentSummaryCard
+                student={student}
+                absenceRecords={absenceRecords}
+                outreaches={outreaches}
+                interventions={interventions}
+                notes={notes}
+              />
+            }
             </Tab>
             <Tab label="Parent Info">
               <div className="tab-view">
@@ -153,24 +189,25 @@ class StudentPage extends React.Component {
             </Tab>
           </Tabs>
         </div>
-
-        <StudentDialog
-          data={this.props.settings.interventionTypes}
-          dialogOpen={this.state.dialogOpen}
-          dialogClose={this.dialogClose}
-          dialogSubmit={this.props.actions.postIntervention}
-          student={this.props.student.student} />
-
+        { this.props.settings
+          && <StudentDialog
+            data={this.props.settings.interventionTypes}
+            dialogOpen={this.state.dialogOpen}
+            dialogClose={this.dialogClose}
+            dialogSubmit={this.props.studentActions.postIntervention}
+            student={this.props.student.student} />
+        }
       </div>
     );
   }
 }
 
 StudentPage.propTypes = {
-  params   : PropTypes.object,
-  settings : PropTypes.object,
-  student  : PropTypes.object.isRequired,
-  actions  : PropTypes.object.isRequired
+  params          : PropTypes.object,
+  settings        : PropTypes.object,
+  student         : PropTypes.object.isRequired,
+  studentActions  : PropTypes.object.isRequired,
+  settingsActions : PropTypes.object.isRequired
 };
 
 function mapStateToProps(state) {
@@ -182,7 +219,7 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    actions         : bindActionCreators(studentActions, dispatch),
+    studentActions  : bindActionCreators(studentActions, dispatch),
     settingsActions : bindActionCreators(settingsActions, dispatch)
   };
 }

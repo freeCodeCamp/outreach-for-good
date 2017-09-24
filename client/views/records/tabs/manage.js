@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import {List} from 'immutable';
+import { makeCancelable } from '../../../utils/promise';
 
 import * as recordsActions from '../../../modules/records';
 import * as schoolActions from '../../../modules/school';
@@ -36,6 +37,13 @@ class ManageTab extends React.Component {
     }
   }
 
+  componentWillUnmount() {
+    this.activeApiCalls.forEach(call => {
+      call.cancel();
+    });
+  }
+
+  activeApiCalls = [];
   pendingApiCalls = [];
   schoolRecords = List([]);
 
@@ -50,18 +58,26 @@ class ManageTab extends React.Component {
   }
 
   retrieveData = (data, schoolId) => {
+    let loadingPromise;
     switch (data) {
     case 'records':
-      this.props.recordsActions.fetchSchoolRecordList(schoolId).then(() => this.updateData());
+      loadingPromise = this.props.recordsActions.fetchSchoolRecordList(schoolId);
       break;
     case 'schools':
-      this.props.schoolActions.getAllSchools().then(() => this.updateData());
+      loadingPromise = this.props.schoolActions.getAllSchools();
       break;
     }
+    const cancelablePromise = makeCancelable(loadingPromise);
+    cancelablePromise.promise.then(() => this.updateData());
+    this.activeApiCalls.push(cancelablePromise);
     this.setState({loadResolved: false});
   }
 
   updateData = nextProps => {
+    if(!this.props.schools) {
+      this.retrieveData('schools');
+      return;
+    }
     let schools = {};
     let loadResolved = true;
     schools.available = this.props.schools.map(school => ({name: school.name, id: school._id}))

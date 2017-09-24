@@ -18,11 +18,11 @@ const UNMOUNT_STUDENT = 'UNMOUNT_STUDENT';
 
 //REDUCER
 const initialState = {
-  student       : {},
-  records       : [],
-  interventions : [],
-  outreaches    : [],
-  notes         : []
+  student        : {},
+  absenceRecords : [],
+  interventions  : [],
+  outreaches     : [],
+  notes          : []
 };
 export default function studentReducer(state = initialState, action) {
   switch (action.type) {
@@ -35,7 +35,7 @@ export default function studentReducer(state = initialState, action) {
   case GET_STUDENT_RECORDS_SUCCESS: {
     return {
       ...state,
-      records : action.records
+      absenceRecords : action.records
     };
   }
   case GET_STUDENT_INTERVENTIONS_SUCCESS: {
@@ -166,11 +166,7 @@ export function putStudentIep(studentIds, iep) {
   return dispatch => StudentApi.putStudentIep(Array.isArray(studentIds)
     ? studentIds : [studentIds], iep)
     .then(student => {
-      dispatch({
-        type : GET_STUDENT_SUCCESS,
-        student
-      });
-      dispatch(openSnackbar(`IEP status changed to ${student[0].iep}`));
+      dispatch(openSnackbar(student[0].iep ? 'Student IEP status added' : 'Student IEP status removed'));
     })
     .catch(err => handleReducerError(err, dispatch, errorMessage.student.putStudentIep));
 }
@@ -179,11 +175,7 @@ export function putStudentCfa(studentIds, cfa) {
   return dispatch => StudentApi.putStudentCfa(Array.isArray(studentIds)
     ? studentIds : [studentIds], cfa)
     .then(student => {
-      dispatch({
-        type : GET_STUDENT_SUCCESS,
-        student
-      });
-      dispatch(openSnackbar(`CFA status changed to ${student[0].cfa}`));
+      dispatch(openSnackbar(student[0].cfa ? 'Student CFA status added' : 'Student CFA status removed'));
     })
     .catch(err => handleReducerError(err, dispatch, errorMessage.student.putStudentCfa));
 }
@@ -192,11 +184,7 @@ export function putStudentWithdrawn(studentIds, withdrawn) {
   return dispatch => StudentApi.putStudentWithdrawn(Array.isArray(studentIds)
     ? studentIds : [studentIds], withdrawn)
     .then(student => {
-      dispatch({
-        type : GET_STUDENT_SUCCESS,
-        student
-      });
-      dispatch(openSnackbar(`Withdrawn status changed to ${student[0].withdrawn}`));
+      dispatch(openSnackbar(student[0].withdrawn ? 'Student set to Withdrawn' : 'Student set to Enrolled'));
     })
     .catch(err => handleReducerError(err, dispatch, errorMessage.student.putStudentWithdrawn));
 }

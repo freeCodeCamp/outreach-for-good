@@ -1,36 +1,36 @@
 import React from 'react';
-import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn} from 'material-ui/Table';
+import PropTypes from 'prop-types';
+
+import { formatDate } from '../../utils/date';
 
 const StudentAbsenceRecordTable = props =>
-  <Table
-    height="150px"
-    selectable={false}>
-    <TableHeader
-      displaySelectAll={false}>
-      <TableRow
-        selectable={false}>
-        <TableHeaderColumn tooltip="Date">Date</TableHeaderColumn>
-        <TableHeaderColumn tooltip="Present">P</TableHeaderColumn>
-        <TableHeaderColumn tooltip="Tardies">T</TableHeaderColumn>
-        <TableHeaderColumn tooltip="Tardies Delta">T&Delta;</TableHeaderColumn>
-        <TableHeaderColumn tooltip="Absences">A</TableHeaderColumn>
-        <TableHeaderColumn tooltip="Absences Delta">A&Delta;</TableHeaderColumn>
-      </TableRow>
-    </TableHeader>
-    <TableBody
-      displayRowCheckbox={false}>
-      {props.records.map((record, i) =>
-        <TableRow key={i}>
-          <TableRowColumn>{new Date(record.date).toDateString()}</TableRowColumn>
-          <TableRowColumn>{record.entry.present}</TableRowColumn>
-          <TableRowColumn>{record.entry.tardies}</TableRowColumn>
-          <TableRowColumn>{record.entry.tardiesDelta}</TableRowColumn>
-          <TableRowColumn>{record.entry.absences}</TableRowColumn>
-          <TableRowColumn>{record.entry.absencesDelta}</TableRowColumn>
-        </TableRow>
+  <table className="student-record-table">
+    <thead>
+      <tr>
+        <th>Date</th>
+        <th>P</th>
+        <th>T</th>
+        <th>T&Delta;</th>
+        <th>A</th>
+        <th>&Delta;</th>
+      </tr>
+    </thead>
+    <tbody>
+      {props.absenceRecords.map(record =>
+      <tr key={record._id}>
+        <td>{formatDate(new Date(record.date))}</td>
+        <td>{record.entry.present}</td>
+        <td>{record.entry.tardies}</td>
+        <td>{record.entry.tardiesDelta}</td>
+        <td>{record.entry.absences}</td>
+        <td>{record.entry.absencesDelta}</td>
+      </tr>
       )}
-    </TableBody>
-  </Table>
-;
+    </tbody>
+  </table>;
+
+StudentAbsenceRecordTable.propTypes = {
+  absenceRecords : PropTypes.array.isRequired
+};
 
 export default StudentAbsenceRecordTable;

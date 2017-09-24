@@ -2,6 +2,7 @@ import { fromJS } from 'immutable';
 
 import AbsenceRecord from '../models/absence-record';
 import AbsenceRecordsApi from '../api/absence-records';
+import { formatDate } from '../utils/date';
 import { handleReducerError, errorMessage } from '../utils/error';
 import { openSnackbar } from './view';
 
@@ -10,21 +11,17 @@ const LOAD_ABSENCE_RECORD_SUCCESS = 'LOAD_ABSENCE_RECORD_SUCCESS';
 
 //REDUCER
 
-const formatDates = state =>
+const parseDate = state =>
   state.map(record => {
     let timestamp = Date.parse(record.get('date'));
     let date = isNaN(timestamp) ? null : new Date(timestamp);
-    return record.set('dateFormatted', date ?
-      ('0' + date.getUTCFullYear()).slice(-2) + '-' +
-      ('0' + (date.getUTCMonth() + 1)).slice(-2) + '-' +
-      ('0' + date.getUTCDate()).slice(-2) :
-      null);
+    return record.set('dateFormatted', date ? formatDate(date) : null);
   });
 
 export default function reducer(state = {}, action) {
   switch (action.type) {
   case LOAD_ABSENCE_RECORD_SUCCESS:
-    return formatDates(
+    return parseDate(
       fromJS(action.absenceRecords)
         .map(record => new AbsenceRecord(record)
       ));

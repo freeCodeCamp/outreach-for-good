@@ -1,12 +1,28 @@
 .student-page {
+  h3 {
+    display: inline-block;
+    margin: 0px;
+    padding-top: 10px;
+    padding-left: 20px;
+  }
   .info {
-    padding: 10px;
     display: flex;
     .col-data {
-      flex: 1;
+      flex: 1.5;
+      .student-info {
+        display: flex;
+        padding: 5px;
+        .student-data {
+          flex: 1
+        }
+        .student-settings {
+          flex: 1
+        }
+      }
     }
     .col-attendance {
       flex: 2;
+      border-left: 1px #d3d3d3 solid;
     }
   }
 
@@ -28,4 +44,22 @@
       }
     }
   }
+}
+
+.student-name-header {
+  height: 48px;
+  border-bottom: 2px solid #265e6d;
+}
+
+.student-id-heading {
+  float: right;
+  padding-top: 20px;
+  padding-right: 20px;
+}
+
+.col-heading {
+  background-color: #d9edf7;
+  width: 100%;
+  font-size: 1.75rem;
+  padding: 2px 10px;
 }

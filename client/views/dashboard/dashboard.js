@@ -15,6 +15,7 @@ import * as userActions from '../../modules/user';
 import Dimensions from 'react-dimensions-cjs';
 import { Tabs } from 'material-ui/Tabs';
 import { List, Map } from 'immutable';
+import { makeCancelable } from '../../utils/promise';
 
 import CsvParse from '../../components/csv-parse/csv-parse';
 import { Tab } from '../../components/tab/tab';
@@ -54,6 +55,13 @@ class DashboardPage extends React.Component {
     }
   }
 
+  componentWillUnmount() {
+    this.activeApiCalls.forEach(call => {
+      call.cancel();
+    });
+  }
+
+  activeApiCalls = [];
   _absenceRecords = List([]);
   pendingApiCalls = [];
 
@@ -101,8 +109,10 @@ class DashboardPage extends React.Component {
       loadingPromise = this.props.absRecordActions.fetchRecordsList(yearFilter);
       break;
     }
+    const cancelablePromise = makeCancelable(loadingPromise);
     this.props.reportActions.getOutreachCounts('withdrawn=false');
-    loadingPromise.then(() => this.updateData());
+    cancelablePromise.promise.then(() => this.updateData());
+    this.activeApiCalls.push(cancelablePromise);
     this.setState({loadResolved: false, currentTab, yearFilter});
   }
 
