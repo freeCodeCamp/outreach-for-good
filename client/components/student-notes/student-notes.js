@@ -36,11 +36,20 @@ const StudentNotes = ({ notes, clickHandler }) => {
 
   return (
     <div className="notes-container">
-      <div className="add-notes input-group">
-        <input type="text" className="form-control" placeholder="Search for..." />
-        <span className="input-group-btn">
-          <button className="btn btn-secondary" type="button">Go!</button>
-        </span>
+      <div className="add-notes">
+        <div className="add-notes-label">
+          <span style={{position: 'absolute', right: 10, bottom: 2}}>
+            Notes
+          </span>
+        </div>
+        <div className="add-notes-input">
+          <div className="input-group">
+            <input type="text" className="form-control" />
+            <span className="input-group-btn">
+              <button className="btn btn-secondary" type="button">+</button>
+            </span>
+          </div>
+        </div>
       </div>
       <div className="note-list">
         {notes.map((note, i) =>

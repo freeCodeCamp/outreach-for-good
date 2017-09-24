@@ -31,7 +31,7 @@ class StudentOutreaches extends React.Component {
       <div className="outreach-container container-fluid">
         {this.props.outreaches.map((outreach, i) =>
         <div
-          className={classnames({row: i % 2 !== 0})}
+          className={classnames('student-row', {row: i % 2 !== 0})}
           key={'outreach-' + outreach._id}
         >
           <div className={classnames("col-data col-md-6", {'last-outreach-row': (i === this.props.outreaches.length - 1 && i % 2 === 0)})}>
