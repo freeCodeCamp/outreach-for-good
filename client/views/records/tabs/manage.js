@@ -96,7 +96,6 @@ class ManageTab extends React.Component {
     this.setState({table: nextTable, loadResolved, schools});
   }
 
-
   clickHandler = (action, data, event) => {
     let nextTable;
     switch (action) {

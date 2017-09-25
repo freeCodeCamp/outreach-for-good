@@ -1,74 +1,59 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import TextField from 'material-ui/TextField';
-import RaisedButton from 'material-ui/RaisedButton';
-import FontIcon from 'material-ui/FontIcon';
-import Chip from 'material-ui/Chip';
 
+import { formatDate } from '../../utils/date';
 import './student-notes.scss';
-
-const StudentNotes = ({ studentId, cardId, cardType, notes, addNote }) => {
-  const postNote = e => {
-    e.preventDefault();
-    const note = { note: e.target.note.value };
-
-    switch (cardType) {
-    case 'outreach':
-      addNote(studentId, cardId, note);
-      break;
-    case 'intervention':
-      addNote(studentId, cardId, note);
-      break;
-    default:
-      addNote(studentId, note);
-      break;
-    }
-
-    e.target.reset();
-  };
-
-  const renderNote = (note, i) => {
-    let date;
-    if(cardType !== undefined) {
-      date = new Date(note.date).toDateString();
-    } else {
-      date = new Date(note.createdAt).toDateString();
-    }
+class StudentNotes extends React.Component {
+  input;
+  render() {
     return (
-      <div className="note-display" key={i}>
-        <Chip className="chip-style">
-          {date}
-        </Chip>
-        <p>{note.note}</p>
+      <div className="notes-container">
+        <div className="add-notes">
+          <div className="add-notes-label">
+            <span style={{position: 'absolute', right: 10, bottom: 2}}>
+              Notes
+            </span>
+          </div>
+          <div className="add-notes-input">
+            <div className="input-group">
+              <input
+                type="text"
+                className="form-control"
+                ref={input => {this.input = input; }}
+              />
+              <span className="input-group-btn">
+                <button
+                  className="btn btn-secondary"
+                  type="button"
+                  onClick={() => {
+                    this.props.handleNewNote(this.input.value, this.props.outreachId);
+                    this.input.value = '';
+                  }}
+                >
+                  +
+                </button>
+              </span>
+            </div>
+          </div>
+        </div>
+        <div className="note-list">
+          {this.props.notes.map((note, i) =>
+            <div className="note-line" key={note._id}>
+              <span className="note-date">{formatDate(new Date(note.date || note.updatedAt))}</span> &nbsp;
+              {note.note}
+              {i !== this.props.notes.length - 1 && <hr />}
+            </div>
+          )}
+        </div>
       </div>
     );
-  };
-
-  return (
-    <div className="notes-container">
-      <form name="postNote" onSubmit={postNote}>
-        <TextField
-          id="post-note-field"
-          name="note"
-          hintText="Type your note here" />
-        <RaisedButton
-          icon={<FontIcon className="fa fa-plus" />}
-          type="submit"
-          primary />
-      </form>
-      <div className={`note-window ${cardType ? 'card' : ''}`}>
-        {notes.map(renderNote)}
-      </div>
-    </div>
-  );
-};
+  }
+}
 
 StudentNotes.propTypes = {
-  studentId : PropTypes.string,
-  cardId    : PropTypes.string,
-  cardType  : PropTypes.string,
-  notes     : PropTypes.array,
-  addNote   : PropTypes.func
+  outreachId    : PropTypes.string,
+  notes         : PropTypes.array,
+  handleNewNote : PropTypes.func
 };
 
 export default StudentNotes;

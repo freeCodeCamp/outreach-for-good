@@ -88,3 +88,5 @@ This version is currently under development.
 
 
 Fix promise-cancel console error
+Ensure performApiCall queue always flushes
+allow clicking on student note dates to see more info in a dialog
