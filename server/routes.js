@@ -6,20 +6,21 @@
 
 var errors = require('./components/errors');
 var path = require('path');
+// var debug = require('debug')('route:main');
 
 module.exports = function(app) {
-
   // models
   app.use('/api/absence-records', require('./api/absence-record'));
   app.use('/api/schools', require('./api/school'));
   app.use('/api/students', require('./api/student'));
   app.use('/api/users', require('./api/user'));
+  //app.use('/api/volunteers', require('./api/volunteer'));
 
   // services
   app.use('/auth', require('./auth'));
   app.use('/api/visualizations', require('./api/visualization'));
 
-  // configurations
+  //configuration
   app.use('/api/settings', require('./api/setting'));
 
   // development
@@ -32,6 +33,6 @@ module.exports = function(app) {
   // All other routes should redirect to the index.html
   app.route('/*')
     .get(function(req, res) {
-      res.sendFile(path.resolve(app.get('appPath') + '/index.html'));
+      res.sendFile(path.resolve(`${app.get('appPath')}/index.html`));
     });
 };

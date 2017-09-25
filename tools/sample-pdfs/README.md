@@ -2,8 +2,6 @@
 
 This repository contains PDFs with dummy data that can be used to test the webapp.
 
-The template used to generate these pdfs can be found at:
+The original file supplied by CFA is 'Sample-PDF_2017.pdf'
 
-https://docs.google.com/spreadsheets/d/1j1OQfaQKqgkaxuB5OSHCK-GtJJzJfyIBpqhQNR4vM-o/edit?usp=sharing
-
-<!--Trivial change to trigger another webhook-->
+The 'abs-record-generator' folder was used with the original Angular webapp.

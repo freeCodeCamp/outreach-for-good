@@ -1,0 +1,23 @@
+---
+
+#|  Install NVM
+
+- name: install - Setup Global NVM
+  git:
+    repo: '{{ nvm_repo }}'
+    dest: '/usr/local/nvm'
+    version: '{{ nvm_version }}'
+    accept_hostkey: true
+  when: '{{ nvm_system_install }}'
+
+- name: install - Setup User NVM
+  git:
+    repo: '{{ nvm_repo }}'
+    dest: '{{item.stdout}}/.nvm'
+    version: '{{ nvm_version }}'
+    accept_hostkey: true
+  become: true
+  become_user: '{{ item.item }}'
+  with_items:
+    - '{{ _nvm_user.results }}'
+

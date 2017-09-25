@@ -2,11 +2,11 @@
 
 A Vagrantfile provisioned with Ansible that sets up a dev environment for the Child First Authority project.
 
-This is only usable on OSX at the moment because the box uses NFS to mount the share folder.
+Current configurations do not support Windows due to NFS mounting of shared folders.
 
 It could be modified easily to be used with a windows machine by removing a couple lines or adding smb support. See https://github.com/blinkreaction/boot2docker-vagrant for a reference to how that might be accomplished.
 
-# Prerequisites
+# Prerequisites - `Vagrantfile`
 
 * Vagrant (http://docs.vagrantup.com/v2/installation/index.html)
 * Virtualbox (https://www.virtualbox.org/wiki/Downloads)
@@ -32,14 +32,36 @@ Make copy of `provisioning/group_vars/all.yml.example` as
 
 Install vagrant plugins on the host:
 
-		$ vagrant plugin install vagrant-hostmanager
-		$ vagrant plugin install vagrant-vbguest
+        $ vagrant plugin install vagrant-hostmanager
+        $ vagrant plugin install vagrant-vbguest
 
 Bring up the vm and wait for ansible to provision it.
 
     projectdir$ vagrant up
 
 This first vagrant up will take a fairly long time to complete (~30 mins).
+
+# Prerequisites - `Vagrantfile.libvirt`
+
+Linux workstations already running qemu/libvirt can make use of Vagrantfile.libvirt with native linux utillities
+to build a similar development environment. The `vagrant-libvirt` plugin is required.
+
+```
+mv Vagrantfile Vagrantfile.vbox
+mv Vagrantfile.libvirt Vagrantfile
+vagrant up
+```
+
+While `vagrant-libvirt` supports shared folders and forwarded ports, due to differing environments such
+tasks are left to the developer. An example using sshfs/ssh is included below.
+
+```
+sshfs -o reconnect,port=22,idmap=user,allow_other vagrant@192.168.121.100:/vagrant/app ~/vagrant
+ssh -N -L 9000:localhost:9000 -p 22 vagrant@192.168.121.100
+ssh -N -L 35729:localhost:35729 -p 22 vagrant@192.168.121.100
+ssh -N -L 27017:localhost:27017 -p 22 vagrant@192.168.121.100
+ssh -N -L 5858:localhost:5858 -p 22 vagrant@192.168.121.100
+```
 
 # Post provisioning
 

@@ -8,17 +8,17 @@ var router = express.Router();
 
 router
   .get('/', passport.authenticate('google', {
-    failureRedirect: '/signup',
-    scope: [
+    failureRedirect : '/signup',
+    scope           : [
       'https://www.googleapis.com/auth/userinfo.profile',
       'https://www.googleapis.com/auth/userinfo.email'
     ],
-    session: false
+    session : false
   }))
 
   .get('/callback', passport.authenticate('google', {
-    failureRedirect: '/signup',
-    session: false
+    failureRedirect : '/signup',
+    session         : false
   }), auth.setTokenCookie);
 
 module.exports = router;

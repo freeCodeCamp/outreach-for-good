@@ -8,3 +8,6 @@ provisioning/group_vars/all.yml
 
 ### App Folder ###
 app/
+
+# Ansible
+*.retry

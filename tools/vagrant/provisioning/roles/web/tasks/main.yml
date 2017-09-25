@@ -1,64 +1,9 @@
 ---
-- name: Install packages
-  apt: pkg={{ item }}
-  sudo: yes
-  with_items:
-    - build-essential
-    - curl
-    - git
-    - ruby
-    - g++
-    - libkrb5-dev
-    - libpng-dev
-    - libfontconfig-dev
-    - python-pip
-  tags: packages
-
-- name: CSS | Install SASS
-  sudo: yes
-  action: command gem install sass creates=/usr/local/bin/sass
-  tags: css
 
 - name: Create global .gitconfig with default user.name and user.email.
   sudo: no
   template: src=gconfig.j2 dest=/home/vagrant/.gitconfig force=no
   tags: git
-
-- name: Install nodejs, npm, and npm packages
-  include: node.yml
-  tags: nodejs
-
-- name: Register remote PATH File
-  shell: "echo $PATH"
-  register: nodejs_path_out
-
-- name: use node 12.7
-  sudo: no
-  command: /home/vagrant/n/bin/n 0.12.7
-  environment:
-    N_PREFIX: "/home/vagrant/n"
-    PATH: "/home/vagrant/n/bin:{{ nodejs_path_out.stdout }}"
-
-- name: Npm | Install npm
-  sudo: no
-  npm: name=npm global=yes executable=/home/vagrant/n/bin/npm state=latest
-  environment:
-    N_PREFIX: "/home/vagrant/n"
-    PATH: "/home/vagrant/n/bin:{{ nodejs_path_out.stdout }}"
-
-- name: Npm | Install npm packages
-  sudo: no
-  npm: name={{item}} global=yes executable=/home/vagrant/n/bin/npm
-  with_items:
-    - yo
-    - bower
-    - grunt-cli
-    - generator-angular-fullstack
-    - npm-check-updates
-  environment:
-    N_PREFIX: "/home/vagrant/n"
-    PATH: "/home/vagrant/n/bin:{{ nodejs_path_out.stdout }}"
-  tags: npm packages
 
 - name: Install heroku-toolbelt
   include: 'heroku.yml'
