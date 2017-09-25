@@ -21,6 +21,10 @@ class StudentOutreaches extends React.Component {
     this.props.clickHandler('updateOutreachAction', outreachId, {actionDate: date.toString()});
   };
 
+  handleOutreachNote = (note, outreachId) => {
+    this.props.clickHandler('addOutreachNote', outreachId, {note});
+  };
+
   updateData = i => {
     console.log('outreach-date-picker-' + i);
     this.state.datePickers[i].focus();
@@ -59,8 +63,9 @@ class StudentOutreaches extends React.Component {
               </div>
               <div className="outreach-notes">
                 <StudentNotes
-                  clickHandler={this.props.clickHandler}
+                  handleNewNote={this.handleOutreachNote}
                   notes={outreach.notes}
+                  outreachId={outreach._id}
                 />
               </div>
             </div>

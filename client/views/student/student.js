@@ -60,10 +60,10 @@ class StudentPage extends React.Component {
       this.props.studentActions.putStudentWithdrawn(studentId, {withdrawn: data});
       break;
     case 'addOutreachNote':
-      this.props.studentActions.postOutreachNote(studentId, data);
+      this.props.studentActions.postOutreachNote(studentId, data, event);
       break;
     case 'addInterventionNote':
-      this.props.studentActions.postInterventionNote(studentId, data);
+      this.props.studentActions.postInterventionNote(studentId, data, event);
       break;
     case 'updateOutreachAction':
       this.props.studentActions.putOutreachAction(studentId, data, event);

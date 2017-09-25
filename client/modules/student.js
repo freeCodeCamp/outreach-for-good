@@ -193,7 +193,7 @@ export function postOutreachNote(studentId, outreachId, note) {
   return dispatch => StudentApi.postOutreachNote(studentId, outreachId, note)
     .then(outreach => {
       dispatch(getStudentOutreaches(studentId));
-      dispatch(openSnackbar(`Outreach posted for ${outreach.type} ${outreach.tier}`));
+      dispatch(openSnackbar(`Note added to ${outreach.type} ${outreach.tier}`));
     })
     .catch(err => handleReducerError(err, dispatch, errorMessage.student.postOutreachNote));
 }
