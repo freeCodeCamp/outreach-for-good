@@ -51,13 +51,13 @@ class StudentPage extends React.Component {
     const { studentId } = this.props.params;
     switch (action) {
     case 'setIep':
-      this.props.studentActions.putStudentIep(studentId, {iep: data});
+      this.props.studentActions.putStudentIep(studentId, data);
       break;
     case 'setCfa':
-      this.props.studentActions.putStudentCfa(studentId, {cfa: data});
+      this.props.studentActions.putStudentCfa(studentId, data);
       break;
     case 'setWithdrawn':
-      this.props.studentActions.putStudentWithdrawn(studentId, {withdrawn: data});
+      this.props.studentActions.putStudentWithdrawn(studentId, data);
       break;
     case 'addOutreachNote':
       this.props.studentActions.postOutreachNote(studentId, data, event);

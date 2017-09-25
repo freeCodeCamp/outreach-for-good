@@ -162,28 +162,31 @@ export function postStudentNote(studentId, body) {
     .catch(err => handleReducerError(err, dispatch, errorMessage.student.postStudentNote));
 }
 
-export function putStudentIep(studentIds, iep) {
-  return dispatch => StudentApi.putStudentIep(Array.isArray(studentIds)
-    ? studentIds : [studentIds], iep)
+export function putStudentIep(studentId, iep) {
+  const studentIds = Array.isArray(studentId) ? studentId : [studentId];
+  return dispatch => StudentApi.putStudentIep(studentIds, iep)
     .then(student => {
+      dispatch(getStudent(studentIds[0]));
       dispatch(openSnackbar(student[0].iep ? 'Student IEP status added' : 'Student IEP status removed'));
     })
     .catch(err => handleReducerError(err, dispatch, errorMessage.student.putStudentIep));
 }
 
-export function putStudentCfa(studentIds, cfa) {
-  return dispatch => StudentApi.putStudentCfa(Array.isArray(studentIds)
-    ? studentIds : [studentIds], cfa)
+export function putStudentCfa(studentId, cfa) {
+  const studentIds = Array.isArray(studentId) ? studentId : [studentId];
+  return dispatch => StudentApi.putStudentCfa(studentIds, cfa)
     .then(student => {
+      dispatch(getStudent(studentIds[0]));
       dispatch(openSnackbar(student[0].cfa ? 'Student CFA status added' : 'Student CFA status removed'));
     })
     .catch(err => handleReducerError(err, dispatch, errorMessage.student.putStudentCfa));
 }
 
-export function putStudentWithdrawn(studentIds, withdrawn) {
-  return dispatch => StudentApi.putStudentWithdrawn(Array.isArray(studentIds)
-    ? studentIds : [studentIds], withdrawn)
+export function putStudentWithdrawn(studentId, withdrawn) {
+  const studentIds = Array.isArray(studentId) ? studentId : [studentId];
+  return dispatch => StudentApi.putStudentWithdrawn(studentIds, withdrawn)
     .then(student => {
+      dispatch(getStudent(studentIds[0]));
       dispatch(openSnackbar(student[0].withdrawn ? 'Student set to Withdrawn' : 'Student set to Enrolled'));
     })
     .catch(err => handleReducerError(err, dispatch, errorMessage.student.putStudentWithdrawn));
