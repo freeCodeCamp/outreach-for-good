@@ -1,18 +1,19 @@
 'use strict';
+/* eslint babel/no-invalid-this: 0 */
 
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var UserSchema = new Schema({
-  name: String,
-  email: {type: String, lowercase: true},
-  role: {
-    type: String,
-    default: 'guest'
+  name  : String,
+  email : {type: String, lowercase: true},
+  role  : {
+    type    : String,
+    default : 'guest'
   },
-  provider: String,
-  google: {},
-  assignment: {type: Schema.Types.ObjectId, ref: 'School'}
+  provider   : String,
+  google     : {},
+  assignment : {type: Schema.Types.ObjectId, ref: 'School'}
 });
 
 // Public profile information
@@ -20,8 +21,8 @@ UserSchema
   .virtual('profile')
   .get(function() {
     return {
-      'name': this.name,
-      'role': this.role
+      name : this.name,
+      role : this.role
     };
   });
 
@@ -30,8 +31,8 @@ UserSchema
   .virtual('token')
   .get(function() {
     return {
-      '_id': this._id,
-      'role': this.role
+      _id  : this._id,
+      role : this.role
     };
   });
 

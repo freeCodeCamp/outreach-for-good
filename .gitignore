@@ -161,9 +161,5 @@ public
 .idea
 client/bower_components
 dist
-/server/config/local.env.js
 /server/config/local.env
-*.env
-/server/config/development.env.js
-*.pyc
 npm-debug.log

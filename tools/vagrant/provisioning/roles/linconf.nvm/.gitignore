@@ -1,0 +1,4 @@
+.kitchen
+tests/vagrant*.rb
+*.lock
+*.retry

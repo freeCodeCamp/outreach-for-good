@@ -1,0 +1,22 @@
+---
+
+#| Set to `False` to disable the role
+
+nvm_role_enabled: True
+
+
+#|
+#| Settings
+#|
+
+#latest: v0.33.1
+nvm_version: 'HEAD'
+nvm_system_install: True
+nvm_user_installs: []
+
+nvm_install_node_versions:
+  - 'lts/boron'
+nvm_default_node_version: 'lts/boron'
+nvm_install_packages: []
+
+nvm_repo: 'git://github.com/creationix/nvm.git'

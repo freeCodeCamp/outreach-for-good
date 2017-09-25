@@ -1,0 +1,10 @@
+footer{
+  width: 100%;
+  background-color: #f1f1f1;
+  color: #666666;
+  padding: 6px;
+  text-align: center;
+  font-size: 0.9em;
+  // higher than snackbar at 2900
+  z-index: 3000;
+}

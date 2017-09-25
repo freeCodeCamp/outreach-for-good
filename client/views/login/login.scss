@@ -1,0 +1,39 @@
+.login-page {
+  padding: 60px 0px 20px;
+  height: 100vh;
+  background-color: #265e6d;
+  text-align: center;
+
+  img {
+    display: block;
+    margin: 0 auto;
+  }
+}
+.login-page-title {
+    margin-bottom: 20px;
+    font-size: 21px;
+    font-weight: 300;
+    line-height: 1.4;
+    color: #fff;
+    text-align: center;
+}
+
+.login-button {
+  border-radius: 5px !important;
+
+  & a {
+    line-height: 30px !important;
+    border-radius: 5px !important;
+  }
+
+  & .fa-google-plus {
+    display: inline-block;
+    vertical-align: middle;
+    width: 36px;
+    height: 36px;
+    line-height: 36px;
+    margin-left: 6px !important;
+    font-size: 18px !important;
+    border-right: #fff 1px solid;
+  }
+}

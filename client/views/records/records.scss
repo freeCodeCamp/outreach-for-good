@@ -1,0 +1,85 @@
+.upload-tab {
+  margin: 10px;
+  .dropzone-container {
+    .column {
+      width: 50%;
+      display: inline-block;
+      padding: 0 20px;
+      margin: 0;
+      vertical-align: top;
+      .dropzone {
+        width: 90%;
+        height: 140px;
+        line-height: 140px;
+        text-align: center;
+        vertical-align: middle;
+        margin: 0 auto;
+        border: 2px dashed #adadad;
+        color: #adadad;
+      }
+    }
+  }
+
+  .hidden {
+    display: none;
+  }
+
+  .display-container {
+    padding: 20px;
+    .buttons {
+      text-align: center;
+      .RaisedButton {
+        margin: 12px;
+      }
+    }
+  }
+}
+
+.manage-tab {
+  margin: 10px;
+  .school-select {
+    margin: 10px;
+  }
+
+  .record-data{
+    margin: 0 10px;
+    padding: 10px;
+    .column {
+      display: inline-block;
+      vertical-align: top;
+      width: 50%;
+    }
+  }
+}
+
+$alertred: #f2dede;
+.alert {
+  color: #a94442;
+  background-color: $alertred;
+}
+
+.record-page-title {
+  height: 50px;
+  padding: 0px 10px 10px;
+  position: relative;
+}
+
+.section-label {
+  color: #3c763d;
+}
+
+.student-record-table-container {
+  padding: 30px;
+}
+
+.student-record-table {
+  width: 100%;
+
+  tr {
+    border-bottom: 1px solid #DDDDDD;
+
+    td {
+      padding: 4px;
+    }
+  }
+}

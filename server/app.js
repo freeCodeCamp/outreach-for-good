@@ -1,48 +1,48 @@
+'use strict';
 /**
  * Main application file
  */
 
-'use strict';
-
-// Set default node environment to development
-process.env.NODE_ENV = process.env.NODE_ENV || 'development';
-var Raven = require('raven');
-
 var express = require('express');
-var mongoose = require('mongoose');
-var Raven = require('raven');
-var app;
+var webpack = require('webpack');
+var raven = require('raven');
+var env = require('./config/environment');
+const debug = require('debug')('app:main');
 
-var config = require('./config/environment');
-if(!config.raven.dsn) {
-	throw new Error('You must set the raven environment variable');
+// Connect to database
+require('./config/mongoose');
+
+const app = express();
+
+// Add Sentry.io request and error handler middleware
+if(env.raven_dsn) {
+  debug('Sentry.io reporting enabled');
+  raven.config(env.raven_dsn).install();
+  app.use(raven.requestHandler());
+  app.use(raven.errorHandler());
 }
-Raven.config(config.raven.dsn).install();
-Raven.context(function () {
 
-	// Connect to database
-	mongoose.connect(config.mongo.uri, config.mongo.options);
-	mongoose.connection.on('error', function(err) {
-		console.error('MongoDB connection error: ' + err);
-		process.exit(-1);
-		}
-	);
-	// Populate DB with sample data
-	if(config.seedDB) { require('./config/seed'); }
+// Use webpack-dev-server for HMR durring development
+if(env.env == 'development') {
+  const webpackDevServer = require('webpack-dev-server');
+  const webpackDevConfig = require('../webpack.config.dev');
+  const compiler = webpack(webpackDevConfig);
 
-	// Setup server
-	app = express();
-	app.use(Raven.requestHandler());
-	app.use(Raven.errorHandler());
+  const wpServer = new webpackDevServer(compiler, webpackDevConfig.devServer);
 
-	var server = require('http').createServer(app);
-	require('./config/express')(app);
-	require('./routes')(app);
+  wpServer.listen(env.webpackPort, 'localhost', function() {
+    debug('  🌎  Webpack server listening on %d, in %s mode', env.webpackPort, app.get('env'));
+    debug('DeprecationWarning: loaderUtils.parseQuery() - caused by babel, fixed in v7.0');
+  });
+}
 
-	// Start server
-	server.listen(config.port, config.ip, function () {
-		console.log('Express server listening on %d, in %s mode', config.port, app.get('env'));
-	});
+var server = require('http').createServer(app);
+require('./config/express')(app);
+require('./routes')(app);
+
+// Start server
+server.listen(env.port, env.ip, function() {
+  debug('  🌎  Express server listening on %d, in %s mode', env.port, app.get('env'));
 });
 
 // Expose app

@@ -3,6 +3,7 @@
   sudo: yes
   roles:
     - common
+    - linconf.nvm
     - web
     - mongodb
     - cleanup
