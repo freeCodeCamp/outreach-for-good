@@ -4,7 +4,7 @@
 // ===========================
 module.exports = {
   // MongoDB connection options
-  mongo : {
-    uri : 'mongodb://localhost/app-test'
+  mongo: {
+    uri: 'mongodb://localhost/app-test'
   }
 };

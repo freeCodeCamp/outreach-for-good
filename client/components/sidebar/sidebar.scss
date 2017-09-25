@@ -1,9 +1,7 @@
-@import '../../styles/variables.scss';
-
-#sidebar {
+sidebar {
   display: flex;
   flex-direction: column;
-  @media(max-width: $medium) {
+  @media(max-width: 1200px) {
     position: absolute;
     top: $cfa-unit;
     bottom: 0;
@@ -23,7 +21,7 @@
   list-style: none;
   overflow-y: auto;
   &.expanded {
-    width: 200px;
+    width: 250px;
   }
   li {
     overflow: hidden;
@@ -43,29 +41,29 @@
       text-decoration: none;
       color: #fff;
       border-radius: 0;
-      &.active {
-        background-color: $orange;
-        background: linear-gradient(to right, $cfaOrange500, $cfaOrange500);
-        a, a:focus {
-          background: none;
-        }
-        a:hover {
-          background-color: $cfaOrange500;
-        }
-      }
     }
     a:hover {
       color: #fff;
       background-color: $teal-l05;
-      box-shadow: inset 2px 0 0 0 $cfaOrange500;
+      box-shadow: inset 2px 0 0 0 #D35400;
     }
     &.flex-spacer {
       flex: 1;
       min-height: 0;
     }
+    &.active {
+      background-color: $orange;
+      background: linear-gradient(to right, $orange-d05, $orange);
+      a, a:focus {
+        background: none;
+      }
+      a:hover {
+        background-color: $orange-l10;
+      }
+    }
   }
   transition: all 0.5s ease;
-  @media(max-width: $medium) {
+  @media(max-width: 1200px) {
     width: 0;
   }
   @include cfa-scrollbar(1px, 0, $teal, $teal-d05);
@@ -76,7 +74,7 @@
 }
 
 @media print {
-  #sidebar {
+  sidebar {
     display: none !important;
   }
 }

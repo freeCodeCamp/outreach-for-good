@@ -2,59 +2,57 @@
 
 var _ = require('lodash');
 var AbsenceRecord = require('../absence-record/absence-record.model');
-var debug = require('debug')('route:api:visualization');
 
 var categoryDefaults = {
-  Normal : 0,
-  ARCA   : 0,
-  CA     : 0
+  'Normal': 0,
+  'ARCA': 0,
+  'CA': 0
 };
 
 var arcaCondition = {
-  $cond : [{
-    $lte : [{$divide: ['$entries.present', '$entries.enrolled']}, 0.9]
+  $cond: [{
+    $lte: [{$divide: ['$entries.present', '$entries.enrolled']}, 0.9]
   }, 'ARCA', 'Normal']
 };
 
 var categorizeCondition = {
-  $cond : [{$gte: ['$entries.absences', 20]}, 'CA', arcaCondition]
+  $cond: [{$gte: ['$entries.absences', 20]}, 'CA', arcaCondition]
 };
 
 exports.cfaComparison = function(req, res) {
   var pipeline = [{
-    $sort : {date: -1}
+    $sort: {date: -1}
   }, {
-    $group : {
-      _id            : '$school',
-      entries        : {$first: '$entries'},
-      missingEntries : {$first: '$missingEntries'}
+    $group: {
+      _id: '$school',
+      entries: {$first: '$entries'},
+      missingEntries: {$first: '$missingEntries'}
     }
   }, {
-    $project : {
-      entries : {$setUnion: ['$entries', '$missingEntries']}
+    $project: {
+      entries: {$setUnion: ['$entries', '$missingEntries']}
     }
   }, {
-    $unwind : '$entries'
+    $unwind: '$entries'
   }, {
-    $project : {
-      _id      : false,
-      student  : '$entries.student',
-      category : categorizeCondition
+    $project: {
+      _id: false,
+      student: '$entries.student',
+      category: categorizeCondition
     }
   }];
-  if(req.school) {
+  if (req.school) {
     pipeline.unshift({
-      $match : {school: req.school._id}
+      $match: {school: req.school._id}
     });
   }
   AbsenceRecord.aggregate(pipeline, function(err, results) {
-    if(err) throw new Error('Error in absence record visualization');
     AbsenceRecord.populate(results, {
-      path   : 'student',
-      model  : 'Student',
-      select : 'cfa withdrawn'
+      path: 'student',
+      model: 'Student',
+      select: 'cfa withdrawn'
     }, function(err, docs) {
-      if(err) return handleError(res, err);
+      if (err) return handleError(res, err);
       res.status(200).json(_(docs)
         .filter(['student.withdrawn', false])
         .groupBy('student.cfa')
@@ -74,6 +72,6 @@ exports.cfaComparison = function(req, res) {
 };
 
 function handleError(res, err) {
-  debug(err);
+  console.log(err);
   return res.status(500).send(err);
 }

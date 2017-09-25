@@ -1,61 +1,60 @@
 'use strict';
 
 var _ = require('lodash');
-// var mongoose = require('mongoose');
+var mongoose = require('mongoose');
 var AbsenceRecord = require('./absence-record.model');
 var Outreach = require('../student/outreach/outreach.model');
-var debug = require('debug')('route:api:absence-record-list');
 
 var populateOptions = [{
-  path   : 'school',
-  model  : 'School',
-  select : 'name'
+  path: 'school',
+  model: 'School',
+  select: 'name'
 }, {
-  path   : 'student',
-  model  : 'Student',
-  select : 'firstName lastName grade studentId iep cfa withdrawn'
+  path: 'student',
+  model: 'Student',
+  select: 'firstName lastName grade studentId iep cfa withdrawn'
 }];
 
 function absenceRecordPipeline(user, year) {
   var match = {};
-  if(user.role === 'teacher') match.school = user.assignment;
-  if(year) match.schoolYear = year;
+  if (user.role === 'teacher') match.school = user.assignment;
+  if (year) match.schoolYear = year;
 
   return [{
-    $match : match
+    $match: match
   }, {
-    $sort : {date: -1}
+    $sort: {date: -1}
   }, {
-    $group : {
-      _id            : '$school',
-      recordId       : {$first: '$_id'},
-      date           : {$first: '$date'},
-      school         : {$first: '$school'},
-      entries        : {$first: '$entries'},
-      missingEntries : {$first: '$missingEntries'}
+    $group: {
+      _id: '$school',
+      recordId: {$first: '$_id'},
+      date: {$first: '$date'},
+      school: {$first: '$school'},
+      entries: {$first: '$entries'},
+      missingEntries: {$first: '$missingEntries'}
     }
   }, {
-    $project : {
-      _id      : false,
-      recordId : 1,
-      date     : 1,
-      school   : 1,
-      entries  : {$setUnion: ['$entries', '$missingEntries']}
+    $project: {
+      _id: false,
+      recordId: 1,
+      date: 1,
+      school: 1,
+      entries: {$setUnion: ['$entries', '$missingEntries']}
     }
   }, {
-    $unwind : '$entries'
+    $unwind: '$entries'
   }, {
-    $sort : {
-      school         : 1,
-      'entries.date' : -1
+    $sort: {
+      school: 1,
+      'entries.date': -1
     }
   }, {
-    $project : {
-      recordId : 1,
-      date     : 1,
-      school   : 1,
-      entry    : '$entries',
-      student  : '$entries.student'
+    $project: {
+      recordId: 1,
+      date: 1,
+      school: 1,
+      entry: '$entries',
+      student: '$entries.student'
     }
   }];
 }
@@ -71,9 +70,9 @@ function absenceRecordPipeline(user, year) {
 exports.current = function(req, res) {
   var pipeline = absenceRecordPipeline(req.user);
   AbsenceRecord.aggregate(pipeline, function(err, results) {
-    if(err) return handleError(res, err);
+    if (err) return handleError(res, err);
     AbsenceRecord.populate(results, populateOptions, function(err, docs) {
-      if(err) return handleError(res, err);
+      if (err) return handleError(res, err);
       return res.status(200).json(docs);
     });
   });
@@ -90,9 +89,9 @@ exports.current = function(req, res) {
 exports.year = function(req, res) {
   var pipeline = absenceRecordPipeline(req.user, req.params.year);
   AbsenceRecord.aggregate(pipeline, function(err, results) {
-    if(err) return handleError(res, err);
+    if (err) return handleError(res, err);
     AbsenceRecord.populate(results, populateOptions, function(err, docs) {
-      if(err) return handleError(res, err);
+      if (err) return handleError(res, err);
       return res.status(200).json(docs);
     });
   });
@@ -108,24 +107,24 @@ exports.year = function(req, res) {
  */
 exports.query = function(req, res) {
   var options = {
-    actionDate : null,
-    type       : req.query.type
+    actionDate: null,
+    type: req.query.type
   };
-  if(req.query.tier) {
-    options.tier = req.query.tier;
+  if (req.query.tier) {
+    options.tier = req.query.tier
   }
   Outreach.find(options)
     .distinct('student')
     .exec(function(err, students) {
-      if(err) return handleError(res, err);
+      if (err) return handleError(res, err);
       var pipeline = absenceRecordPipeline(req.user);
       pipeline.push({
-        $match : {student: {$in: students}}
+        $match: {'student': {$in: students}}
       });
       AbsenceRecord.aggregate(pipeline, function(err, results) {
-        if(err) return handleError(res, err);
+        if (err) return handleError(res, err);
         AbsenceRecord.populate(results, populateOptions, function(err, docs) {
-          if(err) return handleError(res, err);
+          if (err) return handleError(res, err);
           return res.status(200).json(docs);
         });
       });
@@ -143,12 +142,12 @@ exports.query = function(req, res) {
 exports.atRisk = function(req, res) {
   var pipeline = absenceRecordPipeline(req.user);
   pipeline.push({
-    $match : {'entry.absences': {$lte: 19}}
+    $match: {'entry.absences': {$lte: 19}}
   });
   AbsenceRecord.aggregate(pipeline, function(err, results) {
-    if(err) return handleError(res, err);
+    if (err) return handleError(res, err);
     AbsenceRecord.populate(results, populateOptions, function(err, docs) {
-      if(err) return handleError(res, err);
+      if (err) return handleError(res, err);
       docs = _.filter(docs, function(doc) {
         return doc.entry.present / doc.entry.enrolled <= 0.9;
       });
@@ -168,12 +167,12 @@ exports.atRisk = function(req, res) {
 exports.chronic = function(req, res) {
   var pipeline = absenceRecordPipeline(req.user);
   pipeline.push({
-    $match : {'entry.absences': {$gte: 20}}
+    $match: {'entry.absences': {$gte: 20}}
   });
   AbsenceRecord.aggregate(pipeline, function(err, results) {
-    if(err) return handleError(res, err);
+    if (err) return handleError(res, err);
     AbsenceRecord.populate(results, populateOptions, function(err, docs) {
-      if(err) return handleError(res, err);
+      if (err) return handleError(res, err);
       return res.status(200).json(docs);
     });
   });
@@ -185,51 +184,51 @@ exports.chronic = function(req, res) {
  */
 exports.school = function(req, res) {
   var pipeline = [{
-    $match : {
-      school : req.school._id
+    $match: {
+      school: req.school._id
     }
   }, {
-    $group : {
-      _id     : '$schoolYear',
-      records : {$push: '$$ROOT'}
+    $group: {
+      _id: '$schoolYear',
+      records: {$push: '$$ROOT'}
     }
   }, {
-    $sort : {_id: -1}
+    $sort: {_id: -1}
   }, {
-    $limit : 1
+    $limit: 1
   }, {
-    $unwind : '$records'
+    $unwind: '$records'
   }, {
-    $sort : {'records.date': -1}
+    $sort: {'records.date': -1}
   }, {
-    $project : {
-      _id                : false,
-      recordId           : '$records._id',
-      schoolYear         : '$_id',
-      date               : '$records.date',
-      entries            : '$records.entries',
-      newMissingStudents : '$records.newMissingStudents',
-      createdStudents    : '$records.createdStudents'
+    $project: {
+      _id: false,
+      recordId: '$records._id',
+      schoolYear: '$_id',
+      date: '$records.date',
+      entries: '$records.entries',
+      newMissingStudents: '$records.newMissingStudents',
+      createdStudents: '$records.createdStudents'
     }
   }];
   AbsenceRecord.aggregate(pipeline, function(err, results) {
-    if(err) return handleError(res, err);
+    if (err) return handleError(res, err);
     AbsenceRecord.populate(results, [{
-      path   : 'createdStudents',
-      model  : 'Student',
-      select : 'firstName lastName studentId'
+      path: 'createdStudents',
+      model: 'Student',
+      select: 'firstName lastName studentId'
     }, {
-      path   : 'newMissingStudents',
-      model  : 'Student',
-      select : 'firstName lastName studentId'
+      path: 'newMissingStudents',
+      model: 'Student',
+      select: 'firstName lastName studentId'
     }], function(err, docs) {
-      if(err) return handleError(res, err);
+      if (err) return handleError(res, err);
       return res.status(200).json(docs);
     });
   });
 };
 
 function handleError(res, err) {
-  debug(err);
+  console.log(err);
   return res.status(500).send(err);
 }

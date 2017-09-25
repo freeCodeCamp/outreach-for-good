@@ -1,0 +1,13 @@
+<div class="form-group">
+  <label class="control-label">Intervention Type:</label>
+
+  <select class="form-control" name="name" ng-model="model.type" placeholder="Type" required>
+    <option ng-repeat="(ind, type) in modal.types" value="{{ind}}">{{type.title}}</option>
+  </select>
+  <p class="help-block" ng-if="model.type">
+    <label class="control-label">Intervention Description:</label>
+    {{modal.types[model.type].description}}
+  </p>
+  <p class="help-block error-text" ng-if="(form.$dirty || form.$submitted) && form.$invalid">The intervention type is
+    required</p>
+</div>

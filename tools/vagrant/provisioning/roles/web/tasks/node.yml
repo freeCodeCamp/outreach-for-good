@@ -1,50 +1,17 @@
 ---
+- name: Download n install script
+  get_url:
+    url=http://git.io/n-install
+    dest=/tmp/n-install
+    mode=0500
+  sudo: no
+  tags: n
 
-- name: Install nvm
-  sudo: yes
-  sudo_user: "{{ nvm.user }}"
-  git: repo=https://github.com/creationix/nvm.git dest=~/.nvm version={{ nvm.version }}
-  tags: nvm
+- stat: path=/home/vagrant/n
+  register: n_dir
 
-- name: Check checkout latest version
-  shell: cd ~/.nvm; git checkout $(git describe --abbrev=0 --tags --match "v[0-9]*" origin)
-  register: nvm_check_default
-  changed_when: False
-  ignore_errors: True
-  tags: nvm
-
-- name: Source nvm in ~/.profile
-  blockinfile:
-    dest: ~/.profile
-    block: | 
-      export NVM_DIR="$HOME/.nvm"
-      [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh" # This loads nvm
-    create: yes
-  tags: nvm
-
-- name: Source nvm in ~/.bashrc
-  blockinfile:
-    dest: ~/.bashrc
-    block: | 
-      export NVM_DIR="$HOME/.nvm"
-      [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh" # This loads nvm
-    create: yes
-  tags: nvm
-
-- name: Install {{ nvm.node_version }}
-  command: sudo -iu {{ nvm.user }} nvm install {{ nvm.node_version }}
-  register: nvm_install_result
-  changed_when: "'is already installed.' not in nvm_install_result.stdout"
-  tags: nvm
-
-- name: Check if {{ nvm.node_version }} is the default node version
-  shell: sudo -iu {{ nvm.user }} nvm ls | grep -e 'default -> {{ nvm.node_version }}'
-  register: nvm_check_default
-  changed_when: False
-  ignore_errors: True
-  tags: nvm
-
-- name: Set default node version to {{ nvm.node_version }}
-  command: sudo -iu {{ nvm.user }} nvm alias default {{ nvm.node_version }}
-  when: nvm_check_default|failed
-  tags: nvm
+- name: Install n
+  shell: /bin/bash /tmp/n-install -y
+  sudo: no
+  when: n_dir.stat.exists == false
+  tags: n

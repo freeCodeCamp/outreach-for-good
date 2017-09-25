@@ -1,0 +1,11 @@
+.access-view {
+  background-color: $cfa-blue;
+  flex: 1;
+  .banner {
+    text-align: center;
+    color: white;
+    img {
+      max-height: 250px;
+    }
+  }
+}

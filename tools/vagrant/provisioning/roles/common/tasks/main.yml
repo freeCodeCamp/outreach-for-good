@@ -8,19 +8,3 @@
   sudo: yes
   apt: pkg=language-pack-en
   tags: common
-
-- name: Install packages
-  apt: pkg={{ item }}
-  sudo: yes
-  with_items:
-    - build-essential
-    - curl
-    - git
-    - ruby
-    - g++
-    - libkrb5-dev
-    - libpng-dev
-    - libfontconfig-dev
-    - libssl-dev
-    - python-pip
-  tags: packages

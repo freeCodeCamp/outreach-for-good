@@ -1,12 +1,11 @@
 'use strict';
-/* eslint-disable no-process-env */
 
 var path = require('path');
 var _ = require('lodash');
 
 function requiredProcessEnv(name) {
   if(!process.env[name]) {
-    throw new Error(`You must set the ${name} environment variable`);
+    throw new Error('You must set the ' + name + ' environment variable');
   }
   return process.env[name];
 }
@@ -17,53 +16,46 @@ requiredProcessEnv('SUPER_USER_EMAIL');
 // All configurations will extend these options
 // ============================================
 var all = {
-  debug : process.env.DEBUG || '*',
-
-  env : process.env.NODE_ENV,
+  env: process.env.NODE_ENV,
 
   // Root path of server
-  root : process.env.APP_ROOT || path.normalize(`${__dirname}/../../..`),
+  root: process.env.APP_ROOT || path.normalize(__dirname + '/../../..'),
 
-  // Webpack Dev Server port
-  webpackPort : process.env.PORT || 9000,
-
-  // Express Server port
-  port : process.env.PORT || 9002,
+  // Server port
+  port: process.env.PORT || 9000,
 
   // Server IP
-  ip : process.env.IP || '0.0.0.0',
+  ip: process.env.IP || '0.0.0.0',
 
   // Should we populate the DB with sample data?
-  seedDB : false,
+  seedDB: false,
 
-  secrets : {
-    session : process.env.APP_SECRET
+  secrets: {
+    session: process.env.APP_SECRET
   },
 
-  superUserEmail : process.env.SUPER_USER_EMAIL,
-
   // List of user roles
-  userRoles : ['guest', 'teacher', 'manager', 'admin', 'super'],
+  userRoles: ['guest', 'teacher', 'manager', 'admin', 'super'],
 
   // MongoDB connection options
-  mongo : {
-    options : {
-      db : {
-        safe : true
+  mongo: {
+    options: {
+      db: {
+        safe: true
       }
     }
   },
 
-  google : {
-    clientID     : process.env.GOOGLE_ID || 'id',
-    clientSecret : process.env.GOOGLE_SECRET || 'secret',
-    callbackURL  : `${process.env.DOMAIN || ''}/auth/google/callback`
+  google: {
+    clientID:     process.env.GOOGLE_ID || 'id',
+    clientSecret: process.env.GOOGLE_SECRET || 'secret',
+    callbackURL:  (process.env.DOMAIN || '') + '/auth/google/callback'
   },
 
   // Raven connection options
-  raven : {
-    dsn : process.env.RAVEN_DSN
-            || undefined
+  raven: {
+    dsn:    process.env.RAVEN_DSN ||
+            undefined
   }
 };
 
@@ -71,4 +63,4 @@ var all = {
 // ==============================================
 module.exports = _.merge(
   all,
-  require(`./${process.env.NODE_ENV}.js`) || {});
+  require('./' + process.env.NODE_ENV + '.js') || {});
