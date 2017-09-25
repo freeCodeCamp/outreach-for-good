@@ -12,10 +12,10 @@ import FontIcon from 'material-ui/FontIcon';
 
 import Parent from '../../components/student-parent-card/student-parent-card';
 import StudentAbsenceRecordTable from '../../components/student-abs-record-table/student-abs-record-table';
-import StudentDialog from '../../components/student-dialog/student-dialog';
 import StudentNotes from '../../components/student-notes/student-notes';
 import StudentCard from '../../components/student-card/student-card';
 import StudentOutreaches from '../../components/student-outreaches/student-outreaches';
+import StudentInterventions from '../../components/student-interventions/student-interventions';
 import StudentInfoPane from '../../components/student-info-pane/student-info-pane';
 import StudentSummaryCard from '../../components/student-summary-card/student-summary-card';
 import './student.scss';
@@ -23,7 +23,8 @@ import './student.scss';
 class StudentPage extends React.Component {
   state = {
     dialogOpen        : false,
-    initialDataLoaded : false
+    initialDataLoaded : false,
+    selectedTab       : 'outreaches'
   }
 
   componentDidMount() {
@@ -37,14 +38,6 @@ class StudentPage extends React.Component {
       this.props.studentActions.getStudentNotes(studentId),
       this.props.settingsActions.getInterventionTypes()
     ]).then(() => this.setState({initialDataLoaded: true}));
-  }
-
-  dialogOpen = () => {
-    this.setState({ dialogOpen: true });
-  }
-
-  dialogClose = () => {
-    this.setState({ dialogOpen: false });
   }
 
   clickHandler = (action, data, event) => {
@@ -70,6 +63,10 @@ class StudentPage extends React.Component {
       break;
     }
   } // End of: clickHandler()
+
+  tabHandler = tab => {
+    this.setState({selectedTab: tab.props.value});
+  }
 
   render() {
     const { student, absenceRecords, interventions, outreaches, notes } = this.props.student;
@@ -105,8 +102,8 @@ class StudentPage extends React.Component {
           </div>
         </div>
         <div className="tabs">
-          <Tabs>
-            <Tab label="Outreaches">
+          <Tabs value={this.state.selectedTab}>
+            <Tab label="Outreaches" value="outreaches" onActive={this.tabHandler}>
               {outreaches &&
               <StudentOutreaches
                 outreaches={outreaches}
@@ -114,38 +111,26 @@ class StudentPage extends React.Component {
               />
               }
             </Tab>
-            <Tab label="Interventions">
-              <div className="tab-view">
-                <div className="actions">
-                  <RaisedButton
-                    className="add-intervention"
-                    icon={<FontIcon className="fa fa-plus" />}
-                    label="Add Intervention"
-                    onTouchTap={this.dialogOpen}
-                    primary />
-                </div>
-
-                <div className="cards">
-                  {interventions && interventions.map((card, i) =>
-                    <div className="card" key={i}>
-                      <StudentCard
-                        cardType="intervention"
-                        cardId={card._id}
-                        cardData={card}
-                        addNote={this.props.studentActions.postInterventionNote} />
-                    </div>)}
-                </div>
-              </div>
+            <Tab label="Interventions" value="interventions" onActive={this.tabHandler}>
+              {interventions && this.props.settings && false &&
+              <StudentInterventions
+                interventions={interventions}
+                settings={this.props.settings}
+                selectedTab={this.state.selectedTab}
+                clickHandler={this.clickHandler}
+              />
+              }
             </Tab>
-            <Tab label="Notes">
-            {notes
-              && <StudentNotes
+            <Tab label="Notes" value="notes" onActive={this.tabHandler}>
+            {notes && false &&
+              <StudentNotes
                 studentId={student._id}
                 addNote={this.props.studentActions.postStudentNote}
-                notes={notes} />
+                notes={notes}
+              />
             }
             </Tab>
-            <Tab label="Summary">
+            <Tab label="Summary" value="summary" onActive={this.tabHandler}>
             {student && outreaches && interventions && notes && absenceRecords
               && <StudentSummaryCard
                 student={student}
@@ -156,7 +141,7 @@ class StudentPage extends React.Component {
               />
             }
             </Tab>
-            <Tab label="Parent Info">
+            {/* <Tab label="Parent Info">
               <div className="tab-view">
                 <div className="actions">
                   <RaisedButton
@@ -165,17 +150,10 @@ class StudentPage extends React.Component {
                 </div>
               </div>
               <Parent />
-            </Tab>
+            </Tab> */}
           </Tabs>
         </div>
-        { this.props.settings
-          && <StudentDialog
-            data={this.props.settings.interventionTypes}
-            dialogOpen={this.state.dialogOpen}
-            dialogClose={this.dialogClose}
-            dialogSubmit={this.props.studentActions.postIntervention}
-            student={this.props.student.student} />
-        }
+
       </div>
     );
   }
