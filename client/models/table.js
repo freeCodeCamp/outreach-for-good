@@ -128,21 +128,19 @@ class TableModel extends Table {
     let groupColumn = this.getFixedColumn(state);
     let groupRowIndices = state.get('groupColumn').get('groupIndices').toMap().flip();
     let count = -1;
-    return state.update('groupColumn', nextGroupColumn =>
-      nextGroupColumn.update('summaryRows', () =>
-        groupRowIndices.reduce((a, i, indice) => {
-          count += 1;
-          let rowIndex = indice + count;
-          let nextIndice = groupRowIndices.findEntry((v, k) => k > indice);
-          let recordCount = nextIndice ? nextIndice[0] - indice : data.size - indice;
-          return a.set(rowIndex, Immutable.Map({
-            groupColumn : Immutable.Map({
-              group : data.getIn([indice, groupColumn]),
-              count : recordCount
-            })
-          }).concat(this.getRowAggregateRecord(state, data.slice(rowIndex - count, rowIndex + recordCount))));
-        }, Immutable.Map()))
-    );
+    return state.updateIn(['groupColumn', 'summaryRows'], () =>
+      groupRowIndices.sort().reduce((a, i, indice) => {
+        count += 1;
+        let rowIndex = indice + count;
+        let nextIndice = groupRowIndices.findEntry((v, k) => k > indice);
+        let recordCount = nextIndice ? nextIndice[0] - indice : data.size - indice;
+        return a.set(rowIndex, Immutable.Map({
+          groupColumn : Immutable.Map({
+            group : data.getIn([indice, groupColumn]),
+            count : recordCount
+          })
+        }).concat(this.getRowAggregateRecord(state, data.slice(rowIndex - count, rowIndex + recordCount))));
+      }, Immutable.Map()));
   }
 
   // input data sorted by groupColumn, generates groupColumn.summaryRows[]
