@@ -79,7 +79,7 @@ To run the dev server use:
 
 # Workflow
 
-The editing of the files should be done on the host machine. The changes will be picked up by the vm and reflected via livereload to the host browsers pointed at the http://<vm's ip (default:192.168.111.222)>:9000 or http://localhost:9000 when the grunt serve task is running in the vm.
+The editing of the files should be done on the host machine. The changes will be picked up by the vm and reflected via livereload to the host browsers pointed at the http://<vm's ip (default:192.168.111.222)>:8000 or http://localhost:8000 when the grunt serve task is running in the vm.
 
 ## ssh-agent-forwarding
 
