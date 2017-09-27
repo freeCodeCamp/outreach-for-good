@@ -132,24 +132,24 @@ class TableModel extends Table {
       groupRowIndices.sort().reduce((a, i, indice) => {
         count += 1;
         let rowIndex = indice + count;
-        let nextIndice = groupRowIndices.findEntry((v, k) => k > indice);
+        let nextIndice = groupRowIndices.sort().findEntry((v, k) => k > indice);
         let recordCount = nextIndice ? nextIndice[0] - indice : data.size - indice;
         return a.set(rowIndex, Immutable.Map({
           groupColumn : Immutable.Map({
             group : data.getIn([indice, groupColumn]),
             count : recordCount
           })
-        }).concat(this.getRowAggregateRecord(state, data.slice(rowIndex - count, rowIndex + recordCount))));
+        }).concat(this.getRowAggregateRecord(state, data.slice(rowIndex - count, rowIndex + recordCount - count))));
       }, Immutable.Map()));
   }
 
   // input data sorted by groupColumn, generates groupColumn.summaryRows[]
   getRowAggregateRecord(state, data) {
-    let aggregateColumns = state.get('groupColumn').get('aggregateColumns').toMap().flip().map(() => 0);
+    let aggregateColumns = state.getIn(['groupColumn', 'aggregateColumns']).toMap().flip().map(() => 0);
     switch (state.getIn(['groupColumn', 'aggregateType'])) {
     case 'sum': return data.reduce((summaryRow, dataRow) =>
       summaryRow.map((currentSum, dataKey) =>
-        dataRow.get(dataKey) + currentSum)
+        dataRow.get(dataKey, 0) + currentSum)
       , aggregateColumns);
     case 'average': let count = -1;
       return data.reduce((summaryRow, dataRow) => {
