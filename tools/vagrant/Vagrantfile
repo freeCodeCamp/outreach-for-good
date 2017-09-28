@@ -15,7 +15,7 @@ Vagrant.configure(2) do |config|
   # On host > ~/.ssh/ssh-add -K
   config.ssh.forward_agent = true
 
-  config.vm.network "forwarded_port", guest: 9000, host: 9000, nic_type: "82545EM"
+  config.vm.network "forwarded_port", guest: 8000, host: 8000, nic_type: "82545EM"
   config.vm.network "forwarded_port", guest: 35729, host: 35729, nic_type: "82545EM"
   config.vm.network "forwarded_port", guest: 27017, host: 2701, nic_type: "82545EM"
 
