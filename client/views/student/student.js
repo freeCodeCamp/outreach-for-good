@@ -55,11 +55,11 @@ class StudentPage extends React.Component {
     case 'addOutreachNote':
       this.props.studentActions.postOutreachNote(studentId, data, event);
       break;
-    case 'addInterventionNote':
-      this.props.studentActions.postInterventionNote(studentId, data, event);
-      break;
     case 'updateOutreachAction':
       this.props.studentActions.putOutreachAction(studentId, data, event);
+      break;
+    case 'addInterventionNote':
+      this.props.studentActions.postInterventionNote(studentId, data, event);
       break;
     }
   } // End of: clickHandler()
@@ -112,7 +112,7 @@ class StudentPage extends React.Component {
               }
             </Tab>
             <Tab label="Interventions" value="interventions" onActive={this.tabHandler}>
-              {interventions && this.props.settings && false &&
+              {interventions && this.props.settings &&
               <StudentInterventions
                 interventions={interventions}
                 settings={this.props.settings}

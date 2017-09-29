@@ -65,7 +65,7 @@ class StudentOutreaches extends React.Component {
                 <StudentNotes
                   handleNewNote={this.handleOutreachNote}
                   notes={outreach.notes}
-                  outreachId={outreach._id}
+                  actionId={outreach._id}
                 />
               </div>
             </div>
