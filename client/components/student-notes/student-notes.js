@@ -26,7 +26,7 @@ class StudentNotes extends React.Component {
                   className="btn btn-secondary"
                   type="button"
                   onClick={() => {
-                    this.props.handleNewNote(this.input.value, this.props.outreachId);
+                    this.props.handleNewNote(this.input.value, this.props.actionId);
                     this.input.value = '';
                   }}
                 >
@@ -51,7 +51,7 @@ class StudentNotes extends React.Component {
 }
 
 StudentNotes.propTypes = {
-  outreachId    : PropTypes.string,
+  actionId    : PropTypes.string,
   notes         : PropTypes.array,
   handleNewNote : PropTypes.func
 };

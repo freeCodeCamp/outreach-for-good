@@ -21,16 +21,8 @@ class StudentInterventions extends React.Component {
     dialogOpen  : false
   }
 
-  datePickerClick = i => {
-    this.state.datePickers[i].focus();
-  };
-
-  datePickerChange = (date, interventionId) => {
-    this.props.clickHandler('updateinterventionAction', interventionId, {actionDate: date.toString()});
-  };
-
-  handleinterventionNote = (note, interventionId) => {
-    this.props.clickHandler('addinterventionNote', interventionId, {note});
+  handleInterventionNote = (note, interventionId) => {
+    this.props.clickHandler('addInterventionNote', interventionId, {note});
   };
 
   updateData = i => {
@@ -59,38 +51,24 @@ class StudentInterventions extends React.Component {
     return (
       <div className="intervention-container container-fluid">
         {this.props.interventions.map((intervention, i) =>
+        !intervention.archived &&
         <div
           className={classnames('student-row', {row: i % 2 !== 0})}
           key={'intervention-' + intervention._id}
         >
           <div className={classnames("col-data col-md-6", {'last-intervention-row': (i === this.props.interventions.length - 1 && i % 2 === 0)})}>
             <div className="col-heading">
-              {intervention.type + ' #' + intervention.tier}
-              &nbsp;
+              {intervention.type} &nbsp; 
               <span className="absence-annotation">
-                ({intervention.absences} Absences)
+                ({formatDate(new Date(intervention.createdDate))})
               </span>
             </div>
             <div className="intervention-card">
-              <div className="intervention-info">
-                <div className="intervention-info-label">Trigered</div>
-                <div className="intervention-info-data">{formatDate(new Date(intervention.triggerDate))}</div>
-                <div className="intervention-info-label">
-                  Action Taken <i className="fa fa-calendar" onClick={() => this.datePickerClick(i)}/>
-                </div>
-                <DatePicker
-                  onChange={(e, date) => this.datePickerChange(date, intervention._id)}
-                  ref={(input) => { this.state.datePickers[i] = input; }}
-                  id={"intervention-date-picker-" + i}
-                  style={{visibility: 'hidden', width: 1, height: 1}}
-                />
-                <div className="intervention-info-data">{intervention.actionDate && formatDate(new Date(intervention.actionDate))}&nbsp;</div>
-              </div>
               <div className="intervention-notes">
                 <StudentNotes
-                  handleNewNote={this.handleinterventionNote}
+                  handleNewNote={this.handleInterventionNote}
                   notes={intervention.notes}
-                  interventionId={intervention._id}
+                  actionId={intervention._id}
                 />
               </div>
             </div>
