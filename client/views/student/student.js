@@ -61,6 +61,9 @@ class StudentPage extends React.Component {
     case 'addInterventionNote':
       this.props.studentActions.postInterventionNote(studentId, data, event);
       break;
+    case 'addIntervention':
+      this.props.studentActions.postIntervention(studentId, data);
+      break;
     }
   } // End of: clickHandler()
 

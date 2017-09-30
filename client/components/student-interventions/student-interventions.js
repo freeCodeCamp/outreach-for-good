@@ -3,6 +3,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import DatePicker from 'material-ui/DatePicker';
+import DropDownMenu from 'material-ui/DropDownMenu';
+import Dialog from 'material-ui/Dialog';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
 import Popover from 'material-ui/Popover';
@@ -23,6 +25,10 @@ class StudentInterventions extends React.Component {
 
   handleInterventionNote = (note, interventionId) => {
     this.props.clickHandler('addInterventionNote', interventionId, {note});
+  };
+
+  handleNewIntervention = (note, interventionId) => {
+    this.props.clickHandler('addIntervention', interventionId, {note});
   };
 
   updateData = i => {
@@ -93,7 +99,7 @@ class StudentInterventions extends React.Component {
               <Menu>
                 <MenuItem
                   primaryText="Create New Intervention"
-                  onClick={this.dialogOpen}
+                  onClick={this.handleDialogOpen}
                 />
                 <MenuItem
                   primaryText={
@@ -108,12 +114,40 @@ class StudentInterventions extends React.Component {
         </div>
       }
       { this.props.settings &&
-        <StudentDialog
-          data={this.props.settings.interventionTypes}
-          dialogOpen={this.state.dialogOpen}
-          dialogClose={this.dialogClose}
-          dialogSubmit={null} //this.props.studentActions.postIntervention
-        />
+        <Dialog
+          title={'New Intervention'}
+          actions={dialog.get('actions')
+            .map((v, i) => dialog.getActionButton(
+              v.label, v.click, i, v.value, v.disabled
+            ))
+          }
+          modal
+          open={this.state.dialogOpen}
+          onRequestClose={this.handleDialogClose}
+          key={index}
+          titleClassName='dialog-title'
+          bodyClassName='dialog-body'
+          contentClassName='dialog-content'
+        >
+          <div>
+          Select an Intervention Type
+          <br />
+          <div style={{textAlign: 'center'}}>
+            <DropDownMenu
+              value={currentState.get('selected')}
+              onChange={currentState.get('onChange')}
+              key={key}
+            >
+              {currentState.get('items').map(item =>
+                <MenuItem
+                  value={item}
+                  primaryText={item}
+                  key={item}
+                />
+              )}
+            </DropDownMenu>
+          </div></div>
+        </Dialog>
       }
       </div>
     );
