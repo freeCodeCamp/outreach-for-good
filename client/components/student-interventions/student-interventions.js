@@ -10,6 +10,7 @@ import ContentAdd from 'material-ui/svg-icons/content/add';
 import Popover from 'material-ui/Popover';
 import Menu from 'material-ui/Menu';
 import MenuItem from 'material-ui/MenuItem';
+import FlatButton from 'material-ui/FlatButton';
 
 import StudentNotes from '../student-notes/student-notes';
 import StudentDialog from '../../components/student-dialog/student-dialog';
@@ -20,15 +21,19 @@ class StudentInterventions extends React.Component {
   state = {
     datePickers : {},
     menuOpen    : false,
-    dialogOpen  : false
+    dialogOpen  : false,
+    selectedInterventionId: this.props.settings.interventionTypes[0]._id,
+    selectedInterventionType: this.props.settings.interventionTypes[0].title,
+    showArchive: false
   }
 
   handleInterventionNote = (note, interventionId) => {
     this.props.clickHandler('addInterventionNote', interventionId, {note});
   };
 
-  handleNewIntervention = (note, interventionId) => {
-    this.props.clickHandler('addIntervention', interventionId, {note});
+  handleNewIntervention = () => {
+    this.props.clickHandler('addIntervention', this.state.selectedInterventionType);
+    this.setState({ dialogOpen: false });
   };
 
   updateData = i => {
@@ -46,27 +51,57 @@ class StudentInterventions extends React.Component {
   };
 
   handleDialogOpen = () => {
-    this.setState({ dialogOpen: true });
+    this.setState({ dialogOpen: true, menuOpen: false });
   }
 
   handleDialogClose = () => {
     this.setState({ dialogOpen: false });
   }
 
+  handleInterventionChange = (event, key, value) => {
+    this.setState({
+      selectedInterventionId: value,
+      selectedInterventionType: this.props.settings.interventionTypes.filter(i => i._id == value)[0].title
+    });
+  }
+
+  handleArchiveIntervention = id => {
+    this.props.clickHandler('archiveIntervention', id);
+  }
+
+  handleUnArchiveIntervention = id => {
+    this.props.clickHandler('unArchiveIntervention', id);
+  }
+
+  handleToggleShowArchived = () => {
+    this.setState({ showArchive: !this.state.showArchive, menuOpen: false });
+  }
+
+  handleDeleteIntervention = id => {
+    this.props.clickHandler('deleteIntervention', id);
+  }
+
   render() {
+    const interventions = this.state.showArchive ?
+      this.props.interventions : this.props.interventions.filter(i => !i.archived);
     return (
       <div className="intervention-container container-fluid">
-        {this.props.interventions.map((intervention, i) =>
-        !intervention.archived &&
+        {interventions.map((intervention, i) =>
         <div
           className={classnames('student-row', {row: i % 2 !== 0})}
           key={'intervention-' + intervention._id}
         >
           <div className={classnames("col-data col-md-6", {'last-intervention-row': (i === this.props.interventions.length - 1 && i % 2 === 0)})}>
-            <div className="col-heading">
+            <div className={classnames('col-heading', {'archived-intervention': intervention.archived})}>
               {intervention.type} &nbsp; 
               <span className="absence-annotation">
                 ({formatDate(new Date(intervention.createdDate))})
+              </span>
+              <span style={{float: 'right', color: '#31708f', cursor: 'pointer'}}>
+                <i className="fa fa-archive" onClick={() => intervention.archived ? this.handleUnArchiveIntervention(intervention._id) : this.handleArchiveIntervention(intervention._id)}/>
+                { intervention.archived &&
+                 <i className="fa fa-trash archive-remove" onClick={() => this.handleDeleteIntervention(intervention._id)}/>
+                }
               </span>
             </div>
             <div className="intervention-card">
@@ -108,6 +143,7 @@ class StudentInterventions extends React.Component {
                       &nbsp; Archived Interventions
                     </div>
                   }
+                  onClick={this.handleToggleShowArchived}
                 />
               </Menu>
             </Popover>
@@ -116,15 +152,23 @@ class StudentInterventions extends React.Component {
       { this.props.settings &&
         <Dialog
           title={'New Intervention'}
-          actions={dialog.get('actions')
-            .map((v, i) => dialog.getActionButton(
-              v.label, v.click, i, v.value, v.disabled
-            ))
-          }
+          actions={[
+            <FlatButton
+              label='Cancel'
+              primary
+              onClick={this.handleDialogClose}
+              disabled={false}
+            />,
+            <FlatButton
+              label='Add'
+              primary
+              onClick={this.handleNewIntervention}
+              value='NEW_INTERVENTION'
+              disabled={false}
+            />]}
           modal
           open={this.state.dialogOpen}
           onRequestClose={this.handleDialogClose}
-          key={index}
           titleClassName='dialog-title'
           bodyClassName='dialog-body'
           contentClassName='dialog-content'
@@ -134,19 +178,19 @@ class StudentInterventions extends React.Component {
           <br />
           <div style={{textAlign: 'center'}}>
             <DropDownMenu
-              value={currentState.get('selected')}
-              onChange={currentState.get('onChange')}
-              key={key}
+              value={this.state.selectedInterventionId}
+              onChange={this.handleInterventionChange}
             >
-              {currentState.get('items').map(item =>
+              {this.props.settings.interventionTypes.map(item =>
                 <MenuItem
-                  value={item}
-                  primaryText={item}
-                  key={item}
+                  value={item._id}
+                  primaryText={item.title}
+                  key={item._id}
                 />
               )}
             </DropDownMenu>
-          </div></div>
+            </div>
+          </div>
         </Dialog>
       }
       </div>

@@ -62,7 +62,20 @@ class StudentPage extends React.Component {
       this.props.studentActions.postInterventionNote(studentId, data, event);
       break;
     case 'addIntervention':
-      this.props.studentActions.postIntervention(studentId, data);
+      this.props.studentActions.postIntervention(studentId, {
+        type: data,
+        school: this.props.student.student.school._id,
+        student: studentId
+      });
+      break;
+    case 'archiveIntervention':
+      this.props.studentActions.putInterventionArchive(studentId, data, {archived: true});
+      break;
+    case 'unArchiveIntervention':
+      this.props.studentActions.putInterventionArchive(studentId, data, {archived: false});
+      break;
+    case 'deleteIntervention':
+      this.props.studentActions.deleteIntervention(studentId, data);
       break;
     }
   } // End of: clickHandler()
@@ -115,7 +128,8 @@ class StudentPage extends React.Component {
               }
             </Tab>
             <Tab label="Interventions" value="interventions" onActive={this.tabHandler}>
-              {interventions && this.props.settings &&
+              {interventions && this.props.settings && this.props.settings.interventionTypes &&
+                this.props.settings.interventionTypes.length &&
               <StudentInterventions
                 interventions={interventions}
                 settings={this.props.settings}
