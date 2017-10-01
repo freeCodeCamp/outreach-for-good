@@ -121,7 +121,7 @@ class StudentApi extends Api {
   }
 
   static putStudentNoteArchive(studentId, noteId, archived) {
-    return this.putAPI(`/api/students/${studentId}/notes/${noteId}/archived`, archived);
+    return this.putAPI(`/api/students/${studentId}/notes/${noteId}`, archived);
   }
 
   static deleteStudentNote(studentId, noteId) {

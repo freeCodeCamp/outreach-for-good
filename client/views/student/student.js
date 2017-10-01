@@ -94,7 +94,7 @@ class StudentPage extends React.Component {
       });
       break;
     case 'unArchiveStudentNote':
-      this.props.studentActions.putStudentNoteArchive(studentId, {
+      this.props.studentActions.putStudentNoteArchive(studentId, data, {
         ...this.getNoteJson(data),
         archived: false
       });

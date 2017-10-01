@@ -23,6 +23,7 @@ class StudentNotes extends React.Component {
 
   render() {
     const enableActions = this.state.enableActions;
+    const notes = this.props.showArchive ? this.props.notes : this.props.notes.filter(n => !n.archived);
     return (
       <div className="notes-container">
         <div className="add-notes">
@@ -54,8 +55,8 @@ class StudentNotes extends React.Component {
           </div>
         </div>
         <div className="note-list">
-          {this.props.notes.map((note, i) =>
-            <div className="note-line" key={note._id}>
+          {notes.map((note, i) =>
+            <div className={classnames('note-line', {'archived-note': note.archived})} key={note._id}>
               <span className={classnames('note-date', {'note-pointer': enableActions})} onClick={() => this.handleNoteClick(note._id)}>
                 {formatDate(new Date(note.date || note.updatedAt))}
               </span> &nbsp;
@@ -63,7 +64,7 @@ class StudentNotes extends React.Component {
               <span>
                 {note.archived ?
                   <span>
-                    <i className="fa fa-archive" style={{cursor: 'pointer', color: 'rgb(49, 112, 143)'}} onClick={() => this.props.handleUnArchiveNote(note._id)} />
+                    <i className="fa fa-archive" style={{cursor: 'pointer', color: 'rgb(49, 112, 143)'}} onClick={() => this.props.handleUnArchiveNote(note._id)} />  &nbsp;
                     <i className="fa fa-trash" style={{cursor: 'pointer', color: '#a94442'}} onClick={() => this.props.handleDeleteNote(note._id)} />
                   </span> :
                   <i className="fa fa-archive" style={{cursor: 'pointer', color: 'rgb(49, 112, 143)'}} onClick={() => this.props.handleArchiveNote(note._id)}/>
@@ -88,6 +89,7 @@ StudentNotes.propTypes = {
   handleArchiveNote : PropTypes.func,
   handleUnArchiveNote : PropTypes.func,
   handleDeleteNote : PropTypes.func,
+  showArchive: PropTypes.bool
 };
 
 export default StudentNotes;

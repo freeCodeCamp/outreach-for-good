@@ -53,6 +53,7 @@ class StudentNotesPage extends React.Component {
           handleNewNote={this.handleNewStudentNote}
           notes={this.props.notes}
           actionId={'STUDENT_NOTE'}
+          showArchive={this.state.showArchive}
           handleArchiveNote={this.handleArchiveClick}
           handleUnArchiveNote={this.handleUnArchiveClick}
           handleDeleteNote={this.handleDeleteClick}

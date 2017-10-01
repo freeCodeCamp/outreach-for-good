@@ -48,13 +48,6 @@ class Api {
     }
   }
 
-  /**
-   * Handle errors from api calls
-   */
-  static handleError(err) {
-    console.log(err);
-  }
-
   static getAPI(url) {
     let request = new Request(url, {
       method  : 'GET',
@@ -62,8 +55,7 @@ class Api {
     });
 
     return fetch(request)
-      .then(response => this.parseResponse(response))
-      .catch(error => this.handleError(error));
+      .then(response => this.parseResponse(response));
   }
 
   static postAPI(url, body) {
@@ -74,8 +66,7 @@ class Api {
     });
 
     return fetch(request)
-      .then(response => this.parseResponse(response))
-      .catch(error => this.handleError(error));
+      .then(response => this.parseResponse(response, 'POST'));
   }
 
   static putAPI(url, body) {
@@ -86,8 +77,7 @@ class Api {
     });
 
     return fetch(request)
-      .then(response => this.parseResponse(response))
-      .catch(error => this.handleError(error));
+      .then(response => this.parseResponse(response, 'PUT'));
   }
 
   static deleteAPI(url) {
@@ -97,8 +87,7 @@ class Api {
     });
 
     return fetch(request)
-      .then(response => this.parseResponse(response))
-      .catch(error => this.handleError(error));
+      .then(response => this.parseResponse(response, 'DELETE'));
   }
 }
 export default Api;
