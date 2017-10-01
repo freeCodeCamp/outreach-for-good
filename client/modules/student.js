@@ -213,10 +213,8 @@ export function putOutreachAction(studentId, outreachId, action) {
 export function postIntervention(studentId, intervention) {
   return dispatch => StudentApi.postIntervention(studentId, intervention)
     .then(response => {
-      const date = new Date(response.createdDate).toDateString();
-
       dispatch(getStudentInterventions(studentId));
-      dispatch(openSnackbar(`Intervention of type '${intervention.type}' created on ${date}`));
+      dispatch(openSnackbar(`Intervention added`));
     })
     .catch(err => handleReducerError(err, dispatch, errorMessage.student.postIntervention));
 }
