@@ -65,6 +65,8 @@ export const errorMessage = {
     getStudentOutreaches    : 'Error: Could not fetch student outreaches',
     getStudentNotes         : 'Error: Could not fetch student notes',
     postStudentNote         : 'Error: Could not set student note',
+    putNoteArchive          : 'Error: Could not archive note',
+    deleteNote              : 'Error: Could not remove student note',
     putStudentIep           : 'Error: Could not update student IEP status',
     putStudentCfa           : 'Error: Could not update student CFA status',
     putStudentWithdrawn     : 'Error: Could not update student withdrawn status',
