@@ -1,11 +1,28 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import classnames from 'classnames';
 
 import { formatDate } from '../../utils/date';
 import './student-notes.scss';
 class StudentNotes extends React.Component {
   input;
+
+  state = {
+    enableActions: !!(this.props.handleArchiveNote && this.props.handleUnArchiveNote && this.props.handleDeleteNote),
+    openNoteActions: {}
+  }
+
+  handleNoteClick = id => {
+    if(!this.state.enableActions) {
+      return;
+    }
+    const openNoteActions = this.state.openNoteActions;
+    openNoteActions[id] = !openNoteActions[id];
+    this.setState({openNoteActions});
+  }
+
   render() {
+    const enableActions = this.state.enableActions;
     return (
       <div className="notes-container">
         <div className="add-notes">
@@ -39,7 +56,21 @@ class StudentNotes extends React.Component {
         <div className="note-list">
           {this.props.notes.map((note, i) =>
             <div className="note-line" key={note._id}>
-              <span className="note-date">{formatDate(new Date(note.date || note.updatedAt))}</span> &nbsp;
+              <span className={classnames('note-date', {'note-pointer': enableActions})} onClick={() => this.handleNoteClick(note._id)}>
+                {formatDate(new Date(note.date || note.updatedAt))}
+              </span> &nbsp;
+              {this.state.openNoteActions[note._id] &&
+              <span>
+                {note.archived ?
+                  <span>
+                    <i className="fa fa-archive" style={{cursor: 'pointer', color: 'rgb(49, 112, 143)'}} onClick={() => this.props.handleUnArchiveNote(note._id)} />
+                    <i className="fa fa-trash" style={{cursor: 'pointer', color: '#a94442'}} onClick={() => this.props.handleDeleteNote(note._id)} />
+                  </span> :
+                  <i className="fa fa-archive" style={{cursor: 'pointer', color: 'rgb(49, 112, 143)'}} onClick={() => this.props.handleArchiveNote(note._id)}/>
+                }
+                &nbsp; &nbsp;
+              </span>
+              }
               {note.note}
               {i !== this.props.notes.length - 1 && <hr />}
             </div>
@@ -53,7 +84,10 @@ class StudentNotes extends React.Component {
 StudentNotes.propTypes = {
   actionId    : PropTypes.string,
   notes         : PropTypes.array,
-  handleNewNote : PropTypes.func
+  handleNewNote : PropTypes.func,
+  handleArchiveNote : PropTypes.func,
+  handleUnArchiveNote : PropTypes.func,
+  handleDeleteNote : PropTypes.func,
 };
 
 export default StudentNotes;

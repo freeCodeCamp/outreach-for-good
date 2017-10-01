@@ -162,6 +162,24 @@ export function postStudentNote(studentId, body) {
     .catch(err => handleReducerError(err, dispatch, errorMessage.student.postStudentNote));
 }
 
+export function putStudentNoteArchive(studentId, noteId, archived) {
+  return dispatch => StudentApi.putStudentNoteArchive(studentId, noteId, archived)
+    .then(outreach => {
+      dispatch(getStudentNotes(studentId));
+      dispatch(openSnackbar(`Note archived`));
+    })
+    .catch(err => handleReducerError(err, dispatch, errorMessage.student.putNoteArchive));
+}
+
+export function deleteStudentNote(studentId, noteId) {
+  return dispatch => StudentApi.deleteStudentNote(studentId, noteId)
+    .then(response => {
+      dispatch(getStudentNotes(studentId));
+      dispatch(openSnackbar('Note deleted'));
+    })
+    .catch(err => handleReducerError(err, dispatch, errorMessage.student.deleteNote));
+}
+
 export function putStudentIep(studentId, iep) {
   const studentIds = Array.isArray(studentId) ? studentId : [studentId];
   return dispatch => StudentApi.putStudentIep(studentIds, iep)
