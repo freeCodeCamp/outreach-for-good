@@ -10,7 +10,8 @@ export const RaisedButton = Immutable.Record({
   backgroundColor : '#124e78',
   actionID        : '',
   disabled        : true,
-  menu            : {}
+  menu            : {},
+  enableFirst     : false
 });
 
 class RaisedButtonModel extends RaisedButton {
