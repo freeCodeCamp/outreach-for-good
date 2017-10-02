@@ -37,6 +37,7 @@ class RecordsPage extends React.Component {
           label="Manage"
           value="manage">
           <ManageTab
+            currentTab={this.state.currentTab}
             viewport={viewport}
           />
         </Tab>

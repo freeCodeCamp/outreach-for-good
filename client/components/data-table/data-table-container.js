@@ -59,7 +59,10 @@ class DataTableContainer extends React.Component {
                   secondary={button.get('secondary') || false}
                   backgroundColor={button.get('backgroundColor')}
                   style={{marginLeft: '10px'}}
-                  disabled={table.get('selectedIndex').size == 0 && button.get('disabled')}
+                  disabled={
+                    button.get('enableFirst') && this.props.table.get('indexMap').get(this.props.table.get('selectedIndex').get(0)) !== 0 ||
+                    !button.get('enableFirst') && table.get('selectedIndex').size === 0 && button.get('disabled')
+                    }
                   onClick={e => this.handleButtonClick(e, button.get('actionID') || '')} // eslint-disable-line react/jsx-no-bind
                 />
                 {button.get('menu').open

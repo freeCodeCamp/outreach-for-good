@@ -67,5 +67,6 @@ export const deleteRecordButton = () =>
   new RaisedButtonModel({
     label           : 'Remove',
     backgroundColor : '#d9534f',
+    enableFirst     : true,
     actionID        : localActions.DELETE_RECORD
   });
