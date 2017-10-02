@@ -16,6 +16,7 @@ function PDF($q, $resource) {
       var students = [];
 
       items.forEach(function(item, idx) {
+        console.log('checking: ', item);
         var capture = re.exec(item);
         if (capture) {
           var grade = capture[1];
