@@ -14,6 +14,11 @@ export var insertSummaryRows = (data, table) => {
     const summaryRows = groupCol.get('summaryRows');
     const groupIndices = groupCol.get('groupIndices');
     let count = -1;
+    // console.log('indexMap: ', _indexMap && _indexMap.toJS());
+    // console.log('displayColumn: ', displayColumn);
+    // console.log('summaryRows: ', summaryRows && summaryRows.toJS());
+    // console.log('groupIndices: ', groupIndices && groupIndices.toJS());
+    // console.log('rowDefinition: ', rowDefinition && rowDefinition.toJS());
     groupIndices.forEach(i => {
       count += 1;
       _data = _data.push(_data.get(0).map((v, k) => {
