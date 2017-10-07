@@ -187,15 +187,23 @@ class TableModel extends Table {
   //  - remove collapsed indices from indexMap before rendering
   //  - indexMap (obviously) needs to contain summary rows to collapse
   //  - return: indexMap
+  // For performance, we assume groupColumn-collapsed appear in-order in indexMap
   removeCollapsedDataFromIndexMap(state, dataSize) {
-    //const correctedGroupIndices = this.getCorrectedGroupIndices(state);
-    let collapsedIndexMap =  state.getIn(['groupColumn', 'collapsed']).reduce((_indexMap, indice) => {
-      let nextIndice = _indexMap.findEntry(v => v > indice); // find next largest indicie
-      let frontsideRange = [0, _indexMap.indexOf(indice) + 1];
-      let backsideRange = [nextIndice ? _indexMap.indexOf(nextIndice[1]) : _indexMap.size, _indexMap.size];
-      return _indexMap.slice(...frontsideRange).concat(_indexMap.slice(...backsideRange));
-    }, state.get('indexMap_uf'));
-    return state.get('indexMap').filter(i => collapsedIndexMap.indexOf(i) !== -1 || dataSize <= i);
+    let nextIndexMap = Immutable.List();
+    let collapsed = state.getIn(['groupColumn', 'collapsed']).sort();
+    let summaryRows = state.getIn(['groupColumn', 'summaryRows']).sortBy((v, k) => k);
+    let unfilteredIndexMap = state.get('indexMap_uf');
+    let currentCollapsedIndex = dataSize - summaryRows.size;
+    summaryRows.forEach((v, k) => {
+      if(collapsed.indexOf(currentCollapsedIndex) >= 0) {
+        nextIndexMap = nextIndexMap.push(currentCollapsedIndex);
+      } else {
+        let nextGroup = unfilteredIndexMap.slice(k, k + v.getIn(['groupColumn', 'count']) + 1);
+        nextIndexMap = nextIndexMap.concat(nextGroup);
+      }
+      currentCollapsedIndex += 1;
+    });
+    return nextIndexMap;
   }
 
   // groupColumn is a column where rows of similar values sort togeather and don't speerate
