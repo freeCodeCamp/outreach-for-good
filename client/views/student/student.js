@@ -12,7 +12,7 @@ import FontIcon from 'material-ui/FontIcon';
 
 import Parent from '../../components/student-parent-card/student-parent-card';
 import StudentAbsenceRecordTable from '../../components/student-abs-record-table/student-abs-record-table';
-import StudentNotes from '../../components/student-notes/student-notes';
+import StudentNotesPage from '../../components/student-notes-page/student-notes-page';
 import StudentCard from '../../components/student-card/student-card';
 import StudentOutreaches from '../../components/student-outreaches/student-outreaches';
 import StudentInterventions from '../../components/student-interventions/student-interventions';
@@ -55,14 +55,59 @@ class StudentPage extends React.Component {
     case 'addOutreachNote':
       this.props.studentActions.postOutreachNote(studentId, data, event);
       break;
-    case 'addInterventionNote':
-      this.props.studentActions.postInterventionNote(studentId, data, event);
-      break;
     case 'updateOutreachAction':
       this.props.studentActions.putOutreachAction(studentId, data, event);
       break;
+    case 'addInterventionNote':
+      this.props.studentActions.postInterventionNote(studentId, data, event);
+      break;
+    case 'addIntervention':
+      this.props.studentActions.postIntervention(studentId, {
+        type: data,
+        school: this.props.student.student.school._id,
+        student: studentId
+      });
+      break;
+    case 'archiveIntervention':
+      this.props.studentActions.putInterventionArchive(studentId, data, {archived: true});
+      break;
+    case 'unArchiveIntervention':
+      this.props.studentActions.putInterventionArchive(studentId, data, {archived: false});
+      break;
+    case 'deleteIntervention':
+      this.props.studentActions.deleteIntervention(studentId, data);
+      break;
+    case 'addInterventionNote':
+      this.props.studentActions.postInterventionNote(studentId, data, event);
+      break;
+    case 'addStudentNote':
+      this.props.studentActions.postStudentNote(studentId, {
+        ...data,
+        student: studentId,
+        user: this.props.session.me.id
+      });
+      break;
+    case 'archiveStudentNote':
+      this.props.studentActions.putStudentNoteArchive(studentId, data, {
+        ...this.getNoteJson(data),
+        archived: true
+      });
+      break;
+    case 'unArchiveStudentNote':
+      this.props.studentActions.putStudentNoteArchive(studentId, data, {
+        ...this.getNoteJson(data),
+        archived: false
+      });
+      break;
+    case 'deleteStudentNote':
+      this.props.studentActions.deleteStudentNote(studentId, data);
+      break;
     }
   } // End of: clickHandler()
+
+  getNoteJson = id => {
+    return this.props.student.notes.filter(n => n._id == id)[0];
+  }
 
   tabHandler = tab => {
     this.setState({selectedTab: tab.props.value});
@@ -112,7 +157,8 @@ class StudentPage extends React.Component {
               }
             </Tab>
             <Tab label="Interventions" value="interventions" onActive={this.tabHandler}>
-              {interventions && this.props.settings && false &&
+              {interventions && this.props.settings && this.props.settings.interventionTypes &&
+                this.props.settings.interventionTypes.length &&
               <StudentInterventions
                 interventions={interventions}
                 settings={this.props.settings}
@@ -122,11 +168,11 @@ class StudentPage extends React.Component {
               }
             </Tab>
             <Tab label="Notes" value="notes" onActive={this.tabHandler}>
-            {notes && false &&
-              <StudentNotes
-                studentId={student._id}
-                addNote={this.props.studentActions.postStudentNote}
+            {notes &&
+              <StudentNotesPage
                 notes={notes}
+                clickHandler={this.clickHandler}
+                selectedTab={this.state.selectedTab}
               />
             }
             </Tab>
@@ -141,16 +187,6 @@ class StudentPage extends React.Component {
               />
             }
             </Tab>
-            {/* <Tab label="Parent Info">
-              <div className="tab-view">
-                <div className="actions">
-                  <RaisedButton
-                    label="Add parent hours"
-                    primary />
-                </div>
-              </div>
-              <Parent />
-            </Tab> */}
           </Tabs>
         </div>
 
@@ -162,6 +198,7 @@ class StudentPage extends React.Component {
 StudentPage.propTypes = {
   params          : PropTypes.object,
   settings        : PropTypes.object,
+  session        : PropTypes.object,
   student         : PropTypes.object.isRequired,
   studentActions  : PropTypes.object.isRequired,
   settingsActions : PropTypes.object.isRequired
@@ -170,7 +207,8 @@ StudentPage.propTypes = {
 function mapStateToProps(state) {
   return {
     student  : state.student,
-    settings : state.settings
+    settings : state.settings,
+    session : state.session
   };
 }
 

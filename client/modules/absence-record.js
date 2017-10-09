@@ -133,8 +133,8 @@ export function fetchRecordsListYear(year) {
 export function addRecord(schoolId, record) {
   return function(dispatch) {
     return AbsenceRecordsApi.addRecord(schoolId, record).then(res => {
-      console.log('record', record);
-      dispatch(openSnackbar(`Record added for ${res.record.school.name} with ${res.outreaches.length} outreaches created.`));
+      dispatch(fetchRecords());
+      dispatch(openSnackbar(`Record added successfully`));
     })
     .catch(err => handleReducerError(err, dispatch, errorMessage.absenceRecord.addRecord));
   };
@@ -147,8 +147,8 @@ export function addRecord(schoolId, record) {
 export function removeRecord(recordId) {
   return function(dispatch) {
     return AbsenceRecordsApi.removeRecord(recordId).then(res => {
-      console.log('record', recordId, res);
-      dispatch(openSnackbar(`Record deleted for ${res.record.school.name}.`));
+      dispatch(fetchRecords());
+      dispatch(openSnackbar(`Record deleted successfully`));
     })
     .catch(err => handleReducerError(err, dispatch, errorMessage.absenceRecord.removeRecord));
   };

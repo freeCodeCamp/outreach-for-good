@@ -162,12 +162,30 @@ export function postStudentNote(studentId, body) {
     .catch(err => handleReducerError(err, dispatch, errorMessage.student.postStudentNote));
 }
 
+export function putStudentNoteArchive(studentId, noteId, archived) {
+  return dispatch => StudentApi.putStudentNoteArchive(studentId, noteId, archived)
+    .then(outreach => {
+      dispatch(getStudentNotes(studentId));
+      dispatch(openSnackbar(`Note archived`));
+    })
+    .catch(err => handleReducerError(err, dispatch, errorMessage.student.putNoteArchive));
+}
+
+export function deleteStudentNote(studentId, noteId) {
+  return dispatch => StudentApi.deleteStudentNote(studentId, noteId)
+    .then(response => {
+      dispatch(getStudentNotes(studentId));
+      dispatch(openSnackbar('Note deleted'));
+    })
+    .catch(err => handleReducerError(err, dispatch, errorMessage.student.deleteNote));
+}
+
 export function putStudentIep(studentId, iep) {
   const studentIds = Array.isArray(studentId) ? studentId : [studentId];
   return dispatch => StudentApi.putStudentIep(studentIds, iep)
     .then(student => {
       dispatch(getStudent(studentIds[0]));
-      dispatch(openSnackbar(student[0].iep ? 'Student IEP status added' : 'Student IEP status removed'));
+      dispatch(openSnackbar('Student IEP status updated'));
     })
     .catch(err => handleReducerError(err, dispatch, errorMessage.student.putStudentIep));
 }
@@ -177,7 +195,7 @@ export function putStudentCfa(studentId, cfa) {
   return dispatch => StudentApi.putStudentCfa(studentIds, cfa)
     .then(student => {
       dispatch(getStudent(studentIds[0]));
-      dispatch(openSnackbar(student[0].cfa ? 'Student CFA status added' : 'Student CFA status removed'));
+      dispatch(openSnackbar('Student CFA status updated'));
     })
     .catch(err => handleReducerError(err, dispatch, errorMessage.student.putStudentCfa));
 }
@@ -187,7 +205,7 @@ export function putStudentWithdrawn(studentId, withdrawn) {
   return dispatch => StudentApi.putStudentWithdrawn(studentIds, withdrawn)
     .then(student => {
       dispatch(getStudent(studentIds[0]));
-      dispatch(openSnackbar(student[0].withdrawn ? 'Student set to Withdrawn' : 'Student set to Enrolled'));
+      dispatch(openSnackbar('Student Withdrawn status updated'));
     })
     .catch(err => handleReducerError(err, dispatch, errorMessage.student.putStudentWithdrawn));
 }
@@ -196,7 +214,7 @@ export function postOutreachNote(studentId, outreachId, note) {
   return dispatch => StudentApi.postOutreachNote(studentId, outreachId, note)
     .then(outreach => {
       dispatch(getStudentOutreaches(studentId));
-      dispatch(openSnackbar(`Note added to ${outreach.type} ${outreach.tier}`));
+      dispatch(openSnackbar(`Note added to ${outreach.type || ''} ${outreach.tier || ''}`));
     })
     .catch(err => handleReducerError(err, dispatch, errorMessage.student.postOutreachNote));
 }
@@ -205,7 +223,7 @@ export function putOutreachAction(studentId, outreachId, action) {
   return dispatch => StudentApi.putOutreachAction(studentId, outreachId, action)
     .then(outreach => {
       dispatch(getStudentOutreaches(studentId));
-      dispatch(openSnackbar(`${outreach.type} ${outreach.tier} updated`));
+      dispatch(openSnackbar(`${outreach.type || ''} ${outreach.tier || ''} updated`));
     })
     .catch(err => handleReducerError(err, dispatch, errorMessage.student.postOutreachNote));
 }
@@ -213,10 +231,8 @@ export function putOutreachAction(studentId, outreachId, action) {
 export function postIntervention(studentId, intervention) {
   return dispatch => StudentApi.postIntervention(studentId, intervention)
     .then(response => {
-      const date = new Date(response.createdDate).toDateString();
-
       dispatch(getStudentInterventions(studentId));
-      dispatch(openSnackbar(`Intervention of type '${intervention.type}' created on ${date}`));
+      dispatch(openSnackbar(`Intervention added`));
     })
     .catch(err => handleReducerError(err, dispatch, errorMessage.student.postIntervention));
 }

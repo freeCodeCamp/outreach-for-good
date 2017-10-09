@@ -5,6 +5,7 @@ import {connect} from 'react-redux';
 import {List} from 'immutable';
 import { makeCancelable } from '../../../utils/promise';
 
+import * as absenceRecordActions from '../../../modules/absence-record';
 import * as recordsActions from '../../../modules/records';
 import * as schoolActions from '../../../modules/school';
 import * as localActions from '../records.actions';
@@ -24,7 +25,7 @@ class ManageTab extends React.Component {
     super(props);
 
     let nextTable = this.initClickActions(table);
-    this.state = {table: nextTable};
+    this.state = {table: nextTable, dialogOpen: false};
   }
 
   componentDidMount() {
@@ -62,6 +63,9 @@ class ManageTab extends React.Component {
     switch (data) {
     case 'records':
       loadingPromise = this.props.recordsActions.fetchSchoolRecordList(schoolId);
+      break;
+    case 'current-records':
+      loadingPromise = this.props.recordsActions.fetchRecords(schoolId);
       break;
     case 'schools':
       loadingPromise = this.props.schoolActions.getAllSchools();
@@ -127,8 +131,10 @@ class ManageTab extends React.Component {
         this.setState({table: nextTable, schools});
 
       } else if(data == localActions.DELETE_RECORD) {
-        this.pendingApiCalls.push(localActions.DELETE_RECORD);
-        this.handleInterfaceButtonClick(nextTable);
+        //
+        this.retrieveData('current-records');
+        nextTable = table.resetPopovers(nextTable);
+        this.setState({table: nextTable, dialogOpen: true});
 
       } else {
         this.handleInterfaceButtonClick(nextTable);
@@ -140,6 +146,17 @@ class ManageTab extends React.Component {
       break;
     }
   } // End of: clickHandler()
+
+  //ToDo: update local cache instead of re-requeting the data
+  performApiCall = (apiCallId, recordId) => {
+    let loadingPromise;
+    switch (apiCallId) {
+    case localActions.DELETE_RECORD:
+      loadingPromise = this.props.absenceRecordActions.removeRecord(recordId).then(() => this.retrieveData('records', this.state.schools.selected.id));
+      break;
+    }
+    loadingPromise.then(() => this.updateData());
+  }
 
   handleToggleSelectedRow = (nextTable, index) => {
     nextTable = table.toggleSingleSelectedRowIndex(this.state.table, index);
@@ -160,6 +177,18 @@ class ManageTab extends React.Component {
   getSelectedRowData = (nextTable = this.state.table) => this.schoolRecords
       .filter((v, i) => nextTable.get('selectedIndex')
       .indexOf(i) != -1);
+
+  handleCloseDialog = () => {
+    this.setState({dialogOpen: false});
+  }
+
+  handleDeleteRecord = schoolId => {
+    const selectedRecord = this.props.records.latest.filter(r => r._id == schoolId);
+    if(selectedRecord.length === 1 && selectedRecord[0].school.name === this.state.schools.selected.name){
+      this.performApiCall(localActions.DELETE_RECORD, selectedRecord[0].recordId);
+    }
+    this.setState({dialogOpen: false});
+  }
 
   render() {
     if(!this.state.schools) {
@@ -188,12 +217,14 @@ class ManageTab extends React.Component {
     const selectedRecords = this.state.schools.selected && this.props.records[this.state.schools.selected.id] &&
       this.props.records[this.state.schools.selected.id].getIn([this.state.selectedRecord, 'entries']);
 
+    const sortedRecords = this.schoolRecords.sort((a, b) => Date.parse(a.get('date')) > Date.parse(b.get('date')));
+
     return (
       <div>
         {this.state.schools &&
         <DataTableContainer
           page={page}
-          data={this.schoolRecords}
+          data={sortedRecords}
           view = {this.props.viewport}
           table = {this.state.table}
           loaded = {this.state.loadResolved}
@@ -208,16 +239,25 @@ class ManageTab extends React.Component {
             />
           </div>
         }
+        <DeleteDialog
+          selectedSchoolName={this.state.schools.selected.name}
+          selectedSchoolId={this.state.schools.selected.id}
+          dialogOpen={this.state.dialogOpen}
+          closeDialog={this.handleCloseDialog}
+          removeRecord={this.handleDeleteRecord}
+        />
       </div>
     );
   }
 }
 
 ManageTab.propTypes = {
+  absenceRecordActions: PropTypes.object.isRequired,
   recordsActions : PropTypes.object.isRequired,
   schoolActions  : PropTypes.object.isRequired,
   records        : PropTypes.object,
   schools        : PropTypes.object,
+  currentTab     : PropTypes.string
 };
 
 
@@ -230,6 +270,7 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
+    absenceRecordActions : bindActionCreators(absenceRecordActions, dispatch),
     recordsActions : bindActionCreators(recordsActions, dispatch),
     schoolActions  : bindActionCreators(schoolActions, dispatch)
   };

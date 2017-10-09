@@ -21,14 +21,16 @@ class DeleteDialog extends Component {
     const actions = [
       <RaisedButton key="1"
         label="Cancel"
-        onTouchTap={this.props.closeDialog}
+        onClick={this.props.closeDialog}
       />,
-      <RaisedButton key="2"
-        label="Delete Record"
-        disabled={!this.state.confirmDelete}
-        onTouchTap={this.props.removeRecord}
-        primary
-      />,
+      <span> &nbsp;
+        <RaisedButton key="2"
+          label="Delete Record"
+          disabled={!this.state.confirmDelete}
+          onClick={() => this.props.removeRecord(this.props.selectedSchoolId)}
+          primary
+        />
+      </span>,
     ];
 
     return (
@@ -37,10 +39,11 @@ class DeleteDialog extends Component {
         modal={false}
         open={this.props.dialogOpen}
         onRequestClose={this.props.closeDialog}
+        title={`Delete Record from ${this.props.selectedSchoolName}`}
       >
-        <div className="alert">
+        <div className="alert" style={{fontSize: '1.4rem'}}>
 
-          <h3>WARNING!</h3>
+          <h3 style={{margin: 0}}>WARNING!</h3>
           <h4>In addition to deleting the absence record, this operation will permanently delete:</h4>
           <ul>
             <li>Triggered outreaches</li>
@@ -51,12 +54,13 @@ class DeleteDialog extends Component {
               <li>Notes</li>
             </ul>
           </ul>
-
         </div>
+        <div style={{textAlign: 'center'}}>This action can only delete the most recent record.</div>
         <TextField
           id="change-delete-text"
-          hintText="Type DELETE to confirm that you want to delete this record"
+          floatingLabelText="Type DELETE to confirm"
           onChange={this.handleChangeText}
+          floatingLabelStyle={{color: 'rgba(0, 0, 0, 0.8)', fontWeight: 300}}
           fullWidth
         />
       </Dialog>
@@ -67,7 +71,9 @@ class DeleteDialog extends Component {
 DeleteDialog.propTypes = {
   dialogOpen   : PropTypes.bool,
   closeDialog  : PropTypes.func,
-  removeRecord : PropTypes.func
+  removeRecord : PropTypes.func,
+  selectedSchoolName: PropTypes.string,
+  selectedSchoolId: PropTypes.string
 };
 
 export default DeleteDialog;
