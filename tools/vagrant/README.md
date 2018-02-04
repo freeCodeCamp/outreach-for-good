@@ -1,6 +1,6 @@
-# Child First Authority Vagrant
+# Outreach for Good Vagrant
 
-A Vagrantfile provisioned with Ansible that sets up a dev environment for the Child First Authority project.
+A Vagrantfile provisioned with Ansible that sets up a dev environment for the Outreach for Good project.
 
 Current configurations do not support Windows due to NFS mounting of shared folders.
 
@@ -65,7 +65,7 @@ ssh -N -L 5858:localhost:5858 -p 22 vagrant@192.168.121.100
 
 # Post provisioning
 
-Next step is to fork and clone the app repository into the app directory. First go to https://github.com/child-first-authority-fcc-project/webapp and fork the project. Copy the clone url and on the host:
+Next step is to fork and clone the app repository into the app directory. First go to https://github.com/freeCodeCamp/outreach-for-good and fork the project. Copy the clone url and on the host:
 
     projectdir$ git clone <clone url> app
 

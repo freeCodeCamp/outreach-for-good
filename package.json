@@ -1,6 +1,6 @@
 {
-  "name": "child-first-authority",
-  "description": "Student absentee and outreach tracking and reporting app for Child First Authority",
+  "name": "outreach-for-good",
+  "description": "Student absentee and outreach tracking and reporting app for Outreach for Good",
   "version": "2.0.0",
   "scripts": {
     "start": "npm-run-all --parallel server:dev lint:watch",
