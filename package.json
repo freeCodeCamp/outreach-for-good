@@ -1,6 +1,6 @@
 {
-  "name": "child-first-authority",
-  "description": "Student absentee and outreach tracking and reporting app for Child First Authority",
+  "name": "outreach-for-good",
+  "description": "Student absentee and outreach tracking and reporting app for Outreach for Good",
   "version": "2.0.0",
   "scripts": {
     "start": "npm-run-all --parallel server:dev lint:watch",
@@ -26,7 +26,6 @@
     "composable-middleware": "^0.3.0",
     "compression": "~1.6.1",
     "cookie-parser": "~1.4.1",
-    "ejs": "~2.4.1",
     "errorhandler": "~1.4.3",
     "express": "~4.13.4",
     "express-jwt": "^3.0.0",

@@ -1,12 +1,12 @@
-# Child First Authority
+# Outreach for Good
 **Student absenteeism and outreach tracking app**
 
 <!--To be re-enabled when CI fully configured-->
-<!--[![Build Status](https://travis-ci.org/child-first-authority-fcc-project/webapp.svg)](https://travis-ci.org/child-first-authority-fcc-project/webapp)-->
+<!--[![Build Status](https://travis-ci.org/outreach-for-good/webapp.svg)](https://travis-ci.org/outreach-for-good/webapp)-->
 
 ## Purpose
 
-This application is intended to streamline the process of tracking and reporting student absenteeism for Child First Authority.
+This application is intended to streamline the process of tracking and reporting student absenteeism for Outreach for Good.
 
 # Authentication and Authorization
 
@@ -25,7 +25,7 @@ The roles are:
 
 **Vagrant**
 
-See [tools/vagrant](https://github.com/freeCodeCamp/child-first-authority/tree/master/tools/vagrant) for development environment setup instructions
+See [tools/vagrant](https://github.com/freeCodeCamp/outreach-for-good/tree/master/tools/vagrant) for development environment setup instructions
 
 **Heroku**
 
@@ -44,7 +44,7 @@ Google id and secret need to be obtained by creating an application on [Google D
 
 ## Sample PDFs
 
-See [tools/sample-pdfs](https://github.com/freeCodeCamp/child-first-authority/tree/master/tools/sample-pdfs) for example import documents.
+See [tools/sample-pdfs](https://github.com/freeCodeCamp/outreach-for-good/tree/master/tools/sample-pdfs) for example import documents.
 
 ## To-Do
 

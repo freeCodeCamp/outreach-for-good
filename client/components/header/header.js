@@ -60,7 +60,7 @@ class Header extends Component {
     return (
       <AppBar
         className="main-header"
-        title={<span style={{fontWeight: 400, fontSize: 20}}>Child First Authority</span>}
+        title={<span style={{fontWeight: 400, fontSize: 20}}>Outreach for Good</span>}
         iconElementRight={
           <div>
             <AuthButton
