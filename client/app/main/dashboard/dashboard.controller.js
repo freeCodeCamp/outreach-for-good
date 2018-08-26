@@ -125,6 +125,13 @@ function DashboardCtrl($scope, $timeout, AbsenceRecord, GridDefaults, Student) {
       $scope.gridApi.core.refresh();
       $scope.tableTitle = $scope.makeTitle('2017-2018');
     }
+  }, {
+    text: '2018-2019',
+    action: function() {
+      $scope.gridOptions.data = AbsenceRecord.list2018($scope.filter);
+      $scope.gridApi.core.refresh();
+      $scope.tableTitle = $scope.makeTitle('2018-2019');
+    }
   }];
 
   updateOutreachCounts();

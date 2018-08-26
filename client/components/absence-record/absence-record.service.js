@@ -45,6 +45,15 @@ angular.module('app').factory('AbsenceRecord', function($resource) {
           year: '2017-2018'
         }
       },
+      list2018: {
+        method: 'GET',
+        isArray: true,
+        params: {
+          controller: 'list',
+          selector: 'year',
+          year: '2018-2019'
+        }
+      },
       students: {
         method: 'GET',
         isArray: true,
