@@ -1,7 +1,7 @@
 # Outreach for Good
 **Student absenteeism and outreach tracking app**
 
-<!--To be re-enabled when CI fully configured-->
+<!--To be re-enabled when CI fully configured--->
 <!--[![Build Status](https://travis-ci.org/outreach-for-good/webapp.svg)](https://travis-ci.org/outreach-for-good/webapp)-->
 
 ## Purpose
